@@ -17,17 +17,27 @@ const devnet = "https://api.devnet.solana.com"
 const normalserummarket = "ByRys5tuUWDgL73G8JBAEfkdFf8JWBzPBDHsBVQ5vbQA"
 
 func main() {
+	tryDeribit()
+}
+func tryDeribit() {
 	list, err := rainbow.GetMarkets("BTC")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fmt.Println(list[0])
-	spew.Dump(list[0])
+	fmt.Println(list[10])
+	spew.Dump(list[10])
+
+	orderBook, err := rainbow.GetOrderBook(list[10:15], 5)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	spew.Dump(orderBook[0].Offers)
 
 }
-
 func testPsyops() {
 	serumMarketAddresses := []string{"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
 		"7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",
@@ -52,7 +62,7 @@ func testPsyops() {
 	}
 	spew.Dump(out)
 
-	fmt.Println("asks ", out.Market.GetAsks(), "\n\n\n")
+	fmt.Println("asks ", out.Market.GetAsks(), "\n\n")
 	orders, err := serum.FetchOpenOrders(context.TODO(), client, out.Market.GetAsks())
 	//spew.Dump(orders)
 	fmt.Println(orders.OpenOrders.GetOrder(0))
