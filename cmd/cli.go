@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"rainbow"
+
 	"github.com/davecgh/go-spew/spew"
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"
@@ -15,6 +17,18 @@ const devnet = "https://api.devnet.solana.com"
 const normalserummarket = "ByRys5tuUWDgL73G8JBAEfkdFf8JWBzPBDHsBVQ5vbQA"
 
 func main() {
+	list, err := rainbow.GetMarkets("BTC")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(list[0])
+	spew.Dump(list[0])
+
+}
+
+func testPsyops() {
 	serumMarketAddresses := []string{"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
 		"7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",
 		"9ugAWZCSgUKjL11fJE9Zjn4QVTdTkAkSLgPu9ZC8mcfD",
