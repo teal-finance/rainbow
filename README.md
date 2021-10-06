@@ -25,7 +25,7 @@ the options, prices, expiries, liquidities across L1/L2.
 
 Options
 
-```json
+```js
 {
   "name":"Ethereum-5000-C",
   "options":"call",        // call or put
@@ -42,7 +42,7 @@ Options
 ----
 Offers
 
-```json
+```js
 {
   "side": "buy",      // buy/sell
   "price":"0.1",
