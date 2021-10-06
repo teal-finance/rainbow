@@ -86,6 +86,15 @@ linters:
     - nlreturn         # nlreturn checks for a new line before return and branch statements to increase code clarity
 
 linters-settings:
+
+  goimports:
+    local-prefixes: github.com/teal-finance/rainbow
+
+  # https://github.com/mvdan/gofumpt
+  gofumpt:
+    lang-version: "1.16"
+    extra-rules: true
+
   tagliatelle:
     case:
       rules:

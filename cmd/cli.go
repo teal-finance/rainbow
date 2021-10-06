@@ -10,12 +10,12 @@ import (
 	"context"
 	"fmt"
 
-	"rainbow"
-
 	"github.com/davecgh/go-spew/spew"
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
+
+	"github.com/teal-finance/rainbow"
 )
 
 const (

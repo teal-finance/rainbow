@@ -1,4 +1,4 @@
-module rainbow
+module github.com/teal-finance/rainbow
 
 go 1.16
 
