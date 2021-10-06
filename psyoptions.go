@@ -15,7 +15,9 @@ func GetListMarkets(coin string) []string {
 			"8fFcWuVaZSKoge4DCpMcNrR5nNXF2pbXCfBUxkMomgr5",
 		}
 	}
-	return []string{"8fhiAYm41RwtiX8WusCSpY617GWPt2LwUnCQcEeer78o",
+
+	return []string{
+		"8fhiAYm41RwtiX8WusCSpY617GWPt2LwUnCQcEeer78o",
 		"6at26sVk8vTYtLh4YDKvje4PDdgFJsNHHyoGw87WNszP",
 		"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
 		"7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",

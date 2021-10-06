@@ -8,26 +8,37 @@ import (
 	"strings"
 )
 
-func GetMarkets(coin string) ([]Instruments, error) {
+func GetMarkets(coin string) ([]Instrument, error) {
 	baseURL := "https://deribit.com/api/v2/public/get_instruments?currency="
 	opts := "&expired=false&kind=option"
 	fmt.Println(baseURL + coin + opts)
-	clt := http.Client{}
-	resp, err := clt.Get(baseURL + coin + opts)
-	if err != nil {
-		return []Instruments{}, err
+
+	clt := http.Client{
+		Transport:     nil,
+		CheckRedirect: nil,
+		Jar:           nil,
+		Timeout:       0,
 	}
 
-	result := struct {
-		Result []Instruments `json:"result"`
-	}{}
-	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return []Instruments{}, fmt.Errorf("nft collections : %w", err)
+	resp, err := clt.Get(baseURL + coin + opts)
+	if err != nil {
+		return []Instrument{}, err
 	}
+
+	defer resp.Body.Close()
+
+	result := struct {
+		Result []Instrument `json:"result"`
+	}{}
+
+	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return []Instrument{}, fmt.Errorf("nft collections : %w", err)
+	}
+
 	return result.Result, nil
 }
 
-type Instruments struct {
+type Instrument struct {
 	TickSize             float64 `json:"tick_size"`
 	TakerCommission      float64 `json:"taker_commission"`
 	Strike               float64 `json:"strike"`
@@ -46,40 +57,50 @@ type Instruments struct {
 	BaseCurrency         string  `json:"base_currency"`
 }
 
-func GetOrderBook(instruments []Instruments, depth uint32) ([]Options, error) {
+func GetOrderBook(instruments []Instrument, depth uint32) ([]Options, error) {
 	orderBook := []Options{}
-	//deribitOrderBook := []DeribitOrderBook{}
+	// deribitOrderBook := []DeribitOrderBook{}
 	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
-	clt := http.Client{}
+	clt := http.Client{
+		Transport:     nil,
+		CheckRedirect: nil,
+		Jar:           nil,
+		Timeout:       0,
+	}
 
 	for _, i := range instruments {
 		resp, err := clt.Get(baseURL + i.InstrumentName)
 		if err != nil {
 			return []Options{}, err
 		}
+
+		defer resp.Body.Close()
+
 		result := struct {
 			Result DeribitOrderBook `json:"result"`
 		}{}
+
 		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
 			return []Options{}, fmt.Errorf(" order book : %w", err)
 		}
 
-		o := Options{}
-		o.Asset = i.BaseCurrency
-		o.Chain = "None"
-		o.Layer = "None"
-		o.ExchangeType = "CEX"
-		o.Provider = "Deribit"
-		o.ExpirationTimestamp = i.ExpirationTimestamp
-		o.Strike = i.Strike
-		o.Name = i.InstrumentName
-		o.Type = strings.ToUpper(i.OptionType)
+		o := Options{
+			Name:                i.InstrumentName,
+			Type:                strings.ToUpper(i.OptionType),
+			Asset:               i.BaseCurrency,
+			ExpirationTimestamp: i.ExpirationTimestamp,
+			Strike:              i.Strike,
+			ExchangeType:        "CEX",
+			Chain:               "None",
+			Layer:               "None",
+			Provider:            "Deribit",
+			Offers:              nil,
+		}
 		o.Offers = BidsAsksToOffers(result.Result.Bids, "BUY", i.QuoteCurrency)
 		o.Offers = append(o.Offers, BidsAsksToOffers(result.Result.Asks, "SELL", i.QuoteCurrency)...)
-		//fmt.Println("o ", o)
+		// fmt.Println("o ", o)
 
 		orderBook = append(orderBook, o)
-
 	}
 
 	return orderBook, nil
@@ -129,8 +150,7 @@ func BidsAsksToOffers(orders [][]float64, side, quote string) []Offer {
 	offers := []Offer{}
 	for _, ord := range orders {
 		offers = append(offers, Offer{side, ord[1], ord[0], quote})
-
 	}
-	return offers
 
+	return offers
 }

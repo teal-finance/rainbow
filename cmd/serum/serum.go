@@ -22,9 +22,11 @@ import (
 	"github.com/streamingfast/solana-go/rpc"
 )
 
-const mainnet = "https://api.mainnet-beta.solana.com"
-const devnet = "https://api.devnet.solana.com"
-const normalserummarket = "ByRys5tuUWDgL73G8JBAEfkdFf8JWBzPBDHsBVQ5vbQA"
+const (
+	mainnet           = "https://api.mainnet-beta.solana.com"
+	devnet            = "https://api.devnet.solana.com"
+	normalserummarket = "ByRys5tuUWDgL73G8JBAEfkdFf8JWBzPBDHsBVQ5vbQA"
+)
 
 func getClient() *rpc.Client {
 	return rpc.NewClient(mainnet)

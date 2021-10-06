@@ -12,13 +12,16 @@ import (
 	"github.com/streamingfast/solana-go/rpc"
 )
 
-const mainnet = "https://api.mainnet-beta.solana.com"
-const devnet = "https://api.devnet.solana.com"
-const normalserummarket = "ByRys5tuUWDgL73G8JBAEfkdFf8JWBzPBDHsBVQ5vbQA"
+const (
+	mainnet           = "https://api.mainnet-beta.solana.com"
+	devnet            = "https://api.devnet.solana.com"
+	normalserummarket = "ByRys5tuUWDgL73G8JBAEfkdFf8JWBzPBDHsBVQ5vbQA"
+)
 
 func main() {
 	tryDeribit()
 }
+
 func tryDeribit() {
 	list, err := rainbow.GetMarkets("BTC")
 	if err != nil {
@@ -30,16 +33,17 @@ func tryDeribit() {
 	spew.Dump(list[10])
 
 	orderBook, err := rainbow.GetOrderBook(list[10:15], 5)
-
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	spew.Dump(orderBook[0].Offers)
 
+	spew.Dump(orderBook[0].Offers)
 }
+
 func testPsyops() {
-	serumMarketAddresses := []string{"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
+	serumMarketAddresses := []string{
+		"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
 		"7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",
 		"9ugAWZCSgUKjL11fJE9Zjn4QVTdTkAkSLgPu9ZC8mcfD",
 		"ACdjLA5wPk31eUEqra9BFQ3MTXbHqZfdM1TRQPX8Hi28",
@@ -51,33 +55,46 @@ func testPsyops() {
 		"2wriXhTCsUwBvfyYch8X6J8pLW797Vm8Thsz4xRZh1Yb",
 	}*/
 	client := rpc.NewClient(mainnet)
-	//client := rpc.NewClient(devnet)
+	// client := rpc.NewClient(devnet)
 
 	pubKey := solana.MustPublicKeyFromBase58(serumMarketAddresses[1])
-	//pubKey := solana.MustPublicKeyFromBase58(serumDevnetAddresses[2])
+	// pubKey := solana.MustPublicKeyFromBase58(serumDevnetAddresses[2])
 
 	out, err := serum.FetchMarket(context.TODO(), client, pubKey)
 	if err != nil {
 		panic(err)
 	}
+
 	spew.Dump(out)
 
-	fmt.Println("asks ", out.Market.GetAsks(), "\n\n")
+	fmt.Print("asks ", out.Market.GetAsks(), "\n\n\n")
+
 	orders, err := serum.FetchOpenOrders(context.TODO(), client, out.Market.GetAsks())
-	//spew.Dump(orders)
+	if err != nil {
+		panic(err)
+	}
+
+	// spew.Dump(orders)
 	fmt.Println(orders.OpenOrders.GetOrder(0))
+
 	pubKey = solana.MustPublicKeyFromBase58(normalserummarket)
+
 	out, err = serum.FetchMarket(context.TODO(), client, pubKey)
+	if err != nil {
+		panic(err)
+	}
+
 	orders, err = serum.FetchOpenOrders(context.TODO(), client, out.Market.GetAsks())
+	if err != nil {
+		panic(err)
+	}
 
 	var index uint32
 	for index = 0; index < 40; index++ {
-
 		order := orders.OpenOrders.GetOrder(index)
-		//spew.Dump(firstOrder)
+		// spew.Dump(firstOrder)
 		fmt.Println("price", order.Price())
 		fmt.Println("seqnum", order.SeqNum())
 		fmt.Println("side ", order.Side)
 	}
-
 }
