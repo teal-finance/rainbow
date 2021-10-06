@@ -18,13 +18,7 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"math/big"
-	"strings"
 
-	"github.com/ryanuber/columnize"
-	"github.com/streamingfast/solana-go"
-	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
 )
 
@@ -32,153 +26,21 @@ const mainnet = "https://api.mainnet-beta.solana.com"
 const devnet = "https://api.devnet.solana.com"
 const normalserummarket = "ByRys5tuUWDgL73G8JBAEfkdFf8JWBzPBDHsBVQ5vbQA"
 
+func getClient() *rpc.Client {
+	return rpc.NewClient(mainnet)
+}
+
 func main() {
 	ctx := context.TODO()
-	serumMarketAddresses := []string{"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
+	serumMarketAddresses := []string{
+		"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
 		"7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",
 		"9ugAWZCSgUKjL11fJE9Zjn4QVTdTkAkSLgPu9ZC8mcfD",
 		"ACdjLA5wPk31eUEqra9BFQ3MTXbHqZfdM1TRQPX8Hi28",
 	}
 
-	marketAddr, err := solana.PublicKeyFromBase58(serumMarketAddresses[0])
+	err := runE(ctx, serumMarketAddresses)
 	if err != nil {
-		fmt.Errorf("decoding market addr: %w", err)
+		panic(err)
 	}
-
-	cli := rpc.NewClient(mainnet)
-
-	market, err := serum.FetchMarket(ctx, cli, marketAddr)
-	if err != nil {
-		fmt.Errorf("fetch market: %w", err)
-	}
-
-	asks, askSize, err := getOrderBook(ctx, market, cli, market.Market.GetAsks(), false)
-	if err != nil {
-		fmt.Errorf("unable to retrieve asks: %w", err)
-	}
-
-	bids, bidSize, err := getOrderBook(ctx, market, cli, market.Market.GetBids(), true)
-	if err != nil {
-		fmt.Errorf("unable to retrieve bids: %w", err)
-	}
-	totalSize := new(big.Float).Add(askSize, bidSize)
-
-	output := []string{
-		"Price | Quantity | Depth",
-		"Asks",
-	}
-	output = append(output, outputOrderBook(asks, totalSize, true)...)
-	output = append(output, "------- | --------")
-	output = append(output, outputOrderBook(bids, totalSize, false)...)
-	output = append(output, "Bids")
-
-	fmt.Println(market.Name)
-
-	fmt.Println("Request RequestQueue: ", market.Market.GetRequestQueue())
-	fmt.Println("Event RequestQueue: ", market.Market.GetEventQueue())
-
-	fmt.Println("Base")
-	fmt.Println("base mint", market.Market.GetBaseMint().String())
-	fmt.Println("base lot size", market.Market.GetBaseLotSize())
-
-	fmt.Println("")
-	fmt.Println("Quote")
-	fmt.Println("quote mint", market.Market.GetQuoteMint().String())
-	fmt.Println("quote lot size", market.Market.GetQuoteLotSize())
-
-	fmt.Println(columnize.Format(output, nil))
-
-}
-
-type orderBookEntry struct {
-	price    *big.Float
-	quantity *big.Float
-}
-
-func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool) (out []*orderBookEntry, totalSize *big.Float, err error) {
-	var o serum.Orderbook
-	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
-		return nil, nil, fmt.Errorf("getting orderbook: %w", err)
-	}
-
-	limit := 20
-	levels := [][]*big.Int{}
-
-	o.Items(desc, func(node *serum.SlabLeafNode) error {
-		quantity := big.NewInt(int64(node.Quantity))
-		price := node.GetPrice()
-		if len(levels) > 0 && levels[len(levels)-1][0].Cmp(price) == 0 {
-			current := levels[len(levels)-1][1]
-			levels[len(levels)-1][1] = new(big.Int).Add(current, quantity)
-		} else if len(levels) == limit {
-			return fmt.Errorf("done")
-		} else {
-			levels = append(levels, []*big.Int{price, quantity})
-		}
-		return nil
-	})
-
-	totalSize = big.NewFloat(0)
-	for _, level := range levels {
-		price := market.PriceLotsToNumber(level[0])
-		qty := market.BaseSizeLotsToNumber(level[1])
-		totalSize = new(big.Float).Add(totalSize, qty)
-		out = append(out,
-			&orderBookEntry{
-				price:    price,
-				quantity: qty,
-			},
-		)
-	}
-	return out, totalSize, nil
-}
-
-func depth(value *big.Float) string {
-	v, _ := value.Int(nil)
-	return strings.Repeat("#", int(v.Int64()))
-}
-
-func outputOrderBook(entries []*orderBookEntry, totalSize *big.Float, reverse bool) (out []string) {
-	total := totalSize
-	if totalSize == nil {
-		total = new(big.Float).SetInt64(1)
-	}
-
-	type orderBookRow struct {
-		price    string
-		quantity string
-		depth    string
-	}
-
-	rows := []*orderBookRow{}
-	cumulativeSize := big.NewFloat(0)
-	for i := 0; i < len(entries); i++ {
-		entry := entries[i]
-		cumulativeSize = new(big.Float).Add(cumulativeSize, entry.quantity)
-		sizePercent := new(big.Float).Mul(new(big.Float).Quo(cumulativeSize, total), new(big.Float).SetInt64(100))
-		rows = append(rows, &orderBookRow{
-			price:    entry.price.String(),
-			quantity: entry.quantity.String(),
-			depth:    depth(sizePercent),
-		})
-	}
-
-	if reverse {
-		for i := len(entries) - 1; i >= 0; i-- {
-			out = append(out, fmt.Sprintf("%s | %s | %s",
-				rows[i].quantity,
-				rows[i].price,
-				rows[i].depth,
-			))
-		}
-		return
-	}
-	for i := 0; i < len(rows); i++ {
-		out = append(out, fmt.Sprintf("%s | %s | %s",
-			rows[i].quantity,
-			rows[i].price,
-			rows[i].depth,
-		))
-	}
-	return
 }
