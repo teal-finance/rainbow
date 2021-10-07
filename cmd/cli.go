@@ -15,7 +15,7 @@ import (
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
 
-	"github.com/teal-finance/rainbow"
+	"github.com/teal-finance/rainbow/deribit"
 )
 
 const (
@@ -29,7 +29,7 @@ func main() {
 }
 
 func tryDeribit() {
-	list, err := rainbow.GetMarkets("BTC")
+	list, err := deribit.GetMarkets("BTC")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -38,7 +38,7 @@ func tryDeribit() {
 	fmt.Println(list[10])
 	spew.Dump(list[10])
 
-	orderBook, err := rainbow.GetOrderBook(list[10:15], 5)
+	orderBook, err := deribit.GetOrderBook(list[10:15], 5)
 	if err != nil {
 		fmt.Println(err)
 		return
