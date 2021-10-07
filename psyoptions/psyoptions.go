@@ -9,7 +9,8 @@ import (
 	"context"
 	"fmt"
 	"math/big"
-	"rainbow"
+
+	"github.com/teal-finance/rainbow"
 
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"

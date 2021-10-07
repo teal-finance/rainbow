@@ -10,9 +10,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"rainbow"
 	"strconv"
 	"strings"
+
+	"github.com/teal-finance/rainbow"
 )
 
 func GetMarkets(coin string) ([]Instrument, error) {
