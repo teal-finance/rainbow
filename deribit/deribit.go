@@ -4,12 +4,13 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-package rainbow
+package deribit
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"rainbow"
 	"strconv"
 	"strings"
 )
@@ -63,8 +64,8 @@ type Instrument struct {
 	BaseCurrency         string  `json:"base_currency"`
 }
 
-func GetOrderBook(instruments []Instrument, depth uint32) ([]Options, error) {
-	orderBook := []Options{}
+func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Options, error) {
+	orderBook := []rainbow.Options{}
 	// deribitOrderBook := []DeribitOrderBook{}
 	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
 	clt := http.Client{
@@ -77,7 +78,7 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]Options, error) {
 	for _, i := range instruments {
 		resp, err := clt.Get(baseURL + i.InstrumentName)
 		if err != nil {
-			return []Options{}, err
+			return []rainbow.Options{}, err
 		}
 
 		defer resp.Body.Close()
@@ -87,10 +88,10 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]Options, error) {
 		}{}
 
 		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			return []Options{}, fmt.Errorf(" order book : %w", err)
+			return []rainbow.Options{}, fmt.Errorf(" order book : %w", err)
 		}
 
-		o := Options{
+		o := rainbow.Options{
 			Name:                i.InstrumentName,
 			Type:                strings.ToUpper(i.OptionType),
 			Asset:               i.BaseCurrency,
@@ -152,11 +153,12 @@ type DeribitOrderBook struct {
 	AskIv                  float64     `json:"ask_iv"`
 }
 
-func BidsAsksToOffers(orders [][]float64, side, quote string) []Offer {
-	offers := []Offer{}
+func BidsAsksToOffers(orders [][]float64, side, quote string) []rainbow.Offer {
+	offers := []rainbow.Offer{}
 	for _, ord := range orders {
-		offers = append(offers, Offer{side, ord[1], ord[0], quote})
-	}
+		offers = append(offers, rainbow.Offer{Side: side, Price: ord[1], Quantity: ord[0], QuoteCurrency: quote})
 
+	}
 	return offers
+
 }
