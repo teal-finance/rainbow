@@ -42,7 +42,7 @@ func tryOpyn() {
 
 	fmt.Println(zerox.ConvertToSolidity(10.0, 8))
 
-	orderBook, err = zerox.GetAggregatedOrderBook(markets, "Opyn", 10.0)
+	orderBook, err = zerox.GetAggregatedOrderBook(markets, "Opyn", 2.0)
 	if err != nil {
 		fmt.Println(err)
 		return

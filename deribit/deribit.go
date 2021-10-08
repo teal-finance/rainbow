@@ -156,6 +156,11 @@ type DeribitOrderBook struct {
 
 func BidsAsksToOffers(orders [][]float64, side, quote string) []rainbow.Offer {
 	offers := []rainbow.Offer{}
+	//if there is no offer, send price=0.0, quant=0.0
+	//hopefully we never an array of empty array
+	if len(orders) == 0 {
+		return append(offers, rainbow.Offer{Side: side, Price: 0.0, Quantity: 0.0, QuoteCurrency: quote})
+	}
 	for _, ord := range orders {
 		offers = append(offers, rainbow.Offer{Side: side, Price: ord[1], Quantity: ord[0], QuoteCurrency: quote})
 

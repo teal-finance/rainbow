@@ -168,13 +168,15 @@ func GetQuote(side, sellToken, buyToken string, amount float64, decimals int) (Z
 	var baseURL string
 	if side == "SELL" {
 		baseURL = "https://api.0x.org/swap/v1/quote?sellToken=" + sellToken +
-			"buyToken=" + buyToken + "&buyAmount=" + ConvertToSolidity(amount, decimals)
+			"&buyToken=" + buyToken + "&buyAmount=" + ConvertToSolidity(amount, decimals)
 
 	} else if side == "BUY" {
 
 		baseURL = "https://api.0x.org/swap/v1/quote?sellToken=" + sellToken +
-			"buyToken=" + buyToken + "&sellAmount=" + ConvertToSolidity(amount, decimals)
+			"&buyToken=" + buyToken + "&sellAmount=" + ConvertToSolidity(amount, decimals)
 	}
+
+	fmt.Println("swap url ", baseURL)
 	resp, err := clt.Get(baseURL)
 	if err != nil {
 		return ZeroxQuote{}, err
@@ -217,31 +219,50 @@ func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}
-		price, err := strconv.ParseFloat(b.Price, 64)
-		if err != nil {
-			return []rainbow.Options{}, err
+		if b.Price != "" {
+			price, err := strconv.ParseFloat(b.Price, 64)
+			if err != nil {
+				fmt.Println("price ")
+				return []rainbow.Options{}, err
+			}
+			o.Offers = append(o.Offers, rainbow.Offer{
+				Side:          "BUY",
+				Price:         price,
+				Quantity:      amount,
+				QuoteCurrency: quote,
+			})
+		} else {
+			o.Offers = append(o.Offers, rainbow.Offer{
+				Side:          "BUY",
+				Price:         0.0,
+				Quantity:      0.0,
+				QuoteCurrency: quote,
+			})
 		}
-		o.Offers = append(o.Offers, rainbow.Offer{
-			Side:          "BUY",
-			Price:         price,
-			Quantity:      amount,
-			QuoteCurrency: quote,
-		})
 
 		a, err := GetQuote("SELL", USDC, i.ID, amount, decimals)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}
-		price, err = strconv.ParseFloat(a.Price, 64)
-		if err != nil {
-			return []rainbow.Options{}, err
+		if a.Price != "" {
+			price, err := strconv.ParseFloat(a.Price, 64)
+			if err != nil {
+				return []rainbow.Options{}, err
+			}
+			o.Offers = append(o.Offers, rainbow.Offer{
+				Side:          "SELL",
+				Price:         price,
+				Quantity:      amount,
+				QuoteCurrency: quote,
+			})
+		} else {
+			o.Offers = append(o.Offers, rainbow.Offer{
+				Side:          "SELL",
+				Price:         0.0,
+				Quantity:      0.0,
+				QuoteCurrency: quote,
+			})
 		}
-		o.Offers = append(o.Offers, rainbow.Offer{
-			Side:          "SELL",
-			Price:         price,
-			Quantity:      amount,
-			QuoteCurrency: quote,
-		})
 
 		orderBook = append(orderBook, o)
 	}
