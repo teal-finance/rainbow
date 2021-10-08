@@ -7,7 +7,7 @@ type Opyn struct {
 	Name   string // ASSET-DATE-Strike-OptionsType
 	Type   string // CALL or PUT
 	Asset  string // ETH, BTC, SOL
-	Expiry string
+	Expiry string // 2021-12-31
 	Strike float64
 }
 

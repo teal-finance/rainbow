@@ -38,6 +38,9 @@ func main() {
 			key:     key,
 			wrapped: http.DefaultTransport,
 		},
+		CheckRedirect: nil,
+		Jar:           nil,
+		Timeout:       0,
 	}
 
 	graphqlClient := graphql.NewClient(opynURL, &httpClient)
