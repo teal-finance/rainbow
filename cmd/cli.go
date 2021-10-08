@@ -16,6 +16,7 @@ import (
 	"github.com/streamingfast/solana-go/rpc"
 
 	"github.com/teal-finance/rainbow/deribit"
+	"github.com/teal-finance/rainbow/zerox"
 )
 
 const (
@@ -25,7 +26,20 @@ const (
 )
 
 func main() {
-	tryDeribit()
+	tryOpyn()
+}
+func tryOpyn() {
+	markets := zerox.GetMarkets("ETH")
+	//fmt.Println(markets)
+	//spew.Dump(markets[1:2])
+	orderBook, err := zerox.GetOrderBook(markets[2:], "Opyn")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	spew.Dump(orderBook[0])
+
 }
 
 func tryDeribit() {

@@ -19,7 +19,7 @@ import (
 
 const listMarketsURL = "wss://api.psyoptions.io/v1/graphql"
 
-func GetListMarkets(coin string) []string {
+func GetMarkets(coin string) []string {
 	if coin == "ETH" {
 		return []string{
 			"8A493gU55NfS4fCjDoLAiN57zPzWf6QQw31QQf1fd6iX",
