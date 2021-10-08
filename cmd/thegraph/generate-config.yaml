@@ -9,23 +9,13 @@ operations:
 generated: generated-queries.go
 
 # needed since it doesn't match the directory name:
-package: thegraph
+package: main
 
 # We bind github's DateTime scalar type to Go's time.Time (which conveniently
 # already defines MarshalJSON and UnmarshalJSON).  This means genqlient will
 # use time.Time when a query requests a DateTime, and is required for custom
 # scalars.
 bindings:
-  Date:
-    type: cloud.google.com/go/civil.Date
-  DateTime:
-    type: time.Time
-  URI:
-    type: string
-  SearchResultItemEdge1:
-    type: github.com/StevenACoffman/teamboard/pkg/types.Edge
-  SearchResultItemEdge2:
-    type: encoding/json.RawMessage
   BigInt:
     type: int
   Bytes:
