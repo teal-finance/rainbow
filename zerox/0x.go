@@ -59,16 +59,16 @@ func GetOrderBook(instruments []Opyn, provider string) ([]rainbow.Options, error
 		}
 
 		o := rainbow.Options{
-			Name:                i.Name,
-			Type:                i.Type,
-			Asset:               i.Asset,
-			ExpirationTimestamp: i.ExpirationTimestamp,
-			Strike:              i.Strike,
-			ExchangeType:        "DEX",
-			Chain:               "Ethereum",
-			Layer:               "L1",
-			Provider:            provider,
-			Offers:              nil,
+			Name:         i.Name,
+			Type:         i.Type,
+			Asset:        i.Asset,
+			Expiry:       i.Expiry,
+			Strike:       i.Strike,
+			ExchangeType: "DEX",
+			Chain:        "Ethereum",
+			Layer:        "L1",
+			Provider:     provider,
+			Offers:       nil,
 		}
 		b, err := BidsAsksToOffers(result.Bids.Records, "BUY", OpynQuoteCurrency)
 		if err != nil {
@@ -204,21 +204,22 @@ func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64)
 	for _, i := range instruments {
 
 		o := rainbow.Options{
-			Name:                i.Name,
-			Type:                i.Type,
-			Asset:               i.Asset,
-			ExpirationTimestamp: i.ExpirationTimestamp,
-			Strike:              i.Strike,
-			ExchangeType:        "DEX",
-			Chain:               "Ethereum",
-			Layer:               "L1",
-			Provider:            provider,
-			Offers:              nil,
+			Name:         i.Name,
+			Type:         i.Type,
+			Asset:        i.Asset,
+			Expiry:       i.Expiry,
+			Strike:       i.Strike,
+			ExchangeType: "DEX",
+			Chain:        "Ethereum",
+			Layer:        "L1",
+			Provider:     provider,
+			Offers:       nil,
 		}
 		b, err := GetQuote("BUY", i.ID, USDC, amount, decimals)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}
+
 		if b.Price != "" {
 			price, err := strconv.ParseFloat(b.Price, 64)
 			if err != nil {

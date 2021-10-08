@@ -68,7 +68,6 @@ linters:
     - varcheck         # Finds unused global variables and constants
     - wastedassign     # wastedassign finds wasted assignment statements.
     - whitespace       # Tool for detection of leading and trailing whitespace
-    - wrapcheck        # Checks that errors returned from external packages are wrapped
     - wsl              # Whitespace Linter - Forces you to use empty lines!
 
   disable:
@@ -84,6 +83,7 @@ linters:
     - gomnd            # An analyzer to detect magic numbers.
     - lll              # Reports long lines
     - nlreturn         # nlreturn checks for a new line before return and branch statements to increase code clarity
+    - wrapcheck        # Checks that errors returned from external packages are wrapped
 
 linters-settings:
 
