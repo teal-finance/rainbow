@@ -1,0 +1,26 @@
+query getOptions {  
+  otokens {
+    id
+    symbol
+    name
+    decimals
+    strikeAsset {
+      id
+      symbol
+      decimals
+    }
+    underlyingAsset {
+      id
+      symbol
+      decimals
+    }
+    collateralAsset {
+      id
+      symbol
+      decimals
+    }
+    strikePrice
+    isPut
+    expiryTimestamp
+  }
+}
