@@ -1,6 +1,6 @@
 package zerox
 
-const OpynQuoteCurrency = "USD"
+const OpynQuoteCurrency = "USDC"
 
 type Opyn struct {
 	ID                  string //0x id
