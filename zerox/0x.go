@@ -28,12 +28,11 @@ const (
 )
 
 func GetMarkets(coin string) []Opyn {
-
 	return Opynmarket(coin)
 }
 
 func GetOrderBook(instruments []Opyn, provider string) ([]rainbow.Options, error) {
-	baseURL := "https://api.0x.org/orderbook/v1?quoteToken="
+	const baseURL = "https://api.0x.org/orderbook/v1?quoteToken="
 	opts := "&baseToken=" + USDC
 
 	clt := http.Client{
@@ -59,16 +58,16 @@ func GetOrderBook(instruments []Opyn, provider string) ([]rainbow.Options, error
 		}
 
 		o := rainbow.Options{
-			Name:                i.Name,
-			Type:                i.Type,
-			Asset:               i.Asset,
-			ExpirationTimestamp: i.ExpirationTimestamp,
-			Strike:              i.Strike,
-			ExchangeType:        "DEX",
-			Chain:               "Ethereum",
-			Layer:               "L1",
-			Provider:            provider,
-			Offers:              nil,
+			Name:         i.Name,
+			Type:         i.Type,
+			Asset:        i.Asset,
+			Expiry:       i.Expiry,
+			Strike:       i.Strike,
+			ExchangeType: "DEX",
+			Chain:        "Ethereum",
+			Layer:        "L1",
+			Provider:     provider,
+			Offers:       nil,
 		}
 		b, err := BidsAsksToOffers(result.Bids.Records, "BUY", OpynQuoteCurrency)
 		if err != nil {
@@ -146,8 +145,7 @@ func BidsAsksToOffers(records Records, side, quote string) ([]rainbow.Offer, err
 			return []rainbow.Offer{}, err
 		}
 		offers = append(offers, rainbow.Offer{Side: side, Price: makerAmount / takerAmount, Quantity: takerAmount * math.Pow(10, -float64(USDCDecimal)), QuoteCurrency: quote})
-
 	}
-	return offers, nil
 
+	return offers, nil
 }

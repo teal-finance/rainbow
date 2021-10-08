@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/teal-finance/rainbow"
 )
@@ -92,17 +93,24 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Options, er
 			return []rainbow.Options{}, fmt.Errorf(" order book : %w", err)
 		}
 
+		// API doc: https://docs.deribit.com/#public-get_index_price_names
+		// ExpirationTimestamp = The time when the instrument will expire (milliseconds since the UNIX epoch)
+		seconds := i.ExpirationTimestamp / 1000
+		ns := (i.ExpirationTimestamp % 1000) * 1000_000
+		expiryTime := time.Unix(seconds, ns).UTC()
+		expiryStr := expiryTime.Format("2006-01-02 15:04:05")
+
 		o := rainbow.Options{
-			Name:                i.InstrumentName,
-			Type:                strings.ToUpper(i.OptionType),
-			Asset:               i.BaseCurrency,
-			ExpirationTimestamp: i.ExpirationTimestamp,
-			Strike:              i.Strike,
-			ExchangeType:        "CEX",
-			Chain:               "None",
-			Layer:               "None",
-			Provider:            "Deribit",
-			Offers:              nil,
+			Name:         i.InstrumentName,
+			Type:         strings.ToUpper(i.OptionType),
+			Asset:        i.BaseCurrency,
+			Expiry:       expiryStr,
+			Strike:       i.Strike,
+			ExchangeType: "CEX",
+			Chain:        "None",
+			Layer:        "None",
+			Provider:     "Deribit",
+			Offers:       nil,
 		}
 		o.Offers = BidsAsksToOffers(result.Result.Bids, "BUY", i.QuoteCurrency)
 		o.Offers = append(o.Offers, BidsAsksToOffers(result.Result.Asks, "SELL", i.QuoteCurrency)...)
