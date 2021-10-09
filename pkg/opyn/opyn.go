@@ -4,18 +4,17 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-package main
+package opyn
 
 import (
 	"context"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/Khan/genqlient/graphql"
 )
 
-const opynURL = "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/0xfc3ac80003d8a5181e554d03983284e4341a7610-0"
+const opynURL = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
 
 type authedTransport struct {
 	key     string
@@ -27,28 +26,30 @@ func (t *authedTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	return t.wrapped.RoundTrip(req)
 }
 
-func main() {
-	key := os.Getenv("OPYN_API_KEY")
-	if key == "" {
-		log.Print("Missing GITHUB_TOKEN=<github token>")
-	}
+func Instruments() []getOptionsOtokensOToken {
+	// -- key := os.Getenv("OPYN_API_KEY")
+	// -- if key == "" {
+	// -- 	log.Print("Missing OPYN_API_KEY=<secret>")
+	// -- }
+	// --
+	// -- httpClient := http.Client{
+	// -- 	Transport: &authedTransport{
+	// -- 		key:     key,
+	// -- 		wrapped: http.DefaultTransport,
+	// -- 	},
+	// -- }
 
-	httpClient := http.Client{
-		Transport: &authedTransport{
-			key:     key,
-			wrapped: http.DefaultTransport,
-		},
-		CheckRedirect: nil,
-		Jar:           nil,
-		Timeout:       0,
-	}
-
-	graphqlClient := graphql.NewClient(opynURL, &httpClient)
+	graphqlClient := graphql.NewClient(opynURL, nil)
 
 	resp, err := getOptions(context.Background(), graphqlClient)
 	if err != nil {
-		log.Print("ERROR:", err)
+		log.Print("ERROR: ", err)
 	}
 
-	log.Print(resp)
+	if resp == nil {
+		log.Print("ERROR: resp=nil")
+		return nil
+	}
+
+	return resp.Otokens
 }

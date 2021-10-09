@@ -9,7 +9,7 @@ operations:
 generated: generated-queries.go
 
 # needed since it doesn't match the directory name:
-package: main
+package: opyn
 
 # We bind github's DateTime scalar type to Go's time.Time (which conveniently
 # already defines MarshalJSON and UnmarshalJSON).  This means genqlient will

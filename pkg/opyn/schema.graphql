@@ -24,8 +24,8 @@ type OToken {
   collateralAsset: ERC20! # address
   creator: Bytes! # address
   
-  strikePrice: BigInt!
-  expiryTimestamp: BigInt!
+  strikePrice: String!
+  expiryTimestamp: String!
   isPut: Boolean!
 
   createdAt: BigInt!
