@@ -16,6 +16,7 @@ import (
 	"github.com/streamingfast/solana-go/rpc"
 
 	"github.com/teal-finance/rainbow/pkg/deribit"
+	"github.com/teal-finance/rainbow/pkg/psyoptions"
 	"github.com/teal-finance/rainbow/pkg/zerox"
 )
 
@@ -26,7 +27,7 @@ const (
 )
 
 func main() {
-	tryOpyn()
+	tryPsyops()
 }
 
 func tryOpyn() {
@@ -71,35 +72,24 @@ func tryDeribit() {
 	spew.Dump(orderBook[0].Offers)
 }
 
-func testPsyops() {
-	serumMarketAddresses := []string{
-		"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
-		"7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",
-		"9ugAWZCSgUKjL11fJE9Zjn4QVTdTkAkSLgPu9ZC8mcfD",
-		"ACdjLA5wPk31eUEqra9BFQ3MTXbHqZfdM1TRQPX8Hi28",
-	}
-	/*serumDevnetAddresses := []string{
-		"B6VGQiFN7auykkDgyJfNibkqRwth7dWzxS6w6TjUxmmD",
-		"49vNyNhxq9wp96hYtKHtGM6dvbVPzH31WMzMmNwfdEEr",
-		"A1puENk4nxMwCPhtT9HT28nDU8CTE5uSFLL7RhdrPD4s",
-		"2wriXhTCsUwBvfyYch8X6J8pLW797Vm8Thsz4xRZh1Yb",
-	}*/
+func tryPsyops() {
+	serumMarketAddresses := psyoptions.Instruments("BTC")
 	client := rpc.NewClient(mainnet)
 	// client := rpc.NewClient(devnet)
 
-	pubKey := solana.MustPublicKeyFromBase58(serumMarketAddresses[1])
-	// pubKey := solana.MustPublicKeyFromBase58(serumDevnetAddresses[2])
+	pubKey := solana.MustPublicKeyFromBase58(serumMarketAddresses[2])
 
-	out, err := serum.FetchMarket(context.TODO(), client, pubKey)
+	ctx := context.TODO()
+	out, err := serum.FetchMarket(ctx, client, pubKey)
 	if err != nil {
 		panic(err)
 	}
 
-	spew.Dump(out)
+	//spew.Dump(out)
 
 	fmt.Print("asks ", out.Market.GetAsks(), "\n\n\n")
 
-	orders, err := serum.FetchOpenOrders(context.TODO(), client, out.Market.GetAsks())
+	orders, err := serum.FetchOpenOrders(ctx, client, out.Market.GetAsks())
 	if err != nil {
 		panic(err)
 	}
@@ -109,22 +99,29 @@ func testPsyops() {
 
 	pubKey = solana.MustPublicKeyFromBase58(normalserummarket)
 
-	out, err = serum.FetchMarket(context.TODO(), client, pubKey)
+	out, err = serum.FetchMarket(ctx, client, pubKey)
 	if err != nil {
 		panic(err)
 	}
 
-	orders, err = serum.FetchOpenOrders(context.TODO(), client, out.Market.GetAsks())
+	orders, err = serum.FetchOpenOrders(ctx, client, out.Market.GetAsks())
 	if err != nil {
 		panic(err)
 	}
-
-	var index uint32
-	for index = 0; index < 40; index++ {
-		order := orders.OpenOrders.GetOrder(index)
-		// spew.Dump(firstOrder)
-		fmt.Println("price", order.Price())
-		fmt.Println("seqnum", order.SeqNum())
-		fmt.Println("side ", order.Side)
+	/*
+		var index uint32
+		for index = 0; index < 2; index++ {
+			order := orders.OpenOrders.GetOrder(index)
+			// spew.Dump(firstOrder)
+			fmt.Println("price", order.Price())
+			fmt.Println("seqnum", order.SeqNum())
+			fmt.Println("side ", order.Side)
+		}*/
+	offers, total, err := psyoptions.BidsAsksToOffers(ctx, out, client, out.Market.GetAsks(), true, "SELL")
+	if err != nil {
+		panic(err)
 	}
+	fmt.Println("total ", total)
+	spew.Dump(offers[0:2])
+
 }

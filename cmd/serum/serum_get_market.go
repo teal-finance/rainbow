@@ -22,6 +22,7 @@ import (
 	"math/big"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/ryanuber/columnize"
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"
@@ -121,6 +122,7 @@ func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 			},
 		)
 	}
+	spew.Dump(out)
 	return out, totalSize, nil
 }
 
