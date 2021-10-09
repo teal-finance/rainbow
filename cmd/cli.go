@@ -26,6 +26,12 @@ const (
 )
 
 func main() {
+	parseFlags()
+
+	if *port != "" && *port != "no" {
+		runAPIServer()
+	}
+
 	tryOpyn()
 }
 
