@@ -3,7 +3,7 @@ package zerox
 const OpynQuoteCurrency = "USDC"
 
 type Opyn struct {
-	ID     string //0x id
+	ID     string // 0x id
 	Name   string // ASSET-DATE-Strike-OptionsType
 	Type   string // CALL or PUT
 	Asset  string // ETH, BTC, SOL
@@ -15,6 +15,7 @@ func Opynmarket(coin string) []Opyn {
 	if coin != "ETH" {
 		return []Opyn{}
 	}
+
 	return []Opyn{
 		{
 			ID:     "0x16aab4738843fb2d9eafc8fd261488797bf0df29",
@@ -41,5 +42,4 @@ func Opynmarket(coin string) []Opyn {
 			Strike: 3800,
 		},
 	}
-
 }

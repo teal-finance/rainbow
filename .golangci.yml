@@ -57,7 +57,6 @@ linters:
     - staticcheck      # Staticcheck is a go vet on steroids, applying a ton of static analysis checks
     - structcheck      # Finds unused struct fields
     - stylecheck       # Stylecheck is a replacement for golint
-    - tagliatelle      # Checks the struct tags.
     - testpackage      # linter that makes you use a separate _test package
     - thelper          # thelper detects golang test helpers without t.Helper() call and checks the consistency of test helpers
     - tparallel        # tparallel detects inappropriate usage of t.Parallel() method in your Go test codes
@@ -83,6 +82,7 @@ linters:
     - gomnd            # An analyzer to detect magic numbers.
     - lll              # Reports long lines
     - nlreturn         # nlreturn checks for a new line before return and branch statements to increase code clarity
+    - tagliatelle      # Checks the struct tags.
     - wrapcheck        # Checks that errors returned from external packages are wrapped
 
 linters-settings:
@@ -98,7 +98,7 @@ linters-settings:
   tagliatelle:
     case:
       rules:
-        json: snake
+        json: snake # should also be "goCamel"
 run:
   skip-files:
     - cmd/serum/serum_get_market.go

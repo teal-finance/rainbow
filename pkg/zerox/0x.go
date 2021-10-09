@@ -45,8 +45,7 @@ func GetOrderBook(instruments []Opyn, provider string) ([]rainbow.Options, error
 
 		defer resp.Body.Close()
 
-		result := ZeroxOrderBook{}
-
+		var result OrderBook
 		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
 			return []rainbow.Options{}, fmt.Errorf(" order book : %w", err)
 		}
@@ -63,10 +62,12 @@ func GetOrderBook(instruments []Opyn, provider string) ([]rainbow.Options, error
 			Provider:     provider,
 			Offers:       nil,
 		}
+
 		b, err := BidsAsksToOffers(result.Bids.Records, "BUY", OpynQuoteCurrency)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}
+
 		a, err := BidsAsksToOffers(result.Asks.Records, "SELL", OpynQuoteCurrency)
 		if err != nil {
 			return []rainbow.Options{}, err
@@ -82,7 +83,7 @@ func GetOrderBook(instruments []Opyn, provider string) ([]rainbow.Options, error
 	return orderBook, nil
 }
 
-type ZeroxOrderBook struct {
+type OrderBook struct {
 	Bids struct {
 		Total   int     `json:"total"`
 		Page    int     `json:"page"`
@@ -127,68 +128,76 @@ type Records []struct {
 	} `json:"metaData"`
 }
 
-//The result is false because I don't properly take into account the decimals
-//Use GetQuote instead
+// The result is false because I don't properly take into account the decimals
+// Use GetQuote instead.
 func BidsAsksToOffers(records Records, side, quote string) ([]rainbow.Offer, error) {
-	offers := []rainbow.Offer{}
+	offers := make([]rainbow.Offer, 0, len(records))
+
 	for _, r := range records {
 		takerAmount, err := strconv.ParseFloat(r.Order.TakerAmount, 64)
 		if err != nil {
 			return []rainbow.Offer{}, err
 		}
+
 		makerAmount, err := strconv.ParseFloat(r.Order.MakerAmount, 64)
 		if err != nil {
 			return []rainbow.Offer{}, err
 		}
-		offers = append(offers, rainbow.Offer{Side: side, Price: makerAmount / takerAmount, Quantity: takerAmount * math.Pow(10, -float64(OTokensDecimals)), QuoteCurrency: quote})
 
+		offers = append(
+			offers,
+			rainbow.Offer{
+				Side:          side,
+				Price:         makerAmount / takerAmount,
+				Quantity:      takerAmount * math.Pow(10, -float64(OTokensDecimals)),
+				QuoteCurrency: quote,
+			})
 	}
-	return offers, nil
 
+	return offers, nil
 }
 
 // GetQuote you can get the quote in the side you want with 0x
 // but for us we will focus on always buying or selling a certain amount of options
 // so Asks/SELL side (so you send a buy inquiry): sellToken=usdc, buyToken=option address
-// so Bids/BUY side (so you send a sell inquiry): sellToken=option address, buyToken=usdc
-func GetQuote(side, sellToken, buyToken string, amount float64, decimals int) (ZeroxQuote, error) {
-	var baseURL string
+// so Bids/BUY side (so you send a sell inquiry): sellToken=option address, buyToken=usdc.
+func GetQuote(side, sellToken, buyToken string, amount float64, decimals int) (Quote, error) {
+	baseURL := "https://api.0x.org/swap/v1/quote?sellToken=" + sellToken + "&buyToken=" + buyToken
 	if side == "SELL" {
-		baseURL = "https://api.0x.org/swap/v1/quote?sellToken=" + sellToken +
-			"&buyToken=" + buyToken + "&buyAmount=" + ConvertToSolidity(amount, decimals)
-
-	} else if side == "BUY" {
-		baseURL = "https://api.0x.org/swap/v1/quote?sellToken=" + sellToken +
-			"&buyToken=" + buyToken + "&sellAmount=" + ConvertToSolidity(amount, decimals)
+		baseURL += "&buyAmount="
+	} else {
+		baseURL += "&sellAmount="
 	}
+	baseURL += ConvertToSolidity(amount, decimals)
 
 	fmt.Println("swap url ", baseURL)
+
 	resp, err := http.Get(baseURL)
 	if err != nil {
-		return ZeroxQuote{}, err
+		return Quote{}, err
 	}
+
 	defer resp.Body.Close()
 
-	result := ZeroxQuote{}
-
+	var result Quote
 	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return ZeroxQuote{}, fmt.Errorf(" order book : %w", err)
+		return Quote{}, fmt.Errorf(" order book : %w", err)
 	}
 
 	return result, nil
-
 }
 
 func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64) ([]rainbow.Options, error) {
 	orderBook := []rainbow.Options{}
+
 	var decimals int
 	var quote string
 	if provider == "Opyn" {
 		decimals = OTokensDecimals
 		quote = OpynQuoteCurrency
 	}
-	for _, i := range instruments {
 
+	for _, i := range instruments {
 		o := rainbow.Options{
 			Name:         i.Name,
 			Type:         i.Type,
@@ -201,6 +210,7 @@ func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64)
 			Provider:     provider,
 			Offers:       nil,
 		}
+
 		b, err := GetQuote("BUY", i.ID, USDC, amount, decimals)
 		if err != nil {
 			return []rainbow.Options{}, err
@@ -212,6 +222,7 @@ func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64)
 				fmt.Println("price ")
 				return []rainbow.Options{}, err
 			}
+
 			o.Offers = append(o.Offers, rainbow.Offer{
 				Side:          "BUY",
 				Price:         price,
@@ -231,11 +242,13 @@ func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}
+
 		if a.Price != "" {
 			price, err := strconv.ParseFloat(a.Price, 64)
 			if err != nil {
 				return []rainbow.Options{}, err
 			}
+
 			o.Offers = append(o.Offers, rainbow.Offer{
 				Side:          "SELL",
 				Price:         price,
@@ -253,12 +266,12 @@ func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64)
 
 		orderBook = append(orderBook, o)
 	}
+
 	return orderBook, nil
 }
 
 func ConvertToSolidity(value float64, decimals int) string {
 	return strconv.Itoa(int(value * math.Pow10(decimals)))
-
 }
 
 func ConvertFromSolidity(s string, decimals int) (float64, error) {
@@ -266,13 +279,13 @@ func ConvertFromSolidity(s string, decimals int) (float64, error) {
 	if err != nil {
 		return 0.0, err
 	}
+
 	value *= math.Pow10(-decimals)
 
 	return value, nil
-
 }
 
-type ZeroxQuote struct {
+type Quote struct {
 	ChainID            int    `json:"chainId"`
 	Price              string `json:"price"`
 	GuaranteedPrice    string `json:"guaranteedPrice"`

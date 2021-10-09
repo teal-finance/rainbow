@@ -9,7 +9,6 @@ package opyn
 import (
 	"context"
 	"log"
-	"net/http"
 
 	"github.com/Khan/genqlient/graphql"
 )

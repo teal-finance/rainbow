@@ -3,6 +3,7 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
+
 package psyoptions
 
 import (
@@ -10,11 +11,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/teal-finance/rainbow"
-
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
+
+	"github.com/teal-finance/rainbow"
 )
 
 const listMarketsURL = "wss://api.psyoptions.io/v1/graphql"
@@ -32,8 +33,10 @@ func Instruments(coin string) []string {
 			"8fFcWuVaZSKoge4DCpMcNrR5nNXF2pbXCfBUxkMomgr5",
 		}
 	}
-	//"BTC"
-	return []string{"8fhiAYm41RwtiX8WusCSpY617GWPt2LwUnCQcEeer78o",
+
+	// else: "BTC"
+	return []string{
+		"8fhiAYm41RwtiX8WusCSpY617GWPt2LwUnCQcEeer78o",
 		"6at26sVk8vTYtLh4YDKvje4PDdgFJsNHHyoGw87WNszP",
 		"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
 		"7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",
@@ -56,6 +59,7 @@ func GetOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 	o.Items(desc, func(node *serum.SlabLeafNode) error {
 		quantity := big.NewInt(int64(node.Quantity))
 		price := node.GetPrice()
+
 		if len(levels) > 0 && levels[len(levels)-1][0].Cmp(price) == 0 {
 			current := levels[len(levels)-1][1]
 			levels[len(levels)-1][1] = new(big.Int).Add(current, quantity)
@@ -64,22 +68,26 @@ func GetOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 		} else {
 			levels = append(levels, []*big.Int{price, quantity})
 		}
+
 		return nil
 	})
 
 	totalSize = big.NewFloat(0)
+
 	for _, level := range levels {
-		//price := market.PriceLotsToNumber(level[0]) TODO
+		// price := market.PriceLotsToNumber(level[0]) TODO
 		qty := market.BaseSizeLotsToNumber(level[1])
 		totalSize = new(big.Float).Add(totalSize, qty)
+
 		offers = append(offers,
 			rainbow.Offer{
-				Price:         1.0, //price, TODO
-				Quantity:      2.0, //qty, TODO
+				Price:         1.0, // price, TODO
+				Quantity:      2.0, // qty, TODO
 				QuoteCurrency: "USD",
 				Side:          side,
 			},
 		)
 	}
+
 	return offers, totalSize, nil
 }

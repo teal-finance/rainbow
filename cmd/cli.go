@@ -28,11 +28,12 @@ const (
 func main() {
 	tryOpyn()
 }
+
 func tryOpyn() {
-	intruments := zerox.Instruments("ETH")
-	//fmt.Println(markets)
-	//spew.Dump(markets[1:2])
-	orderBook, err := zerox.GetOrderBook(intruments[1:2], "Opyn")
+	instruments := zerox.Instruments("ETH")
+	// fmt.Println(markets)
+	// spew.Dump(markets[1:2])
+	orderBook, err := zerox.GetOrderBook(instruments[1:2], "Opyn")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -42,11 +43,12 @@ func tryOpyn() {
 
 	fmt.Println(zerox.ConvertToSolidity(10.0, 8))
 
-	orderBook, err = zerox.GetAggregatedOrderBook(intruments, "Opyn", 2.0)
+	orderBook, err = zerox.GetAggregatedOrderBook(instruments, "Opyn", 2.0)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
 	spew.Dump(orderBook)
 }
 
