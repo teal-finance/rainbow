@@ -22,14 +22,7 @@ func Instruments(coin string) ([]Instrument, error) {
 	opts := "&expired=false&kind=option"
 	fmt.Println(baseURL + coin + opts)
 
-	clt := http.Client{
-		Transport:     nil,
-		CheckRedirect: nil,
-		Jar:           nil,
-		Timeout:       0,
-	}
-
-	resp, err := clt.Get(baseURL + coin + opts)
+	resp, err := http.Get(baseURL + coin + opts)
 	if err != nil {
 		return []Instrument{}, err
 	}
@@ -70,15 +63,9 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Options, er
 	orderBook := []rainbow.Options{}
 	// deribitOrderBook := []DeribitOrderBook{}
 	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
-	clt := http.Client{
-		Transport:     nil,
-		CheckRedirect: nil,
-		Jar:           nil,
-		Timeout:       0,
-	}
 
 	for _, i := range instruments {
-		resp, err := clt.Get(baseURL + i.InstrumentName)
+		resp, err := http.Get(baseURL + i.InstrumentName)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}

@@ -35,16 +35,10 @@ func GetOrderBook(instruments []Opyn, provider string) ([]rainbow.Options, error
 	baseURL := "https://api.0x.org/orderbook/v1?quoteToken="
 	opts := "&baseToken=" + USDC
 
-	clt := http.Client{
-		Transport:     nil,
-		CheckRedirect: nil,
-		Jar:           nil,
-		Timeout:       0,
-	}
 	orderBook := []rainbow.Options{}
 
 	for _, i := range instruments {
-		resp, err := clt.Get(baseURL + i.ID + opts)
+		resp, err := http.Get(baseURL + i.ID + opts)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}
@@ -158,25 +152,18 @@ func BidsAsksToOffers(records Records, side, quote string) ([]rainbow.Offer, err
 // so Asks/SELL side (so you send a buy inquiry): sellToken=usdc, buyToken=option address
 // so Bids/BUY side (so you send a sell inquiry): sellToken=option address, buyToken=usdc
 func GetQuote(side, sellToken, buyToken string, amount float64, decimals int) (ZeroxQuote, error) {
-	clt := http.Client{
-		Transport:     nil,
-		CheckRedirect: nil,
-		Jar:           nil,
-		Timeout:       0,
-	}
 	var baseURL string
 	if side == "SELL" {
 		baseURL = "https://api.0x.org/swap/v1/quote?sellToken=" + sellToken +
 			"&buyToken=" + buyToken + "&buyAmount=" + ConvertToSolidity(amount, decimals)
 
 	} else if side == "BUY" {
-
 		baseURL = "https://api.0x.org/swap/v1/quote?sellToken=" + sellToken +
 			"&buyToken=" + buyToken + "&sellAmount=" + ConvertToSolidity(amount, decimals)
 	}
 
 	fmt.Println("swap url ", baseURL)
-	resp, err := clt.Get(baseURL)
+	resp, err := http.Get(baseURL)
 	if err != nil {
 		return ZeroxQuote{}, err
 	}

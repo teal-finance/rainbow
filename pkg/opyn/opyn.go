@@ -16,29 +16,7 @@ import (
 
 const opynURL = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
 
-type authedTransport struct {
-	key     string
-	wrapped http.RoundTripper
-}
-
-func (t *authedTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.Header.Set("Authorization", "bearer "+t.key)
-	return t.wrapped.RoundTrip(req)
-}
-
 func Instruments() []getOptionsOtokensOToken {
-	// -- key := os.Getenv("OPYN_API_KEY")
-	// -- if key == "" {
-	// -- 	log.Print("Missing OPYN_API_KEY=<secret>")
-	// -- }
-	// --
-	// -- httpClient := http.Client{
-	// -- 	Transport: &authedTransport{
-	// -- 		key:     key,
-	// -- 		wrapped: http.DefaultTransport,
-	// -- 	},
-	// -- }
-
 	graphqlClient := graphql.NewClient(opynURL, nil)
 
 	resp, err := getOptions(context.Background(), graphqlClient)
