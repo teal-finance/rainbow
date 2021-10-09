@@ -1,5 +1,6 @@
 # Rainbow
-![rainbow](./rainbow.jpg)
+
+![rainbow](./logo/small.png)
 
 **Rainbow** is a dashboard for Decentralized Finance Options trading.
 It's developed during Solana's Ignition & Ethereum's EthGlobal Hackathons
