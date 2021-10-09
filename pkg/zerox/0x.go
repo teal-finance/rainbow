@@ -27,8 +27,7 @@ const (
 	WBTCDEcimals    = 8
 )
 
-func GetMarkets(coin string) []Opyn {
-
+func Instruments(coin string) []Opyn {
 	return Opynmarket(coin)
 }
 

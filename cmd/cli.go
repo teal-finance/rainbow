@@ -29,10 +29,10 @@ func main() {
 	tryOpyn()
 }
 func tryOpyn() {
-	markets := zerox.GetMarkets("ETH")
+	intruments := zerox.Instruments("ETH")
 	//fmt.Println(markets)
 	//spew.Dump(markets[1:2])
-	orderBook, err := zerox.GetOrderBook(markets[1:2], "Opyn")
+	orderBook, err := zerox.GetOrderBook(intruments[1:2], "Opyn")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -42,7 +42,7 @@ func tryOpyn() {
 
 	fmt.Println(zerox.ConvertToSolidity(10.0, 8))
 
-	orderBook, err = zerox.GetAggregatedOrderBook(markets, "Opyn", 2.0)
+	orderBook, err = zerox.GetAggregatedOrderBook(intruments, "Opyn", 2.0)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -51,16 +51,16 @@ func tryOpyn() {
 }
 
 func tryDeribit() {
-	list, err := deribit.GetMarkets("BTC")
+	instruments, err := deribit.Instruments("BTC")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fmt.Println(list[10])
-	spew.Dump(list[10])
+	fmt.Println(instruments[10])
+	spew.Dump(instruments[10])
 
-	orderBook, err := deribit.GetOrderBook(list[10:15], 5)
+	orderBook, err := deribit.GetOrderBook(instruments[10:15], 5)
 	if err != nil {
 		fmt.Println(err)
 		return

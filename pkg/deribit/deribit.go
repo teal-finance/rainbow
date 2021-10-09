@@ -17,7 +17,7 @@ import (
 	"github.com/teal-finance/rainbow"
 )
 
-func GetMarkets(coin string) ([]Instrument, error) {
+func Instruments(coin string) ([]Instrument, error) {
 	baseURL := "https://deribit.com/api/v2/public/get_instruments?currency="
 	opts := "&expired=false&kind=option"
 	fmt.Println(baseURL + coin + opts)
