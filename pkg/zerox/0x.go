@@ -9,6 +9,8 @@ package zerox
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"math"
 	"net/http"
 	"strconv"
@@ -27,35 +29,83 @@ const (
 	WBTCDEcimals    = 8
 )
 
-func Instruments(coin string) []Opyn {
-	return Opynmarket(coin)
+var decimalsToPower10 = map[int]float64{
+	1:  1,
+	2:  10,
+	3:  100,
+	4:  1000,
+	5:  10000,
+	6:  100000,
+	7:  1000000,
+	8:  10000000,
+	9:  100000000,
+	10: 1000000000,
+	11: 10000000000,
+	12: 100000000000,
 }
 
-func GetOrderBook(instruments []Opyn, provider string) ([]rainbow.Options, error) {
+func extract(i getOptionsOtokensOToken) (tipe, expiry string, strike float64) {
+	tipe = "CALL"
+	if i.IsPut {
+		tipe = "PUT"
+	}
+
+	seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
+	expiryTime := time.Unix(seconds, 0).UTC()
+	expiry = expiryTime.Format("2006-01-02 15:04:05")
+	if err != nil {
+		log.Printf("WARN Expiry: %v from %+v", err, i)
+		expiry = ""
+	}
+
+	strikeInt, err := strconv.ParseInt(i.StrikePrice, 10, 0)
+	if err != nil {
+		log.Printf("WARN Strike: %v from %+v", err, i)
+	} else {
+		denominateur, ok := decimalsToPower10[i.StrikeAsset.Decimals]
+		if ok {
+			strike = float64(strikeInt) / denominateur
+		}
+	}
+
+	return
+}
+
+func GetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rainbow.Options, error) {
 	baseURL := "https://api.0x.org/orderbook/v1?quoteToken="
 	opts := "&baseToken=" + USDC
 
 	orderBook := []rainbow.Options{}
 
 	for _, i := range instruments {
-		resp, err := http.Get(baseURL + i.ID + opts)
+		resp, err := http.Get(baseURL + i.Id + opts)
 		if err != nil {
-			return []rainbow.Options{}, err
+			log.Printf("WARN Get base=%v id=%v opts=%v: %v", baseURL, i.Id, opts, err)
+			continue
 		}
 
-		defer resp.Body.Close()
+		j, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
+
+		if err != nil {
+			log.Print("WARN cannot ReadAll: ", err)
+			continue
+		}
 
 		var result OrderBook
-		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			return []rainbow.Options{}, fmt.Errorf(" order book : %w", err)
+		if err = json.Unmarshal(j, &result); err != nil {
+			log.Printf("WARN %v when json.Unmarshal: %v", err, string(j))
+			continue
 		}
+
+		tipe, expiry, strike := extract(i)
 
 		o := rainbow.Options{
 			Name:         i.Name,
-			Type:         i.Type,
-			Asset:        i.Asset,
-			Expiry:       i.Expiry,
-			Strike:       i.Strike,
+			Type:         tipe,
+			Asset:        i.CollateralAsset.Symbol,
+			Expiry:       expiry,
+			Strike:       strike,
 			ExchangeType: "DEX",
 			Chain:        "Ethereum",
 			Layer:        "L1",
@@ -63,12 +113,12 @@ func GetOrderBook(instruments []Opyn, provider string) ([]rainbow.Options, error
 			Offers:       nil,
 		}
 
-		b, err := BidsAsksToOffers(result.Bids.Records, "BUY", OpynQuoteCurrency)
+		b, err := BidsAsksToOffers(result.Bids.Records, "BUY", i.UnderlyingAsset.Symbol)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}
 
-		a, err := BidsAsksToOffers(result.Asks.Records, "SELL", OpynQuoteCurrency)
+		a, err := BidsAsksToOffers(result.Asks.Records, "SELL", i.UnderlyingAsset.Symbol)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}
@@ -177,33 +227,40 @@ func GetQuote(side, sellToken, buyToken string, amount float64, decimals int) (Q
 		return Quote{}, err
 	}
 
-	defer resp.Body.Close()
+	j, err := io.ReadAll(resp.Body)
+	resp.Body.Close()
+
+	if err != nil {
+		return Quote{}, fmt.Errorf("cannot ReadAll quote from Ox: %w", err)
+	}
 
 	var result Quote
-	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return Quote{}, fmt.Errorf(" order book : %w", err)
+	if err = json.Unmarshal(j, &result); err != nil {
+		return Quote{}, fmt.Errorf("cannot json.Unmarshal quote from Ox: %w in: %v", err, string(j))
 	}
 
 	return result, nil
 }
 
-func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64) ([]rainbow.Options, error) {
+func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider string, amount float64) ([]rainbow.Options, error) {
 	orderBook := []rainbow.Options{}
 
-	var decimals int
-	var quote string
-	if provider == "Opyn" {
-		decimals = OTokensDecimals
-		quote = OpynQuoteCurrency
-	}
-
 	for _, i := range instruments {
+		tipe, expiry, strike := extract(i)
+
+		var decimals int
+		var quote string
+		if provider == "Opyn" {
+			decimals = OTokensDecimals
+			quote = i.UnderlyingAsset.Symbol
+		}
+
 		o := rainbow.Options{
 			Name:         i.Name,
-			Type:         i.Type,
-			Asset:        i.Asset,
-			Expiry:       i.Expiry,
-			Strike:       i.Strike,
+			Type:         tipe,
+			Asset:        i.CollateralAsset.Symbol,
+			Expiry:       expiry,
+			Strike:       strike,
 			ExchangeType: "DEX",
 			Chain:        "Ethereum",
 			Layer:        "L1",
@@ -211,7 +268,7 @@ func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64)
 			Offers:       nil,
 		}
 
-		b, err := GetQuote("BUY", i.ID, USDC, amount, decimals)
+		b, err := GetQuote("BUY", i.Id, USDC, amount, decimals)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}
@@ -238,7 +295,7 @@ func GetAggregatedOrderBook(instruments []Opyn, provider string, amount float64)
 			})
 		}
 
-		a, err := GetQuote("SELL", USDC, i.ID, amount, decimals)
+		a, err := GetQuote("SELL", USDC, i.Id, amount, decimals)
 		if err != nil {
 			return []rainbow.Options{}, err
 		}

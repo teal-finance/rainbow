@@ -36,10 +36,10 @@ func main() {
 }
 
 func tryOpyn() {
-	instruments := zerox.Instruments("ETH")
+	instruments := zerox.Instruments()
 	// fmt.Println(markets)
 	// spew.Dump(markets[1:2])
-	orderBook, err := zerox.GetOrderBook(instruments[1:2], "Opyn")
+	orderBook, err := zerox.GetOrderBook(instruments, "Opyn")
 	if err != nil {
 		fmt.Println(err)
 		return
