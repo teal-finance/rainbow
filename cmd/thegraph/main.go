@@ -9,10 +9,10 @@ package main
 import (
 	"log"
 
-	"github.com/teal-finance/rainbow/pkg/opyn"
+	"github.com/teal-finance/rainbow/pkg/zerox"
 )
 
 func main() {
-	options := opyn.Instruments()
+	options := zerox.Instruments()
 	log.Print("Options: ", options)
 }

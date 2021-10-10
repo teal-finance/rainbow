@@ -15,6 +15,7 @@ linters:
     - exhaustive       # check exhaustiveness of enum switch statements
     - exhaustivestruct # Checks if all struct's fields are initialized
     - exportloopref    # checks for pointers to enclosing loop variables
+    - forbidigo        # Forbids identifiers - we use log.Print
     - forcetypeassert  # finds forced type assertions
     - funlen           # Tool for detection of long functions
     - gci              # Gci control golang package import order and make it always deterministic.
@@ -78,7 +79,6 @@ linters:
     - scopelint        # v1.39 has been replaced by exportloopref (checks for unpinned variables in go programs)
 
     # ANNOYING
-    - forbidigo        # Forbids identifiers - we use fmt.Print
     - gomnd            # An analyzer to detect magic numbers.
     - lll              # Reports long lines
     - nlreturn         # nlreturn checks for a new line before return and branch statements to increase code clarity

@@ -19,6 +19,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/big"
 	"strings"
 
@@ -60,21 +61,21 @@ func runE(ctx context.Context, serumMarketAddresses []string) error {
 	output = append(output, outputOrderBook(bids, totalSize, false)...)
 	output = append(output, "Bids")
 
-	fmt.Println(market.Name)
+	log.Println(market.Name)
 
-	fmt.Println("Request RequestQueue: ", market.Market.GetRequestQueue())
-	fmt.Println("Event RequestQueue: ", market.Market.GetEventQueue())
+	log.Println("Request RequestQueue: ", market.Market.GetRequestQueue())
+	log.Println("Event RequestQueue: ", market.Market.GetEventQueue())
 
-	fmt.Println("Base")
-	fmt.Println("base mint", market.Market.GetBaseMint().String())
-	fmt.Println("base lot size", market.Market.GetBaseLotSize())
+	log.Println("Base")
+	log.Println("base mint", market.Market.GetBaseMint().String())
+	log.Println("base lot size", market.Market.GetBaseLotSize())
 
-	fmt.Println("")
-	fmt.Println("Quote")
-	fmt.Println("quote mint", market.Market.GetQuoteMint().String())
-	fmt.Println("quote lot size", market.Market.GetQuoteLotSize())
+	log.Println("")
+	log.Println("Quote")
+	log.Println("quote mint", market.Market.GetQuoteMint().String())
+	log.Println("quote lot size", market.Market.GetQuoteLotSize())
 
-	fmt.Println(columnize.Format(output, nil))
+	log.Println(columnize.Format(output, nil))
 	return nil
 }
 

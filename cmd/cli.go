@@ -8,7 +8,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/streamingfast/solana-go"
@@ -36,22 +36,22 @@ func main() {
 }
 
 func tryOpyn() {
-	instruments := zerox.Instruments("ETH")
-	// fmt.Println(markets)
+	instruments := zerox.Instruments()
+	// log.Println(markets)
 	// spew.Dump(markets[1:2])
-	orderBook, err := zerox.GetOrderBook(instruments[1:2], "Opyn")
+	orderBook, err := zerox.GetOrderBook(instruments, "Opyn")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
 	spew.Dump(orderBook[0])
 
-	fmt.Println(zerox.ConvertToSolidity(10.0, 8))
+	log.Println(zerox.ConvertToSolidity(10.0, 8))
 
 	orderBook, err = zerox.GetAggregatedOrderBook(instruments, "Opyn", 2.0)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
@@ -61,16 +61,16 @@ func tryOpyn() {
 func tryDeribit() {
 	instruments, err := deribit.Instruments("BTC")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
-	fmt.Println(instruments[10])
+	log.Println(instruments[10])
 	spew.Dump(instruments[10])
 
 	orderBook, err := deribit.GetOrderBook(instruments[10:15], 5)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
@@ -103,7 +103,7 @@ func testPsyops() {
 
 	spew.Dump(out)
 
-	fmt.Print("asks ", out.Market.GetAsks(), "\n\n\n")
+	log.Print("asks ", out.Market.GetAsks(), "\n\n\n")
 
 	orders, err := serum.FetchOpenOrders(context.TODO(), client, out.Market.GetAsks())
 	if err != nil {
@@ -111,7 +111,7 @@ func testPsyops() {
 	}
 
 	// spew.Dump(orders)
-	fmt.Println(orders.OpenOrders.GetOrder(0))
+	log.Println(orders.OpenOrders.GetOrder(0))
 
 	pubKey = solana.MustPublicKeyFromBase58(normalserummarket)
 
@@ -129,8 +129,8 @@ func testPsyops() {
 	for index = 0; index < 40; index++ {
 		order := orders.OpenOrders.GetOrder(index)
 		// spew.Dump(firstOrder)
-		fmt.Println("price", order.Price())
-		fmt.Println("seqnum", order.SeqNum())
-		fmt.Println("side ", order.Side)
+		log.Println("price", order.Price())
+		log.Println("seqnum", order.SeqNum())
+		log.Println("side ", order.Side)
 	}
 }
