@@ -3,8 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
-	"github.com/davecgh/go-spew/spew"
+	//"github.com/davecgh/go-spew/spew"
+
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/teal-finance/rainbow"
 	"github.com/teal-finance/rainbow/pkg/deribit"
 	"github.com/teal-finance/rainbow/pkg/psyoptions"
@@ -13,9 +16,32 @@ import (
 
 func main() {
 
-	spew.Dump(all())
-	//spew.Dump(tryDeribit())
+	//spew.Dump(all())
+	options, err := all() //tryDeribit() //tryOpyn() //tryDeribit()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	PrintOptions(options)
 
+}
+func PrintOptions(options []rainbow.Options) {
+	t := newTable(fmt.Sprintf("Featured NFT (%v)", len(options)))
+	t.AppendHeader(table.Row{"Provider", "Asset", "Instrument"})
+	for _, option := range options {
+		t.AppendRows([]table.Row{{option.Provider, option.Asset, option.Name}})
+	}
+	t.SortBy([]table.SortBy{
+		{Name: "Asset", Mode: table.Dsc},
+	})
+	t.Render()
+}
+func newTable(title string) table.Writer {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.SetStyle(table.StyleLight)
+	t.SetTitle(title)
+	return t
 }
 
 func tryOpyn() ([]rainbow.Options, error) {
