@@ -23,6 +23,8 @@ type PsyOptions struct {
 	PsyOptionsProgramId          string
 }
 
+//TODO somehting is wrong here
+//use in .Name() when fixed
 func (psy PsyOptions) Expiration() string {
 	seconds := psy.Expiry / 1000
 	ns := (psy.Expiry % 1000) * 1000_000
@@ -33,12 +35,11 @@ func (psy PsyOptions) Expiration() string {
 
 func (psy PsyOptions) Asset() string {
 	var asset string
-	switch psy.SerumMarketAddress {
-	case ETHAddress:
+	if psy.QuoteAssetMint == ETHAddress || psy.UnderlyingAssetMint == ETHAddress {
 		asset = "ETH"
-	case BTCAddress:
+	} else if psy.QuoteAssetMint == BTCAddress || psy.UnderlyingAssetMint == BTCAddress {
 		asset = "BTC"
-	case SolAddress:
+	} else if psy.QuoteAssetMint == SolAddress || psy.UnderlyingAssetMint == SolAddress {
 		asset = "SOL"
 	}
 	return asset
@@ -72,8 +73,8 @@ func (psy PsyOptions) Strike() float64 {
 }
 
 func (psy PsyOptions) Name() string {
-	return psy.Asset() + "-" + psy.Expiration() + "-" +
-		fmt.Sprintf("%f.0", psy.Strike) + psy.Type()
+	return psy.Asset() + "-" + Expiration + "-" +
+		fmt.Sprintf("%.0f", psy.Strike()) + "-" + psy.Type()
 
 }
 

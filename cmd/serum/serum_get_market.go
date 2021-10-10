@@ -110,6 +110,8 @@ func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 		panic(err)
 	}
 
+	spew.Dump(levels)
+
 	totalSize = big.NewFloat(0)
 	for _, level := range levels {
 		price := market.PriceLotsToNumber(level[0])

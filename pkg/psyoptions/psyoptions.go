@@ -21,7 +21,7 @@ import (
 const (
 	listMarketsURL   = "wss://api.psyoptions.io/v1/graphql"
 	PsyQuoteCurrency = "USDC"
-	mainnet          = "https://api.mainnet-beta.solana.com"
+	mainnet          = "https://solana-api.projectserum.com" //https://api.mainnet-beta.solana.com"
 	devnet           = "https://api.devnet.solana.com"
 	Expiration       = "2021-10-29 23:59:59"
 )
@@ -83,7 +83,7 @@ func InstrumentsFromAllMarkets() (r []rainbow.Options, err error) {
 			Name:         i.Name(),
 			Type:         i.Type(),
 			Asset:        i.Asset(),
-			Expiry:       i.Expiration(),
+			Expiry:       Expiration,
 			Strike:       i.Strike(),
 			ExchangeType: "DEX",
 			Chain:        "Solana",
