@@ -358,7 +358,7 @@ func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider stri
 		var quote string
 		if provider == "Opyn" {
 			decimals = OTokensDecimals
-			quote = i.UnderlyingAsset.Symbol
+			quote = i.StrikeAsset.Symbol
 		}
 
 		o := rainbow.Options{
