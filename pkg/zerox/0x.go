@@ -58,8 +58,13 @@ func extract(i getOptionsOtokensOToken) (oType, expiry string, strike float64) {
 	} else {
 		log.Printf("WARN Expiry: %v from %+v", err, i)
 	}
+	strike, err = ConvertFromSolidity(i.StrikePrice, OTokensDecimals)
+	//thought the USDCdecimals were correct but apparently not (whatever)
+	if err != nil {
+		log.Printf("WARN Strike: %v from %+v", err, i) //TODO fail better
+	}
 
-	strikeInt, err := strconv.ParseInt(i.StrikePrice, 10, 0)
+	/*strikeInt, err := strconv.ParseInt(i.StrikePrice, 10, 0)
 	if err == nil {
 		denominateur, ok := decimalsToPower10[i.StrikeAsset.Decimals]
 		if ok {
@@ -67,7 +72,7 @@ func extract(i getOptionsOtokensOToken) (oType, expiry string, strike float64) {
 		}
 	} else {
 		log.Printf("WARN Strike: %v from %+v", err, i)
-	}
+	}*/
 
 	return
 }
@@ -364,7 +369,7 @@ func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider stri
 		o := rainbow.Options{
 			Name:         i.Name,
 			Type:         tipe,
-			Asset:        i.CollateralAsset.Symbol,
+			Asset:        i.UnderlyingAsset.Symbol,
 			Expiry:       expiry,
 			Strike:       strike,
 			ExchangeType: "DEX",
