@@ -27,7 +27,8 @@ const (
 )
 
 func main() {
-	tryPsyops()
+	//tryPsyops()
+	all()
 }
 
 func tryOpyn() {
@@ -85,43 +86,20 @@ func tryPsyops() {
 		panic(err)
 	}
 
-	//spew.Dump(out)
-
-	fmt.Print("asks ", out.Market.GetAsks(), "\n\n\n")
-
-	orders, err := serum.FetchOpenOrders(ctx, client, out.Market.GetAsks())
+	bids, totalBids, err := psyoptions.BidsAsksToOffers(ctx, out, client, out.Market.GetBids(), false, "BUY")
 	if err != nil {
 		panic(err)
 	}
-
-	// spew.Dump(orders)
-	fmt.Println(orders.OpenOrders.GetOrder(0))
-
-	pubKey = solana.MustPublicKeyFromBase58(normalserummarket)
-
-	out, err = serum.FetchMarket(ctx, client, pubKey)
+	asks, totalAsks, err := psyoptions.BidsAsksToOffers(context.TODO(), out, client, out.Market.GetAsks(), true, "SELL")
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("total ", totalAsks+totalBids)
+	offers := append(bids, asks...)
+	spew.Dump(offers)
 
-	orders, err = serum.FetchOpenOrders(ctx, client, out.Market.GetAsks())
-	if err != nil {
-		panic(err)
-	}
-	/*
-		var index uint32
-		for index = 0; index < 2; index++ {
-			order := orders.OpenOrders.GetOrder(index)
-			// spew.Dump(firstOrder)
-			fmt.Println("price", order.Price())
-			fmt.Println("seqnum", order.SeqNum())
-			fmt.Println("side ", order.Side)
-		}*/
-	offers, total, err := psyoptions.BidsAsksToOffers(ctx, out, client, out.Market.GetAsks(), true, "SELL")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("total ", total)
-	spew.Dump(offers[0:2])
+}
 
+func all() {
+	spew.Dump(psyoptions.InstrumentsFromAllMarkets())
 }

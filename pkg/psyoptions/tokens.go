@@ -1,10 +1,23 @@
 package psyoptions
 
+const (
+	SolAddress  = "So11111111111111111111111111111111111111112"
+	SolDecimals = 9
+
+	BTCAddress  = "9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E"
+	BTCDecimals = 6
+
+	USDCAddress  = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+	USDCDecimals = 6
+	ETHAddress   = "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk"
+	EthDecimals  = 6
+)
+
 /*export const MainnetTokens: Token[] = [
   // {
   //   tokenSymbol: "SOL",
   //   tokenName: "Solana",
-  //   mintAddress: "So11111111111111111111111111111111111111112",
+  //   intAddress: "So11111111111111111111111111111111111111112",
   //   icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png",
   //   decimals: 9,
   //   defaultContractSize: 10,
