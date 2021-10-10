@@ -13,7 +13,9 @@ import (
 
 func main() {
 
-	all()
+	spew.Dump(all())
+	//spew.Dump(tryDeribit())
+
 }
 
 func tryOpyn() ([]rainbow.Options, error) {
@@ -46,17 +48,31 @@ func tryDeribit() ([]rainbow.Options, error) {
 		return []rainbow.Options{}, err
 	}
 
-	log.Println(instruments[10])
-	spew.Dump(instruments[10])
+	//log.Println(instruments[10])
+	//spew.Dump(instruments[10])
 
-	orderBook, err := deribit.GetOrderBook(instruments[10:15], 5)
+	orderBookBTC, err := deribit.GetOrderBook(instruments, 5)
+	if err != nil {
+		log.Println(err)
+		return []rainbow.Options{}, err
+	}
+	instruments, err = deribit.Instruments("ETH")
+	if err != nil {
+		log.Println(err)
+		return []rainbow.Options{}, err
+	}
+
+	//log.Println(instruments[10])
+	//spew.Dump(instruments[10])
+
+	orderBookETH, err := deribit.GetOrderBook(instruments, 5)
 	if err != nil {
 		log.Println(err)
 		return []rainbow.Options{}, err
 	}
 
 	//spew.Dump(orderBook[0].Offers)
-	return orderBook, nil
+	return append(orderBookBTC, orderBookETH...), nil
 }
 
 func tryPsyops() ([]rainbow.Options, error) {
@@ -64,29 +80,31 @@ func tryPsyops() ([]rainbow.Options, error) {
 
 }
 
-func all() {
+func all() ([]rainbow.Options, error) {
 	options := []rainbow.Options{}
 	//psy
 	psy, err := psyoptions.InstrumentsFromAllMarkets()
 	if err != nil {
 		fmt.Println("psy error ", err)
-		return
+		return []rainbow.Options{}, err
+
 	}
 	options = append(options, psy...)
 	//opyn
 	op, err := tryOpyn()
 	if err != nil {
 		fmt.Println("opyn error ", err)
-		return
+		return []rainbow.Options{}, err
+
 	}
 	options = append(options, op...)
 
 	der, err := tryDeribit()
 	if err != nil {
 		fmt.Println("der error ", err)
-		return
-	}
-	options = append(options, der...)
+		return []rainbow.Options{}, err
 
-	spew.Dump(options)
+	}
+	return append(options, der...), nil
+
 }

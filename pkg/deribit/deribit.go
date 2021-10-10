@@ -38,7 +38,7 @@ func Instruments(coin string) ([]Instrument, error) {
 		return []Instrument{}, fmt.Errorf("nft collections : %w", err)
 	}
 
-	return result.Result, nil
+	return filterTooFar(result.Result), nil
 }
 
 type Instrument struct {
@@ -58,6 +58,28 @@ type Instrument struct {
 	ContractSize         float64 `json:"contract_size"`
 	BlockTradeCommission float64 `json:"block_trade_commission"`
 	BaseCurrency         string  `json:"base_currency"`
+}
+
+func filterTooFar(instruments []Instrument) (filtered []Instrument) {
+	for _, i := range instruments {
+		seconds := i.ExpirationTimestamp / 1000
+		ns := (i.ExpirationTimestamp % 1000) * 1000_000
+		expiryTime := time.Unix(seconds, ns).UTC()
+		//we want market only for the 29OCT
+		// we should filter by taking what is available elsewhere and then
+		//only fetch those
+		t, _ := time.Parse(time.RFC3339, "2021-10-29T08:00:00Z")
+		if expiryTime.Equal(t) {
+			if i.BaseCurrency == "BTC" && i.Strike >= 30000 && i.Strike <= 60000 {
+				filtered = append(filtered, i)
+			}
+			if i.BaseCurrency == "ETH" && i.Strike >= 2500 && i.Strike <= 4000 {
+				filtered = append(filtered, i)
+			}
+		}
+
+	}
+	return filtered
 }
 
 func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Options, error) {
