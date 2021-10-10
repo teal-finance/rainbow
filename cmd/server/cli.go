@@ -41,8 +41,6 @@ func main() {
 
 func tryOpyn() {
 	instruments := zerox.Instruments()
-	// log.Println(markets)
-	// spew.Dump(markets[1:2])
 	orderBook, err := zerox.GetOrderBook(instruments, "Opyn")
 	if err != nil {
 		log.Println(err)

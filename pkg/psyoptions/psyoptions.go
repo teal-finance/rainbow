@@ -68,15 +68,14 @@ func InstrumentsFromAllMarkets() (r []rainbow.Options, err error) {
 			panic(err)
 		}
 
-		bids, totalBids, err := BidsAsksToOffers(ctx, out, client, out.Market.GetBids(), false, "BUY")
+		bids, _, err := BidsAsksToOffers(ctx, out, client, out.Market.GetBids(), false, "BUY")
 		if err != nil {
 			panic(err)
 		}
-		asks, totalAsks, err := BidsAsksToOffers(context.TODO(), out, client, out.Market.GetAsks(), true, "SELL")
+		asks, _, err := BidsAsksToOffers(context.TODO(), out, client, out.Market.GetAsks(), true, "SELL")
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("total ", totalAsks+totalBids)
 		offers := append(bids, asks...)
 
 		o := rainbow.Options{

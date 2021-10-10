@@ -141,8 +141,8 @@ type stubbornRequester struct {
 }
 
 var defaultStubbornRequester = stubbornRequester{
-	sleep:  300 * time.Millisecond,
-	maxBad: 200 * time.Millisecond,
+	sleep:  500 * time.Millisecond, //300 * time.Millisecond,
+	maxBad: 250 * time.Millisecond, //200 * time.Millisecond,
 	ok:     0,
 	ko:     0,
 }

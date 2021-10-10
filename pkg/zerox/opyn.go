@@ -8,7 +8,10 @@ package zerox
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strconv"
+	"time"
 
 	"github.com/Khan/genqlient/graphql"
 )
@@ -28,5 +31,21 @@ func Instruments() []getOptionsOtokensOToken {
 		return nil
 	}
 
-	return resp.Otokens
+	return filterExpired(resp.Otokens)
+}
+
+func filterExpired(instruments []getOptionsOtokensOToken) (filtered []getOptionsOtokensOToken) {
+	for _, i := range instruments {
+		seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
+		if err != nil {
+			fmt.Println("Oh Sh*t ", i.ExpiryTimestamp)
+			continue //TODO should do much better than failing silently
+		}
+		expiryTime := time.Unix(seconds, 0).Add(48 * time.Hour) // we keep a matket for two days after expiry
+		if expiryTime.After(time.Now()) {
+			filtered = append(filtered, i)
+		}
+
+	}
+	return filtered
 }
