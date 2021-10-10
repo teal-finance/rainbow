@@ -41,8 +41,9 @@ func filterExpired(instruments []getOptionsOtokensOToken) (filtered []getOptions
 			fmt.Println("Oh Sh*t ", i.ExpiryTimestamp)
 			continue //TODO should do much better than failing silently
 		}
-		expiryTime := time.Unix(seconds, 0).Add(48 * time.Hour) // we keep a matket for two days after expiry
-		if expiryTime.After(time.Now()) {
+		expiryTime := time.Unix(seconds, 0)
+		t, _ := time.Parse(time.RFC3339, "2021-10-29T08:00:00Z")
+		if expiryTime.Equal(t) {
 			filtered = append(filtered, i)
 		}
 

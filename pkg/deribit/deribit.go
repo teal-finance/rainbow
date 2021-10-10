@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -122,9 +123,16 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Options, er
 			Provider:     "Deribit",
 			Offers:       nil,
 		}
-		o.Offers = BidsAsksToOffers(result.Result.Bids, "BUY", i.QuoteCurrency)
-		o.Offers = append(o.Offers, BidsAsksToOffers(result.Result.Asks, "SELL", i.QuoteCurrency)...)
-		// log.Println("o ", o)
+		bids := BidsAsksToOffers(result.Result.Bids, "BUY", i.QuoteCurrency)
+		sort.Slice(bids, func(i, j int) bool {
+			return bids[i].Price > bids[j].Price
+		})
+		asks := BidsAsksToOffers(result.Result.Asks, "SELL", i.QuoteCurrency)
+		sort.Slice(asks, func(i, j int) bool {
+			return asks[i].Price < asks[j].Price
+		})
+		o.Offers = append(o.Offers, bids...)
+		o.Offers = append(o.Offers, asks...)
 
 		orderBook = append(orderBook, o)
 	}
@@ -181,7 +189,7 @@ func BidsAsksToOffers(orders [][]float64, side, quote string) []rainbow.Offer {
 
 	offers := make([]rainbow.Offer, 0, len(orders))
 	for _, ord := range orders {
-		offers = append(offers, rainbow.Offer{Side: side, Price: ord[1], Quantity: ord[0], QuoteCurrency: quote})
+		offers = append(offers, rainbow.Offer{Side: side, Price: ord[0], Quantity: ord[1], QuoteCurrency: quote})
 	}
 
 	return offers

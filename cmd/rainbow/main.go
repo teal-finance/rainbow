@@ -7,6 +7,7 @@ import (
 
 	//"github.com/davecgh/go-spew/spew"
 
+	"github.com/gookit/color"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/teal-finance/rainbow"
 	"github.com/teal-finance/rainbow/pkg/deribit"
@@ -17,24 +18,48 @@ import (
 func main() {
 
 	//spew.Dump(all())
-	options, err := all() //tryDeribit() //tryOpyn() //tryDeribit()
+	options, err := all() //tryDeribit() //tryPsyops() //tryOpyn() //all()
 	if err != nil {
 		log.Println(err)
 		return
 	}
 	PrintOptions(options)
+	//spew.Dump(options)
 
 }
 func PrintOptions(options []rainbow.Options) {
-	t := newTable(fmt.Sprintf("Featured NFT (%v)", len(options)))
-	t.AppendHeader(table.Row{"Provider", "Asset", "Instrument"})
+	green := color.FgGreen.Render
+	red := color.FgRed.Render
+
+	t := newTable(fmt.Sprintf("\t\t 29OCT21 CeDeFi options: (%v)", len(options)))
+	t.AppendHeader(table.Row{"Provider", "Asset", "Type", "Bids size", "Bids Price", "Strike", "Asks Price", "Asks size", "Instrument"})
 	for _, option := range options {
-		t.AppendRows([]table.Row{{option.Provider, option.Asset, option.Name}})
+		t.AppendRows([]table.Row{{prov(option.Provider), option.Asset, option.Type,
+			option.Offers[0].Quantity, green(option.Offers[0].Price), option.Strike,
+			red(option.Offers[len(option.Offers)-1].Price), option.Offers[len(option.Offers)-1].Quantity, option.Name}})
+
 	}
+
 	t.SortBy([]table.SortBy{
-		{Name: "Asset", Mode: table.Dsc},
+		{Name: "Strike", Mode: table.AscNumeric},
+		{Name: "Type", Mode: table.Dsc},
 	})
 	t.Render()
+}
+func prov(p string) string {
+	magenta := color.FgMagenta.Render
+	green := color.FgGreen.Render
+	blue := color.FgCyan.Render
+	s := ""
+	if p == "Opyn" {
+		s = blue(p)
+	} else if p == "Deribit" {
+		s = green(p)
+
+	} else if p == "PsyOptions" {
+		s = magenta(p)
+	}
+	return s
 }
 func newTable(title string) table.Writer {
 	t := table.NewWriter()
