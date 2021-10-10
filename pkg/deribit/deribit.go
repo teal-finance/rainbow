@@ -9,6 +9,7 @@ package deribit
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -20,7 +21,7 @@ import (
 func Instruments(coin string) ([]Instrument, error) {
 	baseURL := "https://deribit.com/api/v2/public/get_instruments?currency="
 	opts := "&expired=false&kind=option"
-	fmt.Println(baseURL + coin + opts)
+	log.Println(baseURL + coin + opts)
 
 	resp, err := http.Get(baseURL + coin + opts)
 	if err != nil {
@@ -101,7 +102,7 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Options, er
 		}
 		o.Offers = BidsAsksToOffers(result.Result.Bids, "BUY", i.QuoteCurrency)
 		o.Offers = append(o.Offers, BidsAsksToOffers(result.Result.Asks, "SELL", i.QuoteCurrency)...)
-		// fmt.Println("o ", o)
+		// log.Println("o ", o)
 
 		orderBook = append(orderBook, o)
 	}
