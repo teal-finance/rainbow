@@ -92,31 +92,60 @@ based on Typescript/Vue3.
 
 ![CLI screenshot](images/cli.jpg)
 
+## Back-end API
+
+To run Rainbow as a HTTP server, use command line argument `-port 8080`
+or define the environment variable `API_PORT`.
+
+Rainbow also provides an export port to be monitored by Prometheus
+or other monitoring tools.
+
+Rainbow also implements a configurable rate limiter.
+
+    $ ./rainbow -help
+    Usage of ./rainbow:
+      -dev
+          Run rainbow in dev. mode
+      -exp int
+          Export port for Prometheus, overseeds env. var. EXP_PORT
+      -max-burst int
+          Max requests during a burst, overseeds env. var. MAX_REQ_BURST (default 1)
+      -max-rate int
+          Max requests per minute, overseeds env. var. MAX_REQ_PER_MINUTE (default 6)
+      -port int
+          API port, overseeds env. var. API_PORT
+
 ## Data structure
 
-### Options
-
 ```js
-{
-  "name": "Ethereum-5000-C",
-  "options": "call",        // call or put
-  "asset": "ETH",           // ETH, BTC, SOL
-  "expiry": "31/12/2021",
-  "strike": 5000,
-  "blockchain": "Ethereum", // Ethereum, Solana…
-  "layer": 1,               // L1 or L2
-  "provider": "Opyn",      // Opyn, Lyra, Thales, Deribit, Psyoptions
-  "offers": []
-}
-```
-
-### Offers
-
-```js
-{
-  "side": "buy",      // buy/sell
-  "price": "0.1",
-  "currency": "ETH",  // ETH, BTC, DOLLARS
-  "quantity": 5
-}
+  {
+    "Name": "ETH-2021-10-29 23:59:59-2800-CALL",
+    "Expiry": "2021-10-29 23:59:59",
+    "Type": "CALL",
+    "Asset": "ETH",             // ETH, BTC, SOL
+    "Strike": 2800,
+    "ExchangeType": "DEX",      // CEX or DEX
+    "Chain": "Solana",          // Ethereum, Solana...
+    "Layer": "L1",
+    "Provider": "PsyOptions",   // Opyn, Lyra, Thales, Deribit, Psyoptions
+    "Offers": [
+      {
+        "Side": "BUY",
+        "Price": 77.75,
+        "Quantity": 5,
+        "QuoteCurrency": "USDC" // ETH, BTC...
+      },
+      {
+        "Side": "BUY",
+        "Price": 76.84,
+        "Quantity": 6,
+        "QuoteCurrency": "USDC"
+      },
+      {
+        "Side": "BUY",
+        "Price": 2.5,
+        "Quantity": 2,
+        "QuoteCurrency": "USDC"
+      },
+      ...
 ```
