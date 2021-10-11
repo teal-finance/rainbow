@@ -1,4 +1,4 @@
-# https://github.com/opynfinance/Gamma-Subgraph/blob/master/schema.graphql
+# fixed copy from https://github.com/opynfinance/Gamma-Subgraph/blob/master/schema.graphql
 
 scalar Bytes
 scalar BigInt

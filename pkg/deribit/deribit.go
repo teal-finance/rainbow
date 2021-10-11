@@ -19,30 +19,65 @@ import (
 	"github.com/teal-finance/rainbow"
 )
 
-func Instruments(coin string) ([]Instrument, error) {
+func Options() ([]rainbow.Option, error) {
+	instruments, err := query("BTC")
+	if err != nil {
+		log.Print(err)
+		return nil, err
+	}
+
+	// log.Print(instruments[10])
+	// spew.Dump(instruments[10])
+
+	optionsBTC, err := normalize(instruments, 5)
+	if err != nil {
+		log.Print(err)
+		return nil, err
+	}
+
+	instruments, err = query("ETH")
+	if err != nil {
+		log.Print(err)
+		return nil, err
+	}
+
+	// log.Print(instruments[10])
+	// spew.Dump(instruments[10])
+
+	optionsETH, err := normalize(instruments, 5)
+	if err != nil {
+		log.Print(err)
+		return nil, err
+	}
+
+	// spew.Dump(orderBook[0].Offers)
+	return append(optionsBTC, optionsETH...), nil
+}
+
+func query(coin string) ([]instrument, error) {
 	baseURL := "https://deribit.com/api/v2/public/get_instruments?currency="
 	opts := "&expired=false&kind=option"
-	log.Println(baseURL + coin + opts)
+	log.Print(baseURL + coin + opts)
 
 	resp, err := http.Get(baseURL + coin + opts)
 	if err != nil {
-		return []Instrument{}, err
+		return []instrument{}, err
 	}
 
 	defer resp.Body.Close()
 
 	result := struct {
-		Result []Instrument `json:"result"`
+		Result []instrument `json:"result"`
 	}{}
 
 	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return []Instrument{}, fmt.Errorf("nft collections : %w", err)
+		return []instrument{}, fmt.Errorf("nft collections : %w", err)
 	}
 
 	return filterTooFar(result.Result), nil
 }
 
-type Instrument struct {
+type instrument struct {
 	TickSize             float64 `json:"tick_size"`
 	TakerCommission      float64 `json:"taker_commission"`
 	Strike               float64 `json:"strike"`
@@ -61,7 +96,7 @@ type Instrument struct {
 	BaseCurrency         string  `json:"base_currency"`
 }
 
-func filterTooFar(instruments []Instrument) (filtered []Instrument) {
+func filterTooFar(instruments []instrument) (filtered []instrument) {
 	for _, i := range instruments {
 		seconds := i.ExpirationTimestamp / 1000
 		ns := (i.ExpirationTimestamp % 1000) * 1000_000
@@ -83,15 +118,15 @@ func filterTooFar(instruments []Instrument) (filtered []Instrument) {
 	return filtered
 }
 
-func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Option, error) {
-	orderBook := []rainbow.Option{}
+func normalize(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
+	options := []rainbow.Option{}
 	// deribitOrderBook := []DeribitOrderBook{}
 	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
 
 	for _, i := range instruments {
 		resp, err := http.Get(baseURL + i.InstrumentName)
 		if err != nil {
-			return []rainbow.Option{}, err
+			return nil, err
 		}
 
 		defer resp.Body.Close()
@@ -101,7 +136,7 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Option, err
 		}{}
 
 		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			return []rainbow.Option{}, fmt.Errorf(" order book : %w", err)
+			return nil, fmt.Errorf(" order book : %w", err)
 		}
 
 		// API doc: https://docs.deribit.com/#public-get_index_price_names
@@ -111,7 +146,17 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Option, err
 		expiryTime := time.Unix(seconds, ns).UTC()
 		expiryStr := expiryTime.Format("2006-01-02 15:04:05")
 
-		o := rainbow.Option{
+		bids := bidAskToOffers(result.Result.Bids, "BUY", i.QuoteCurrency)
+		sort.Slice(bids, func(i, j int) bool {
+			return bids[i].Price > bids[j].Price
+		})
+
+		asks := bidAskToOffers(result.Result.Asks, "SELL", i.QuoteCurrency)
+		sort.Slice(asks, func(i, j int) bool {
+			return asks[i].Price < asks[j].Price
+		})
+
+		options = append(options, rainbow.Option{
 			Name:         i.InstrumentName,
 			Type:         strings.ToUpper(i.OptionType),
 			Asset:        i.BaseCurrency,
@@ -121,23 +166,11 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Option, err
 			Chain:        "None",
 			Layer:        "None",
 			Provider:     "Deribit",
-			Offers:       nil,
-		}
-		bids := BidsAsksToOffers(result.Result.Bids, "BUY", i.QuoteCurrency)
-		sort.Slice(bids, func(i, j int) bool {
-			return bids[i].Price > bids[j].Price
+			Offers:       append(bids, asks...),
 		})
-		asks := BidsAsksToOffers(result.Result.Asks, "SELL", i.QuoteCurrency)
-		sort.Slice(asks, func(i, j int) bool {
-			return asks[i].Price < asks[j].Price
-		})
-		o.Offers = append(o.Offers, bids...)
-		o.Offers = append(o.Offers, asks...)
-
-		orderBook = append(orderBook, o)
 	}
 
-	return orderBook, nil
+	return options, nil
 }
 
 type OrderBook struct {
@@ -180,7 +213,7 @@ type OrderBook struct {
 	AskIv                  float64     `json:"ask_iv"`
 }
 
-func BidsAsksToOffers(orders [][]float64, side, quote string) []rainbow.Offer {
+func bidAskToOffers(orders [][]float64, side, quote string) []rainbow.Offer {
 	// if there is no offer, send price=0.0, quant=0.0
 	// hopefully we never an array of empty array
 	if len(orders) == 0 {

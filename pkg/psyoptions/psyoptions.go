@@ -26,7 +26,7 @@ const (
 	Expiration       = "2021-10-29 23:59:59"
 )
 
-func Instruments(coin string) []string {
+func oldInstruments(coin string) []string {
 	switch coin {
 	case "ETH":
 		return []string{
@@ -56,9 +56,9 @@ func Instruments(coin string) []string {
 	}
 }
 
-func InstrumentsFromAllMarkets() (options []rainbow.Option, err error) {
-	// instruments := append(Instruments("ETH"), Instruments("BTC")...)
-	instruments := GetInstruments()
+func Options() (options []rainbow.Option, err error) {
+	// instruments := append(oldInstruments("ETH"), oldInstruments("BTC")...)
+	instruments := query()
 	client := rpc.NewClient(mainnet)
 
 	for _, i := range instruments {
@@ -71,22 +71,22 @@ func InstrumentsFromAllMarkets() (options []rainbow.Option, err error) {
 			panic(err)
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
-		bids, _, err := BidsAsksToOffers(ctx, out, client, out.Market.GetBids(), true, "BUY")
+		bids, _, err := bidAskToOffers(ctx, out, client, out.Market.GetBids(), true, "BUY")
 		if err != nil {
 			panic(err)
 		}
 
-		asks, _, err := BidsAsksToOffers(context.TODO(), out, client, out.Market.GetAsks(), false, "SELL")
+		asks, _, err := bidAskToOffers(context.TODO(), out, client, out.Market.GetAsks(), false, "SELL")
 		if err != nil {
 			panic(err)
 		}
 
 		options = append(options, rainbow.Option{
-			Name:         i.Name(),
-			Type:         i.Type(),
-			Asset:        i.Asset(),
+			Name:         i.name(),
+			Type:         i.optionType(),
+			Asset:        i.asset(),
 			Expiry:       Expiration,
-			Strike:       i.Strike(),
+			Strike:       i.strike(),
 			ExchangeType: "DEX",
 			Chain:        "Solana",
 			Layer:        "L1",
@@ -101,7 +101,7 @@ func InstrumentsFromAllMarkets() (options []rainbow.Option, err error) {
 // I don't really need the totalsize but I am keeping it since it was in the original func
 // ASKs on the top so desc=True & side="SELL"
 // BIDS down so desc=False @ side ="BUY".
-func BidsAsksToOffers(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, side string) (offers []rainbow.Offer, totalSize float64, err error) {
+func bidAskToOffers(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, side string) (offers []rainbow.Offer, totalSize float64, err error) {
 	var o serum.Orderbook
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
 		return nil, 0, fmt.Errorf("getting orderbook: %w", err)

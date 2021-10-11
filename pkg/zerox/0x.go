@@ -30,25 +30,10 @@ const (
 	WBTCDEcimals    = 8
 )
 
-var decimalsToPower10 = map[int]float64{
-	1:  1,
-	2:  10,
-	3:  100,
-	4:  1000,
-	5:  10000,
-	6:  100000,
-	7:  1000000,
-	8:  10000000,
-	9:  100000000,
-	10: 1000000000,
-	11: 10000000000,
-	12: 100000000000,
-}
-
-func extract(i getOptionsOtokensOToken) (oType, expiry string, strike float64) {
-	oType = "CALL"
+func extract(i getOptionsOtokensOToken) (optionType, expiry string, strike float64) {
+	optionType = "CALL"
 	if i.IsPut {
-		oType = "PUT"
+		optionType = "PUT"
 	}
 
 	seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
@@ -60,33 +45,20 @@ func extract(i getOptionsOtokensOToken) (oType, expiry string, strike float64) {
 	}
 
 	// thought the USDCdecimals were correct but apparently not (whatever)
-	strike, err = ConvertFromSolidity(i.StrikePrice, OTokensDecimals)
+	strike, err = convertFromSolidity(i.StrikePrice, OTokensDecimals)
 	if err != nil {
 		log.Printf("WARN Strike: %v from %+v", err, i) // TODO fail better
 	}
 
-	/*strikeInt, err := strconv.ParseInt(i.StrikePrice, 10, 0)
-	if err == nil {
-		denominateur, ok := decimalsToPower10[i.StrikeAsset.Decimals]
-		if ok {
-			strike = float64(strikeInt) / denominateur
-		}
-	} else {
-		log.Printf("WARN Strike: %v from %+v", err, i)
-	}*/
-
-	return
+	return optionType, expiry, strike
 }
 
-const (
-	baseURL = "https://api.0x.org/orderbook/v1?quoteToken="
-	opts    = "&baseToken=" + USDC
-)
-
-func getOrderbook(i getOptionsOtokensOToken) (result OrderBook, err error) {
+func getOrderbook(i getOptionsOtokensOToken) (ob OrderBook, err error) {
 	var resp *http.Response
-	if resp, err = http.Get(baseURL + i.Id + opts); err != nil {
-		err = fmt.Errorf("base=%v id=%v opts=%v: %w", baseURL, i.Id, opts, err)
+
+	url := "https://api.0x.org/orderbook/v1?quoteToken=" + i.Id + "&baseToken=" + USDC
+	if resp, err = http.Get(url); err != nil {
+		err = fmt.Errorf("url=%v %w", url, err)
 		return
 	}
 
@@ -99,7 +71,7 @@ func getOrderbook(i getOptionsOtokensOToken) (result OrderBook, err error) {
 		return
 	}
 
-	if err = json.Unmarshal(j, &result); err != nil {
+	if err = json.Unmarshal(j, &ob); err != nil {
 		err = fmt.Errorf("WARN %w when json.Unmarshal: %v", err, string(j))
 	}
 
@@ -111,15 +83,15 @@ func getOrderbook(i getOptionsOtokensOToken) (result OrderBook, err error) {
 // so Asks/SELL side (so you send a buy inquiry): sellToken=usdc, buyToken=option address
 // so Bids/BUY side (so you send a sell inquiry): sellToken=option address, buyToken=usdc.
 func getQuote(side, sellToken, buyToken string, amount float64, decimals int) (Quote, error) {
-	baseURL := "https://api.0x.org/swap/v1/quote?sellToken=" + sellToken + "&buyToken=" + buyToken
+	url := "https://api.0x.org/swap/v1/quote?sellToken=" + sellToken + "&buyToken=" + buyToken
 	if side == "SELL" {
-		baseURL += "&buyAmount="
+		url += "&buyAmount="
 	} else {
-		baseURL += "&sellAmount="
+		url += "&sellAmount="
 	}
-	baseURL += ConvertToSolidity(amount, decimals)
+	url += convertToSolidity(amount, decimals)
 
-	resp, err := http.Get(baseURL)
+	resp, err := http.Get(url)
 	if err != nil {
 		return Quote{}, err
 	}
@@ -202,7 +174,7 @@ func (sr *stubbornRequester) getOrderBook(i getOptionsOtokensOToken) (ob OrderBo
 		sr.failure(err)
 	}
 
-	return
+	return ob, err
 }
 
 func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount float64, decimals int) (q Quote, err error) {
@@ -221,7 +193,7 @@ func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount f
 		sr.failure(err)
 	}
 
-	return
+	return q, err
 }
 
 func (sr *stubbornRequester) logStats() {
@@ -229,7 +201,7 @@ func (sr *stubbornRequester) logStats() {
 		sr.maxBad, sr.sleep, sr.ok, sr.ko)
 }
 
-func GetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rainbow.Option, error) {
+func oldGetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rainbow.Option, error) {
 	orderBook := []rainbow.Option{}
 
 	sr := defaultStubbornRequester
@@ -256,19 +228,19 @@ func GetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rai
 			Offers:       nil,
 		}
 
-		b, err := BidsAsksToOffers(ob.Bids.Records, "BUY", i.UnderlyingAsset.Symbol)
+		b, err := bidAskToOffers(ob.Bids.Records, "BUY", i.UnderlyingAsset.Symbol)
 		if err != nil {
-			return []rainbow.Option{}, err
+			return nil, err
 		}
 
-		a, err := BidsAsksToOffers(ob.Asks.Records, "SELL", i.UnderlyingAsset.Symbol)
+		a, err := bidAskToOffers(ob.Asks.Records, "SELL", i.UnderlyingAsset.Symbol)
 		if err != nil {
-			return []rainbow.Option{}, err
+			return nil, err
 		}
 
 		o.Offers = append(o.Offers, b...)
 		o.Offers = append(o.Offers, a...)
-		// log.Println("o ", o)
+		// log.Print("o ", o)
 
 		orderBook = append(orderBook, o)
 	}
@@ -278,22 +250,19 @@ func GetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rai
 	return orderBook, nil
 }
 
-type OrderBook struct {
-	Bids struct {
-		Total   int     `json:"total"`
-		Page    int     `json:"page"`
-		PerPage int     `json:"perPage"`
-		Records Records `json:"records"`
-	} `json:"bids"`
-	Asks struct {
-		Total   int     `json:"total"`
-		Page    int     `json:"page"`
-		PerPage int     `json:"perPage"`
-		Records Records `json:"records"`
-	} `json:"asks"`
+type Orders struct {
+	Total   int      `json:"total"`
+	Page    int      `json:"page"`
+	PerPage int      `json:"perPage"`
+	Records []Record `json:"records"`
 }
 
-type Records []struct {
+type OrderBook struct {
+	Bids Orders `json:"bids"`
+	Asks Orders `json:"asks"`
+}
+
+type Record struct {
 	Order struct {
 		Signature struct {
 			SignatureType int    `json:"signatureType"`
@@ -325,7 +294,7 @@ type Records []struct {
 
 // The result is false because I don't properly take into account the decimals
 // Use GetQuote instead.
-func BidsAsksToOffers(records Records, side, quote string) ([]rainbow.Offer, error) {
+func bidAskToOffers(records []Record, side, quote string) ([]rainbow.Offer, error) {
 	offers := make([]rainbow.Offer, 0, len(records))
 
 	for _, r := range records {
@@ -352,13 +321,13 @@ func BidsAsksToOffers(records Records, side, quote string) ([]rainbow.Offer, err
 	return offers, nil
 }
 
-func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider string, amount float64) ([]rainbow.Option, error) {
-	orderBook := []rainbow.Option{}
+func normalize(instruments []getOptionsOtokensOToken, provider string, amount float64) ([]rainbow.Option, error) {
+	options := []rainbow.Option{}
 
 	sr := defaultStubbornRequester
 
 	for _, i := range instruments {
-		tipe, expiry, strike := extract(i)
+		optionType, expiry, strike := extract(i)
 
 		var decimals int
 		var quote string
@@ -369,7 +338,7 @@ func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider stri
 
 		o := rainbow.Option{
 			Name:         i.Name,
-			Type:         tipe,
+			Type:         optionType,
 			Asset:        i.UnderlyingAsset.Symbol,
 			Expiry:       expiry,
 			Strike:       strike,
@@ -383,7 +352,7 @@ func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider stri
 		b, err := sr.getQuote("BUY", i.Id, USDC, amount, decimals)
 		if err != nil {
 			log.Print("getQuote BUY ", err)
-			return []rainbow.Option{}, err
+			return nil, err
 		}
 
 		if b.Price != "" {
@@ -411,13 +380,13 @@ func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider stri
 		a, err := sr.getQuote("SELL", USDC, i.Id, amount, decimals)
 		if err != nil {
 			log.Print("getQuote SELL ", err)
-			return []rainbow.Option{}, err
+			return nil, err
 		}
 
 		if a.Price != "" {
 			price, err := strconv.ParseFloat(a.Price, 64)
 			if err != nil {
-				return []rainbow.Option{}, err
+				return nil, err
 			}
 
 			o.Offers = append(o.Offers, rainbow.Offer{
@@ -435,19 +404,19 @@ func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider stri
 			})
 		}
 
-		orderBook = append(orderBook, o)
+		options = append(options, o)
 	}
 
 	sr.logStats()
 
-	return orderBook, nil
+	return options, nil
 }
 
-func ConvertToSolidity(value float64, decimals int) string {
+func convertToSolidity(value float64, decimals int) string {
 	return strconv.Itoa(int(value * math.Pow10(decimals)))
 }
 
-func ConvertFromSolidity(s string, decimals int) (float64, error) {
+func convertFromSolidity(s string, decimals int) (float64, error) {
 	value, err := strconv.ParseFloat(s, 64)
 	if err != nil {
 		return 0.0, err

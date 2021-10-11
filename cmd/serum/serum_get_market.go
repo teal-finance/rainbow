@@ -62,21 +62,21 @@ func runE(ctx context.Context, serumMarketAddresses []string) error {
 	output = append(output, outputOrderBook(bids, totalSize, false)...)
 	output = append(output, "Bids")
 
-	log.Println(market.Name)
+	log.Print(market.Name)
 
-	log.Println("Request RequestQueue: ", market.Market.GetRequestQueue())
-	log.Println("Event RequestQueue: ", market.Market.GetEventQueue())
+	log.Print("Request RequestQueue: ", market.Market.GetRequestQueue())
+	log.Print("Event RequestQueue: ", market.Market.GetEventQueue())
 
-	log.Println("Base")
-	log.Println("base mint", market.Market.GetBaseMint().String())
-	log.Println("base lot size", market.Market.GetBaseLotSize())
+	log.Print("Base")
+	log.Print("base mint", market.Market.GetBaseMint().String())
+	log.Print("base lot size", market.Market.GetBaseLotSize())
 
-	log.Println("")
-	log.Println("Quote")
-	log.Println("quote mint", market.Market.GetQuoteMint().String())
-	log.Println("quote lot size", market.Market.GetQuoteLotSize())
+	log.Print("")
+	log.Print("Quote")
+	log.Print("quote mint", market.Market.GetQuoteMint().String())
+	log.Print("quote lot size", market.Market.GetQuoteLotSize())
 
-	log.Println(columnize.Format(output, nil))
+	log.Print(columnize.Format(output, nil))
 	return nil
 }
 

@@ -13,12 +13,26 @@ import (
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
+
+	"github.com/teal-finance/rainbow"
 )
 
-const opynURL = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
+func Options() ([]rainbow.Option, error) {
+	instruments := QueryTheGraph()
 
-func Instruments() []getOptionsOtokensOToken {
-	graphqlClient := graphql.NewClient(opynURL, nil)
+	options, err := normalize(instruments, "Opyn", 2.0)
+	if err != nil {
+		log.Print("ERROR: ", err)
+		return nil, err
+	}
+
+	return options, err
+}
+
+func QueryTheGraph() []getOptionsOtokensOToken {
+	const url = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
+
+	graphqlClient := graphql.NewClient(url, nil)
 
 	resp, err := getOptions(context.Background(), graphqlClient)
 	if err != nil {
@@ -39,7 +53,7 @@ func filterExpired(instruments []getOptionsOtokensOToken) (filtered []getOptions
 	for _, i := range instruments {
 		seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
 		if err != nil {
-			log.Println("Oh Sh*t ", i.ExpiryTimestamp)
+			log.Print("Oh Sh*t ", i.ExpiryTimestamp)
 			continue // TODO should do much better than failing silently
 		}
 

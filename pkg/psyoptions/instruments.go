@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type PsyOptions struct {
+type instrument struct {
 	Expiry                       int64
 	OptionMarketAddress          string
 	OptionContractMintAddress    string
@@ -23,61 +23,61 @@ type PsyOptions struct {
 	PsyOptionsProgramID          string
 }
 
-// Expiration is used in .Name() when fixed.
-func (psy PsyOptions) Expiration() string {
-	seconds := psy.Expiry / 1000
-	ns := (psy.Expiry % 1000) * 1000_000
+// expiration will be used in .Name() when fixed.
+func (i instrument) expiration() string {
+	seconds := i.Expiry / 1000
+	ns := (i.Expiry % 1000) * 1000_000
 	expiryTime := time.Unix(seconds, ns).UTC()
 
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
 
-func (psy PsyOptions) Asset() string {
+func (i instrument) asset() string {
 	switch {
-	case psy.QuoteAssetMint == ETHAddress || psy.UnderlyingAssetMint == ETHAddress:
+	case i.QuoteAssetMint == ETHAddress || i.UnderlyingAssetMint == ETHAddress:
 		return "ETH"
-	case psy.QuoteAssetMint == BTCAddress || psy.UnderlyingAssetMint == BTCAddress:
+	case i.QuoteAssetMint == BTCAddress || i.UnderlyingAssetMint == BTCAddress:
 		return "BTC"
-	case psy.QuoteAssetMint == SolAddress || psy.UnderlyingAssetMint == SolAddress:
+	case i.QuoteAssetMint == SolAddress || i.UnderlyingAssetMint == SolAddress:
 		return "SOL"
 	default:
 		return "???"
 	}
 }
 
-func (psy PsyOptions) UnderlyingPerContract() float64 {
-	f, _ := strconv.ParseFloat(psy.UnderlyingAssetPerContract, 64)
+func (i instrument) underlyingPerContract() float64 {
+	f, _ := strconv.ParseFloat(i.UnderlyingAssetPerContract, 64)
 	return f
 }
 
-func (psy PsyOptions) QuotePerContract() float64 {
-	f, _ := strconv.ParseFloat(psy.QuoteAssetPerContract, 64)
+func (i instrument) quotePerContract() float64 {
+	f, _ := strconv.ParseFloat(i.QuoteAssetPerContract, 64)
 	return f
 }
 
-func (psy PsyOptions) Type() string {
-	if psy.UnderlyingPerContract() < psy.QuotePerContract() {
+func (i instrument) optionType() string {
+	if i.underlyingPerContract() < i.quotePerContract() {
 		return "CALL"
 	}
 
 	return "PUT"
 }
 
-func (psy PsyOptions) Strike() float64 {
-	if psy.Type() == "PUT" {
-		return psy.UnderlyingPerContract() / psy.QuotePerContract()
+func (i instrument) strike() float64 {
+	if i.optionType() == "PUT" {
+		return i.underlyingPerContract() / i.quotePerContract()
 	}
 
-	return psy.QuotePerContract() / psy.UnderlyingPerContract()
+	return i.quotePerContract() / i.underlyingPerContract()
 }
 
-func (psy PsyOptions) Name() string {
-	return psy.Asset() + "-" + Expiration + "-" +
-		fmt.Sprintf("%.0f", psy.Strike()) + "-" + psy.Type()
+func (i instrument) name() string {
+	return i.asset() + "-" + Expiration + "-" +
+		fmt.Sprintf("%.0f", i.strike()) + "-" + i.optionType()
 }
 
-func GetInstruments() []PsyOptions {
-	return []PsyOptions{
+func query() []instrument {
+	return []instrument{
 		{
 			Expiry:                       1635551999,
 			OptionMarketAddress:          "3cPMm4y392xaqGfeCuRrB7NRFkWiouFAX2q7cMUWVfY8",

@@ -1,3 +1,9 @@
+// Copyright (c) 2021 teal.finance
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
+
 package main
 
 import (
@@ -9,28 +15,26 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 
 	"github.com/teal-finance/rainbow"
-	"github.com/teal-finance/rainbow/pkg/deribit"
-	"github.com/teal-finance/rainbow/pkg/psyoptions"
-	"github.com/teal-finance/rainbow/pkg/zerox"
+	"github.com/teal-finance/rainbow/pkg/all"
 )
 
 func main() {
-	options, err := all() // tryDeribit() // tryPsyops() // tryOpyn()
+	options, err := all.OptionsFromAllProviders()
 	if err != nil {
-		log.Println(err)
+		log.Print("ERROR: ", err)
 		return
 	}
 
-	PrintOptions(options)
+	printTable(options)
 }
 
-func PrintOptions(options []rainbow.Option) {
+func printTable(options []rainbow.Option) {
 	green := color.FgGreen.Render
 	red := color.FgRed.Render
 
-	t := newTable(fmt.Sprintf("\t\t 29OCT21 CeDeFi options: (%v)", len(options)))
+	t := newTable(fmt.Sprint("\t\t 29-Oct-21 CeDeFi options: ", len(options)))
 
-	t.AppendHeader(table.Row{"Provider", "Asset", "Type", "Bids size", "Bids Price", "Strike", "Asks Price", "Asks size", "Instrument"})
+	t.AppendHeader(table.Row{"Provider", "Asset", "Type", "Bid size", "Bid Price", "Strike", "Ask Price", "Ask size", "Instrument"})
 
 	for _, option := range options {
 		t.AppendRows([]table.Row{{
@@ -72,95 +76,4 @@ func newTable(title string) table.Writer {
 	t.SetTitle(title)
 
 	return t
-}
-
-func tryOpyn() ([]rainbow.Option, error) {
-	instruments := zerox.Instruments()
-	// spew.Dump(instruments)
-	/*orderBook, err := zerox.GetOrderBook(instruments, "Opyn")
-	if err != nil {
-		log.Println(err)
-		return []rainbow.Options{}, err
-	}*/
-
-	// spew.Dump(orderBook[0])
-
-	// log.Println(zerox.ConvertToSolidity(10.0, 8))
-
-	orderBook, err := zerox.GetAggregatedOrderBook(instruments, "Opyn", 2.0)
-	if err != nil {
-		log.Println(err)
-		return []rainbow.Option{}, err
-	}
-
-	return orderBook, err
-}
-
-func tryDeribit() ([]rainbow.Option, error) {
-	instruments, err := deribit.Instruments("BTC")
-	if err != nil {
-		log.Println(err)
-		return []rainbow.Option{}, err
-	}
-
-	// log.Println(instruments[10])
-	// spew.Dump(instruments[10])
-
-	orderBookBTC, err := deribit.GetOrderBook(instruments, 5)
-	if err != nil {
-		log.Println(err)
-		return []rainbow.Option{}, err
-	}
-
-	instruments, err = deribit.Instruments("ETH")
-	if err != nil {
-		log.Println(err)
-		return []rainbow.Option{}, err
-	}
-
-	// log.Println(instruments[10])
-	// spew.Dump(instruments[10])
-
-	orderBookETH, err := deribit.GetOrderBook(instruments, 5)
-	if err != nil {
-		log.Println(err)
-		return []rainbow.Option{}, err
-	}
-
-	// spew.Dump(orderBook[0].Offers)
-	return append(orderBookBTC, orderBookETH...), nil
-}
-
-func tryPsyops() ([]rainbow.Option, error) {
-	return psyoptions.InstrumentsFromAllMarkets()
-}
-
-func all() ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
-
-	// psy
-	psy, err := psyoptions.InstrumentsFromAllMarkets()
-	if err != nil {
-		log.Println("psy error ", err)
-		return []rainbow.Option{}, err
-	}
-
-	options = append(options, psy...)
-
-	// opyn
-	op, err := tryOpyn()
-	if err != nil {
-		log.Println("opyn error ", err)
-		return []rainbow.Option{}, err
-	}
-
-	options = append(options, op...)
-
-	der, err := tryDeribit()
-	if err != nil {
-		log.Println("der error ", err)
-		return []rainbow.Option{}, err
-	}
-
-	return append(options, der...), nil
 }

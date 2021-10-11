@@ -13,6 +13,6 @@ import (
 )
 
 func main() {
-	options := zerox.Instruments()
+	options := zerox.QueryTheGraph()
 	log.Print("Options: ", options)
 }

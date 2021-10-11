@@ -12,5 +12,5 @@ func replyOptions(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// we do not care about HTTP write errors
-	_, _ = w.Write([]byte("[]")) // TODO fill the options
+	_, _ = w.Write([]byte("[]"))
 }

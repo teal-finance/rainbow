@@ -1,3 +1,5 @@
+// inspired from https://github.com/StevenACoffman/teamboard/main/pkg/tools
+
 // +build generate
 
 package generate
