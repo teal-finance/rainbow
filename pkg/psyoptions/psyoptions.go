@@ -27,7 +27,8 @@ const (
 )
 
 func Instruments(coin string) []string {
-	if coin == "ETH" {
+	switch coin {
+	case "ETH":
 		return []string{
 			"8A493gU55NfS4fCjDoLAiN57zPzWf6QQw31QQf1fd6iX",
 			"5pHcU2Gz8eCMwynLvz1AHSFoFbKkeTc7ufeqeG4spb99",
@@ -38,7 +39,8 @@ func Instruments(coin string) []string {
 			"HYmPvo8szh62QVaAfUAXR1eppvCfouUPpH68yE87UYmy",
 			"8fFcWuVaZSKoge4DCpMcNrR5nNXF2pbXCfBUxkMomgr5",
 		}
-	} else if coin == "BTC" {
+
+	case "BTC":
 		return []string{
 			"8fhiAYm41RwtiX8WusCSpY617GWPt2LwUnCQcEeer78o",
 			"6at26sVk8vTYtLh4YDKvje4PDdgFJsNHHyoGw87WNszP",
@@ -49,9 +51,10 @@ func Instruments(coin string) []string {
 			"2q5f1H8xT3tsBzQhwZC3BKnbKMb44fTuDGamZ6xUdZz2",
 			"DvohGwDZR9Z2siWBj2Xhgxd1qRScVCpywL3EoRbpon3p",
 		}
-	}
+	default:
 		return []string{}
 	}
+}
 
 func InstrumentsFromAllMarkets() (options []rainbow.Option, err error) {
 	// instruments := append(Instruments("ETH"), Instruments("BTC")...)

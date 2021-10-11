@@ -52,16 +52,17 @@ func prov(p string) string {
 	magenta := color.FgMagenta.Render
 	green := color.FgGreen.Render
 	blue := color.FgCyan.Render
-	s := ""
-	if p == "Opyn" {
-		s = blue(p)
-	} else if p == "Deribit" {
-		s = green(p)
 
-	} else if p == "PsyOptions" {
-		s = magenta(p)
+	switch p {
+	case "Opyn":
+		return blue(p)
+	case "Deribit":
+		return green(p)
+	case "PsyOptions":
+		return magenta(p)
+	default:
+		return p
 	}
-	return s
 }
 
 func newTable(title string) table.Writer {
