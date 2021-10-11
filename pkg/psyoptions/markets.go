@@ -33,16 +33,16 @@ func (psy PsyOptions) Expiration() string {
 }
 
 func (psy PsyOptions) Asset() string {
-	var asset string
-	if psy.QuoteAssetMint == ETHAddress || psy.UnderlyingAssetMint == ETHAddress {
-		asset = "ETH"
-	} else if psy.QuoteAssetMint == BTCAddress || psy.UnderlyingAssetMint == BTCAddress {
-		asset = "BTC"
-	} else if psy.QuoteAssetMint == SolAddress || psy.UnderlyingAssetMint == SolAddress {
-		asset = "SOL"
+	switch {
+	case psy.QuoteAssetMint == ETHAddress || psy.UnderlyingAssetMint == ETHAddress:
+		return "ETH"
+	case psy.QuoteAssetMint == BTCAddress || psy.UnderlyingAssetMint == BTCAddress:
+		return "BTC"
+	case psy.QuoteAssetMint == SolAddress || psy.UnderlyingAssetMint == SolAddress:
+		return "SOL"
+	default:
+		return "???"
 	}
-	return asset
-
 }
 
 func (psy PsyOptions) UnderlyingPerContract() float64 {
