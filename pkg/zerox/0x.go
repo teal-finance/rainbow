@@ -58,10 +58,11 @@ func extract(i getOptionsOtokensOToken) (oType, expiry string, strike float64) {
 	} else {
 		log.Printf("WARN Expiry: %v from %+v", err, i)
 	}
+
+	// thought the USDCdecimals were correct but apparently not (whatever)
 	strike, err = ConvertFromSolidity(i.StrikePrice, OTokensDecimals)
-	//thought the USDCdecimals were correct but apparently not (whatever)
 	if err != nil {
-		log.Printf("WARN Strike: %v from %+v", err, i) //TODO fail better
+		log.Printf("WARN Strike: %v from %+v", err, i) // TODO fail better
 	}
 
 	/*strikeInt, err := strconv.ParseInt(i.StrikePrice, 10, 0)
@@ -146,8 +147,8 @@ type stubbornRequester struct {
 }
 
 var defaultStubbornRequester = stubbornRequester{
-	sleep:  500 * time.Millisecond, //300 * time.Millisecond,
-	maxBad: 250 * time.Millisecond, //200 * time.Millisecond,
+	sleep:  500 * time.Millisecond,
+	maxBad: 250 * time.Millisecond,
 	ok:     0,
 	ko:     0,
 }

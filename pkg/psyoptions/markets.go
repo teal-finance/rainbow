@@ -1,4 +1,4 @@
-//copied from https://github.com/mithraiclabs/psyoptions-ts/blob/master/packages/market-meta/src/markets/mainnet.ts
+// copied from https://github.com/mithraiclabs/psyoptions-ts/blob/master/packages/market-meta/src/markets/mainnet.ts
 package psyoptions
 
 import (
@@ -19,18 +19,17 @@ type PsyOptions struct {
 	UnderlyingAssetPerContract   string
 	QuoteAssetPerContract        string
 	SerumMarketAddress           string
-	SerumProgramId               string
-	PsyOptionsProgramId          string
+	SerumProgramID               string
+	PsyOptionsProgramID          string
 }
 
-//TODO somehting is wrong here
-//use in .Name() when fixed
+// Expiration is used in .Name() when fixed.
 func (psy PsyOptions) Expiration() string {
 	seconds := psy.Expiry / 1000
 	ns := (psy.Expiry % 1000) * 1000_000
 	expiryTime := time.Unix(seconds, ns).UTC()
-	return expiryTime.Format("2006-01-02 15:04:05")
 
+	return expiryTime.Format("2006-01-02 15:04:05")
 }
 
 func (psy PsyOptions) Asset() string {
@@ -60,22 +59,21 @@ func (psy PsyOptions) Type() string {
 	if psy.UnderlyingPerContract() < psy.QuotePerContract() {
 		return "CALL"
 	}
+
 	return "PUT"
 }
 
 func (psy PsyOptions) Strike() float64 {
 	if psy.Type() == "PUT" {
 		return psy.UnderlyingPerContract() / psy.QuotePerContract()
-
 	}
-	return psy.QuotePerContract() / psy.UnderlyingPerContract()
 
+	return psy.QuotePerContract() / psy.UnderlyingPerContract()
 }
 
 func (psy PsyOptions) Name() string {
 	return psy.Asset() + "-" + Expiration + "-" +
 		fmt.Sprintf("%.0f", psy.Strike()) + "-" + psy.Type()
-
 }
 
 func GetInstruments() []PsyOptions {
@@ -92,8 +90,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "100000",
 			QuoteAssetPerContract:        "280000000",
 			SerumMarketAddress:           "8A493gU55NfS4fCjDoLAiN57zPzWf6QQw31QQf1fd6iX",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -107,8 +105,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "280000000",
 			QuoteAssetPerContract:        "100000",
 			SerumMarketAddress:           "5pHcU2Gz8eCMwynLvz1AHSFoFbKkeTc7ufeqeG4spb99",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -122,8 +120,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "100000",
 			QuoteAssetPerContract:        "300000000",
 			SerumMarketAddress:           "8qgAVVE6eeJ9u32LvJupgW6NyNWPPFFK4xnXfGtDNeP4",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -137,8 +135,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "300000000",
 			QuoteAssetPerContract:        "100000",
 			SerumMarketAddress:           "FfkVR6ha6N9fcefGxfDFP97xL54Pc5ipiwnt1uuTpuyX",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -152,8 +150,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "100000",
 			QuoteAssetPerContract:        "320000000",
 			SerumMarketAddress:           "TLAzx53rb6pEDT3oWitTzg6YNe7BTERLDzujMdU8RQx",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -167,8 +165,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "320000000",
 			QuoteAssetPerContract:        "100000",
 			SerumMarketAddress:           "9A1m1JXgnMrdq3JkqEYx9rK3CcYm9EHDLeA6sn1hH3PP",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -182,8 +180,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "100000",
 			QuoteAssetPerContract:        "340000000",
 			SerumMarketAddress:           "HYmPvo8szh62QVaAfUAXR1eppvCfouUPpH68yE87UYmy",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -197,8 +195,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "340000000",
 			QuoteAssetPerContract:        "100000",
 			SerumMarketAddress:           "8fFcWuVaZSKoge4DCpMcNrR5nNXF2pbXCfBUxkMomgr5",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -212,8 +210,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "10000",
 			QuoteAssetPerContract:        "350000000",
 			SerumMarketAddress:           "8fhiAYm41RwtiX8WusCSpY617GWPt2LwUnCQcEeer78o",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -227,8 +225,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "350000000",
 			QuoteAssetPerContract:        "10000",
 			SerumMarketAddress:           "6at26sVk8vTYtLh4YDKvje4PDdgFJsNHHyoGw87WNszP",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -242,8 +240,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "10000",
 			QuoteAssetPerContract:        "450000000",
 			SerumMarketAddress:           "9ugAWZCSgUKjL11fJE9Zjn4QVTdTkAkSLgPu9ZC8mcfD",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -257,8 +255,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "450000000",
 			QuoteAssetPerContract:        "10000",
 			SerumMarketAddress:           "ACdjLA5wPk31eUEqra9BFQ3MTXbHqZfdM1TRQPX8Hi28",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -272,8 +270,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "10000",
 			QuoteAssetPerContract:        "400000000",
 			SerumMarketAddress:           "2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -287,8 +285,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "400000000",
 			QuoteAssetPerContract:        "10000",
 			SerumMarketAddress:           "7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -302,8 +300,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "10000",
 			QuoteAssetPerContract:        "500000000",
 			SerumMarketAddress:           "2q5f1H8xT3tsBzQhwZC3BKnbKMb44fTuDGamZ6xUdZz2",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 		{
 			Expiry:                       1635551999,
@@ -317,8 +315,8 @@ func GetInstruments() []PsyOptions {
 			UnderlyingAssetPerContract:   "500000000",
 			QuoteAssetPerContract:        "10000",
 			SerumMarketAddress:           "DvohGwDZR9Z2siWBj2Xhgxd1qRScVCpywL3EoRbpon3p",
-			SerumProgramId:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-			PsyOptionsProgramId:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
+			SerumProgramID:               "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+			PsyOptionsProgramID:          "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs",
 		},
 	}
 }
