@@ -15,14 +15,12 @@ import (
 
 const version = "Rainbow-1.0"
 
-// exportPort is for Prometheus.
-const exportPort = "no"
-
 var (
 	dev             = flag.Bool("dev", false, "Run rainbow in dev. mode")
-	port            = flag.String("port", envStr("R_API_PORT", "no"), "API port, overseeds env. var. R_API_PORT")
-	maxReqPerMinute = flag.Int("max-rate", envInt("R_MAX_REQ_PER_MINUTE", 6), "Max requests per minute, overseeds env. var. R_MAX_REQ_PER_MINUTE")
-	maxReqBurst     = flag.Int("max-burst", envInt("R_MAX_REQ_BURST", 1), "Max requests during a burst, overseeds env. var. R_MAX_REQ_BURST")
+	apiPort         = flag.Int("port", envInt("API_PORT", 54321), "API port, overseeds env. var. API_PORT")
+	expPort         = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, overseeds env. var. EXP_PORT")
+	maxReqPerMinute = flag.Int("max-rate", envInt("MAX_REQ_PER_MINUTE", 6), "Max requests per minute, overseeds env. var. MAX_REQ_PER_MINUTE")
+	maxReqBurst     = flag.Int("max-burst", envInt("MAX_REQ_BURST", 1), "Max requests during a burst, overseeds env. var. MAX_REQ_BURST")
 )
 
 func parseFlags() {
@@ -31,10 +29,11 @@ func parseFlags() {
 }
 
 func logFlags() {
-	log.Print("Dev. mode             -dev       = ", *dev)
-	log.Print("R_API_PORT            -port      = ", *port)
-	log.Print("R_MAX_REQ_PER_MINUTE  -max-rate  = ", *maxReqPerMinute)
-	log.Print("R_MAX_REQ_BURST       -max-burst = ", *maxReqBurst)
+	log.Print("Dev. mode           -dev       = ", *dev)
+	log.Print("API_PORT            -port      = ", *apiPort)
+	log.Print("EXP_PORT            -exp       = ", *expPort)
+	log.Print("MAX_REQ_PER_MINUTE  -max-rate  = ", *maxReqPerMinute)
+	log.Print("MAX_REQ_BURST       -max-burst = ", *maxReqBurst)
 }
 
 func envStr(varName, defaultValue string) string {

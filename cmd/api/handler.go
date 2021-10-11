@@ -10,31 +10,35 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+
+	"github.com/teal-finance/rainbow/pkg/server"
 )
 
 // apiHandler creates the mapping between the endpoints and the handler functions.
-func apiHandler() http.Handler {
+func apiHandler(s *server.Server) http.Handler {
 	r := chi.NewRouter()
 
 	// API
-	r.Mount("/v1", apiRouter())
+	r.Mount("/v0", apiRouter(s))
 
 	return r
 }
 
 // apiRouter handles API endpoints.
-func apiRouter() chi.Router {
+func apiRouter(s *server.Server) chi.Router {
 	r := chi.NewRouter()
 
 	r.Route("/", func(r chi.Router) {
-		r.Get("/", reserved)
+		r.Get("/", reserved(s))
 		r.Get("/options", replyOptions)
 	})
 
 	return r
 }
 
-func reserved(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusBadRequest)
-	reqError(w, r, "Path is not valid. Please refer to the API doc.")
+func reserved(s *server.Server) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusBadRequest)
+		s.ReqError(w, r, "Path is not valid. Please refer to the API doc.")
+	}
 }

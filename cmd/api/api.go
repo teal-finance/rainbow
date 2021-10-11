@@ -17,6 +17,7 @@ import (
 
 	"github.com/teal-finance/rainbow/pkg/deribit"
 	"github.com/teal-finance/rainbow/pkg/psyoptions"
+	"github.com/teal-finance/rainbow/pkg/server"
 	"github.com/teal-finance/rainbow/pkg/zerox"
 )
 
@@ -29,13 +30,23 @@ const (
 func main() {
 	parseFlags()
 
-	if *port != "" && *port != "no" {
-		runAPIServer()
+	if *apiPort <= 0 {
+		log.Print()
 	}
 
-	tryOpyn()
-	// tryPsyops()
-	// all()
+	s := server.Server{
+		Version:         version,
+		DocURL:          "https://rainbow.teal.finance/doc",
+		DevMode:         *dev,
+		APIPort:         *apiPort,
+		ExpPort:         *expPort,
+		MaxReqBurst:     *maxReqBurst,
+		MaxReqPerMinute: *maxReqPerMinute,
+	}
+
+	h := apiHandler(&s)
+
+	s.RunServer(h)
 }
 
 func tryOpyn() {
