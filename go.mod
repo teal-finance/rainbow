@@ -13,8 +13,11 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-chi/chi/v5 v5.0.4
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/gookit/color v1.4.2 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
+	github.com/jedib0t/go-pretty/v6 v6.2.4 // indirect
+	github.com/jroimartin/gocui v0.5.0 // indirect
 	github.com/justinas/alice v1.2.0
 	github.com/mattn/go-colorable v0.1.11 // indirect
 	github.com/prometheus/client_golang v1.11.0
