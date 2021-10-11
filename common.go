@@ -13,7 +13,7 @@ type Offer struct {
 	QuoteCurrency string // ETH,BTC,DOLLARS
 }
 
-type Options struct {
+type Option struct {
 	Name         string // ASSET-DATE-Strike-OptionsType
 	Type         string // CALL or PUT
 	Asset        string // ETH, BTC, SOL

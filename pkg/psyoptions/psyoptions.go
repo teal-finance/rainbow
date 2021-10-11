@@ -50,10 +50,10 @@ func Instruments(coin string) []string {
 			"DvohGwDZR9Z2siWBj2Xhgxd1qRScVCpywL3EoRbpon3p",
 		}
 	}
-	return []string{}
-}
+		return []string{}
+	}
 
-func InstrumentsFromAllMarkets() (r []rainbow.Options, err error) {
+func InstrumentsFromAllMarkets() (options []rainbow.Option, err error) {
 	// instruments := append(Instruments("ETH"), Instruments("BTC")...)
 	instruments := GetInstruments()
 	client := rpc.NewClient(mainnet)
@@ -67,19 +67,18 @@ func InstrumentsFromAllMarkets() (r []rainbow.Options, err error) {
 		if err != nil {
 			panic(err)
 		}
-		//inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
+		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
 		bids, _, err := BidsAsksToOffers(ctx, out, client, out.Market.GetBids(), true, "BUY")
 		if err != nil {
 			panic(err)
 		}
+
 		asks, _, err := BidsAsksToOffers(context.TODO(), out, client, out.Market.GetAsks(), false, "SELL")
 		if err != nil {
 			panic(err)
 		}
 
-		offers := append(bids, asks...)
-
-		o := rainbow.Options{
+		options = append(options, rainbow.Option{
 			Name:         i.Name(),
 			Type:         i.Type(),
 			Asset:        i.Asset(),
@@ -89,11 +88,11 @@ func InstrumentsFromAllMarkets() (r []rainbow.Options, err error) {
 			Chain:        "Solana",
 			Layer:        "L1",
 			Provider:     "PsyOptions",
-			Offers:       offers,
-		}
-		r = append(r, o)
+			Offers:       append(bids, asks...),
+		})
 	}
-	return r, err
+
+	return options, err
 }
 
 // I don't really need the totalsize but I am keeping it since it was in the original func

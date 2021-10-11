@@ -1,13 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
-	//"github.com/davecgh/go-spew/spew"
-
 	"github.com/gookit/color"
 	"github.com/jedib0t/go-pretty/v6/table"
+
 	"github.com/teal-finance/rainbow"
 	"github.com/teal-finance/rainbow/pkg/deribit"
 	"github.com/teal-finance/rainbow/pkg/psyoptions"
@@ -15,36 +15,39 @@ import (
 )
 
 func main() {
-
-	//spew.Dump(all())
-	options, err := all() //tryDeribit() //tryPsyops() //tryOpyn() //all()
+	options, err := all() // tryDeribit() // tryPsyops() // tryOpyn()
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	PrintOptions(options)
-	//spew.Dump(options)
 
+	PrintOptions(options)
 }
-func PrintOptions(options []rainbow.Options) {
+
+func PrintOptions(options []rainbow.Option) {
 	green := color.FgGreen.Render
 	red := color.FgRed.Render
 
 	t := newTable(fmt.Sprintf("\t\t 29OCT21 CeDeFi options: (%v)", len(options)))
-	t.AppendHeader(table.Row{"Provider", "Asset", "Type", "Bids size", "Bids Price", "Strike", "Asks Price", "Asks size", "Instrument"})
-	for _, option := range options {
-		t.AppendRows([]table.Row{{prov(option.Provider), option.Asset, option.Type,
-			option.Offers[0].Quantity, green(option.Offers[0].Price), option.Strike,
-			red(option.Offers[len(option.Offers)-1].Price), option.Offers[len(option.Offers)-1].Quantity, option.Name}})
 
+	t.AppendHeader(table.Row{"Provider", "Asset", "Type", "Bids size", "Bids Price", "Strike", "Asks Price", "Asks size", "Instrument"})
+
+	for _, option := range options {
+		t.AppendRows([]table.Row{{
+			prov(option.Provider), option.Asset, option.Type,
+			option.Offers[0].Quantity, green(option.Offers[0].Price), option.Strike,
+			red(option.Offers[len(option.Offers)-1].Price), option.Offers[len(option.Offers)-1].Quantity, option.Name,
+		}})
 	}
 
 	t.SortBy([]table.SortBy{
 		{Name: "Strike", Mode: table.AscNumeric},
 		{Name: "Type", Mode: table.Dsc},
 	})
+
 	t.Render()
 }
+
 func prov(p string) string {
 	magenta := color.FgMagenta.Render
 	green := color.FgGreen.Render
@@ -60,17 +63,19 @@ func prov(p string) string {
 	}
 	return s
 }
+
 func newTable(title string) table.Writer {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.SetStyle(table.StyleLight)
 	t.SetTitle(title)
+
 	return t
 }
 
-func tryOpyn() ([]rainbow.Options, error) {
+func tryOpyn() ([]rainbow.Option, error) {
 	instruments := zerox.Instruments()
-	//spew.Dump(instruments)
+	// spew.Dump(instruments)
 	/*orderBook, err := zerox.GetOrderBook(instruments, "Opyn")
 	if err != nil {
 		log.Println(err)
@@ -84,17 +89,17 @@ func tryOpyn() ([]rainbow.Options, error) {
 	orderBook, err := zerox.GetAggregatedOrderBook(instruments, "Opyn", 2.0)
 	if err != nil {
 		log.Println(err)
-		return []rainbow.Options{}, err
+		return []rainbow.Option{}, err
 	}
 
 	return orderBook, err
 }
 
-func tryDeribit() ([]rainbow.Options, error) {
+func tryDeribit() ([]rainbow.Option, error) {
 	instruments, err := deribit.Instruments("BTC")
 	if err != nil {
 		log.Println(err)
-		return []rainbow.Options{}, err
+		return []rainbow.Option{}, err
 	}
 
 	// log.Println(instruments[10])
@@ -103,13 +108,13 @@ func tryDeribit() ([]rainbow.Options, error) {
 	orderBookBTC, err := deribit.GetOrderBook(instruments, 5)
 	if err != nil {
 		log.Println(err)
-		return []rainbow.Options{}, err
+		return []rainbow.Option{}, err
 	}
 
 	instruments, err = deribit.Instruments("ETH")
 	if err != nil {
 		log.Println(err)
-		return []rainbow.Options{}, err
+		return []rainbow.Option{}, err
 	}
 
 	// log.Println(instruments[10])
@@ -118,25 +123,25 @@ func tryDeribit() ([]rainbow.Options, error) {
 	orderBookETH, err := deribit.GetOrderBook(instruments, 5)
 	if err != nil {
 		log.Println(err)
-		return []rainbow.Options{}, err
+		return []rainbow.Option{}, err
 	}
 
 	// spew.Dump(orderBook[0].Offers)
 	return append(orderBookBTC, orderBookETH...), nil
 }
 
-func tryPsyops() ([]rainbow.Options, error) {
+func tryPsyops() ([]rainbow.Option, error) {
 	return psyoptions.InstrumentsFromAllMarkets()
 }
 
-func all() ([]rainbow.Options, error) {
-	options := []rainbow.Options{}
+func all() ([]rainbow.Option, error) {
+	options := []rainbow.Option{}
 
 	// psy
 	psy, err := psyoptions.InstrumentsFromAllMarkets()
 	if err != nil {
 		log.Println("psy error ", err)
-		return []rainbow.Options{}, err
+		return []rainbow.Option{}, err
 	}
 
 	options = append(options, psy...)
@@ -145,7 +150,7 @@ func all() ([]rainbow.Options, error) {
 	op, err := tryOpyn()
 	if err != nil {
 		log.Println("opyn error ", err)
-		return []rainbow.Options{}, err
+		return []rainbow.Option{}, err
 	}
 
 	options = append(options, op...)
@@ -153,7 +158,7 @@ func all() ([]rainbow.Options, error) {
 	der, err := tryDeribit()
 	if err != nil {
 		log.Println("der error ", err)
-		return []rainbow.Options{}, err
+		return []rainbow.Option{}, err
 	}
 
 	return append(options, der...), nil
