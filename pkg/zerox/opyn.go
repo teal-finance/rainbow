@@ -34,15 +34,17 @@ func Instruments() []getOptionsOtokensOToken {
 }
 
 func filterExpired(instruments []getOptionsOtokensOToken) (filtered []getOptionsOtokensOToken) {
+	oct29th, _ := time.Parse(time.RFC3339, "2021-10-29T08:00:00Z")
+
 	for _, i := range instruments {
 		seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
 		if err != nil {
 			log.Println("Oh Sh*t ", i.ExpiryTimestamp)
 			continue // TODO should do much better than failing silently
 		}
+
 		expiryTime := time.Unix(seconds, 0)
-		t, _ := time.Parse(time.RFC3339, "2021-10-29T08:00:00Z")
-		if expiryTime.Equal(t) {
+		if expiryTime.Equal(oct29th) {
 			filtered = append(filtered, i)
 		}
 	}
