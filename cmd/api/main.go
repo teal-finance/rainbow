@@ -16,8 +16,10 @@ func main() {
 	parseFlags()
 
 	if *apiPort <= 0 {
-		log.Print()
+		log.Fatal("FATAL: Unexpected API port: ", *apiPort)
 	}
+
+	go alwaysCollectOptions()
 
 	s := server.Server{
 		Version:         version,
