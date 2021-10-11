@@ -66,9 +66,9 @@ func filterTooFar(instruments []Instrument) (filtered []Instrument) {
 		seconds := i.ExpirationTimestamp / 1000
 		ns := (i.ExpirationTimestamp % 1000) * 1000_000
 		expiryTime := time.Unix(seconds, ns).UTC()
-		//we want market only for the 29OCT
+		// we want market only for the 29OCT
 		// we should filter by taking what is available elsewhere and then
-		//only fetch those
+		// only fetch those
 		t, _ := time.Parse(time.RFC3339, "2021-10-29T08:00:00Z")
 		if expiryTime.Equal(t) {
 			if i.BaseCurrency == "BTC" && i.Strike >= 30000 && i.Strike <= 60000 {
@@ -78,20 +78,20 @@ func filterTooFar(instruments []Instrument) (filtered []Instrument) {
 				filtered = append(filtered, i)
 			}
 		}
-
 	}
+
 	return filtered
 }
 
-func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Options, error) {
-	orderBook := []rainbow.Options{}
+func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Option, error) {
+	orderBook := []rainbow.Option{}
 	// deribitOrderBook := []DeribitOrderBook{}
 	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
 
 	for _, i := range instruments {
 		resp, err := http.Get(baseURL + i.InstrumentName)
 		if err != nil {
-			return []rainbow.Options{}, err
+			return []rainbow.Option{}, err
 		}
 
 		defer resp.Body.Close()
@@ -101,7 +101,7 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Options, er
 		}{}
 
 		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			return []rainbow.Options{}, fmt.Errorf(" order book : %w", err)
+			return []rainbow.Option{}, fmt.Errorf(" order book : %w", err)
 		}
 
 		// API doc: https://docs.deribit.com/#public-get_index_price_names
@@ -111,7 +111,7 @@ func GetOrderBook(instruments []Instrument, depth uint32) ([]rainbow.Options, er
 		expiryTime := time.Unix(seconds, ns).UTC()
 		expiryStr := expiryTime.Format("2006-01-02 15:04:05")
 
-		o := rainbow.Options{
+		o := rainbow.Option{
 			Name:         i.InstrumentName,
 			Type:         strings.ToUpper(i.OptionType),
 			Asset:        i.BaseCurrency,

@@ -21,13 +21,14 @@ import (
 const (
 	listMarketsURL   = "wss://api.psyoptions.io/v1/graphql"
 	PsyQuoteCurrency = "USDC"
-	mainnet          = "https://solana-api.projectserum.com" //https://api.mainnet-beta.solana.com"
+	mainnet          = "https://solana-api.projectserum.com" // https://api.mainnet-beta.solana.com"
 	devnet           = "https://api.devnet.solana.com"
 	Expiration       = "2021-10-29 23:59:59"
 )
 
 func Instruments(coin string) []string {
-	if coin == "ETH" {
+	switch coin {
+	case "ETH":
 		return []string{
 			"8A493gU55NfS4fCjDoLAiN57zPzWf6QQw31QQf1fd6iX",
 			"5pHcU2Gz8eCMwynLvz1AHSFoFbKkeTc7ufeqeG4spb99",
@@ -38,7 +39,8 @@ func Instruments(coin string) []string {
 			"HYmPvo8szh62QVaAfUAXR1eppvCfouUPpH68yE87UYmy",
 			"8fFcWuVaZSKoge4DCpMcNrR5nNXF2pbXCfBUxkMomgr5",
 		}
-	} else if coin == "BTC" {
+
+	case "BTC":
 		return []string{
 			"8fhiAYm41RwtiX8WusCSpY617GWPt2LwUnCQcEeer78o",
 			"6at26sVk8vTYtLh4YDKvje4PDdgFJsNHHyoGw87WNszP",
@@ -49,36 +51,37 @@ func Instruments(coin string) []string {
 			"2q5f1H8xT3tsBzQhwZC3BKnbKMb44fTuDGamZ6xUdZz2",
 			"DvohGwDZR9Z2siWBj2Xhgxd1qRScVCpywL3EoRbpon3p",
 		}
+	default:
+		return []string{}
 	}
-	return []string{}
 }
 
-func InstrumentsFromAllMarkets() (r []rainbow.Options, err error) {
-	//instruments := append(Instruments("ETH"), Instruments("BTC")...)
+func InstrumentsFromAllMarkets() (options []rainbow.Option, err error) {
+	// instruments := append(Instruments("ETH"), Instruments("BTC")...)
 	instruments := GetInstruments()
 	client := rpc.NewClient(mainnet)
 
 	for _, i := range instruments {
-
 		pubKey := solana.MustPublicKeyFromBase58(i.SerumMarketAddress)
 
 		ctx := context.TODO()
+
 		out, err := serum.FetchMarket(ctx, client, pubKey)
 		if err != nil {
 			panic(err)
 		}
-		//inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
+		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
 		bids, _, err := BidsAsksToOffers(ctx, out, client, out.Market.GetBids(), true, "BUY")
 		if err != nil {
 			panic(err)
 		}
+
 		asks, _, err := BidsAsksToOffers(context.TODO(), out, client, out.Market.GetAsks(), false, "SELL")
 		if err != nil {
 			panic(err)
 		}
-		offers := append(bids, asks...)
 
-		o := rainbow.Options{
+		options = append(options, rainbow.Option{
 			Name:         i.Name(),
 			Type:         i.Type(),
 			Asset:        i.Asset(),
@@ -88,17 +91,16 @@ func InstrumentsFromAllMarkets() (r []rainbow.Options, err error) {
 			Chain:        "Solana",
 			Layer:        "L1",
 			Provider:     "PsyOptions",
-			Offers:       offers,
-		}
-		r = append(r, o)
-
+			Offers:       append(bids, asks...),
+		})
 	}
-	return r, err
+
+	return options, err
 }
 
 // I don't really need the totalsize but I am keeping it since it was in the original func
 // ASKs on the top so desc=True & side="SELL"
-// BIDS down so desc=False @ side ="BUY"
+// BIDS down so desc=False @ side ="BUY".
 func BidsAsksToOffers(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, side string) (offers []rainbow.Offer, totalSize float64, err error) {
 	var o serum.Orderbook
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
@@ -122,7 +124,7 @@ func BidsAsksToOffers(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cl
 		return nil
 	})
 	if err != nil {
-		//TODO fail more graciously
+		// TODO fail more graciously
 		panic(err)
 	}
 

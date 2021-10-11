@@ -58,10 +58,11 @@ func extract(i getOptionsOtokensOToken) (oType, expiry string, strike float64) {
 	} else {
 		log.Printf("WARN Expiry: %v from %+v", err, i)
 	}
+
+	// thought the USDCdecimals were correct but apparently not (whatever)
 	strike, err = ConvertFromSolidity(i.StrikePrice, OTokensDecimals)
-	//thought the USDCdecimals were correct but apparently not (whatever)
 	if err != nil {
-		log.Printf("WARN Strike: %v from %+v", err, i) //TODO fail better
+		log.Printf("WARN Strike: %v from %+v", err, i) // TODO fail better
 	}
 
 	/*strikeInt, err := strconv.ParseInt(i.StrikePrice, 10, 0)
@@ -146,8 +147,8 @@ type stubbornRequester struct {
 }
 
 var defaultStubbornRequester = stubbornRequester{
-	sleep:  500 * time.Millisecond, //300 * time.Millisecond,
-	maxBad: 250 * time.Millisecond, //200 * time.Millisecond,
+	sleep:  500 * time.Millisecond,
+	maxBad: 250 * time.Millisecond,
 	ok:     0,
 	ko:     0,
 }
@@ -228,8 +229,8 @@ func (sr *stubbornRequester) logStats() {
 		sr.maxBad, sr.sleep, sr.ok, sr.ko)
 }
 
-func GetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rainbow.Options, error) {
-	orderBook := []rainbow.Options{}
+func GetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rainbow.Option, error) {
+	orderBook := []rainbow.Option{}
 
 	sr := defaultStubbornRequester
 
@@ -242,7 +243,7 @@ func GetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rai
 
 		tipe, expiry, strike := extract(i)
 
-		o := rainbow.Options{
+		o := rainbow.Option{
 			Name:         i.Name,
 			Type:         tipe,
 			Asset:        i.CollateralAsset.Symbol,
@@ -257,12 +258,12 @@ func GetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rai
 
 		b, err := BidsAsksToOffers(ob.Bids.Records, "BUY", i.UnderlyingAsset.Symbol)
 		if err != nil {
-			return []rainbow.Options{}, err
+			return []rainbow.Option{}, err
 		}
 
 		a, err := BidsAsksToOffers(ob.Asks.Records, "SELL", i.UnderlyingAsset.Symbol)
 		if err != nil {
-			return []rainbow.Options{}, err
+			return []rainbow.Option{}, err
 		}
 
 		o.Offers = append(o.Offers, b...)
@@ -351,8 +352,8 @@ func BidsAsksToOffers(records Records, side, quote string) ([]rainbow.Offer, err
 	return offers, nil
 }
 
-func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider string, amount float64) ([]rainbow.Options, error) {
-	orderBook := []rainbow.Options{}
+func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider string, amount float64) ([]rainbow.Option, error) {
+	orderBook := []rainbow.Option{}
 
 	sr := defaultStubbornRequester
 
@@ -366,7 +367,7 @@ func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider stri
 			quote = i.StrikeAsset.Symbol
 		}
 
-		o := rainbow.Options{
+		o := rainbow.Option{
 			Name:         i.Name,
 			Type:         tipe,
 			Asset:        i.UnderlyingAsset.Symbol,
@@ -382,7 +383,7 @@ func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider stri
 		b, err := sr.getQuote("BUY", i.Id, USDC, amount, decimals)
 		if err != nil {
 			log.Print("getQuote BUY ", err)
-			return []rainbow.Options{}, err
+			return []rainbow.Option{}, err
 		}
 
 		if b.Price != "" {
@@ -410,13 +411,13 @@ func GetAggregatedOrderBook(instruments []getOptionsOtokensOToken, provider stri
 		a, err := sr.getQuote("SELL", USDC, i.Id, amount, decimals)
 		if err != nil {
 			log.Print("getQuote SELL ", err)
-			return []rainbow.Options{}, err
+			return []rainbow.Option{}, err
 		}
 
 		if a.Price != "" {
 			price, err := strconv.ParseFloat(a.Price, 64)
 			if err != nil {
-				return []rainbow.Options{}, err
+				return []rainbow.Option{}, err
 			}
 
 			o.Offers = append(o.Offers, rainbow.Offer{

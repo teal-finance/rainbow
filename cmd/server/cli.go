@@ -8,7 +8,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/davecgh/go-spew/spew"
@@ -35,8 +34,8 @@ func main() {
 	}
 
 	tryOpyn()
-	//tryPsyops()
-	//all()
+	// tryPsyops()
+	// all()
 }
 
 func tryOpyn() {
@@ -96,14 +95,15 @@ func tryPsyops() {
 	if err != nil {
 		panic(err)
 	}
+
 	asks, totalAsks, err := psyoptions.BidsAsksToOffers(context.TODO(), out, client, out.Market.GetAsks(), true, "SELL")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("total ", totalAsks+totalBids)
+
+	log.Println("total ", totalAsks+totalBids)
 	offers := append(bids, asks...)
 	spew.Dump(offers)
-
 }
 
 func all() {

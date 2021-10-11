@@ -4,7 +4,6 @@ linters:
     - asciicheck       # Simple linter to check that your code does not contain non-ASCII identifiers
     - bodyclose        # checks whether HTTP response body is closed successfully
     - cyclop           # checks function and package cyclomatic complexity
-    - deadcode         # Finds unused code
     - depguard         # Go linter that checks if package imports are in a list of acceptable packages
     - dogsled          # Checks assignments with too many blank identifiers (e.g. x, _, _, _, := f())
     - dupl             # Tool for code clone detection
@@ -19,7 +18,6 @@ linters:
     - forcetypeassert  # finds forced type assertions
     - funlen           # Tool for detection of long functions
     - gci              # Gci control golang package import order and make it always deterministic.
-    - gochecknoglobals # check that no global variables exist
     - gochecknoinits   # Checks that no init functions are present in Go code
     - gocognit         # Computes and checks the cognitive complexity of functions
     - goconst          # Finds repeated strings that could be replaced by a constant
@@ -79,7 +77,9 @@ linters:
     - scopelint        # v1.39 has been replaced by exportloopref (checks for unpinned variables in go programs)
 
     # ANNOYING
-    - gomnd            # An analyzer to detect magic numbers.
+    - deadcode         # Finds unused code
+    - gochecknoglobals # check that no global variables exist
+    - gomnd            # An analyzer to detect magic numbers
     - lll              # Reports long lines
     - nlreturn         # nlreturn checks for a new line before return and branch statements to increase code clarity
     - tagliatelle      # Checks the struct tags.
