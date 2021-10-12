@@ -115,6 +115,10 @@ Rainbow also implements a configurable rate limiter.
       -port int
           API port, overseeds env. var. API_PORT
 
+See also the Dockerfile for a light container image (16.3 MB).
+The container enables by default the API and export ports.
+The Dockerfile supports Docker, but it is not compatible with Podman-3.3.1.
+
 ## Data structure
 
 ```js
