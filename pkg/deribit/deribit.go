@@ -50,7 +50,6 @@ func Options() ([]rainbow.Option, error) {
 		return nil, err
 	}
 
-	// spew.Dump(orderBook[0].Offers)
 	return append(optionsBTC, optionsETH...), nil
 }
 
@@ -146,12 +145,12 @@ func normalize(instruments []instrument, depth uint32) ([]rainbow.Option, error)
 		expiryTime := time.Unix(seconds, ns).UTC()
 		expiryStr := expiryTime.Format("2006-01-02 15:04:05")
 
-		bids := bidAskToOffers(result.Result.Bids, "BUY", i.QuoteCurrency)
+		bids := normalizeOrders(result.Result.Bids, i.QuoteCurrency)
 		sort.Slice(bids, func(i, j int) bool {
 			return bids[i].Price > bids[j].Price
 		})
 
-		asks := bidAskToOffers(result.Result.Asks, "SELL", i.QuoteCurrency)
+		asks := normalizeOrders(result.Result.Asks, i.QuoteCurrency)
 		sort.Slice(asks, func(i, j int) bool {
 			return asks[i].Price < asks[j].Price
 		})
@@ -166,7 +165,8 @@ func normalize(instruments []instrument, depth uint32) ([]rainbow.Option, error)
 			Chain:        "None",
 			Layer:        "None",
 			Provider:     "Deribit",
-			Offers:       append(bids, asks...),
+			Bid:          bids,
+			Ask:          asks,
 		})
 	}
 
@@ -213,16 +213,16 @@ type OrderBook struct {
 	AskIv                  float64     `json:"ask_iv"`
 }
 
-func bidAskToOffers(orders [][]float64, side, quote string) []rainbow.Offer {
+func normalizeOrders(orders [][]float64, quote string) []rainbow.Order {
 	// if there is no offer, send price=0.0, quant=0.0
 	// hopefully we never an array of empty array
 	if len(orders) == 0 {
-		return []rainbow.Offer{{Side: side, Price: 0.0, Quantity: 0.0, QuoteCurrency: quote}}
+		return []rainbow.Order{{Price: 0.0, Quantity: 0.0, QuoteCurrency: quote}}
 	}
 
-	offers := make([]rainbow.Offer, 0, len(orders))
+	offers := make([]rainbow.Order, 0, len(orders))
 	for _, ord := range orders {
-		offers = append(offers, rainbow.Offer{Side: side, Price: ord[0], Quantity: ord[1], QuoteCurrency: quote})
+		offers = append(offers, rainbow.Order{Price: ord[0], Quantity: ord[1], QuoteCurrency: quote})
 	}
 
 	return offers

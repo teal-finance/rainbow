@@ -121,35 +121,43 @@ The Dockerfile supports Docker, but it is not compatible with Podman-3.3.1.
 
 ## Data structure
 
+The API endpoint /v0/options replies an array of options.
+Each option is described with the following JSON structure:
+
 ```js
-  {
-    "Name": "ETH-2021-10-29 23:59:59-2800-CALL",
-    "Expiry": "2021-10-29 23:59:59",
-    "Type": "CALL",
-    "Asset": "ETH",             // ETH, BTC, SOL
-    "Strike": 2800,
-    "ExchangeType": "DEX",      // CEX or DEX
-    "Chain": "Solana",          // Ethereum, Solana...
-    "Layer": "L1",
-    "Provider": "PsyOptions",   // Opyn, Lyra, Thales, Deribit, Psyoptions
-    "Offers": [
-      {
-        "Side": "BUY",
-        "Price": 77.75,
-        "Quantity": 5,
-        "QuoteCurrency": "USDC" // ETH, BTC...
-      },
-      {
-        "Side": "BUY",
-        "Price": 76.84,
-        "Quantity": 6,
-        "QuoteCurrency": "USDC"
-      },
-      {
-        "Side": "BUY",
-        "Price": 2.5,
-        "Quantity": 2,
-        "QuoteCurrency": "USDC"
-      },
-      ...
+{
+  "Name": "ETH-2021-10-29 23:59:59-3200-PUT",
+  "Expiry": "2021-10-29 23:59:59",
+  "Type": "PUT",
+  "Asset": "ETH",             // ETH, BTC, SOL
+  "Strike": 3200,
+  "ExchangeType": "DEX",      // CEX or DEX
+  "Chain": "Solana",          // Ethereum, Solana...
+  "Layer": "L1",
+  "Provider": "PsyOptions",   // Opyn, Lyra, Thales, Deribit, Psyoptions
+  "Bid": [
+    {
+      "Price": 13.3,
+      "Quantity": 5,
+      "QuoteCurrency": "USDC" // ETH, BTC...
+    },
+    {
+      "Price": 13.1,
+      "Quantity": 10,
+      "QuoteCurrency": "USDC"
+    }
+  ],
+  "Ask": [
+    {
+      "Price": 15.12,
+      "Quantity": 5,
+      "QuoteCurrency": "USDC"
+    },
+    {
+      "Price": 15.25,
+      "Quantity": 9,
+      "QuoteCurrency": "USDC"
+    }
+  ]
+}
 ```

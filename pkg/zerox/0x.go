@@ -201,8 +201,8 @@ func (sr *stubbornRequester) logStats() {
 		sr.maxBad, sr.sleep, sr.ok, sr.ko)
 }
 
-func oldGetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]rainbow.Option, error) {
-	orderBook := []rainbow.Option{}
+func oldNormalize(instruments []getOptionsOtokensOToken, provider string) ([]rainbow.Option, error) {
+	options := []rainbow.Option{}
 
 	sr := defaultStubbornRequester
 
@@ -213,11 +213,21 @@ func oldGetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]
 			continue
 		}
 
-		tipe, expiry, strike := extract(i)
+		optionType, expiry, strike := extract(i)
 
-		o := rainbow.Option{
+		bids, err := normalizeOrders(ob.Bids.Records, i.UnderlyingAsset.Symbol)
+		if err != nil {
+			return nil, err
+		}
+
+		asks, err := normalizeOrders(ob.Asks.Records, i.UnderlyingAsset.Symbol)
+		if err != nil {
+			return nil, err
+		}
+
+		options = append(options, rainbow.Option{
 			Name:         i.Name,
-			Type:         tipe,
+			Type:         optionType,
 			Asset:        i.CollateralAsset.Symbol,
 			Expiry:       expiry,
 			Strike:       strike,
@@ -225,29 +235,14 @@ func oldGetOrderBook(instruments []getOptionsOtokensOToken, provider string) ([]
 			Chain:        "Ethereum",
 			Layer:        "L1",
 			Provider:     provider,
-			Offers:       nil,
-		}
-
-		b, err := bidAskToOffers(ob.Bids.Records, "BUY", i.UnderlyingAsset.Symbol)
-		if err != nil {
-			return nil, err
-		}
-
-		a, err := bidAskToOffers(ob.Asks.Records, "SELL", i.UnderlyingAsset.Symbol)
-		if err != nil {
-			return nil, err
-		}
-
-		o.Offers = append(o.Offers, b...)
-		o.Offers = append(o.Offers, a...)
-		// log.Print("o ", o)
-
-		orderBook = append(orderBook, o)
+			Bid:          bids,
+			Ask:          asks,
+		})
 	}
 
 	sr.logStats()
 
-	return orderBook, nil
+	return options, nil
 }
 
 type Orders struct {
@@ -294,24 +289,23 @@ type Record struct {
 
 // The result is false because I don't properly take into account the decimals
 // Use GetQuote instead.
-func bidAskToOffers(records []Record, side, quote string) ([]rainbow.Offer, error) {
-	offers := make([]rainbow.Offer, 0, len(records))
+func normalizeOrders(records []Record, quote string) ([]rainbow.Order, error) {
+	offers := make([]rainbow.Order, 0, len(records))
 
 	for _, r := range records {
 		takerAmount, err := strconv.ParseFloat(r.Order.TakerAmount, 64)
 		if err != nil {
-			return []rainbow.Offer{}, err
+			return []rainbow.Order{}, err
 		}
 
 		makerAmount, err := strconv.ParseFloat(r.Order.MakerAmount, 64)
 		if err != nil {
-			return []rainbow.Offer{}, err
+			return []rainbow.Order{}, err
 		}
 
 		offers = append(
 			offers,
-			rainbow.Offer{
-				Side:          side,
+			rainbow.Order{
 				Price:         makerAmount / takerAmount,
 				Quantity:      takerAmount * math.Pow(10, -float64(OTokensDecimals)),
 				QuoteCurrency: quote,
@@ -346,7 +340,8 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 			Chain:        "Ethereum",
 			Layer:        "L1",
 			Provider:     provider,
-			Offers:       nil,
+			Bid:          nil,
+			Ask:          nil,
 		}
 
 		b, err := sr.getQuote("BUY", i.Id, USDC, amount, decimals)
@@ -362,15 +357,13 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 				continue
 			}
 
-			o.Offers = append(o.Offers, rainbow.Offer{
-				Side:          "BUY",
+			o.Bid = append(o.Bid, rainbow.Order{
 				Price:         price,
 				Quantity:      amount,
 				QuoteCurrency: quote,
 			})
 		} else {
-			o.Offers = append(o.Offers, rainbow.Offer{
-				Side:          "BUY",
+			o.Bid = append(o.Bid, rainbow.Order{
 				Price:         0.0,
 				Quantity:      0.0,
 				QuoteCurrency: quote,
@@ -389,15 +382,13 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 				return nil, err
 			}
 
-			o.Offers = append(o.Offers, rainbow.Offer{
-				Side:          "SELL",
+			o.Ask = append(o.Ask, rainbow.Order{
 				Price:         price,
 				Quantity:      amount,
 				QuoteCurrency: quote,
 			})
 		} else {
-			o.Offers = append(o.Offers, rainbow.Offer{
-				Side:          "SELL",
+			o.Ask = append(o.Ask, rainbow.Order{
 				Price:         0.0,
 				Quantity:      0.0,
 				QuoteCurrency: quote,

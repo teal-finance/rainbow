@@ -71,12 +71,12 @@ func Options() (options []rainbow.Option, err error) {
 			panic(err)
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
-		bids, _, err := bidAskToOffers(ctx, out, client, out.Market.GetBids(), true, "BUY")
+		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true)
 		if err != nil {
 			panic(err)
 		}
 
-		asks, _, err := bidAskToOffers(context.TODO(), out, client, out.Market.GetAsks(), false, "SELL")
+		asks, _, err := normalizeOrders(context.TODO(), out, client, out.Market.GetAsks(), false)
 		if err != nil {
 			panic(err)
 		}
@@ -91,17 +91,18 @@ func Options() (options []rainbow.Option, err error) {
 			Chain:        "Solana",
 			Layer:        "L1",
 			Provider:     "PsyOptions",
-			Offers:       append(bids, asks...),
+			Bid:          bids,
+			Ask:          asks,
 		})
 	}
 
 	return options, err
 }
 
-// I don't really need the totalsize but I am keeping it since it was in the original func
-// ASKs on the top so desc=True & side="SELL"
-// BIDS down so desc=False @ side ="BUY".
-func bidAskToOffers(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, side string) (offers []rainbow.Offer, totalSize float64, err error) {
+// I don't really need the totalsize but I am keeping it since it was in the original func:
+//     - ASK on the top so desc=true
+//     - BID down so desc=false
+func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool) (offers []rainbow.Order, totalSize float64, err error) {
 	var o serum.Orderbook
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
 		return nil, 0, fmt.Errorf("getting orderbook: %w", err)
@@ -136,11 +137,10 @@ func bidAskToOffers(ctx context.Context, market *serum.MarketMeta, cli *rpc.Clie
 		totalSize += qty
 
 		offers = append(offers,
-			rainbow.Offer{
+			rainbow.Order{
 				Price:         price,
 				Quantity:      qty,
 				QuoteCurrency: PsyQuoteCurrency,
-				Side:          side,
 			},
 		)
 	}

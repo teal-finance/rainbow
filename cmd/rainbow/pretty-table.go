@@ -38,9 +38,9 @@ func printTable(options []rainbow.Option) {
 
 	for _, option := range options {
 		t.AppendRows([]table.Row{{
-			prov(option.Provider), option.Asset, option.Type,
-			option.Offers[0].Quantity, green(option.Offers[0].Price), option.Strike,
-			red(option.Offers[len(option.Offers)-1].Price), option.Offers[len(option.Offers)-1].Quantity, option.Name,
+			provider(option.Provider), option.Asset, option.Type,
+			option.Bid[0].Quantity, green(option.Bid[0].Price), option.Strike,
+			red(option.Ask[0].Price), option.Ask[0].Quantity, option.Name,
 		}})
 	}
 
@@ -52,7 +52,7 @@ func printTable(options []rainbow.Option) {
 	t.Render()
 }
 
-func prov(p string) string {
+func provider(p string) string {
 	magenta := color.FgMagenta.Render
 	green := color.FgGreen.Render
 	blue := color.FgCyan.Render
