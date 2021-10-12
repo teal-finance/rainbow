@@ -44,11 +44,14 @@ func main() {
 		ExpPort:         *expPort,
 		MaxReqBurst:     *maxReqBurst,
 		MaxReqPerMinute: *maxReqPerMinute,
+		OPAFiles:        nil,
 	}
 
 	h := apiHandler(&s)
 
-	s.RunServer(h)
+	if err := s.RunServer(h); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func logFlags() {
@@ -69,12 +72,12 @@ func envStr(varName, defaultValue string) string {
 
 func envInt(varName string, defaultValue int) int {
 	if str, ok := os.LookupEnv(varName); ok {
-		val, err := strconv.Atoi(str)
+		value, err := strconv.Atoi(str)
 		if err == nil {
-			return val
+			return value
 		}
 
-		log.Printf("ERROR: Want integer but got %v=%v err: %v", varName, str, err)
+		log.Fatalf("ERROR: Want integer but got %v=%v err: %v", varName, str, err)
 	}
 
 	return defaultValue

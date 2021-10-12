@@ -13,6 +13,8 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/open-policy-agent/opa/ast"
 )
 
 type Server struct {
@@ -35,14 +37,26 @@ type Server struct {
 	httpActive   int64 // counter
 	httpIdle     int64 // counter
 	httpHijacked int64 // counter
+
+	OPAFiles    []string
+	opaCompiler *ast.Compiler
 }
 
-func (s *Server) RunServer(h http.Handler) {
+// run the server for API endpoints.
+func (s *Server) RunServer(h http.Handler) error {
 	middlewares, connState := s.metricsServer()
+
+	if len(s.OPAFiles) > 0 {
+		err := s.loadPolicies()
+		if err != nil {
+			return err
+		}
+
+		middlewares.Append(s.auth)
+	}
 
 	port := strconv.Itoa(s.APIPort)
 
-	// run the server for API endpoints
 	log.Print("API server listening on http://localhost:", port)
 
 	server := http.Server{
@@ -65,10 +79,13 @@ func (s *Server) RunServer(h http.Handler) {
 		log.Print("ERROR: Install ncat and ss: sudo apt install ncat iproute2")
 		log.Printf("ERROR: Try to listen port %v: sudo ncat -l %v", port, port)
 		log.Printf("ERROR: Get the process using port %v: sudo ss -pan | grep %v", port, port)
-		log.Fatal(err)
+
+		return err
 	}
 
 	go s.removeOldVisitors()
+
+	return nil
 }
 
 func (s *Server) ReqError(w http.ResponseWriter, r *http.Request, errMsg string) {
