@@ -15,7 +15,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/server"
 )
 
-const version = "Rainbow-1.0"
+const version = "Rainbow-0.1"
 
 var (
 	dev             = flag.Bool("dev", false, "Run rainbow in dev. mode")
