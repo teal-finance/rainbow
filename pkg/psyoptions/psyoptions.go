@@ -76,7 +76,7 @@ func Options() (options []rainbow.Option, err error) {
 			panic(err)
 		}
 
-		asks, _, err := normalizeOrders(context.TODO(), out, client, out.Market.GetAsks(), false)
+		asks, _, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false)
 		if err != nil {
 			panic(err)
 		}

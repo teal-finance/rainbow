@@ -23,7 +23,6 @@ func getClient() *rpc.Client {
 }
 
 func main() {
-	ctx := context.TODO()
 	serumMarketAddresses := []string{
 		"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
 		"7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",
@@ -31,7 +30,7 @@ func main() {
 		"ACdjLA5wPk31eUEqra9BFQ3MTXbHqZfdM1TRQPX8Hi28",
 	}
 
-	err := runE(ctx, serumMarketAddresses)
+	err := runE(context.TODO(), serumMarketAddresses)
 	if err != nil {
 		panic(err)
 	}

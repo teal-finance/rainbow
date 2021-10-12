@@ -34,7 +34,7 @@ func QueryTheGraph() []getOptionsOtokensOToken {
 
 	graphqlClient := graphql.NewClient(url, nil)
 
-	resp, err := getOptions(context.Background(), graphqlClient)
+	resp, err := getOptions(context.TODO(), graphqlClient)
 	if err != nil {
 		log.Print("ERROR: ", err)
 	}
