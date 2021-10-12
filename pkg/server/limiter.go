@@ -53,8 +53,16 @@ func (s *Server) getVisitor(ip string) *rate.Limiter {
 
 func (s *Server) limitReqRate(next http.Handler) http.Handler {
 	s.visitors = make(map[string]*visitor)
-	s.ratePerSecond = float64(s.MaxReqPerMinute) / 60
-	log.Print("Enable Rate limiter rate=", s.ratePerSecond)
+
+	if s.DevMode {
+		s.MaxReqBurst *= 10
+		s.ratePerSecond = float64(s.MaxReqPerMinute)
+	} else {
+		s.ratePerSecond = float64(s.MaxReqPerMinute) / 60
+	}
+
+	log.Printf("Enable Rate limiter dev=%v burst=%v rate=%v",
+		s.DevMode, s.MaxReqBurst, s.ratePerSecond)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
