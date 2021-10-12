@@ -20,6 +20,7 @@ require (
 	github.com/jroimartin/gocui v0.5.0 // indirect
 	github.com/justinas/alice v1.2.0
 	github.com/mattn/go-colorable v0.1.11 // indirect
+	github.com/open-policy-agent/opa v0.33.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/prometheus/common v0.31.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
