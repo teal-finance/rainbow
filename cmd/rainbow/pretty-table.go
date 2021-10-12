@@ -18,7 +18,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/all"
 )
 
-func printPrettyTabble() {
+func printPrettyTable() {
 	options, err := all.OptionsFromAllProviders()
 	if err != nil {
 		log.Print("ERROR: ", err)

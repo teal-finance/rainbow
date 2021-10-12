@@ -7,12 +7,40 @@
 package main
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 
+	"github.com/teal-finance/rainbow/pkg/all"
 	"github.com/teal-finance/rainbow/pkg/server"
 )
+
+var optionsJSON []byte
+
+func alwaysCollectOptions() {
+	optionsJSON = []byte(`{"error":"initializing"}`)
+
+	for {
+		options, err := all.OptionsFromAllProviders()
+		if err == nil {
+			if b, err := json.Marshal(options); err != nil {
+				log.Print("ERROR JSON Encode: ", err)
+			} else {
+				optionsJSON = b
+			}
+		}
+
+		time.Sleep(10 * time.Minute)
+	}
+}
+
+func replyOptions(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	_, _ = w.Write(optionsJSON)
+}
 
 // apiHandler creates the mapping between the endpoints and the handler functions.
 func apiHandler(s *server.Server) http.Handler {

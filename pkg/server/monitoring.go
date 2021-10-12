@@ -142,7 +142,7 @@ func (s *Server) countRED(next http.Handler) http.Handler {
 		duration := time.Since(start)
 		metrics.AddSampleWithLabels([]string{"request_duration"}, float32(duration.Milliseconds()), labels)
 
-		log.Printf("%v %v %v\n", r.Method, r.RequestURI, duration)
+		log.Printf("out %v %v %v", r.Method, r.URL, duration)
 	})
 }
 
@@ -172,7 +172,7 @@ func (s *Server) setServerHeader(next http.Handler) http.Handler {
 func logRequests(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			log.Printf("Received: %+v %+v", r.Method, r.URL)
+			log.Printf("in  %v %v %v", r.Method, r.RequestURI, r.RemoteAddr)
 			next.ServeHTTP(w, r)
 		})
 }
