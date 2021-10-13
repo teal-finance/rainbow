@@ -40,11 +40,11 @@ func main() {
 		Version:         version,
 		DocURL:          "https://rainbow.teal.finance/doc",
 		DevMode:         *dev,
-		APIPort:         *apiPort,
+		HTTPPort:        *apiPort,
 		ExpPort:         *expPort,
 		MaxReqBurst:     *maxReqBurst,
 		MaxReqPerMinute: *maxReqPerMinute,
-		OPAFiles:        nil,
+		OPAFilenames:    nil,
 	}
 
 	h := apiHandler(&s)

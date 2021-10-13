@@ -23,28 +23,20 @@ import (
 
 // metricsServer creates and starts the Prometheus export server.
 func (s *Server) metricsServer() (middlewares alice.Chain, connState func(net.Conn, http.ConnState)) {
-	var handler http.Handler
-	if s.ExpPort > 0 {
-		handler = s.metricsHandler()
-	}
-
-	if handler == nil {
+	if s.ExpPort <= 0 {
 		log.Print("Disable Prometheus, export port=", s.ExpPort)
-		middlewares := alice.New(logRequests, s.limitReqRate, s.setServerHeader)
-
-		return middlewares, connState
+		return middlewares, nil
 	}
-
-	middlewares = alice.New(s.countRED, logRequests, s.limitReqRate, s.setServerHeader)
 
 	addr := ":" + strconv.Itoa(s.ExpPort)
+	handler := metricsHandler()
 
 	go func() {
 		err := http.ListenAndServe(addr, handler)
 		log.Fatal(err)
 	}()
 
-	log.Print("Enable Prometheus export listening on http://localhost", addr)
+	log.Print("Prometheus export http://localhost" + addr)
 
 	// connState counts the HTTP client connections.
 	// In prod mode, we do not care about minor counting errors, we use the unsafe-thread version.
@@ -55,11 +47,11 @@ func (s *Server) metricsServer() (middlewares alice.Chain, connState func(net.Co
 		connState = s.updateConnCounters()
 	}
 
-	return middlewares, connState
+	return alice.New(countRED), connState
 }
 
 // metricsHandler returns the endpoints "/metrics/xxx".
-func (s *Server) metricsHandler() http.Handler {
+func metricsHandler() http.Handler {
 	sink, err := prometheus.NewPrometheusSink()
 	if err != nil {
 		log.Print("ERROR: NewPrometheusSink cannot register sink because ", err)
@@ -75,6 +67,27 @@ func (s *Server) metricsHandler() http.Handler {
 	handler.Handle("/metrics", promhttp.Handler())
 
 	return handler
+}
+
+// countRED increments/decrements the RED metrics depending on incoming requests and outgoing responses.
+func countRED(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		record := &statusRecorder{ResponseWriter: w, Status: "success"}
+
+		next.ServeHTTP(record, r)
+
+		labels := []metrics.Label{
+			{Name: "method", Value: r.Method},
+			{Name: "route", Value: r.RequestURI},
+			{Name: "status", Value: record.Status},
+		}
+
+		duration := time.Since(start)
+		metrics.AddSampleWithLabels([]string{"request_duration"}, float32(duration.Milliseconds()), labels)
+
+		log.Printf("out %v %v %v", r.Method, r.URL, duration)
+	})
 }
 
 // updateConnCounters increments/decrements the number of connections.
@@ -123,27 +136,6 @@ func (s *Server) updateConnCountersAtomic() func(net.Conn, http.ConnState) {
 			atomic.AddInt64(&s.httpConn, -1)
 		}
 	}
-}
-
-// countRED increments/decrements the RED metrics depending on incoming requests and outgoing responses.
-func (s *Server) countRED(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
-		record := &statusRecorder{ResponseWriter: w, Status: "success"}
-
-		next.ServeHTTP(record, r)
-
-		labels := []metrics.Label{
-			{Name: "method", Value: r.Method},
-			{Name: "route", Value: r.RequestURI},
-			{Name: "status", Value: record.Status},
-		}
-
-		duration := time.Since(start)
-		metrics.AddSampleWithLabels([]string{"request_duration"}, float32(duration.Milliseconds()), labels)
-
-		log.Printf("out %v %v %v", r.Method, r.URL, duration)
-	})
 }
 
 type statusRecorder struct {

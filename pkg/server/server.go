@@ -23,8 +23,8 @@ type Server struct {
 
 	DevMode bool
 
-	APIPort int // port of the API
-	ExpPort int // export port for Prometheus
+	HTTPPort int // port of the main server (REST API or any HTTP web server)
+	ExpPort  int // export port for Prometheus
 
 	MaxReqBurst     int
 	MaxReqPerMinute int
@@ -38,15 +38,17 @@ type Server struct {
 	httpIdle     int64 // counter
 	httpHijacked int64 // counter
 
-	OPAFiles    []string
-	opaCompiler *ast.Compiler
+	OPAFilenames []string
+	opaCompiler  *ast.Compiler
 }
 
 // run the server for API endpoints.
 func (s *Server) RunServer(h http.Handler) error {
 	middlewares, connState := s.metricsServer()
 
-	if len(s.OPAFiles) > 0 {
+	middlewares.Append(logRequests, s.limitReqRate, s.setServerHeader)
+
+	if len(s.OPAFilenames) > 0 {
 		err := s.loadPolicies()
 		if err != nil {
 			return err
@@ -55,9 +57,9 @@ func (s *Server) RunServer(h http.Handler) error {
 		middlewares.Append(s.auth)
 	}
 
-	port := strconv.Itoa(s.APIPort)
+	port := strconv.Itoa(s.HTTPPort)
 
-	log.Print("API server listening on http://localhost:", port)
+	log.Print("HTTP server listening on http://localhost:", port)
 
 	server := http.Server{
 		Addr:              ":" + port,

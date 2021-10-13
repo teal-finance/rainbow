@@ -33,11 +33,11 @@ import (
 
 // loadPolicies loads one or more policies files.
 func (s *Server) loadPolicies() (err error) {
-	log.Printf("Load OPA %v files", len(s.OPAFiles))
-
 	modules := map[string]string{}
 
-	for _, f := range s.OPAFiles {
+	for _, f := range s.OPAFilenames {
+		log.Print("Load OPA file: ", f)
+
 		content, e := ioutil.ReadFile(f)
 		if e != nil {
 			return fmt.Errorf("OPA read file: %w", e)
