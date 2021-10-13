@@ -79,6 +79,8 @@ in a near future, other protocols like Thales.
 To support PsyOptions, we took our first plunge
 in the Solana ecosystem to understand and use the Serum Go library.
 
+See also the Go documentation: <https://pkg.go.dev/github.com/teal-finance/rainbow>
+
 Next step is to implement on a proper UI that enables users to trade,
 based on Typescript/Vue3.
 
