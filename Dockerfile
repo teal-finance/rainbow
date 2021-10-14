@@ -1,4 +1,14 @@
-FROM docker.io/golang:1.17-buster AS builder
+# Build:
+#
+#    docker build . -t=rainbow
+#    podman build . -t=rainbow
+#
+# Run with disabled export port:
+#
+#    docker run -p 0.0.0.0:1234:1234 -d -e API_PORT=1234 -e EXP_PORT=0 --name rainbow rainbow
+#    podman run -p 0.0.0.0:1234:1234 -d -e API_PORT=1234 -e EXP_PORT=0 --name rainbow rainbow
+
+FROM docker.io/golang:1.17-alpine3.14 AS builder
 
 WORKDIR /code
 
@@ -15,7 +25,8 @@ COPY structures.go structures.go
 
 RUN ls -l
 
-RUN CGO_ENABLED=0 go build -v -mod=readonly ./cmd/rainbow
+# "-s -w" removes all debug symbols https://pkg.go.dev/cmd/link
+RUN CGO_ENABLED=0 go build -ldflags "-s -w" -v -mod=readonly ./cmd/rainbow
 
 # smoke test
 RUN ls -sh rainbow
@@ -23,11 +34,11 @@ RUN ./rainbow -help
 
 WORKDIR /target
 
-# Time zones and HTTPS root certificates
-RUN mkdir -p   etc/ssl/certs   usr/share
-RUN cp -a /usr/share/zoneinfo  usr/share
-RUN cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs
 RUN cp -a /code/rainbow           .
+
+# HTTPS root certificates (adds about 200 KB)
+RUN mkdir -p                                 etc/ssl/certs
+RUN cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs
 
 # User & group files
 RUN echo 'teal:x:5505:5505::/:' > etc/passwd
