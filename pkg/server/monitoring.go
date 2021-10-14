@@ -17,12 +17,11 @@ import (
 	"github.com/armon/go-metrics"
 	"github.com/armon/go-metrics/prometheus"
 	"github.com/go-chi/chi/v5"
-	"github.com/justinas/alice"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // metricsServer creates and starts the Prometheus export server.
-func (s *Server) metricsServer() (middlewares alice.Chain, connState func(net.Conn, http.ConnState)) {
+func (s *Server) metricsServer() (middlewares Chain, connState func(net.Conn, http.ConnState)) {
 	if s.ExpPort <= 0 {
 		log.Print("Disable Prometheus, export port=", s.ExpPort)
 		return middlewares, nil
@@ -47,7 +46,7 @@ func (s *Server) metricsServer() (middlewares alice.Chain, connState func(net.Co
 		connState = s.updateConnCounters()
 	}
 
-	return alice.New(countRED), connState
+	return NewChain(countRED), connState
 }
 
 // metricsHandler returns the endpoints "/metrics/xxx".
@@ -153,6 +152,8 @@ func (r *statusRecorder) WriteHeader(status int) {
 
 // setServerHeader sets the Server HTTP header in the response.
 func (s *Server) setServerHeader(next http.Handler) http.Handler {
+	log.Print("Middleware: Set response header: Server ", s.Version)
+
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Server", s.Version)
@@ -162,6 +163,8 @@ func (s *Server) setServerHeader(next http.Handler) http.Handler {
 
 // logRequests logs the incoming HTTP requests.
 func logRequests(next http.Handler) http.Handler {
+	log.Print("Middleware: Will log all incoming request URL and remote address")
+
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			log.Printf("in  %v %v %v", r.Method, r.RequestURI, r.RemoteAddr)
