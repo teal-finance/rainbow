@@ -57,6 +57,8 @@ func (s *Server) RunServer(h http.Handler) error {
 		middlewares.Append(s.auth)
 	}
 
+	middlewares.Append(allowCORS)
+
 	port := strconv.Itoa(s.HTTPPort)
 
 	log.Print("HTTP server listening on http://localhost:", port)
@@ -110,4 +112,14 @@ func (s *Server) ReqError(w http.ResponseWriter, r *http.Request, errMsg string)
 	if err != nil {
 		log.Printf("Write url=%v err: %v", r.URL.Path, err)
 	}
+}
+
+func allowCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
+		next.ServeHTTP(w, req)
+	})
 }
