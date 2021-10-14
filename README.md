@@ -1,8 +1,8 @@
-# ![rainbow](images/rainbow-chancery.png)
+# ![rainbow](public/rainbow-chancery.png)
 
 &nbsp; | &nbsp;
 ---|---
-![logo](images/small.png) | **Rainbow** is a dashboard for Decentralized Finance options trading. <br><br> It's developed during Solana's Ignition & Ethereum's EthGlobal Hackathons by some members of [Teal Finance](https://teal.finance/).
+![logo](public/small.png) | **Rainbow** is a dashboard for Decentralized Finance options trading. <br><br> It's developed during Solana's Ignition & Ethereum's EthGlobal Hackathons by some members of [Teal Finance](https://teal.finance/).
 
 ## Motivation
 
@@ -92,7 +92,7 @@ based on Typescript/Vue3.
     go build ./cmd/rainbow/
     ./rainbow
 
-![CLI screenshot](images/cli.jpg)
+![CLI screenshot](public/cli.jpg)
 
 ## Back-end API
 
