@@ -15,14 +15,14 @@ import (
 	"github.com/teal-finance/rainbow/pkg/server"
 )
 
-const version = "Rainbow-0.2.0-betb"
+const version = "Rainbow-0.2.0"
 
 var (
 	dev             = flag.Bool("dev", false, "Run rainbow in dev. mode")
 	apiPort         = flag.Int("port", envInt("API_PORT", 0), "API port, overseeds env. var. API_PORT")
 	expPort         = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, overseeds env. var. EXP_PORT")
-	maxReqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 6), "Max requests per minute, overseeds env. var. REQ_PER_MINUTE")
-	maxReqBurst     = flag.Int("burst", envInt("REQ_BURST", 1), "Max requests during a burst, overseeds env. var. REQ_BURST")
+	maxReqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 20), "Max requests per minute, overseeds env. var. REQ_PER_MINUTE")
+	maxReqBurst     = flag.Int("burst", envInt("REQ_BURST", 10), "Max requests during a burst, overseeds env. var. REQ_BURST")
 	wwwDir          = flag.String("www", envStr("WWW_DIR", "./dist"), "Folder of the web static files, overseeds env. var. WWW_DIR")
 )
 
