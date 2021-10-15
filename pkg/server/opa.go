@@ -36,11 +36,11 @@ func (s *Server) loadPolicies() (err error) {
 	modules := map[string]string{}
 
 	for _, f := range s.OPAFilenames {
-		log.Print("Load OPA file: ", f)
+		log.Print("OPA: load file ", f)
 
 		content, e := ioutil.ReadFile(f)
 		if e != nil {
-			return fmt.Errorf("OPA read file: %w", e)
+			return fmt.Errorf("OPA: ReadFile %w", e)
 		}
 
 		modules[path.Base(f)] = string(content)
@@ -48,7 +48,7 @@ func (s *Server) loadPolicies() (err error) {
 
 	s.opaCompiler, err = ast.CompileModules(modules)
 	if err != nil {
-		return fmt.Errorf("OPA compile modules: %w", err)
+		return fmt.Errorf("OPA: CompileModules %w", err)
 	}
 
 	return nil
@@ -56,6 +56,8 @@ func (s *Server) loadPolicies() (err error) {
 
 // auth is the HTTP middleware for authorization.
 func (s *Server) auth(next http.Handler) http.Handler {
+	log.Print("Middleware OPA: ", s.opaCompiler.Modules)
+
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		input := map[string]interface{}{
 			"method": r.Method,

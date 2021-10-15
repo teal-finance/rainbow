@@ -152,7 +152,7 @@ func (r *statusRecorder) WriteHeader(status int) {
 
 // setServerHeader sets the Server HTTP header in the response.
 func (s *Server) setServerHeader(next http.Handler) http.Handler {
-	log.Print("Middleware: Set response header: Server ", s.Version)
+	log.Print("Middleware response HTTP header: Set Server ", s.Version)
 
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
@@ -163,7 +163,7 @@ func (s *Server) setServerHeader(next http.Handler) http.Handler {
 
 // logRequests logs the incoming HTTP requests.
 func logRequests(next http.Handler) http.Handler {
-	log.Print("Middleware: Will log all incoming request URL and remote address")
+	log.Print("Middleware logger: log requested URLs and remote addresses")
 
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
