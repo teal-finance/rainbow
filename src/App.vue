@@ -8,7 +8,7 @@
       >
         <div class="flex items-center flex-grow">
           <div class="inline-block mx-3">
-            <img alt="Teal rainbow" src="./assets/logo-transparent.png" height="68" width="68" />
+            <img alt="logo" src="./assets/logo-transparent.png" height="68" width="68" />
           </div>
           <div class="inline-block text-xl tracking-widest">
             <!-- img alt="Rainbow" src="./assets/rainbow-chancery.png" height="49" width="185" / -->
