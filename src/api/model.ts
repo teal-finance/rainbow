@@ -29,7 +29,7 @@ class Api {
       headers: {
         "Content-Type": "application/json",
       },
-      mode: "no-cors"
+      mode: "cors"
     } as RequestInit;
     return h;
   }
