@@ -1,17 +1,8 @@
-// Copyright (C) 2020-2021 TealTicks contributors
+// Copyright (c) 2021 teal.finance
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Affero General Public License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
 
 package server
 
@@ -46,7 +37,7 @@ func (s *Server) loadPolicies() (err error) {
 		modules[path.Base(f)] = string(content)
 	}
 
-	s.opaCompiler, err = ast.CompileModules(modules)
+	s.compiler, err = ast.CompileModules(modules)
 	if err != nil {
 		return fmt.Errorf("OPA: CompileModules %w", err)
 	}
@@ -56,7 +47,7 @@ func (s *Server) loadPolicies() (err error) {
 
 // auth is the HTTP middleware for authorization.
 func (s *Server) auth(next http.Handler) http.Handler {
-	log.Print("Middleware OPA: ", s.opaCompiler.Modules)
+	log.Print("Middleware OPA: ", s.compiler.Modules)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		input := map[string]interface{}{
@@ -68,7 +59,7 @@ func (s *Server) auth(next http.Handler) http.Handler {
 		// evaluation
 		rg := rego.New(
 			rego.Query("data.auth.allow"),
-			rego.Compiler(s.opaCompiler),
+			rego.Compiler(s.compiler),
 			rego.Input(input),
 		)
 
@@ -76,22 +67,26 @@ func (s *Server) auth(next http.Handler) http.Handler {
 		if err != nil || len(rs) == 0 {
 			log.Print("ERROR OPA Eval: ", err)
 			w.WriteHeader(http.StatusInternalServerError)
-			s.ReqError(w, r, "Internal Server Error #1")
+			s.Resp.Error(w, r, "Internal Server Error #1")
 			return
 		}
 
 		allow, ok := rs[0].Expressions[0].Value.(bool)
 		if !ok {
 			log.Print("ERROR missing OPA data in ", rs)
+
 			w.WriteHeader(http.StatusInternalServerError)
-			s.ReqError(w, r, "Internal Server Error #2")
+			s.Resp.Error(w, r, "Internal Server Error #2")
+
 			return
 		}
 
 		if !allow {
 			log.Print("OPA unauthorize " + r.RemoteAddr + " " + r.RequestURI)
+
 			w.WriteHeader(http.StatusUnauthorized)
-			s.ReqError(w, r, "Unauthorized")
+			s.Resp.Error(w, r, "Unauthorized")
+
 			return
 		}
 

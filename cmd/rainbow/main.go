@@ -15,15 +15,25 @@ import (
 	"github.com/teal-finance/rainbow/pkg/server"
 )
 
-const version = "Rainbow-0.1.1"
+const version = "Rainbow-0.2.0-betb"
 
 var (
 	dev             = flag.Bool("dev", false, "Run rainbow in dev. mode")
 	apiPort         = flag.Int("port", envInt("API_PORT", 0), "API port, overseeds env. var. API_PORT")
 	expPort         = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, overseeds env. var. EXP_PORT")
-	maxReqPerMinute = flag.Int("max-rate", envInt("MAX_REQ_PER_MINUTE", 6), "Max requests per minute, overseeds env. var. MAX_REQ_PER_MINUTE")
-	maxReqBurst     = flag.Int("max-burst", envInt("MAX_REQ_BURST", 1), "Max requests during a burst, overseeds env. var. MAX_REQ_BURST")
+	maxReqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 6), "Max requests per minute, overseeds env. var. REQ_PER_MINUTE")
+	maxReqBurst     = flag.Int("burst", envInt("REQ_BURST", 1), "Max requests during a burst, overseeds env. var. REQ_BURST")
+	wwwDir          = flag.String("www", envStr("WWW_DIR", "./dist"), "Folder of the web static files, overseeds env. var. WWW_DIR")
 )
+
+func logFlags() {
+	log.Print("Dev. mode      -dev   = ", *dev)
+	log.Print("API_PORT       -port  = ", *apiPort)
+	log.Print("EXP_PORT       -exp   = ", *expPort)
+	log.Print("REQ_PER_MINUTE -rate  = ", *maxReqPerMinute)
+	log.Print("REQ_BURST      -burst = ", *maxReqBurst)
+	log.Print("WWW_DIR        -www   = ", *wwwDir)
+}
 
 func main() {
 	flag.Parse()
@@ -37,15 +47,10 @@ func main() {
 	go collectOptionsIndefinitely()
 
 	s := server.Server{
-		Version:         version,
-		DocURL:          "https://rainbow.teal.finance/doc",
-		DevMode:         *dev,
-		HTTPPort:        *apiPort,
-		ExpPort:         *expPort,
-		MaxReqBurst:     *maxReqBurst,
-		MaxReqPerMinute: *maxReqPerMinute,
-		AllowedOrigins:  []string{"http://teal.finance:33322"},
-		OPAFilenames:    nil,
+		Version:        version,
+		Resp:           "https://rainbow.teal.finance/doc",
+		AllowedOrigins: []string{"http://teal.finance:33322"},
+		OPAFilenames:   nil,
 	}
 
 	if *dev {
@@ -54,17 +59,9 @@ func main() {
 
 	h := apiHandler(&s)
 
-	if err := s.RunServer(h); err != nil {
+	if err := s.RunServer(h, *apiPort, *expPort, *maxReqBurst, *maxReqPerMinute, *dev); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func logFlags() {
-	log.Print("Dev. mode           -dev       = ", *dev)
-	log.Print("API_PORT            -port      = ", *apiPort)
-	log.Print("EXP_PORT            -exp       = ", *expPort)
-	log.Print("MAX_REQ_PER_MINUTE  -max-rate  = ", *maxReqPerMinute)
-	log.Print("MAX_REQ_BURST       -max-burst = ", *maxReqBurst)
 }
 
 func envStr(varName, defaultValue string) string {
