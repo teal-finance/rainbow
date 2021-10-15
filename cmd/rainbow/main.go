@@ -34,7 +34,7 @@ func main() {
 		return
 	}
 
-	go alwaysCollectOptions()
+	go collectOptionsIndefinitely()
 
 	s := server.Server{
 		Version:         version,

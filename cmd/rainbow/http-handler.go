@@ -7,6 +7,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -18,27 +19,53 @@ import (
 	"github.com/teal-finance/rainbow/pkg/server"
 )
 
-var optionsJSON []byte
+const (
+	queryDuration = 40 * time.Second
+	sleepDuration = 10 * time.Minute
+)
 
-func alwaysCollectOptions() {
-	optionsJSON = []byte(`{"error":"initializing"}`)
+var (
+	optionsJSON  = []byte(`{"error":"initializing"}`)
+	lastModified string
+	expires      string
+)
+
+func collectOptionsIndefinitely() {
+	loopDuration := queryDuration + sleepDuration
+	now := time.Now().UTC()
 
 	for {
+		beginTime := now
+
 		options, err := all.OptionsFromAllProviders()
 		if err == nil {
 			if b, err := json.Marshal(options); err != nil {
 				log.Print("ERROR JSON Encode: ", err)
-			} else {
+			} else if !bytes.Equal(optionsJSON, b) {
 				optionsJSON = b
+				lastModified = beginTime.Format(http.TimeFormat)
 			}
 		}
 
-		time.Sleep(10 * time.Minute)
+		// try to estimate the next refresh time
+		expires = time.Now().UTC().Add(loopDuration).Format(http.TimeFormat)
+
+		time.Sleep(sleepDuration)
+
+		now = time.Now().UTC()
+		loopDuration += now.Sub(beginTime)
+		loopDuration /= 2 // compute a basic average
 	}
 }
 
 func replyOptions(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	if lastModified != "" {
+		w.Header().Set("Last-Modified", lastModified)
+		w.Header().Set("Expires", expires)
+	}
+
 	_, _ = w.Write(optionsJSON)
 }
 
