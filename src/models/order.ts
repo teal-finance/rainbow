@@ -1,4 +1,4 @@
-export default class Operation {
+export default class Order {
   price: number;
   quantity: number;
   quoteCurrency: string;

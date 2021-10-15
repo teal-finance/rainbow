@@ -1,21 +1,33 @@
 <template>
-  <div>{{ val.size }}</div>
+  <Popper :hover="true" arrow placement="right">
+    <button>{{ v.size }}</button>
+    <template #content="{ close }">
+      <div class="p-3 bg-neutral text-neutral-r dark:bg-neutral-dark dark:text-neutral-r-dark">
+        <div
+          v-for="(line,i) in v"
+          :key="i"
+        >Quote: {{ line.quoteCurrency }} Price: {{ line.price }} Quantity {{ line.quantity }}</div>
+      </div>
+    </template>
+  </Popper>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref, toRefs } from "vue";
+import Popper from "vue3-popper";
 import { guidGenerator } from "@/datatable/utils";
-import Bid from "@/models/bid";
-import Ask from "@/models/ask";
 
 export default defineComponent({
+  components: {
+    Popper,
+  },
   props: {
     k: {
       type: String,
       required: true,
     },
     v: {
-      type: Object as () => Set<Bid> | Set<Ask>,
+      type: Set,
       required: true,
     },
   },
@@ -23,11 +35,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const { k, v } = toRefs(props);
 
-    const val = ref<Set<Bid> | Set<Ask>>(v.value);
+    const val = ref(v.value);
 
     const id = guidGenerator();
 
-    function onChange(event: boolean) {
+    function onChange(event) {
       console.log("Change", val.value, event)
       emit("update:v", { k: k.value, v: val.value });
     }

@@ -7,12 +7,12 @@ export type OptionData = {
     Price: number,
     Quantity: number,
     QuoteCurrency: string,
-  }];
+  }] | null;
   Ask: [{
     Price: number,
     Quantity: number,
     QuoteCurrency: string,
-  }];
+  }] | null;
   Chain: string;
   ExchangeType: string;
   Expiry: string;

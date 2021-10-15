@@ -51,24 +51,24 @@ export default defineComponent({
     }
 
     function loadData(dataset: Array<Record<string, string | number | Array<Record<string, string | number>>>>) {
-      //console.log("DATA", dataset)
+      console.log("DATA", dataset)
       const options = new Set<Option>();
       for (const line of dataset) {
-        options.add(new Option(line as OptionData))
+        const opt = new Option(line as OptionData);
+        options.add(opt)
       }
       //console.log("OPTS", options);
       const columns = {
         "provider": "Provider",
         "asset": "Asset",
         "type": "Type",
-        "bids": "Bids size",
-        "bidsPrice": "Bids price",
+        "bestBidQty": "Bid size",
+        "bestBidPx": "Bid price",
         "strike": "Strike",
-        "asks": "Asks size",
-        "asksPrice": "Asks price",
+        "bestAskPx": "Ask price",
+        "bestAskQty": "Ask size",
         "chain": "Chain",
         "name": "Instrument",
-
       }
       datatable.value = new SwDataTableModel<Option>({ columns: columns, rows: Array.from(options) });
       //datatable.value.setColumnsFromData();

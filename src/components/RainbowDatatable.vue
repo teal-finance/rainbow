@@ -57,8 +57,8 @@ export default defineComponent({
   setup: (props) => {
     const { model } = toRefs(props);
     const renderers = {
-      "bids": BidAskRenderer,
-      "asks": BidAskRenderer,
+      "bid": BidAskRenderer,
+      "ask": BidAskRenderer,
     };
     const initial = reactive({
       rows: new Array<Option>(),
@@ -102,4 +102,6 @@ export default defineComponent({
     @apply bg-light text-light-r dark:bg-light-dark dark:text-light-r-dark
   td
     @apply px-3 py-1
+  tbody
+    @apply bg-gray-50 dark:bg-gray-700
 </style>
