@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+!/doc/dist
+*.local
+yarn.lock
+yarn-error.log
+/dev
+.vscode
+storybook-static

@@ -38,6 +38,8 @@ type Server struct {
 	httpIdle     int64 // counter
 	httpHijacked int64 // counter
 
+	AllowedOrigins []string // used for CORS
+
 	OPAFilenames []string
 	opaCompiler  *ast.Compiler
 }
@@ -56,6 +58,8 @@ func (s *Server) RunServer(h http.Handler) error {
 
 		middlewares.Append(s.auth)
 	}
+
+	middlewares.Append(handleCORS(s.AllowedOrigins))
 
 	port := strconv.Itoa(s.HTTPPort)
 

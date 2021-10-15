@@ -13,8 +13,8 @@ type Option struct {
 	Expiry       string // Expiry date in format 2021-12-31
 	Strike       float64
 	ExchangeType string // CEX / DEX
-	Chain        string // Ethereum, Solana, None for CEX
-	Layer        string // L1 or L2, for Deribit we put "None"
+	Chain        string // Ethereum, Solana and "–" for CEX (Deribit)
+	Layer        string // L1, L2 and "–" for CEX (Deribit)
 	Provider     string // Opyn, Lyra, Thales, Deribit, Psyoptions
 	Bid          []Order
 	Ask          []Order

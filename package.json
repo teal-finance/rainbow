@@ -1,0 +1,46 @@
+{
+  "version": "0.1.1",
+  "private": false,
+  "homepage": "https://github.com/teal-finance/rainbow",
+  "scripts": {
+    "lint": "eslint --ext .ts,vue --fix --ignore-path .gitignore .",
+    "lint2": "vue-tsc --noEmit",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "storybook": "start-storybook -p 6006",
+    "buildsb": "build-storybook",
+    "deploysb": "storybook-to-ghpages --existing-output-dir=storybook-static --source-branch=main"
+  },
+  "dependencies": {
+    "@snowind/input": "^0.0.3",
+    "@snowind/sidebar": "^0.0.3",
+    "@snowind/switch": "^0.0.3",
+    "@vueuse/core": "^6.5.3",
+    "vue": "^3.2.19",
+    "vue3-popper": "^1.3.0"
+  },
+  "devDependencies": {
+    "@iconify/json": "^1.1.373",
+    "@snowind/plugin": "^0.0.2",
+    "@tailwindcss/forms": "^0.3.3",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "@vitejs/plugin-vue": "^1.9.2",
+    "@vue/compiler-sfc": "^3.2.19",
+    "autoprefixer": "^10.2.6",
+    "eslint": "^7.30.0",
+    "postcss": "^8.3.5",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "sass": "^1.35.1",
+    "tailwindcss": "^2.2.4",
+    "tslib": "^2.3.0",
+    "typescript": "^4.4.3",
+    "unplugin-icons": "^0.12.14",
+    "unplugin-vue-components": "^0.15.6",
+    "vite": "^2.6.2",
+    "vite-plugin-eslint": "^1.3.0",
+    "vue-loader": "^16.3.0",
+    "vue-tsc": "^0.3.0"
+  }
+}
