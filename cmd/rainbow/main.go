@@ -44,7 +44,12 @@ func main() {
 		ExpPort:         *expPort,
 		MaxReqBurst:     *maxReqBurst,
 		MaxReqPerMinute: *maxReqPerMinute,
+		AllowedOrigins:  []string{"http://teal.finance:33322"},
 		OPAFilenames:    nil,
+	}
+
+	if *dev {
+		s.AllowedOrigins = append(s.AllowedOrigins, "http://localhost:")
 	}
 
 	h := apiHandler(&s)
