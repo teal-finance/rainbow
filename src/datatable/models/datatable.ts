@@ -1,15 +1,12 @@
 import { reactive } from 'vue';
 import { TableInterface, TableParams } from '../interfaces';
-import { ExcludeFilter, IncludeFilter } from './filters';
+import { FilterSet } from './filters';
 
 
 export default class SwDatatableModel<T = Record<string, any>> {
   state = reactive<TableInterface<T>>({ columns: {}, rows: [] });
   _initialState = reactive<TableInterface<T>>({ columns: {}, rows: [] });
-  _filters = {
-    include: new Set<IncludeFilter>(),
-    exclude: new Set<ExcludeFilter>(),
-  }
+  _filtersets: Record<string, FilterSet> = {};
 
   constructor({ columns, rows }: TableParams<T> = {}) {
     this._initialState = reactive<TableInterface<T>>({

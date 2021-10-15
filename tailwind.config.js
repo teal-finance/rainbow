@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors');
+
 module.exports = {
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   // purge: false
@@ -17,7 +19,7 @@ module.exports = {
       colors: {
         'primary': {
           DEFAULT: "#44ddfc",
-          dark: "#44ddfc",
+          dark: colors.gray[700],
         },
         'primary-r': {
           DEFAULT: "#FFFFFF",

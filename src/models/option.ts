@@ -8,6 +8,8 @@ export default class Option {
   asset: string;
   bids = new Set<Bid>();
   asks = new Set<Ask>();
+  bidsPrice: number;
+  asksPrice: number;
   chain: string;
   exchangeType: string;
   expiry: string;
@@ -32,5 +34,7 @@ export default class Option {
     this.provider = data.Provider;
     this.strike = data.Strike;
     this.type = data.Type;
+    this.bidsPrice = data.Bid[0].Price;
+    this.asksPrice = data.Ask[0].Price;
   }
 }

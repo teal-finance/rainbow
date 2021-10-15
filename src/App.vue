@@ -1,11 +1,26 @@
 <template>
-  <div :class="{ 'dark': isDarkMode }">
+  <div :class="{ 'dark': user.isDarkMode.value == true }">
     <div
       class="w-full bg-background dark:bg-background-dark text-foreground dark:text-foreground-dark"
     >
-      <div class="h-20 bg-primary dark:bg-primary-dark text-primary-r dark:text-primary-r-dark">
-          <img alt="logo" src="/public/favicon.png" height="16" />
-          <img alt="Rainbow" src="/public/rainbow-chancery.png" height="16" />
+      <div
+        class="flex items-center h-20 bg-primary dark:bg-primary-dark text-primary-r dark:text-primary-r-dark"
+      >
+        <div class="flex items-center flex-grow">
+          <div class="inline-block mx-3">
+            <img alt="Teal rainbow" src="./assets/logo.png" height="68" width="68" />
+          </div>
+          <div class="inline-block text-xl tracking-widest">
+            <!-- img alt="Rainbow" src="./assets/rainbow-chancery.png" height="49" width="185" / -->
+            Rainbow
+          </div>
+        </div>
+        <div>
+          <div class="mr-5 text-lg cursor-pointer" @click="user.toggleDarkMode()">
+            <i-fa-solid-moon v-if="user.isDarkMode.value == false"></i-fa-solid-moon>
+            <i-fa-solid-sun v-else></i-fa-solid-sun>
+          </div>
+        </div>
       </div>
       <div class="p-5">
         <rainbow-datatable :model="datatable" v-if="datatable.hasData"></rainbow-datatable>
@@ -21,13 +36,13 @@ import api from '@/api';
 import Option from './models/option';
 import { OptionData } from './types';
 import SwDataTableModel from "@/datatable/models/datatable";
+import { user } from "@/state";
 
 export default defineComponent({
   components: {
     RainbowDatatable,
   },
   setup() {
-    const isDarkMode = ref(false);
     const datatable = ref(new SwDataTableModel<Option>());
 
     async function fetchData() {
@@ -36,6 +51,7 @@ export default defineComponent({
     }
 
     function loadData(dataset: Array<Record<string, string | number | Array<Record<string, string | number>>>>) {
+      //console.log("DATA", dataset)
       const options = new Set<Option>();
       for (const line of dataset) {
         options.add(new Option(line as OptionData))
@@ -46,8 +62,10 @@ export default defineComponent({
         "asset": "Asset",
         "type": "Type",
         "bids": "Bids size",
+        "bidsPrice": "Bids price",
         "strike": "Strike",
         "asks": "Asks size",
+        "asksPrice": "Asks price",
         "chain": "Chain",
         "name": "Instrument",
 
@@ -58,11 +76,13 @@ export default defineComponent({
     }
 
     onMounted(() => {
+      //console.log("DATA", data)
       fetchData().then((d) => loadData(d));
+      //loadData(data)
     })
 
     return {
-      isDarkMode,
+      user,
       datatable,
     }
   }

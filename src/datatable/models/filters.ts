@@ -8,6 +8,15 @@ class BaseFilter {
   }
 }
 
-export class IncludeFilter extends BaseFilter { }
-
 export class ExcludeFilter extends BaseFilter { }
+
+export class FilterSet {
+  col: string;
+  exclude: Set<ExcludeFilter>;
+
+  constructor(col: string, exclude: Set<ExcludeFilter>) {
+    this.col = col;
+    this.exclude = exclude;
+  }
+}
+

@@ -1,28 +1,35 @@
 <template>
-  <div>
-    <div>
-      Providers:
-      <values-filter :model="model" col="provider"></values-filter>
+  <div class="flex flex-row mt-3">
+    <div class="w-4/5">
+      <sw-datatable
+        :model="model"
+        :renderers="renderers"
+        class="w-full border border-collapse table-auto dark:border-neutral border-light"
+        id="rtable"
+      ></sw-datatable>
     </div>
-    <div>
-      Type:
-      <values-filter :model="model" col="type"></values-filter>
+    <div class="pl-5 pr-3">
+      <div>
+        <div class="text-xl">Asset</div>
+        <hr class="my-3" />
+        <values-filter :model="model" col="asset"></values-filter>
+      </div>
+      <div class="mt-2">
+        <div class="text-xl">Type</div>
+        <hr class="my-3" />
+        <values-filter :model="model" col="type"></values-filter>
+      </div>
+      <div class="mt-2">
+        <div class="text-xl">Providers</div>
+        <hr class="my-3" />
+        <values-filter :model="model" col="provider"></values-filter>
+      </div>
+      <div class="mt-2">
+        <div class="text-xl">Chain</div>
+        <hr class="my-3" />
+        <values-filter :model="model" col="chain"></values-filter>
+      </div>
     </div>
-    <div>
-      Providers:
-      <!--small-badge
-        v-for="provider in initial.providers"
-        :text="provider"
-        :is-active="state.providers.has(provider)"
-        @click="filters.toggleProvider(provider)"
-      ></small-badge-->
-    </div>
-    <sw-datatable
-      :model="model"
-      :renderers="renderers"
-      class="mt-3 border border-collapse table-auto border-light"
-      id="rtable"
-    ></sw-datatable>
   </div>
 </template>
 
@@ -92,7 +99,7 @@ export default defineComponent({
 <style lang="sass">
 #rtable
   th
-    @apply bg-light
+    @apply bg-light text-light-r dark:bg-light-dark dark:text-light-r-dark
   td
     @apply px-3 py-1
 </style>
