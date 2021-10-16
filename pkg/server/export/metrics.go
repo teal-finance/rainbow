@@ -4,7 +4,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-package server
+package export
 
 import (
 	"log"
@@ -18,20 +18,28 @@ import (
 	"github.com/armon/go-metrics/prometheus"
 	"github.com/go-chi/chi/v5"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	"github.com/teal-finance/rainbow/pkg/server/chain"
 )
 
-// metricsServer creates and starts the Prometheus export server.
-func (s *Server) metricsServer() (middlewares Chain, connState func(net.Conn, http.ConnState)) {
-	if s.ExpPort <= 0 {
-		log.Print("Disable Prometheus, export port=", s.ExpPort)
+type Metrics struct {
+	httpConn     int64 // gauge
+	httpActive   int64 // counter
+	httpIdle     int64 // counter
+	httpHijacked int64 // counter
+}
+
+// MetricsServer creates and starts the Prometheus export server.
+func (m *Metrics) StartServer(port int, devMode bool) (middlewares chain.Chain, connState func(net.Conn, http.ConnState)) {
+	if port <= 0 {
+		log.Print("Disable Prometheus, export port=", port)
 		return middlewares, nil
 	}
 
-	addr := ":" + strconv.Itoa(s.ExpPort)
-	handler := metricsHandler()
+	addr := ":" + strconv.Itoa(port)
 
 	go func() {
-		err := http.ListenAndServe(addr, handler)
+		err := http.ListenAndServe(addr, handler())
 		log.Fatal(err)
 	}()
 
@@ -40,17 +48,17 @@ func (s *Server) metricsServer() (middlewares Chain, connState func(net.Conn, ht
 	// connState counts the HTTP client connections.
 	// In prod mode, we do not care about minor counting errors, we use the unsafe-thread version.
 	// In dev mode we use the atomic version to avoid warnings from "go build -race".
-	if s.DevMode {
-		connState = s.updateConnCountersAtomic()
+	if devMode {
+		connState = m.updateConnCountersAtomic()
 	} else {
-		connState = s.updateConnCounters()
+		connState = m.updateConnCounters()
 	}
 
-	return NewChain(countRED), connState
+	return chain.New(countRED), connState
 }
 
-// metricsHandler returns the endpoints "/metrics/xxx".
-func metricsHandler() http.Handler {
+// handler returns the endpoints "/metrics/xxx".
+func handler() http.Handler {
 	sink, err := prometheus.NewPrometheusSink()
 	if err != nil {
 		log.Print("ERROR: NewPrometheusSink cannot register sink because ", err)
@@ -90,49 +98,49 @@ func countRED(next http.Handler) http.Handler {
 }
 
 // updateConnCounters increments/decrements the number of connections.
-func (s *Server) updateConnCounters() func(net.Conn, http.ConnState) {
+func (m *Metrics) updateConnCounters() func(net.Conn, http.ConnState) {
 	return func(nc net.Conn, cs http.ConnState) {
 		switch cs {
 		// StateNew: the client just connects to TealAPI expecting a request.
 		// Transition to either StateActive or StateClosed.
 		case http.StateNew:
-			s.httpConn++
+			m.httpConn++
 		// StateActive when 1 or more bytes of a request has been read.
 		// After the request is handled, transitions to StateClosed, StateHijacked, or StateIdle.
 		// HTTP/2: StateActive only transitions away once all active requests are complete.
 		case http.StateActive:
-			s.httpActive++
+			m.httpActive++
 		// StateIdle when handling a request is finished and is in the keep-alive state,
 		// waiting for a new request, then transitions to either StateActive or StateClosed.
 		case http.StateIdle:
-			s.httpIdle++
+			m.httpIdle++
 		// StateHijacked is a terminal state: does not transition to StateClosed.
 		case http.StateHijacked:
-			s.httpHijacked++
-			s.httpConn--
+			m.httpHijacked++
+			m.httpConn--
 		// StateClosed is a terminal state.
 		case http.StateClosed:
 		default:
-			s.httpConn--
+			m.httpConn--
 		}
 	}
 }
 
-func (s *Server) updateConnCountersAtomic() func(net.Conn, http.ConnState) {
+func (m *Metrics) updateConnCountersAtomic() func(net.Conn, http.ConnState) {
 	return func(nc net.Conn, cs http.ConnState) {
 		switch cs {
 		case http.StateNew:
-			atomic.AddInt64(&s.httpConn, 1)
+			atomic.AddInt64(&m.httpConn, 1)
 		case http.StateActive:
-			atomic.AddInt64(&s.httpActive, 1)
+			atomic.AddInt64(&m.httpActive, 1)
 		case http.StateIdle:
-			atomic.AddInt64(&s.httpIdle, 1)
+			atomic.AddInt64(&m.httpIdle, 1)
 		case http.StateHijacked:
-			atomic.AddInt64(&s.httpHijacked, 1)
-			atomic.AddInt64(&s.httpConn, -1)
+			atomic.AddInt64(&m.httpHijacked, 1)
+			atomic.AddInt64(&m.httpConn, -1)
 		case http.StateClosed:
 		default:
-			atomic.AddInt64(&s.httpConn, -1)
+			atomic.AddInt64(&m.httpConn, -1)
 		}
 	}
 }
@@ -148,26 +156,4 @@ func (r *statusRecorder) WriteHeader(status int) {
 	}
 
 	r.ResponseWriter.WriteHeader(status)
-}
-
-// setServerHeader sets the Server HTTP header in the response.
-func (s *Server) setServerHeader(next http.Handler) http.Handler {
-	log.Print("Middleware response HTTP header: Set Server ", s.Version)
-
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Server", s.Version)
-			next.ServeHTTP(w, r)
-		})
-}
-
-// logRequests logs the incoming HTTP requests.
-func logRequests(next http.Handler) http.Handler {
-	log.Print("Middleware logger: log requested URLs and remote addresses")
-
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			log.Printf("in  %v %v %v", r.Method, r.RequestURI, r.RemoteAddr)
-			next.ServeHTTP(w, r)
-		})
 }

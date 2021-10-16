@@ -8,6 +8,16 @@ import IconsResolver from 'unplugin-icons/resolver'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/js/[name].js`,
+        chunkFileNames: `assets/js/[name].js`,
+        assetFileNames: `assets/css/[name].[ext]`,
+      },
+    },
+  },
+
   plugins: [
     typescript2({
       check: false,
@@ -24,6 +34,7 @@ export default defineConfig({
       compiler: 'vue3',
     }),
   ],
+
   resolve: {
     alias: [
       { find: '@/', replacement: '/src/' }

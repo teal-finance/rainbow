@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": false,
   "homepage": "https://github.com/teal-finance/rainbow",
   "scripts": {
@@ -10,13 +10,15 @@
     "serve": "vite preview",
     "storybook": "start-storybook -p 6006",
     "buildsb": "build-storybook",
-    "deploysb": "storybook-to-ghpages --existing-output-dir=storybook-static --source-branch=main"
+    "deploysb": "storybook-to-ghpages --existing-output-dir=storybook-static --source-branch=main",
+    "compress": "gzipper compress --incremental --brotli --brotli-param-mode font --exclude avif,jpg --threshold 999 --remove-larger ./dist"
   },
   "dependencies": {
     "@snowind/input": "^0.0.3",
     "@snowind/sidebar": "^0.0.3",
     "@snowind/switch": "^0.0.3",
     "@vueuse/core": "^6.5.3",
+    "gzipper": "^6.0.0",
     "vue": "^3.2.19",
     "vue3-popper": "^1.3.0"
   },
@@ -42,5 +44,21 @@
     "vite-plugin-eslint": "^1.3.0",
     "vue-loader": "^16.3.0",
     "vue-tsc": "^0.3.0"
+  },
+  "engines": {
+    "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
+  },
+  "author": {
+    "name": "Teal.Finance contributors",
+    "email": "Teal.Finance@protonmail.com",
+    "url": "https://Teal.Finance"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teal-finance/rainbow"
+  },
+  "bugs": {
+    "url": "https://github.com/teal-finance/rainbow/issues"
   }
 }

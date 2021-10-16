@@ -4,7 +4,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-package server
+package cors
 
 import (
 	"log"
@@ -14,8 +14,8 @@ import (
 	"github.com/go-chi/cors"
 )
 
-// handleCORS uses restrictive CORS values.
-func handleCORS(origins []string) func(next http.Handler) http.Handler {
+// HandleCORS uses restrictive CORS values.
+func HandleCORS(origins []string) func(next http.Handler) http.Handler {
 	options := cors.Options{
 		AllowedOrigins:     []string{},               // No need because use function
 		AllowOriginFunc:    nil,                      // Function is set below
@@ -35,10 +35,10 @@ func handleCORS(origins []string) func(next http.Handler) http.Handler {
 	if len(origins) == 1 {
 		options.AllowOriginFunc = oneOrigin(origins[0])
 	} else {
-		options.AllowOriginFunc = multipleOrigins(origins)
+		options.AllowOriginFunc = multipleOriginPrefixes(origins)
 	}
 
-	log.Print("Middleware CORS: ", options)
+	log.Printf("Middleware CORS: %+v", options)
 
 	return cors.Handler(options)
 }
@@ -60,7 +60,7 @@ func oneOrigin(addr string) func(r *http.Request, origin string) bool {
 	}
 }
 
-func multipleOrigins(prefixes []string) func(r *http.Request, origin string) bool {
+func multipleOriginPrefixes(prefixes []string) func(r *http.Request, origin string) bool {
 	log.Print("CORS: Set origin prefixes: ", prefixes)
 
 	return func(r *http.Request, origin string) bool {

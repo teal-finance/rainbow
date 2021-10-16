@@ -7,48 +7,42 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
-	"sync"
 	"time"
 
 	"github.com/open-policy-agent/opa/ast"
+
+	"github.com/teal-finance/rainbow/pkg/server/cors"
+	"github.com/teal-finance/rainbow/pkg/server/export"
+	"github.com/teal-finance/rainbow/pkg/server/limiter"
+	"github.com/teal-finance/rainbow/pkg/server/resperr"
 )
 
 type Server struct {
 	Version string
-	DocURL  string // https://rainbow.teal.finance/doc
+	Resp    resperr.RespErr
 
-	DevMode bool
-
-	HTTPPort int // port of the main server (REST API or any HTTP web server)
-	ExpPort  int // export port for Prometheus
-
-	MaxReqBurst     int
-	MaxReqPerMinute int
-	ratePerSecond   float64
-
-	mu       sync.Mutex
-	visitors map[string]*visitor
-
-	httpConn     int64 // gauge
-	httpActive   int64 // counter
-	httpIdle     int64 // counter
-	httpHijacked int64 // counter
-
+	// CORS
 	AllowedOrigins []string // used for CORS
 
+	// OPA
 	OPAFilenames []string
-	opaCompiler  *ast.Compiler
+	compiler     *ast.Compiler
+
+	metrics export.Metrics
 }
 
-// run the server for API endpoints.
-func (s *Server) RunServer(h http.Handler) error {
-	middlewares, connState := s.metricsServer()
+// RunServer runs the HTTP server in foreground.
+// Optionally it also starts a metrics server in background (if export port > 0).
+// The metrics server is for use with Prometheus or another compatible monitoring tool.
+func (s *Server) RunServer(h http.Handler, port, expPort, maxReqBurst, maxReqPerMinute int, devMode bool) error {
+	middlewares, connState := s.metrics.StartServer(expPort, devMode)
 
-	middlewares.Append(logRequests, s.limitReqRate, s.setServerHeader)
+	reqLimiter := limiter.New(maxReqBurst, maxReqPerMinute, devMode, s.Resp)
+
+	middlewares.Append(logRequests, reqLimiter.Limit, s.setServerHeader)
 
 	if len(s.OPAFilenames) > 0 {
 		err := s.loadPolicies()
@@ -59,14 +53,15 @@ func (s *Server) RunServer(h http.Handler) error {
 		middlewares.Append(s.auth)
 	}
 
-	middlewares.Append(handleCORS(s.AllowedOrigins))
+	middlewares.Append(cors.HandleCORS(s.AllowedOrigins))
 
-	port := strconv.Itoa(s.HTTPPort)
+	addr := ":" + strconv.Itoa(port)
 
-	log.Print("HTTP server listening on http://localhost:", port)
+	log.Print("HTTP server listening on http://localhost", addr)
 
+	// main server: REST API or any HTTP web server
 	server := http.Server{
-		Addr:              ":" + port,
+		Addr:              addr,
 		Handler:           middlewares.Then(h),
 		TLSConfig:         nil,
 		ReadTimeout:       1 * time.Second,
@@ -89,29 +84,27 @@ func (s *Server) RunServer(h http.Handler) error {
 		return err
 	}
 
-	go s.removeOldVisitors()
-
 	return nil
 }
 
-func (s *Server) ReqError(w http.ResponseWriter, r *http.Request, errMsg string) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("X-Content-Type-Options", "nosniff")
+// setServerHeader sets the Server HTTP header in the response.
+func (s *Server) setServerHeader(next http.Handler) http.Handler {
+	log.Print("Middleware response HTTP header: Set Server ", s.Version)
 
-	var err error
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Server", s.Version)
+			next.ServeHTTP(w, r)
+		})
+}
 
-	switch {
-	case r == nil:
-		_, err = fmt.Fprintf(w, `{"error":%q, "doc":"`+s.DocURL+`"}`, errMsg)
+// logRequests logs the incoming HTTP requests.
+func logRequests(next http.Handler) http.Handler {
+	log.Print("Middleware logger: log requested URLs and remote addresses")
 
-	case r.URL.RawQuery == "":
-		_, err = fmt.Fprintf(w, `{"error":%q, "path":%q, "doc":"`+s.DocURL+`"}`, errMsg, r.URL.Path)
-
-	default:
-		_, err = fmt.Fprintf(w, `{"error":%q, "path":%q, "query":%q, "doc":"`+s.DocURL+`"}`, errMsg, r.URL.Path, r.URL.RawQuery)
-	}
-
-	if err != nil {
-		log.Printf("Write url=%v err: %v", r.URL.Path, err)
-	}
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("in  %v %v %v", r.Method, r.RequestURI, r.RemoteAddr)
+			next.ServeHTTP(w, r)
+		})
 }

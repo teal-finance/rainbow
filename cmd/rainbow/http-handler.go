@@ -17,6 +17,7 @@ import (
 
 	"github.com/teal-finance/rainbow/pkg/all"
 	"github.com/teal-finance/rainbow/pkg/server"
+	"github.com/teal-finance/rainbow/pkg/server/fileserver"
 )
 
 const (
@@ -76,6 +77,15 @@ func apiHandler(s *server.Server) http.Handler {
 	// API
 	r.Mount("/v0", apiRouter(s))
 
+	// Static website files
+	fs := fileserver.New(*wwwDir)
+	r.NotFound(fs.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and /Spots/BTC
+	r.Get("/favicon.png", fs.ServeFile("favicon.png", "image/x-icon"))
+	r.Get("/assets/js/*", fs.ServeDir("text/javascript; charset=utf-8"))
+	r.Get("/assets/css/*", fs.ServeDir("text/css; charset=utf-8"))
+	r.Get("/font/*", fs.ServeDir("font/woff2"))
+	r.Get("/images/*", fs.ServeImages())
+
 	return r
 }
 
@@ -94,6 +104,6 @@ func apiRouter(s *server.Server) chi.Router {
 func reserved(s *server.Server) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
-		s.ReqError(w, r, "Path is not valid. Please refer to the API doc.")
+		s.Resp.Error(w, r, "Path is not valid. Please refer to the API doc.")
 	}
 }

@@ -48,11 +48,14 @@ Opyn use the 0x Protocol for the exchange of their options.
 Rainbow uses both Opyn and 0x APIs to retrieve their trading data.
 TheGraph is also used to list the available options from Opyn.
 
-Most recently, PsyOptions (from the Solana ecosystem) has also been integrated. PsyOptions is the main DeFi options protocol.
+Most recently, PsyOptions (from the Solana ecosystem) has also been integrated.
+PsyOptions is the main DeFi options protocol.
 
-More Ethereum and Solana protocols are planed to also be supported in the near future: Thales, Lyra, Hegic...
+More Ethereum and Solana protocols are planed to also be supported
+in the near future: Thales, Lyra, Hegic...
 
-Now, using Rainbow, you can compare to arbitrage options across these markets, or simply get the best prices.
+Now, using Rainbow, you can compare to arbitrage options
+across these markets, or simply get the best prices.
 
 ## Technology
 
@@ -106,18 +109,20 @@ Rainbow also implements a configurable rate limiter.
 
     $ ./rainbow -help
     Usage of ./rainbow:
+      -burst int
+          Max requests during a burst, has precedence over REQ_BURST (default 10)
       -dev
           Run rainbow in dev. mode
       -exp int
-          Export port for Prometheus, overseeds env. var. EXP_PORT
-      -max-burst int
-          Max requests during a burst, overseeds env. var. MAX_REQ_BURST (default 1)
-      -max-rate int
-          Max requests per minute, overseeds env. var. MAX_REQ_PER_MINUTE (default 6)
+          Export port for Prometheus, has precedence over EXP_PORT
       -port int
-          API port, overseeds env. var. API_PORT
+          API port, has precedence over API_PORT
+      -rate int
+          Max requests per minute, has precedence over REQ_PER_MINUTE (default 20)
+      -www string
+          Folder of the web static files, has precedence over WWW_DIR (default "./dist")
 
-See also the Dockerfile for a light container image (15.5 MB).
+See also the Dockerfile for a light container image: 18 MB including the front-end.
 The container enables by default the API and export ports for back-end purpose.
 The Dockerfile has been successfully tested with Docker-20.10.8 and Podman-3.3.1.
 

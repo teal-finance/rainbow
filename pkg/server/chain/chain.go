@@ -1,9 +1,10 @@
 // modified copy of https://github.com/justinas/alice
 // MIT License
-// Copyright (c) 2014 Justinas Stankevicius
-// Copyright (c) 2021 teal.finance
+// Copyright (c) 2014      Justinas Stankevicius
+// Copyright (c) 2015-2016 contributors of alice
+// Copyright (c) 2021      teal.finance
 
-package server
+package chain
 
 import (
 	"net/http"
@@ -18,18 +19,18 @@ type Middleware func(http.Handler) http.Handler
 // the same set of middlewares in the same order.
 type Chain []Middleware
 
-// NewChain creates a new chain,
+// New creates a new chain,
 // memorizing the given list of middlewares.
-// NewChain serves no other function,
+// New serves no other function,
 // middlewares are only constructed upon a call to Then().
-func NewChain(middlewares ...Middleware) Chain {
+func New(middlewares ...Middleware) Chain {
 	return middlewares
 }
 
 // Append extends a chain, adding the specified middlewares
 // as the last ones in the request flow.
 //
-//     chain := server.NewChain(m1, m2)
+//     chain := chain.New(m1, m2)
 //     chain.Append(m3, m4)
 //     // requests in chain go m1 -> m2 -> m3 -> m4
 func (c *Chain) Append(middlewares ...Middleware) {
@@ -37,7 +38,7 @@ func (c *Chain) Append(middlewares ...Middleware) {
 }
 
 // Then chains the middleware and returns the final http.Handler.
-//     server.NewChain(m1, m2, m3).Then(h)
+//     chain.New(m1, m2, m3).Then(h)
 // is equivalent to:
 //     m1(m2(m3(h)))
 //
@@ -46,7 +47,7 @@ func (c *Chain) Append(middlewares ...Middleware) {
 // (assuming every middleware calls the following one).
 //
 // A chain can be safely reused by calling Then() several times.
-//     chain := server.NewChain(ratelimitHandler, csrfHandler)
+//     chain := chain.New(ratelimitHandler, csrfHandler)
 //     indexPipe = chain.Then(indexHandler)
 //     authPipe  = chain.Then(authHandler)
 //
