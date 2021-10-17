@@ -51,7 +51,7 @@ export default defineComponent({
     }
 
     function loadData(dataset: Array<Record<string, string | number | Array<Record<string, string | number>>>>) {
-      console.log("DATA", dataset)
+      // console.log("DATA", dataset)
       const options = new Set<Option>();
       for (const line of dataset) {
         const opt = new Option(line as OptionData);
@@ -62,9 +62,11 @@ export default defineComponent({
         "provider": "Provider",
         "asset": "Asset",
         "type": "Type",
+        "bid": "Bid",
         "bestBidQty": "Bid size",
         "bestBidPx": "Bid price",
         "strike": "Strike",
+        "ask": "Ask",
         "bestAskPx": "Ask price",
         "bestAskQty": "Ask size",
         "chain": "Chain",
