@@ -15,7 +15,7 @@ import (
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
 
-	"github.com/teal-finance/rainbow"
+	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 const (

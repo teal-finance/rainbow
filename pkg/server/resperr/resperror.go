@@ -19,6 +19,16 @@ func New(docURL string) RespErr {
 	return RespErr(docURL)
 }
 
+func (url RespErr) NotImplemented(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+	url.Error(w, r, "Path is reserved for future use. Please contact us to share your ideas.")
+}
+
+func (url RespErr) InvalidPath(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusBadRequest)
+	url.Error(w, r, "Path is not valid. Please refer to the API doc.")
+}
+
 func (url RespErr) Error(w http.ResponseWriter, r *http.Request, msg string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("X-Content-Type-Options", "nosniff")

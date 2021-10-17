@@ -14,7 +14,7 @@ import (
 
 	"github.com/Khan/genqlient/graphql"
 
-	"github.com/teal-finance/rainbow"
+	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 func Options() ([]rainbow.Option, error) {

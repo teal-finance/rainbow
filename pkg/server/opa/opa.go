@@ -4,7 +4,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-package server
+package opa
 
 // This file manages the Open Policy Agent
 // https://www.openpolicyagent.org/docs/edge/integration/#integrating-with-the-go-api
@@ -20,34 +20,39 @@ import (
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
+
+	"github.com/teal-finance/rainbow/pkg/server/resperr"
 )
 
-// loadPolicies loads one or more policies files.
-func (s *Server) loadPolicies() (err error) {
+type Policy struct {
+	Compiler *ast.Compiler
+	Resp     resperr.RespErr
+}
+
+// LoadPolicies loads one or more Rego files.
+func LoadPolicies(filenames []string) (*ast.Compiler, error) {
 	modules := map[string]string{}
 
-	for _, f := range s.OPAFilenames {
-		log.Print("OPA: load file ", f)
+	for _, f := range filenames {
+		log.Print("OPA: load ", f)
 
-		content, e := ioutil.ReadFile(f)
-		if e != nil {
-			return fmt.Errorf("OPA: ReadFile %w", e)
+		content, err := ioutil.ReadFile(f)
+		if err != nil {
+			return nil, fmt.Errorf("OPA: ReadFile %w", err)
 		}
 
 		modules[path.Base(f)] = string(content)
 	}
 
-	s.compiler, err = ast.CompileModules(modules)
-	if err != nil {
-		return fmt.Errorf("OPA: CompileModules %w", err)
-	}
-
-	return nil
+	return ast.CompileModules(modules)
 }
 
-// auth is the HTTP middleware for authorization.
-func (s *Server) auth(next http.Handler) http.Handler {
-	log.Print("Middleware OPA: ", s.compiler.Modules)
+// Auth is the HTTP middleware for authorization.
+func (opa Policy) Auth(next http.Handler) http.Handler {
+	log.Print("Middleware OPA: ", opa.Compiler.Modules)
+
+	compiler := opa.Compiler
+	resp := opa.Resp
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		input := map[string]interface{}{
@@ -59,7 +64,7 @@ func (s *Server) auth(next http.Handler) http.Handler {
 		// evaluation
 		rg := rego.New(
 			rego.Query("data.auth.allow"),
-			rego.Compiler(s.compiler),
+			rego.Compiler(compiler),
 			rego.Input(input),
 		)
 
@@ -67,7 +72,7 @@ func (s *Server) auth(next http.Handler) http.Handler {
 		if err != nil || len(rs) == 0 {
 			log.Print("ERROR OPA Eval: ", err)
 			w.WriteHeader(http.StatusInternalServerError)
-			s.Resp.Error(w, r, "Internal Server Error #1")
+			resp.Error(w, r, "Internal Server Error #1")
 			return
 		}
 
@@ -76,7 +81,7 @@ func (s *Server) auth(next http.Handler) http.Handler {
 			log.Print("ERROR missing OPA data in ", rs)
 
 			w.WriteHeader(http.StatusInternalServerError)
-			s.Resp.Error(w, r, "Internal Server Error #2")
+			resp.Error(w, r, "Internal Server Error #2")
 
 			return
 		}
@@ -85,7 +90,7 @@ func (s *Server) auth(next http.Handler) http.Handler {
 			log.Print("OPA unauthorize " + r.RemoteAddr + " " + r.RequestURI)
 
 			w.WriteHeader(http.StatusUnauthorized)
-			s.Resp.Error(w, r, "Unauthorized")
+			resp.Error(w, r, "Unauthorized")
 
 			return
 		}

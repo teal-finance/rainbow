@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/teal-finance/rainbow"
+	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 const (

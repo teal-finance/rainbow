@@ -5,26 +5,8 @@
 #
 # Run with disabled export port:
 #
-#    docker run -p 0.0.0.0:1234:1234 -d -e API_PORT=1234 -e EXP_PORT=0 --name rainbow rainbow
-#    podman run -p 0.0.0.0:1234:1234 -d -e API_PORT=1234 -e EXP_PORT=0 --name rainbow rainbow
-
-
-
-
-
-# ---- Build -----
-# DOCKER_BUILDKIT=1
-# docker build --file build/Dockerfile.local . --tag tealapi
-
-# ---- Run ----
-# export IDB_URL=https://db.n20.hessling.fr:41444
-# export IDB_ORG=j3
-# export IDB_TOKEN=lwEperkgPNLZQPmidUQFjNxOrgWJ4UcG47lKPSrw9W7Kls9t1YW4rpZhisBewbxF8EyjGEIThoLgfvegdmlA9A==
-# docker run -e IDB_URL -e IDB_ORG -e IDB_TOKEN              \
-#            -v "/etc/teal:/etc/teal:Z"                      \
-#            -v "/var/cache/teal:/var/cache/teal:delegate,Z" \
-#            -v "/var/www/teal.finance:/var/www:Z"           \
-#            -rm --name tealapi tealapi
+#    docker run -p 0.0.0.0:1234:1234 -d -e MAIN_PORT=1234 -e EXP_PORT=0 --name rainbow rainbow
+#    podman run -p 0.0.0.0:1234:1234 -d -e MAIN_PORT=1234 -e EXP_PORT=0 --name rainbow rainbow
 
 # --------------------------------------------------------------------
 FROM docker.io/node:16-alpine3.14 AS web_builder
@@ -105,7 +87,7 @@ USER teal:teal
 
 ENV TZ   UTC0
 
-ENV API_PORT 1234
+ENV MAIN_PORT 1234
 ENV EXP_PORT 5678
 ENV WWW_DIR  /var/www
 

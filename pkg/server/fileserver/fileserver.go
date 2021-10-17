@@ -19,45 +19,43 @@ import (
 	"github.com/teal-finance/rainbow/pkg/server/resperr"
 )
 
-type Fileserver string
-
-// New is useless.
-func New(wwwDir string) Fileserver {
-	return Fileserver(wwwDir)
+type FileServer struct {
+	Dir  string
+	Resp resperr.RespErr
 }
 
 // ServeFile handles one specific file (and its specific Content-Type).
-func (wwwDir Fileserver) ServeFile(urlPath, contentType string) func(w http.ResponseWriter, r *http.Request) {
-	absPath := path.Join(string(wwwDir), urlPath)
+func (fs FileServer) ServeFile(urlPath, contentType string) func(w http.ResponseWriter, r *http.Request) {
+	absPath := path.Join(fs.Dir, urlPath)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", contentType)
-		send(w, r, absPath)
+		fs.send(w, r, absPath)
 	}
 }
 
 // ServeDir handles the static files using the same Content-Type.
-func (wwwDir Fileserver) ServeDir(contentType string) func(w http.ResponseWriter, r *http.Request) {
+func (fs FileServer) ServeDir(contentType string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if validPath(w, r) {
 			w.Header().Set("Content-Type", contentType)
 
-			absPath := path.Join(string(wwwDir), r.URL.Path)
-			send(w, r, absPath)
+			absPath := path.Join(fs.Dir, r.URL.Path)
+			fs.send(w, r, absPath)
 		}
 	}
 }
 
 // ServeImages detects the Content-Type depending on the image extension.
-func (wwwDir Fileserver) ServeImages() func(w http.ResponseWriter, r *http.Request) {
+func (fs FileServer) ServeImages() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if validPath(w, r) {
-			absPath, contentType := wwwDir.imagePathAndType(r)
+			absPath, contentType := fs.imagePathAndType(r)
 			if contentType != "" {
 				w.Header().Set("Content-Type", contentType)
 			}
 
-			send(w, r, absPath)
+			fs.send(w, r, absPath)
 		}
 	}
 }
@@ -75,7 +73,7 @@ func validPath(w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
-func send(w http.ResponseWriter, r *http.Request, absPath string) {
+func (fs FileServer) send(w http.ResponseWriter, r *http.Request, absPath string) {
 	var file *os.File
 
 	// if client (browser) supports Brotli and the *.br file is present
@@ -97,7 +95,7 @@ func send(w http.ResponseWriter, r *http.Request, absPath string) {
 		f, err := os.Open(absPath)
 		if err != nil {
 			w.WriteHeader(http.StatusNotFound)
-			resperr.Error(w, r, "Page not found")
+			fs.Resp.Error(w, r, "Page not found")
 			log.Printf("WARN Fileserver: Open(%v) %v", absPath, err)
 
 			return
@@ -116,7 +114,7 @@ func send(w http.ResponseWriter, r *http.Request, absPath string) {
 	if err != nil {
 		log.Printf("WARN Fileserver: Stat(%v) %v", absPath, err)
 		w.WriteHeader(http.StatusInternalServerError)
-		resperr.Error(w, r, "Internal Server Error")
+		fs.Resp.Error(w, r, "Internal Server Error")
 
 		return
 	}
@@ -153,7 +151,7 @@ func IEC64(bytes int64) string {
 
 // imagePathAndType returns the path/filename and the Content-Type of the image.
 // If the client (browser) supports AVIF, imagePathAndType replaces the requested image by the AVIF one.
-func (wwwDir Fileserver) imagePathAndType(r *http.Request) (absPath, contentType string) {
+func (fs FileServer) imagePathAndType(r *http.Request) (absPath, contentType string) {
 	extPos := extIndex(r.URL.Path)
 
 	// We only check the first Header "Accept":
@@ -166,7 +164,7 @@ func (wwwDir Fileserver) imagePathAndType(r *http.Request) (absPath, contentType
 	const avifContentType = "image/avif"
 	if strings.Contains(scheme, avifContentType) {
 		avifPath := r.URL.Path[:extPos] + "avif"
-		absPath := path.Join(string(wwwDir), avifPath)
+		absPath := path.Join(fs.Dir, avifPath)
 
 		_, err := os.Stat(absPath)
 		if err == nil {
@@ -177,7 +175,7 @@ func (wwwDir Fileserver) imagePathAndType(r *http.Request) (absPath, contentType
 			avifContentType, absPath, err)
 	}
 
-	absPath = path.Join(string(wwwDir), r.URL.Path)
+	absPath = path.Join(fs.Dir, r.URL.Path)
 
 	ext := r.URL.Path[extPos:]
 	contentType = imageContentType(ext)
