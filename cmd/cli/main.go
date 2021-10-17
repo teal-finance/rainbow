@@ -14,12 +14,12 @@ import (
 	"github.com/gookit/color"
 	"github.com/jedib0t/go-pretty/v6/table"
 
-	"github.com/teal-finance/rainbow"
-	"github.com/teal-finance/rainbow/pkg/all"
+	"github.com/teal-finance/rainbow/pkg/provider"
+	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-func printPrettyTable() {
-	options, err := all.OptionsFromAllProviders()
+func main() {
+	options, err := provider.OptionsFromAllProviders()
 	if err != nil {
 		log.Print("ERROR: ", err)
 		return
@@ -32,15 +32,24 @@ func printTable(options []rainbow.Option) {
 	green := color.FgGreen.Render
 	red := color.FgRed.Render
 
-	t := newTable(fmt.Sprint("\t\t 29-Oct-21 CeDeFi options: ", len(options)))
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.SetStyle(table.StyleLight)
+	t.SetTitle(fmt.Sprint("\t\t 29-Oct-21 CeDeFi options: ", len(options)))
 
-	t.AppendHeader(table.Row{"Provider", "Asset", "Type", "Bid size", "Bid Price", "Strike", "Ask Price", "Ask size", "Instrument"})
+	t.AppendHeader(table.Row{
+		"Provider", "Asset", "Type",
+		"Bid size", "Bid Price", "Strike",
+		"Ask Price", "Ask size", "Instrument",
+	})
 
 	for _, option := range options {
+		bestBidPx, bestBidQty, bestAskPx, bestAskQty := rainbow.BestLimitStr(option)
+
 		t.AppendRows([]table.Row{{
-			provider(option.Provider), option.Asset, option.Type,
-			option.Bid[0].Quantity, green(option.Bid[0].Price), option.Strike,
-			red(option.Ask[0].Price), option.Ask[0].Quantity, option.Name,
+			highlight(option.Provider), option.Asset, option.Type,
+			bestBidQty, green(bestBidPx), option.Strike,
+			red(bestAskPx), bestAskQty, option.Name,
 		}})
 	}
 
@@ -52,7 +61,7 @@ func printTable(options []rainbow.Option) {
 	t.Render()
 }
 
-func provider(p string) string {
+func highlight(p string) string {
 	magenta := color.FgMagenta.Render
 	green := color.FgGreen.Render
 	blue := color.FgCyan.Render
@@ -67,13 +76,4 @@ func provider(p string) string {
 	default:
 		return p
 	}
-}
-
-func newTable(title string) table.Writer {
-	t := table.NewWriter()
-	t.SetOutputMirror(os.Stdout)
-	t.SetStyle(table.StyleLight)
-	t.SetTitle(title)
-
-	return t
 }

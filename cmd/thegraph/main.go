@@ -9,7 +9,7 @@ package main
 import (
 	"log"
 
-	"github.com/teal-finance/rainbow/pkg/zerox"
+	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 )
 
 func main() {

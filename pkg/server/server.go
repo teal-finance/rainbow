@@ -12,11 +12,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/open-policy-agent/opa/ast"
-
 	"github.com/teal-finance/rainbow/pkg/server/cors"
 	"github.com/teal-finance/rainbow/pkg/server/export"
 	"github.com/teal-finance/rainbow/pkg/server/limiter"
+	"github.com/teal-finance/rainbow/pkg/server/opa"
 	"github.com/teal-finance/rainbow/pkg/server/resperr"
 )
 
@@ -29,7 +28,6 @@ type Server struct {
 
 	// OPA
 	OPAFilenames []string
-	compiler     *ast.Compiler
 
 	metrics export.Metrics
 }
@@ -42,15 +40,16 @@ func (s *Server) RunServer(h http.Handler, port, expPort, maxReqBurst, maxReqPer
 
 	reqLimiter := limiter.New(maxReqBurst, maxReqPerMinute, devMode, s.Resp)
 
-	middlewares.Append(logRequests, reqLimiter.Limit, s.setServerHeader)
+	middlewares.Append(LogRequests, reqLimiter.Limit, Header(s.Version))
 
 	if len(s.OPAFilenames) > 0 {
-		err := s.loadPolicies()
+		compiler, err := opa.LoadPolicies(s.OPAFilenames)
 		if err != nil {
 			return err
 		}
 
-		middlewares.Append(s.auth)
+		policy := opa.Policy{Compiler: compiler, Resp: s.Resp}
+		middlewares.Append(policy.Auth)
 	}
 
 	middlewares.Append(cors.HandleCORS(s.AllowedOrigins))
@@ -87,19 +86,21 @@ func (s *Server) RunServer(h http.Handler, port, expPort, maxReqBurst, maxReqPer
 	return nil
 }
 
-// setServerHeader sets the Server HTTP header in the response.
-func (s *Server) setServerHeader(next http.Handler) http.Handler {
-	log.Print("Middleware response HTTP header: Set Server ", s.Version)
+// Header sets the Server HTTP header in the response.
+func Header(version string) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		log.Print("Middleware response HTTP header: Set Server ", version)
 
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Server", s.Version)
-			next.ServeHTTP(w, r)
-		})
+		return http.HandlerFunc(
+			func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Server", version)
+				next.ServeHTTP(w, r)
+			})
+	}
 }
 
-// logRequests logs the incoming HTTP requests.
-func logRequests(next http.Handler) http.Handler {
+// LogRequests logs the incoming HTTP requests.
+func LogRequests(next http.Handler) http.Handler {
 	log.Print("Middleware logger: log requested URLs and remote addresses")
 
 	return http.HandlerFunc(

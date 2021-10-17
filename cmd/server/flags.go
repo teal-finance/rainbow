@@ -11,57 +11,32 @@ import (
 	"log"
 	"os"
 	"strconv"
-
-	"github.com/teal-finance/rainbow/pkg/server"
+	"strings"
 )
-
-const version = "Rainbow-0.2.0"
 
 var (
 	dev             = flag.Bool("dev", false, "Run rainbow in dev. mode")
-	apiPort         = flag.Int("port", envInt("API_PORT", 0), "API port, has precedence over API_PORT")
+	mainPort        = flag.Int("port", envInt("MAIN_PORT", 1234), "API port, has precedence over MAIN_PORT")
 	expPort         = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
 	maxReqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 20), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	maxReqBurst     = flag.Int("burst", envInt("REQ_BURST", 10), "Max requests during a burst, has precedence over REQ_BURST")
 	wwwDir          = flag.String("www", envStr("WWW_DIR", "./dist"), "Folder of the web static files, has precedence over WWW_DIR")
+	opaFlag         = flag.String("opa", "", "Policy files (comma-separated list) for the Open Policy Agent using the Datalog/Rego format")
+	opaFilenames    []string
 )
 
-func logFlags() {
+func parseFlags() {
+	flag.Parse()
+
+	opaFilenames = strings.Split(*opaFlag, ",")
+
 	log.Print("Dev. mode      -dev   = ", *dev)
-	log.Print("API_PORT       -port  = ", *apiPort)
+	log.Print("MAIN_PORT      -port  = ", *mainPort)
 	log.Print("EXP_PORT       -exp   = ", *expPort)
 	log.Print("REQ_PER_MINUTE -rate  = ", *maxReqPerMinute)
 	log.Print("REQ_BURST      -burst = ", *maxReqBurst)
 	log.Print("WWW_DIR        -www   = ", *wwwDir)
-}
-
-func main() {
-	flag.Parse()
-	logFlags()
-
-	if *apiPort <= 0 {
-		printPrettyTable()
-		return
-	}
-
-	go collectOptionsIndefinitely()
-
-	s := server.Server{
-		Version:        version,
-		Resp:           "https://rainbow.teal.finance/doc",
-		AllowedOrigins: []string{"http://teal.finance:33322"},
-		OPAFilenames:   nil,
-	}
-
-	if *dev {
-		s.AllowedOrigins = append(s.AllowedOrigins, "http://localhost:")
-	}
-
-	h := apiHandler(&s)
-
-	if err := s.RunServer(h, *apiPort, *expPort, *maxReqBurst, *maxReqPerMinute, *dev); err != nil {
-		log.Fatal(err)
-	}
+	log.Print("Policy files   -opa   = ", opaFilenames)
 }
 
 func envStr(varName, defaultValue string) string {

@@ -100,7 +100,7 @@ based on Typescript/Vue3.
 ## Back-end API
 
 To run Rainbow as a HTTP server, use command line argument `-port 8080`
-or define the environment variable `API_PORT`.
+or define the environment variable `MAIN_PORT`.
 
 Rainbow also provides an export port to be monitored by Prometheus
 or other monitoring tools.
@@ -116,7 +116,7 @@ Rainbow also implements a configurable rate limiter.
       -exp int
           Export port for Prometheus, has precedence over EXP_PORT
       -port int
-          API port, has precedence over API_PORT
+          API port, has precedence over MAIN_PORT
       -rate int
           Max requests per minute, has precedence over REQ_PER_MINUTE (default 20)
       -www string

@@ -4,15 +4,15 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-package all
+package provider
 
 import (
 	"log"
 
-	"github.com/teal-finance/rainbow"
-	"github.com/teal-finance/rainbow/pkg/deribit"
-	"github.com/teal-finance/rainbow/pkg/psyoptions"
-	"github.com/teal-finance/rainbow/pkg/zerox"
+	"github.com/teal-finance/rainbow/pkg/provider/deribit"
+	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
+	"github.com/teal-finance/rainbow/pkg/provider/zerox"
+	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 func OptionsFromAllProviders() ([]rainbow.Option, error) {
