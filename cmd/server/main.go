@@ -13,7 +13,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/teal-finance/rainbow/pkg/handler"
 	"github.com/teal-finance/rainbow/pkg/server"
 	"github.com/teal-finance/rainbow/pkg/server/cors"
 	"github.com/teal-finance/rainbow/pkg/server/export"
@@ -64,7 +63,7 @@ func main() {
 	middlewares.Append(cors.HandleCORS(allowedOrigins))
 
 	// h handles both the REST API and the static web files
-	h := handler.Handler(service, respError, *wwwDir)
+	h := service.Handler(respError, *wwwDir)
 	h = middlewares.Then(h)
 
 	runMainServer(h, connState)
