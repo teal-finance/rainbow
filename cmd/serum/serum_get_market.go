@@ -108,7 +108,7 @@ func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 		return nil
 	})
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 
 	spew.Dump(levels)

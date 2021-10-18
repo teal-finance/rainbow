@@ -9,6 +9,7 @@ package psyoptions
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/big"
 
 	"github.com/streamingfast/solana-go"
@@ -68,17 +69,17 @@ func Options() (options []rainbow.Option, err error) {
 
 		out, err := serum.FetchMarket(ctx, client, pubKey)
 		if err != nil {
-			panic(err)
+			log.Panic(err)
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
 		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true)
 		if err != nil {
-			panic(err)
+			log.Panic(err)
 		}
 
 		asks, _, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false)
 		if err != nil {
-			panic(err)
+			log.Panic(err)
 		}
 
 		options = append(options, rainbow.Option{
@@ -105,7 +106,7 @@ func Options() (options []rainbow.Option, err error) {
 func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool) (offers []rainbow.Order, totalSize float64, err error) {
 	var o serum.Orderbook
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
-		return nil, 0, fmt.Errorf("getting orderbook: %w", err)
+		log.Panic("getting orderbook: ", err)
 	}
 
 	limit := 20
@@ -126,7 +127,7 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 	})
 	if err != nil {
 		// TODO fail more graciously
-		panic(err)
+		log.Panic(err)
 	}
 
 	for _, level := range levels {
