@@ -10,7 +10,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/teal-finance/server"
@@ -34,7 +33,7 @@ func main() {
 	go service.CollectOptionsIndefinitely()
 
 	// Uniformize error responses with API doc
-	resErr := reserr.New("https://rainbow.teal.finance/doc")
+	resErr := reserr.New(officialAddr + "/doc")
 
 	middlewares, connState := setMiddlewares(resErr)
 
@@ -54,30 +53,29 @@ func setMiddlewares(resErr reserr.ResErr) (middlewares chain.Chain, connState fu
 	// Limit the input request rate per IP
 	reqLimiter := limiter.New(*maxReqBurst, *maxReqPerMinute, *dev, resErr)
 
-	middlewares = middlewares.Append(
-		server.LogRequests,
-		server.Header(version),
-		reqLimiter.Limit,
-	)
-
-	// Endpoint authentication rules (Open Policy Agent)
-	// Set authentication policies
-	if len(opaFilenames) > 0 {
-		policy, err := opa.New(resErr, opaFilenames)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		middlewares = middlewares.Append(policy.Auth)
-	}
-
 	// CORS
-	allowedOrigins := []string{"http://teal.finance:33322"}
+	allowedOrigins := []string{officialAddr}
 	if *dev {
 		allowedOrigins = append(allowedOrigins, "http://localhost:")
 	}
 
-	middlewares = middlewares.Append(cors.HandleCORS(allowedOrigins))
+	middlewares = middlewares.Append(
+		server.LogRequests,
+		server.Header(version),
+		reqLimiter.Limit,
+		cors.HandleCORS(allowedOrigins),
+	)
+
+	// Endpoint authentication rules (Open Policy Agent)
+	// Set authentication policies
+	policy, err := opa.New(opaFilenames, resErr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if policy.Ready() {
+		middlewares = middlewares.Append(policy.Auth)
+	}
 
 	return middlewares, connState
 }
@@ -85,7 +83,7 @@ func setMiddlewares(resErr reserr.ResErr) (middlewares chain.Chain, connState fu
 // runMainServer runs in foreground the main server.
 func runMainServer(h http.Handler, connState func(net.Conn, http.ConnState)) {
 	server := http.Server{
-		Addr:              ":" + strconv.Itoa(*mainPort),
+		Addr:              internalAddr,
 		Handler:           h,
 		TLSConfig:         nil,
 		ReadTimeout:       1 * time.Second,
