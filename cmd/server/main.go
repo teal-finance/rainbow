@@ -13,12 +13,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/teal-finance/rainbow/pkg/server"
-	"github.com/teal-finance/rainbow/pkg/server/cors"
-	"github.com/teal-finance/rainbow/pkg/server/export"
-	"github.com/teal-finance/rainbow/pkg/server/limiter"
-	"github.com/teal-finance/rainbow/pkg/server/opa"
-	"github.com/teal-finance/rainbow/pkg/server/resperr"
+	"github.com/teal-finance/server"
+	"github.com/teal-finance/server/chain"
+	"github.com/teal-finance/server/cors"
+	"github.com/teal-finance/server/limiter"
+	"github.com/teal-finance/server/metrics"
+	"github.com/teal-finance/server/opa"
+	"github.com/teal-finance/server/reserr"
+
 	"github.com/teal-finance/rainbow/pkg/service"
 )
 
@@ -27,31 +29,46 @@ const version = "Rainbow-0.2.0"
 func main() {
 	parseFlags()
 
-	// Start background service
+	// Start the service in background
 	service := &service.Service{}
 	go service.CollectOptionsIndefinitely()
 
 	// Uniformize error responses with API doc
-	respError := resperr.New("https://rainbow.teal.finance/doc")
+	resErr := reserr.New("https://rainbow.teal.finance/doc")
 
-	// Optionally it also starts a metrics server in background (if export port > 0).
+	middlewares, connState := setMiddlewares(resErr)
+
+	// h handles both the REST API and the static web files
+	h := service.Handler(resErr, *wwwDir)
+	h = middlewares.Then(h)
+
+	runMainServer(h, connState)
+}
+
+func setMiddlewares(resErr reserr.ResErr) (middlewares chain.Chain, connState func(net.Conn, http.ConnState)) {
+	// Start a metrics server in background if export port > 0.
 	// The metrics server is for use with Prometheus or another compatible monitoring tool.
-	metrics := export.Metrics{}
-	middlewares, connState := metrics.StartServer(*expPort, *dev)
+	metrics := metrics.Metrics{}
+	middlewares, connState = metrics.StartServer(*expPort, *dev)
 
 	// Limit the input request rate per IP
-	reqLimiter := limiter.New(*maxReqBurst, *maxReqPerMinute, *dev, respError)
-	middlewares.Append(server.LogRequests, reqLimiter.Limit, server.Header(version))
+	reqLimiter := limiter.New(*maxReqBurst, *maxReqPerMinute, *dev, resErr)
 
+	middlewares = middlewares.Append(
+		server.LogRequests,
+		server.Header(version),
+		reqLimiter.Limit,
+	)
+
+	// Endpoint authentication rules (Open Policy Agent)
 	// Set authentication policies
 	if len(opaFilenames) > 0 {
-		compiler, err := opa.LoadPolicies(opaFilenames)
+		policy, err := opa.New(resErr, opaFilenames)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		policy := opa.Policy{Compiler: compiler, Resp: respError}
-		middlewares.Append(policy.Auth)
+		middlewares = middlewares.Append(policy.Auth)
 	}
 
 	// CORS
@@ -60,21 +77,15 @@ func main() {
 		allowedOrigins = append(allowedOrigins, "http://localhost:")
 	}
 
-	middlewares.Append(cors.HandleCORS(allowedOrigins))
+	middlewares = middlewares.Append(cors.HandleCORS(allowedOrigins))
 
-	// h handles both the REST API and the static web files
-	h := service.Handler(respError, *wwwDir)
-	h = middlewares.Then(h)
-
-	runMainServer(h, connState)
+	return middlewares, connState
 }
 
 // runMainServer runs in foreground the main server.
 func runMainServer(h http.Handler, connState func(net.Conn, http.ConnState)) {
-	addr := ":" + strconv.Itoa(*mainPort)
-
 	server := http.Server{
-		Addr:              addr,
+		Addr:              ":" + strconv.Itoa(*mainPort),
 		Handler:           h,
 		TLSConfig:         nil,
 		ReadTimeout:       1 * time.Second,
@@ -89,7 +100,7 @@ func runMainServer(h http.Handler, connState func(net.Conn, http.ConnState)) {
 		ConnContext:       nil,
 	}
 
-	log.Print("HTTP server listening on http://localhost", addr)
+	log.Print("Server listening on http://localhost", server.Addr)
 
 	if err := server.ListenAndServe(); err != nil {
 		log.Print("ERROR: Install ncat and ss: sudo apt install ncat iproute2")

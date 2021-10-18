@@ -10,20 +10,19 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-
-	"github.com/teal-finance/rainbow/pkg/server/fileserver"
-	"github.com/teal-finance/rainbow/pkg/server/resperr"
+	"github.com/teal-finance/server/fileserver"
+	"github.com/teal-finance/server/reserr"
 )
 
 // Handler creates the mapping between the endpoints and the handler functions.
-func (s *Service) Handler(respErr resperr.RespErr, wwwDir string) http.Handler {
+func (s *Service) Handler(resErr reserr.ResErr, wwwDir string) http.Handler {
 	r := chi.NewRouter()
 
 	// API
-	r.Mount("/v0", s.apiRouter(respErr))
+	r.Mount("/v0", s.apiRouter(resErr))
 
 	// Static website files
-	fs := fileserver.FileServer{Dir: wwwDir, Resp: respErr}
+	fs := fileserver.FileServer{Dir: wwwDir, ResErr: resErr}
 	r.NotFound(fs.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
 	r.Get("/favicon.png", fs.ServeFile("favicon.png", "image/x-icon"))
 	r.Get("/assets/js/*", fs.ServeDir("text/javascript; charset=utf-8"))
@@ -35,7 +34,7 @@ func (s *Service) Handler(respErr resperr.RespErr, wwwDir string) http.Handler {
 }
 
 // apiRouter handles API endpoints.
-func (s *Service) apiRouter(resp resperr.RespErr) chi.Router {
+func (s *Service) apiRouter(resp reserr.ResErr) chi.Router {
 	r := chi.NewRouter()
 
 	r.Route("/", func(r chi.Router) {
