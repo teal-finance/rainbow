@@ -10,7 +10,7 @@ require (
 	github.com/jedib0t/go-pretty/v6 v6.2.4
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/streamingfast/solana-go v0.2.1-0.20211013175835-9f9ec6e96c5a
-	github.com/teal-finance/server v0.0.1
+	github.com/teal-finance/server v0.0.2
 )
 
 require (
