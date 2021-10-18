@@ -1,8 +1,7 @@
-# ![rainbow](public/rainbow-chancery.png)
+# ![rainbow](frontend/public/rainbow-chancery.png)
 
-&nbsp; | &nbsp;
+![logo](frontend/public/small.png) | Rainbow is a dashboard for Decentralized Finance options trading. <br><br> It's developed during Solana's Ignition & Ethereum's EthGlobal Hackathons by members of [Teal.Finance](https://teal.finance/).
 ---|---
-![logo](public/small.png) | **Rainbow** is a dashboard for Decentralized Finance options trading. <br><br> It's developed during Solana's Ignition & Ethereum's EthGlobal Hackathons by some members of [Teal Finance](https://teal.finance/).
 
 ## Motivation
 
@@ -92,41 +91,68 @@ based on Typescript/Vue3.
     git clone https://github.com/teal-finance/rainbow
     cd rainbow
     go generate ./...
-    go build ./cmd/rainbow/
-    ./rainbow
 
-![CLI screenshot](public/cli.jpg)
+### CLI
 
-## Back-end API
+You may just use the pretty nice table printed by the command `./cli`.
 
-To run Rainbow as a HTTP server, use command line argument `-port 8080`
-or define the environment variable `MAIN_PORT`.
+    go build ./cmd/cli && ./cli
 
-Rainbow also provides an export port to be monitored by Prometheus
-or other monitoring tools.
+![CLI screenshot](frontend/public/cli.jpg)
 
-Rainbow also implements a configurable rate limiter.
+### Back-end
 
-    $ ./rainbow -help
-    Usage of ./rainbow:
-      -burst int
-          Max requests during a burst, has precedence over REQ_BURST (default 10)
-      -dev
-          Run rainbow in dev. mode
-      -exp int
-          Export port for Prometheus, has precedence over EXP_PORT
-      -port int
-          API port, has precedence over MAIN_PORT
-      -rate int
-          Max requests per minute, has precedence over REQ_PER_MINUTE (default 20)
-      -www string
-          Folder of the web static files, has precedence over WWW_DIR (default "./dist")
+If you prefer the API, use `./server`.
 
-See also the Dockerfile for a light container image: 18 MB including the front-end.
-The container enables by default the API and export ports for back-end purpose.
+    go build ./cmd/server && ./server
+
+### Front-end
+
+This project also provides a pretty nice Vue3 front-end that uses the API.
+
+    cd frontend
+    yarn
+    yarn dev
+
+## Container
+
+See also the [Dockerfile](Dockerfile) for a light container image: 18 MB including the front-end.
+
+The container enables by default the API and export ports.
 The Dockerfile has been successfully tested with Docker-20.10.8 and Podman-3.3.1.
 
-## Data structure
+## API
+
+### Command line flags
+
+Rainbow provides a complete HTTP server,
+including a rate limiter, an export port (Prometheus monitoring),
+and more. For more details see the underlying project
+[Teal.Finance/Server](https://github.com/teal-finance/teal/).
+
+```
+$ go build ./cmd/server
+$ ./server -help
+Usage of ./server:
+  -burst int
+        Max requests during a burst, has precedence over REQ_BURST (default 10)
+  -dev
+        Run rainbow in dev. mode
+  -dns string
+        Schema and DNS used for doc URL and CORS, has precedence over MAIN_DNS (default "http://localhost")
+  -exp int
+        Export port for Prometheus, has precedence over EXP_PORT
+  -opa string
+        Policy files (comma-separated filenames) for the Open Policy Agent using the Datalog/Rego format
+  -port int
+        API port, has precedence over MAIN_PORT (default 1234)
+  -rate int
+        Max requests per minute, has precedence over REQ_PER_MINUTE (default 30)
+  -www string
+        Folder of the web static files, has precedence over WWW_DIR (default "./dist")
+```
+
+### Data structure
 
 The API endpoint /v0/options replies an array of options.
 Each option is described with the following JSON structure:

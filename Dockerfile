@@ -15,20 +15,20 @@ RUN yarnpkg --version
 
 WORKDIR /code
 
-COPY package.json .
-COPY yarn.lock    .
+COPY frontend/package.json .
+COPY frontend/yarn.lock    .
 
 RUN yarnpkg install --frozen-lockfile
 
-COPY .eslintrc.json     .
-COPY index.html         .
-COPY postcss.config.js  .
-COPY tailwind.config.js .
-COPY tsconfig.json      .
-COPY vite.config.ts     .
+COPY frontend/.eslintrc.json     .
+COPY frontend/index.html         .
+COPY frontend/postcss.config.js  .
+COPY frontend/tailwind.config.js .
+COPY frontend/tsconfig.json      .
+COPY frontend/vite.config.ts     .
 
-COPY public public
-COPY src    src
+COPY frontend/public frontend/public
+COPY frontend/src    frontend/src
 
 RUN ls -l
 
