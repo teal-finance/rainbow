@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/teal-finance/rainbow/pkg/provider"
@@ -63,6 +64,8 @@ func (s *Service) ReplyOptions(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Last-Modified", s.lastModified)
 		w.Header().Set("Expires", s.expires)
 	}
+
+	w.Header().Set("Content-Length", strconv.Itoa(len(s.optionsJSON)))
 
 	_, _ = w.Write(s.optionsJSON)
 }
