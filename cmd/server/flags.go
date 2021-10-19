@@ -32,7 +32,10 @@ var (
 func parseFlags() {
 	flag.Parse()
 
-	opaFilenames = strings.Split(*opaFlag, ",")
+	if *opaFlag != "" {
+		opaFilenames = strings.Split(*opaFlag, ",")
+	}
+
 	internalAddr = ":" + strconv.Itoa(*mainPort)
 	officialAddr = *mainDNS + internalAddr
 
