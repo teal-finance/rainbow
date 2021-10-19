@@ -23,27 +23,20 @@ const (
 )
 
 type Service struct {
-	optionsJSON  []byte
+	jsonResponse []byte
 	lastModified string
 	expires      string
 }
 
 func (s *Service) CollectOptionsIndefinitely() {
-	s.optionsJSON = []byte(`{"error":"initializing"}`)
+	s.jsonResponse = []byte(`{"error":"initializing"}`)
 	loopDuration := queryDuration + sleepDuration
 	now := time.Now().UTC()
 
 	for {
 		beginTime := now
-
-		options, err := provider.OptionsFromAllProviders()
-		if err == nil {
-			if b, err := json.Marshal(options); err != nil {
-				log.Print("ERROR JSON Encode: ", err)
-			} else if !bytes.Equal(s.optionsJSON, b) {
-				s.optionsJSON = b
-				s.lastModified = beginTime.Format(http.TimeFormat)
-			}
+		if s.updateJSONRespone() {
+			s.lastModified = beginTime.Format(http.TimeFormat)
 		}
 
 		// try to estimate the next refresh time
@@ -57,6 +50,28 @@ func (s *Service) CollectOptionsIndefinitely() {
 	}
 }
 
+func (s *Service) updateJSONRespone() bool {
+	options, err := provider.OptionsFromAllProviders()
+	if err != nil {
+		log.Print("ERROR OptionsFromAllProviders: ", err)
+		return false
+	}
+
+	b, err := json.Marshal(options)
+	if err != nil {
+		log.Print("ERROR JSON Encode: ", err)
+		return false
+	}
+
+	if bytes.Equal(s.jsonResponse, b) {
+		return false // same content
+	}
+
+	s.jsonResponse = b
+
+	return true
+}
+
 func (s *Service) ReplyOptions(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -65,7 +80,7 @@ func (s *Service) ReplyOptions(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Expires", s.expires)
 	}
 
-	w.Header().Set("Content-Length", strconv.Itoa(len(s.optionsJSON)))
+	w.Header().Set("Content-Length", strconv.Itoa(len(s.jsonResponse)))
 
-	_, _ = w.Write(s.optionsJSON)
+	_, _ = w.Write(s.jsonResponse)
 }
