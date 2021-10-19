@@ -21,7 +21,7 @@ var (
 	expPort         = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
 	maxReqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 30), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	maxReqBurst     = flag.Int("burst", envInt("REQ_BURST", 10), "Max requests during a burst, has precedence over REQ_BURST")
-	wwwDir          = flag.String("www", envStr("WWW_DIR", "./dist"), "Folder of the web static files, has precedence over WWW_DIR")
+	wwwDir          = flag.String("www", envStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
 	opaFlag         = flag.String("opa", "", "Policy files (comma-separated filenames) for the Open Policy Agent using the Datalog/Rego format")
 	opaFilenames    []string
 
@@ -32,7 +32,10 @@ var (
 func parseFlags() {
 	flag.Parse()
 
-	opaFilenames = strings.Split(*opaFlag, ",")
+	if *opaFlag != "" {
+		opaFilenames = strings.Split(*opaFlag, ",")
+	}
+
 	internalAddr = ":" + strconv.Itoa(*mainPort)
 	officialAddr = *mainDNS + internalAddr
 

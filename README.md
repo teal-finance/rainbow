@@ -104,7 +104,9 @@ You may just use the pretty nice table printed by the command `./cli`.
 
 If you prefer the API, use `./server`.
 
-    go build ./cmd/server && ./server
+    go build ./cmd/server && ./server -dev
+
+The flag `-dev` enables CORS for `http://localhost:*`.
 
 ### Front-end
 

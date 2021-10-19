@@ -68,17 +68,17 @@ func Options() (options []rainbow.Option, err error) {
 
 		out, err := serum.FetchMarket(ctx, client, pubKey)
 		if err != nil {
-			panic(err)
+			return nil, fmt.Errorf("serum.FetchMarket: %w", err)
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
 		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 
 		asks, _, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 
 		options = append(options, rainbow.Option{
@@ -105,7 +105,7 @@ func Options() (options []rainbow.Option, err error) {
 func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool) (offers []rainbow.Order, totalSize float64, err error) {
 	var o serum.Orderbook
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
-		return nil, 0, fmt.Errorf("getting orderbook: %w", err)
+		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
 
 	limit := 20
@@ -117,16 +117,13 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		if len(levels) > 0 && levels[len(levels)-1][0].Cmp(price) == 0 {
 			current := levels[len(levels)-1][1]
 			levels[len(levels)-1][1] = new(big.Int).Add(current, quantity)
-		} else if len(levels) == limit {
-			return fmt.Errorf("done")
-		} else {
+		} else if len(levels) != limit {
 			levels = append(levels, []*big.Int{price, quantity})
 		}
 		return nil
 	})
 	if err != nil {
-		// TODO fail more graciously
-		panic(err)
+		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
 
 	for _, level := range levels {

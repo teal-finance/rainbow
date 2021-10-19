@@ -8,6 +8,7 @@ package main
 
 import (
 	"context"
+	"log"
 
 	"github.com/streamingfast/solana-go/rpc"
 )
@@ -32,6 +33,6 @@ func main() {
 
 	err := runE(context.TODO(), serumMarketAddresses)
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 }

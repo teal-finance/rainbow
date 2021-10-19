@@ -19,19 +19,17 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"math/big"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/ryanuber/columnize"
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
 )
 
-func runE(ctx context.Context, serumMarketAddresses []string) error {
-	marketAddr, err := solana.PublicKeyFromBase58(serumMarketAddresses[0])
+func runE(ctx context.Context, args []string) error {
+	marketAddr, err := solana.PublicKeyFromBase58(args[0])
 	if err != nil {
 		return fmt.Errorf("decoding market addr: %w", err)
 	}
@@ -62,21 +60,21 @@ func runE(ctx context.Context, serumMarketAddresses []string) error {
 	output = append(output, outputOrderBook(bids, totalSize, false)...)
 	output = append(output, "Bids")
 
-	log.Print(market.Name)
+	fmt.Println(market.Name)
 
-	log.Print("Request RequestQueue: ", market.Market.GetRequestQueue())
-	log.Print("Event RequestQueue: ", market.Market.GetEventQueue())
+	fmt.Println("Request RequestQueue: ", market.Market.GetRequestQueue())
+	fmt.Println("Event RequestQueue: ", market.Market.GetEventQueue())
 
-	log.Print("Base")
-	log.Print("base mint", market.Market.GetBaseMint().String())
-	log.Print("base lot size", market.Market.GetBaseLotSize())
+	fmt.Println("Base")
+	fmt.Println("base mint", market.Market.GetBaseMint().String())
+	fmt.Println("base lot size", market.Market.GetBaseLotSize())
 
-	log.Print("")
-	log.Print("Quote")
-	log.Print("quote mint", market.Market.GetQuoteMint().String())
-	log.Print("quote lot size", market.Market.GetQuoteLotSize())
+	fmt.Println("")
+	fmt.Println("Quote")
+	fmt.Println("quote mint", market.Market.GetQuoteMint().String())
+	fmt.Println("quote lot size", market.Market.GetQuoteLotSize())
 
-	log.Print(columnize.Format(output, nil))
+	fmt.Println(columnize.Format(output, nil))
 	return nil
 }
 
@@ -94,7 +92,7 @@ func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 	limit := 20
 	levels := [][]*big.Int{}
 
-	err = o.Items(desc, func(node *serum.SlabLeafNode) error {
+	o.Items(desc, func(node *serum.SlabLeafNode) error {
 		quantity := big.NewInt(int64(node.Quantity))
 		price := node.GetPrice()
 		if len(levels) > 0 && levels[len(levels)-1][0].Cmp(price) == 0 {
@@ -107,11 +105,6 @@ func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 		}
 		return nil
 	})
-	if err != nil {
-		panic(err)
-	}
-
-	spew.Dump(levels)
 
 	totalSize = big.NewFloat(0)
 	for _, level := range levels {
@@ -125,7 +118,6 @@ func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 			},
 		)
 	}
-	spew.Dump(out)
 	return out, totalSize, nil
 }
 

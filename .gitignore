@@ -1,10 +1,9 @@
-node_modules
+node_modules/
 .DS_Store
-dist
-dist-ssr
-!/doc/dist
+dist/
+dist-ssr/
 *.local
-yarn-error.log
+*.log
 /dev
 .vscode
 storybook-static
