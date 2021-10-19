@@ -1,17 +1,23 @@
 # Build:
 #
-#    docker  build -t rainbow .
-#    podman  build -t rainbow .
-#    buildah build -t rainbow .
+#    docker  build --build-arg dns=http://myapp.co --build-arg port=8088 -t rainbow .
+#    podman  build --build-arg dns=http://myapp.co --build-arg port=8088 -t rainbow .
+#    buildah build --build-arg dns=http://myapp.co --build-arg port=8088 -t rainbow .
 #
 # Run:
 #
-#    docker run -p 0.0.0.0:8090:8090 -d -e MAIN_PORT=8090 -e EXP_PORT=9868 --name rainbow rainbow
-#    podman run -p 0.0.0.0:8090:8090 -d -e MAIN_PORT=8090 -e EXP_PORT=9868 --name rainbow rainbow
+#    docker run -p 0.0.0.0:8088:8088 -d -e EXP_PORT=9868 --name rainbow rainbow
+#    podman run -p 0.0.0.0:8088:8088 -d -e EXP_PORT=9868 --name rainbow rainbow
 #
-# One single command line:
+# One command line:
 #
-#    ( set -x ; podman  build -t rainbow . && { podman stop rainbow && podman rm rainbow ; podman run -p 0.0.0.0:8090:8090 -d -e MAIN_PORT=8090 -e EXP_PORT=9868 --name rainbow rainbow && sleep 1 && podman logs --follow rainbow ; } )
+#    ( set -x ; podman  build -t rainbow --build-arg port=8088 . && { podman stop rainbow ; podman rm rainbow ; podman run -p 0.0.0.0:8088:8088 -d --name rainbow rainbow && sleep 1 && podman logs --follow rainbow ; } )
+
+
+# --------------------------------------------------------------------
+# Arguments to control server address (CORS, API, front-end)
+ARG dns=http://localhost
+ARG port=8884
 
 # --------------------------------------------------------------------
 FROM docker.io/node:16-alpine3.14 AS web_builder
@@ -36,10 +42,15 @@ COPY frontend/.eslintrc.json     \
 COPY frontend/public public
 COPY frontend/src    src
 
-RUN set -x                                        &&\
-    ls -lA                                        &&\
-    find . -name '*.env' -print -exec head {} +   &&\
-    yarn build                                    &&\
+ARG dns
+ARG port
+
+RUN set -x                                                    &&\
+    ls -lA                                                    &&\
+    sed -e "s|^VITE_MAIN_PORT=.*|VITE_MAIN_PORT=$port|"         \
+        -e "s|^VITE_MAIN_DNS=.*|VITE_MAIN_DNS=$dns|" -i .env  &&\
+    head .env                                                 &&\
+    yarn build                                                &&\
     yarn compress
 
 # --------------------------------------------------------------------
@@ -58,16 +69,23 @@ COPY pkg pkg
 
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
-RUN set -x                                                                &&\
-    ls -lA                                                                &&\
-    export GOOS=linux                                                     &&\
-    export CGO_ENABLED=1                                                  &&\
-    export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"   &&\
-    export GOLDFLAGS="-linkmode=external -s -w"                           &&\
-    CGO_ENABLED=0 go build -mod=readonly ./cmd/server                     &&\
-    ls -sh server                                                         &&\
-    ldd server                                                            &&\
+RUN set -x                                                               &&\
+    ls -lA                                                               &&\
+    export GOOS=linux                                                    &&\
+    export CGO_ENABLED=0                                                 &&\
+    export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"  &&\
+    export GOLDFLAGS="-linkmode=external -s -w"                          &&\
+    go build ./cmd/server                                                &&\
+    ls -sh server                                                        &&\
+    ldd server                                                           &&\
     ./server -help  # smoke test
+
+# To go further in Go hardening and FIPS 140-2 certification:
+# https://www.linkedin.com/pulse/go-crypto-kubernetes-fips-140-2-fedramp-compliance-gokul-chandra
+# https://github.com/golang/go/blob/dev.boringcrypto/README.boringcrypto.md
+# https://hub.docker.com/r/goboring/golang/tags
+# https://github.com/rancher/image-build-base/blob/master/Dockerfile.amd64
+
 
 # --------------------------------------------------------------------
 FROM docker.io/golang:1.17-alpine3.14 AS integrator
@@ -98,6 +116,9 @@ RUN mkdir lib        &&\
 # --------------------------------------------------------------------
 FROM scratch AS final
 
+ARG dns
+ARG port
+
 COPY --chown=5505:5505 --from=integrator /target /
 
 # Run as unprivileged
@@ -106,10 +127,11 @@ USER teal:teal
 # Use UTC time zone by default
 ENV TZ        UTC0
 ENV WWW_DIR   /var/www
-ENV MAIN_PORT 8090
+ENV MAIN_DNS  "$dns"
+ENV MAIN_PORT "$port"
 ENV EXP_PORT  9868
 
-EXPOSE 8090
+EXPOSE "$port"
 EXPOSE 9868
 
 ENTRYPOINT ["/server"]

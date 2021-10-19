@@ -20,12 +20,12 @@
         <values-filter :model="model" col="type"></values-filter>
       </div>
       <div class="mt-2">
-        <div class="text-xl">Providers</div>
+        <div class="text-xl">Provider</div>
         <hr class="my-3" />
         <values-filter :model="model" col="provider"></values-filter>
       </div>
       <div class="mt-2">
-        <div class="text-xl">Chain</div>
+        <div class="text-xl">Blockchain</div>
         <hr class="my-3" />
         <values-filter :model="model" col="chain"></values-filter>
       </div>

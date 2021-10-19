@@ -23,7 +23,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/service"
 )
 
-const version = "Rainbow-0.2.0"
+const version = "Rainbow-0.2.1"
 
 func main() {
 	parseFlags()
@@ -63,7 +63,7 @@ func setMiddlewares(resErr reserr.ResErr) (middlewares chain.Chain, connState fu
 		server.LogRequests,
 		server.Header(version),
 		reqLimiter.Limit,
-		cors.HandleCORS(allowedOrigins),
+		cors.Handle(allowedOrigins, true),
 	)
 
 	// Endpoint authentication rules (Open Policy Agent)
