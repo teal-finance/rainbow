@@ -1,64 +1,73 @@
 # Build:
 #
-#    docker build . -t=rainbow
-#    podman build . -t=rainbow
+#    docker  build -t rainbow .
+#    podman  build -t rainbow .
+#    buildah build -t rainbow .
 #
-# Run with disabled export port:
+# Run:
 #
-#    docker run -p 0.0.0.0:1234:1234 -d -e MAIN_PORT=1234 -e EXP_PORT=0 --name rainbow rainbow
-#    podman run -p 0.0.0.0:1234:1234 -d -e MAIN_PORT=1234 -e EXP_PORT=0 --name rainbow rainbow
+#    docker run -p 0.0.0.0:8090:8090 -d -e MAIN_PORT=8090 -e EXP_PORT=9868 --name rainbow rainbow
+#    podman run -p 0.0.0.0:8090:8090 -d -e MAIN_PORT=8090 -e EXP_PORT=9868 --name rainbow rainbow
+#
+# One single command line:
+#
+#    ( set -x ; podman  build -t rainbow . && { podman stop rainbow && podman rm rainbow ; podman run -p 0.0.0.0:8090:8090 -d -e MAIN_PORT=8090 -e EXP_PORT=9868 --name rainbow rainbow && sleep 1 && podman logs --follow rainbow ; } )
 
 # --------------------------------------------------------------------
 FROM docker.io/node:16-alpine3.14 AS web_builder
-RUN node    --version
-RUN yarnpkg --version
 
 WORKDIR /code
 
-COPY frontend/package.json .
-COPY frontend/yarn.lock    .
+COPY frontend/package.json \
+     frontend/yarn.lock   ./
 
-RUN yarnpkg install --frozen-lockfile
+RUN set -x                          &&\
+    node --version                  &&\
+    yarn --version                  &&\
+    yarn install --frozen-lockfile
 
-COPY frontend/.eslintrc.json     .
-COPY frontend/index.html         .
-COPY frontend/postcss.config.js  .
-COPY frontend/tailwind.config.js .
-COPY frontend/tsconfig.json      .
-COPY frontend/vite.config.ts     .
+COPY frontend/.eslintrc.json     \
+     frontend/index.html         \
+     frontend/postcss.config.js  \
+     frontend/tailwind.config.js \
+     frontend/tsconfig.json      \
+     frontend/vite.config.ts     \
+     .env                       ./
+COPY frontend/public public
+COPY frontend/src    src
 
-COPY frontend/public frontend/public
-COPY frontend/src    frontend/src
-
-RUN ls -l
-
-RUN yarnpkg build
-RUN yarnpkg compress
+RUN set -x                                        &&\
+    ls -lA                                        &&\
+    find . -name '*.env' -print -exec head {} +   &&\
+    yarn build                                    &&\
+    yarn compress
 
 # --------------------------------------------------------------------
 FROM docker.io/golang:1.17-alpine3.14 AS go_builder
 
 WORKDIR /code
 
-COPY go.mod .
-COPY go.sum .
+COPY go.mod go.sum ./
 
-RUN go version
-RUN go mod download
-RUN go mod verify
+RUN go version       &&\
+    go mod download  &&\
+    go mod verify
 
 COPY cmd cmd
 COPY pkg pkg
-COPY structures.go .
 
-RUN ls -l
-
-# "-s -w" removes all debug symbols https://pkg.go.dev/cmd/link
-RUN CGO_ENABLED=0 go build -ldflags "-s -w" -v -mod=readonly ./cmd/rainbow
-
-# smoke test
-RUN ls -sh rainbow
-RUN ./rainbow -help
+# Go build flags: https://shibumi.dev/posts/hardening-executables/
+# "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
+RUN set -x                                                                &&\
+    ls -lA                                                                &&\
+    export GOOS=linux                                                     &&\
+    export CGO_ENABLED=1                                                  &&\
+    export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"   &&\
+    export GOLDFLAGS="-linkmode=external -s -w"                           &&\
+    CGO_ENABLED=0 go build -mod=readonly ./cmd/server                     &&\
+    ls -sh server                                                         &&\
+    ldd server                                                            &&\
+    ./server -help  # smoke test
 
 # --------------------------------------------------------------------
 FROM docker.io/golang:1.17-alpine3.14 AS integrator
@@ -66,16 +75,25 @@ FROM docker.io/golang:1.17-alpine3.14 AS integrator
 WORKDIR /target
 
 # HTTPS root certificates (adds about 200 KB)
-RUN mkdir -p                                 etc/ssl/certs
-RUN cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs
+# Creaate user & group files
+RUN set -x                                                  &&\
+    mkdir -p                                 etc/ssl/certs  &&\
+    cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs  &&\
+    echo 'teal:x:5505:5505::/:' > etc/passwd                &&\
+    echo 'teal:x:5505:'         > etc/group
 
-# User & group files
-RUN echo 'teal:x:5505:5505::/:' > etc/passwd
-RUN echo 'teal:x:5505:'         > etc/group
+# Static website and back-end
+COPY --from=web_builder /code/dist   var/www
+COPY --from=go_builder  /code/server .
 
-# Back-end and static website
-COPY --from=go_builder  /code/rainbow .
-COPY --from=web_builder /code/dist    var/www
+# Copy possible dynamic libs because we use CGO_ENABLED=1
+# https://stackoverflow.com/q/62817082
+RUN mkdir lib        &&\
+    ldd server        |\
+    while read f rest ;\
+    do cp -v "$f" lib ;\
+    done             &&\
+    ls -lA
 
 # --------------------------------------------------------------------
 FROM scratch AS final
@@ -85,13 +103,13 @@ COPY --chown=5505:5505 --from=integrator /target /
 # Run as unprivileged
 USER teal:teal
 
-ENV TZ   UTC0
+# Use UTC time zone by default
+ENV TZ        UTC0
+ENV WWW_DIR   /var/www
+ENV MAIN_PORT 8090
+ENV EXP_PORT  9868
 
-ENV MAIN_PORT 1234
-ENV EXP_PORT 5678
-ENV WWW_DIR  /var/www
+EXPOSE 8090
+EXPOSE 9868
 
-EXPOSE 1234
-EXPOSE 5678
-
-ENTRYPOINT ["/rainbow"]
+ENTRYPOINT ["/server"]
