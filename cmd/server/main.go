@@ -23,7 +23,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/service"
 )
 
-const version = "Rainbow-0.2.0"
+const version = "Rainbow-0.2.1"
 
 func main() {
 	parseFlags()
