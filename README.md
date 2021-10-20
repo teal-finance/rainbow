@@ -118,9 +118,13 @@ This project also provides a pretty nice Vue3 front-end that uses the API.
 
 ## Container
 
-See also the [Dockerfile](Dockerfile) for a light container image: 18 MB including the front-end.
+See also the [Dockerfile](Dockerfile) for a light container image: 30 MB.
 
-The container enables by default the API and export ports.
+The image contains the hardened sever executable (with dynamic library) and the front-end.
+
+The container enables by default the CORS, the export ports and a rate limiter.
+Some of these features can be customized using environments variables.
+
 The Dockerfile has been successfully tested with Docker-20.10.8 and Podman-3.3.1.
 
 ## API
