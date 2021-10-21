@@ -1,8 +1,9 @@
 # Build:
 #
-#    docker  build --build-arg dns=http://myapp.co --build-arg port=8088 -t rainbow .
-#    podman  build --build-arg dns=http://myapp.co --build-arg port=8088 -t rainbow .
-#    buildah build --build-arg dns=http://myapp.co --build-arg port=8088 -t rainbow .
+#    DOCKER_BUILDKIT=1 
+#    docker  build --build-arg addr=http://myapp.co --build-arg port=8088 -t rainbow .
+#    podman  build --build-arg addr=http://myapp.co --build-arg port=8088 -t rainbow .
+#    buildah build --build-arg addr=http://myapp.co --build-arg port=8088 -t rainbow .
 #
 # Run:
 #
@@ -16,7 +17,7 @@
 
 # --------------------------------------------------------------------
 # Arguments to control server address (CORS, API, front-end)
-ARG dns=http://localhost
+ARG addr=http://localhost
 ARG port=8884
 
 # --------------------------------------------------------------------
@@ -30,7 +31,8 @@ COPY frontend/package.json \
 RUN set -x                          &&\
     node --version                  &&\
     yarn --version                  &&\
-    yarn install --frozen-lockfile
+    yarn install --frozen-lockfile  &&\
+    yarn cache clean
 
 COPY frontend/.eslintrc.json     \
      frontend/index.html         \
@@ -39,18 +41,19 @@ COPY frontend/.eslintrc.json     \
      frontend/tsconfig.json      \
      frontend/vite.config.ts     \
      .env                       ./
+
 COPY frontend/public public
 COPY frontend/src    src
 
-ARG dns
+ARG addr
 ARG port
 
-RUN set -x                                                    &&\
-    ls -lA                                                    &&\
-    sed -e "s|^VITE_MAIN_PORT=.*|VITE_MAIN_PORT=$port|"         \
-        -e "s|^VITE_MAIN_DNS=.*|VITE_MAIN_DNS=$dns|" -i .env  &&\
-    head .env                                                 &&\
-    yarn build                                                &&\
+RUN set -x                                                     &&\
+    ls -lA                                                     &&\
+    sed -e "s|^VITE_API_ADDR=.*|VITE_API_ADDR=$addr|"            \
+        -e "s|^VITE_API_PORT=.*|VITE_API_PORT=$port|" -i .env  &&\
+    head .env                                                  &&\
+    yarn build                                                 &&\
     yarn compress
 
 # --------------------------------------------------------------------
@@ -116,7 +119,7 @@ RUN mkdir lib        &&\
 # --------------------------------------------------------------------
 FROM scratch AS final
 
-ARG dns
+ARG addr
 ARG port
 
 COPY --chown=5505:5505 --from=integrator /target /
@@ -127,7 +130,7 @@ USER teal:teal
 # Use UTC time zone by default
 ENV TZ        UTC0
 ENV WWW_DIR   /var/www
-ENV MAIN_DNS  "$dns"
+ENV MAIN_ADDR "$addr"
 ENV MAIN_PORT "$port"
 ENV EXP_PORT  9868
 

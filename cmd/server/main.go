@@ -33,7 +33,7 @@ func main() {
 	go service.CollectOptionsIndefinitely()
 
 	// Uniformize error responses with API doc
-	resErr := reserr.New(officialAddr + "/doc")
+	resErr := reserr.New(*mainAddr + listenAddr + "/doc")
 
 	middlewares, connState := setMiddlewares(resErr)
 
@@ -54,7 +54,7 @@ func setMiddlewares(resErr reserr.ResErr) (middlewares chain.Chain, connState fu
 	reqLimiter := limiter.New(*maxReqBurst, *maxReqPerMinute, *dev, resErr)
 
 	// CORS
-	allowedOrigins := []string{officialAddr}
+	allowedOrigins := []string{*mainAddr + listenAddr}
 	if *dev {
 		allowedOrigins = append(allowedOrigins, "http://localhost:")
 	}
@@ -83,7 +83,7 @@ func setMiddlewares(resErr reserr.ResErr) (middlewares chain.Chain, connState fu
 // runMainServer runs in foreground the main server.
 func runMainServer(h http.Handler, connState func(net.Conn, http.ConnState)) {
 	server := http.Server{
-		Addr:              internalAddr,
+		Addr:              listenAddr,
 		Handler:           h,
 		TLSConfig:         nil,
 		ReadTimeout:       1 * time.Second,

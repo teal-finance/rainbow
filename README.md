@@ -140,12 +140,12 @@ and more. For more details see the underlying project
 $ go build ./cmd/server
 $ ./server -help
 Usage of ./server:
+  -addr string
+        Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR (default "http://localhost")
   -burst int
         Max requests during a burst, has precedence over REQ_BURST (default 10)
   -dev
         Run rainbow in dev. mode
-  -dns string
-        Schema and DNS used for doc URL and CORS, has precedence over MAIN_DNS (default "http://localhost")
   -exp int
         Export port for Prometheus, has precedence over EXP_PORT
   -opa string
@@ -155,7 +155,7 @@ Usage of ./server:
   -rate int
         Max requests per minute, has precedence over REQ_PER_MINUTE (default 30)
   -www string
-        Folder of the web static files, has precedence over WWW_DIR (default "./dist")
+        Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
 
 ### Data structure
