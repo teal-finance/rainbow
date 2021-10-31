@@ -44,11 +44,12 @@ func QueryTheGraph() []getOptionsOtokensOToken {
 		return nil
 	}
 
-	return filterExpired(resp.Otokens)
+	// always filter to net get old options
+	return filterExpired(resp.Otokens, time.Now())
 }
 
-func filterExpired(instruments []getOptionsOtokensOToken) (filtered []getOptionsOtokensOToken) {
-	oct29th, _ := time.Parse(time.RFC3339, "2021-10-29T08:00:00Z")
+func filterExpired(instruments []getOptionsOtokensOToken, date time.Time) (filtered []getOptionsOtokensOToken) {
+	//oct29th, _ := time.Parse(time.RFC3339, "2021-10-29T08:00:00Z")
 
 	for _, i := range instruments {
 		seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
@@ -58,7 +59,10 @@ func filterExpired(instruments []getOptionsOtokensOToken) (filtered []getOptions
 		}
 
 		expiryTime := time.Unix(seconds, 0)
-		if expiryTime.Equal(oct29th) {
+		//we keep an option even 2 days after expiry
+		//mainly because not all protocol stop at expiry or right before
+		//TODO re-check later
+		if expiryTime.After(date.Add(-time.Hour * 48)) {
 			filtered = append(filtered, i)
 		}
 	}
