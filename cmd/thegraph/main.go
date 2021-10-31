@@ -7,12 +7,13 @@
 package main
 
 import (
-	"log"
+	"github.com/davecgh/go-spew/spew"
 
 	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 )
 
 func main() {
 	options := zerox.QueryTheGraph()
-	log.Print("Options: ", options)
+	spew.Dump(options)
+
 }
