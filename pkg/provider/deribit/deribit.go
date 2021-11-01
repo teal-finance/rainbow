@@ -103,18 +103,50 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 		// we want market only for the 29OCT
 		// we should filter by taking what is available elsewhere and then
 		// only fetch those
-		t, _ := time.Parse(time.RFC3339, "2021-10-29T08:00:00Z")
-		if expiryTime.Equal(t) {
-			if i.BaseCurrency == "BTC" && i.Strike >= 30000 && i.Strike <= 60000 {
-				filtered = append(filtered, i)
-			}
-			if i.BaseCurrency == "ETH" && i.Strike >= 2500 && i.Strike <= 4000 {
-				filtered = append(filtered, i)
-			}
+		if isExpiryAvailable(expiryTime) && isStrikeAvailable(i) {
+			filtered = append(filtered, i)
+
 		}
 	}
 
 	return filtered
+}
+
+//TODO change this quick and dirty way of filtering date from deribit
+func isExpiryAvailable(expiry time.Time) bool {
+	dates := []string{
+		"2021-11-4T08:00:00Z",
+		"2021-11-5T08:00:00Z",
+		"2021-11-26T08:00:00Z",
+		"2021-12-31T08:00:00Z",
+	}
+	for _, d := range dates {
+		t, _ := time.Parse(time.RFC3339, d)
+		if expiry.Equal(t) {
+			return true
+
+		}
+
+	}
+	return false
+
+}
+
+//TODO change this quick and dirty way of filtering strikes from deribit
+func isStrikeAvailable(i instrument) bool {
+	ethStrike := []float64{1280, 3000, 3400, 3600, 3700, 4000, 4100, 4500, 4400, 4800, 5000, 5200, 8000}
+	btcStrike := []float64{40000, 50000, 55000, 60000, 65000, 66000, 70000, 100000}
+	strikes := ethStrike
+	if i.BaseCurrency == "BTC" {
+		strikes = btcStrike
+	}
+	for _, s := range strikes {
+		//if strike on deribit around strike anywhere else, keep it
+		if i.Strike >= s*0.99 && i.Strike <= s*1.01 {
+			return true
+		}
+	}
+	return false
 }
 
 func normalize(instruments []instrument, depth uint32) ([]rainbow.Option, error) {

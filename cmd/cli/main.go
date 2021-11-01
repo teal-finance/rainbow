@@ -15,6 +15,7 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 
 	"github.com/teal-finance/rainbow/pkg/provider"
+	//"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -24,6 +25,11 @@ func main() {
 		log.Print("ERROR: ", err)
 		return
 	}
+	/*options, err := deribit.Options()
+	if err != nil {
+		log.Print("ERROR: ", err)
+		return
+	}*/
 
 	printTable(options)
 }
@@ -35,7 +41,7 @@ func printTable(options []rainbow.Option) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.SetStyle(table.StyleLight)
-	t.SetTitle(fmt.Sprint("\t\t 29-Oct-21 CeDeFi options: ", len(options)))
+	t.SetTitle(fmt.Sprint("\t\t 2021 CeDeFi options: ", len(options)))
 
 	t.AppendHeader(table.Row{
 		"Provider", "Asset", "Type",
