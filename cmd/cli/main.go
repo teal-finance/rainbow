@@ -20,7 +20,8 @@ import (
 )
 
 func main() {
-	options, err := provider.OptionsFromAllProviders()
+	service := rainbow.NewService(provider.AllProvider{})
+	options, err := service.Options()
 	if err != nil {
 		log.Print("ERROR: ", err)
 		return
