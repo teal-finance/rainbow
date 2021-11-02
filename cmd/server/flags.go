@@ -17,7 +17,7 @@ import (
 var (
 	dev             = flag.Bool("dev", false, "Run rainbow in dev. mode")
 	mainAddr        = flag.String("addr", envStr("MAIN_ADDR", "http://localhost"), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
-	mainPort        = flag.Int("port", envInt("MAIN_PORT", 1234), "API port, has precedence over MAIN_PORT")
+	mainPort        = flag.Int("port", envInt("MAIN_PORT", 8090), "API port, has precedence over MAIN_PORT")
 	expPort         = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
 	maxReqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 30), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	maxReqBurst     = flag.Int("burst", envInt("REQ_BURST", 10), "Max requests during a burst, has precedence over REQ_BURST")
