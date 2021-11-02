@@ -1,0 +1,45 @@
+{{.Doc}}
+func {{.Name}}(
+    {{if ne .Config.ContextType "-" -}}
+    ctx {{ref .Config.ContextType}},
+    {{end}}
+    {{- if not .Config.ClientGetter -}}
+    client {{ref "github.com/Khan/genqlient/graphql.Client"}},
+    {{end}}
+    {{- if .Input -}}
+    {{- range .Input.Fields -}}
+    {{/* the GraphQL name here is the user-specified variable-name */ -}}
+    {{.GraphQLName}} {{.GoType.Reference}},
+    {{end -}}
+    {{end -}}
+) (*{{.ResponseName}}, error) {
+    {{- if .Input -}}
+    {{/* We need to avoid conflicting with any of the function's argument names
+         which are derived from the GraphQL argument names; notably `input` is
+         a common one.  So we use a name that's not legal in GraphQL, namely
+         one starting with a double-underscore. */ -}}
+    __input := {{.Input.GoName}}{
+        {{range .Input.Fields -}}
+        {{.GoName}}: {{.GraphQLName}},
+        {{end -}}
+    }
+    {{end -}}
+
+    var err error
+    {{if .Config.ClientGetter -}}
+    client, err := {{ref .Config.ClientGetter}}({{if ne .Config.ContextType "-"}}ctx{{else}}{{end}})
+    if err != nil {
+        return nil, err
+    }
+    {{end}}
+
+	var retval {{.ResponseName}}
+    err = client.MakeRequest(
+        {{if ne .Config.ContextType "-"}}ctx{{else}}nil{{end}},
+        "{{.Name}}",
+        `{{.Body}}`,
+        &retval,
+        {{if .Input}}&__input{{else}}nil{{end}},
+    )
+    return &retval, err
+}
