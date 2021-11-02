@@ -14,12 +14,9 @@ import (
 	"github.com/teal-finance/server/reserr"
 )
 
-// Handler creates the mapping between the endpoints and the handler functions.
-func (s *Service) Handler(resErr reserr.ResErr, wwwDir string) http.Handler {
+// Handler to server static web frontend files
+func Handler(resErr reserr.ResErr, wwwDir string) http.Handler {
 	r := chi.NewRouter()
-
-	// API
-	r.Mount("/v0", s.apiRouter(resErr))
 
 	// Static website files
 	fs := fileserver.FileServer{Dir: wwwDir, ResErr: resErr}
@@ -29,20 +26,6 @@ func (s *Service) Handler(resErr reserr.ResErr, wwwDir string) http.Handler {
 	r.Get("/assets/css/*", fs.ServeDir("text/css; charset=utf-8"))
 	r.Get("/font/*", fs.ServeDir("font/woff2"))
 	r.Get("/images/*", fs.ServeImages())
-
-	return r
-}
-
-// apiRouter handles API endpoints.
-func (s *Service) apiRouter(resp reserr.ResErr) chi.Router {
-	r := chi.NewRouter()
-
-	r.Route("/", func(r chi.Router) {
-		r.Get("/", resp.NotImplemented)
-		r.Get("/options", s.ReplyOptions)
-	})
-
-	r.NotFound(resp.InvalidPath)
 
 	return r
 }

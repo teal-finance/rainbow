@@ -20,7 +20,8 @@ import (
 	"github.com/teal-finance/server/opa"
 	"github.com/teal-finance/server/reserr"
 
-	"github.com/teal-finance/rainbow/pkg/service"
+	"github.com/teal-finance/rainbow/pkg/provider"
+	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 const version = "Rainbow-0.2.1"
@@ -29,19 +30,38 @@ func main() {
 	parseFlags()
 
 	// Start the service in background
-	service := &service.Service{}
-	go service.CollectOptionsIndefinitely()
+	service := rainbow.NewService(provider.AllProvider{})
+	go service.Run()
+
+	server := http.Server{
+		Addr:              listenAddr,
+		Handler:           service.Handler(),
+		ReadTimeout:       1 * time.Second,
+		ReadHeaderTimeout: 1 * time.Second,
+		WriteTimeout:      1 * time.Second,
+		IdleTimeout:       1 * time.Second,
+		ErrorLog:          log.Default(),
+	}
+
+	log.Print("Server listening on http://localhost", server.Addr)
+
+	if err := server.ListenAndServe(); err != nil {
+		log.Print("ERROR: Install ncat and ss: sudo apt install ncat iproute2")
+		log.Printf("ERROR: Try to listen port %v: sudo ncat -l %v", *mainPort, *mainPort)
+		log.Printf("ERROR: Get the process using port %v: sudo ss -pan | grep %v", *mainPort, *mainPort)
+		log.Fatal(err)
+	}
 
 	// Uniformize error responses with API doc
-	resErr := reserr.New(*mainAddr + listenAddr + "/doc")
+	// resErr := reserr.New(*mainAddr + listenAddr + "/doc")
 
-	middlewares, connState := setMiddlewares(resErr)
+	// middlewares, connState := setMiddlewares(resErr)
 
 	// h handles both the REST API and the static web files
-	h := service.Handler(resErr, *wwwDir)
-	h = middlewares.Then(h)
+	// h := service.Handler(resErr, *wwwDir)
+	// h = middlewares.Then(h)
 
-	runMainServer(h, connState)
+	// runMainServer(h, connState)
 }
 
 func setMiddlewares(resErr reserr.ResErr) (middlewares chain.Chain, connState func(net.Conn, http.ConnState)) {
