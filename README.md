@@ -1,6 +1,6 @@
-# ![rainbow](frontend/public/rainbow-chancery.png)
+# ![rainbow](doc/rainbow-chancery.png)
 
-![logo](frontend/public/small.png) | Rainbow is a dashboard for Decentralized Finance options trading. <br><br> It's developed during Solana's Ignition & Ethereum's EthGlobal Hackathons by members of [Teal.Finance](https://teal.finance/).
+![logo](doc/small.png) | Rainbow is a dashboard for Decentralized Finance options trading. <br><br> It's developed during Solana's Ignition & Ethereum's EthGlobal Hackathons by members of [Teal.Finance](https://teal.finance/).
 ---|---
 
 ## Motivation
@@ -98,7 +98,7 @@ You may just use the pretty nice table printed by the command `./cli`.
 
     go build ./cmd/cli && ./cli
 
-![CLI screenshot](frontend/public/cli.jpg)
+![CLI screenshot](doc/cli.jpg)
 
 ### Back-end
 
