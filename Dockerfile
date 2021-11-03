@@ -1,9 +1,9 @@
 # Build:
 #
 #    DOCKER_BUILDKIT=1 
-#    docker  build --build-arg addr=http://myapp.co --build-arg port=8088 -t rainbow .
-#    podman  build --build-arg addr=http://myapp.co --build-arg port=8088 -t rainbow .
-#    buildah build --build-arg addr=http://myapp.co --build-arg port=8088 -t rainbow .
+#    docker  build --build-arg addr=http://my.dns.co --build-arg port=8088 -t rainbow .
+#    podman  build --build-arg addr=http://my.dns.co --build-arg port=8088 -t rainbow .
+#    buildah build --build-arg addr=http://my.dns.co --build-arg port=8088 -t rainbow .
 #
 # Run:
 #
@@ -40,7 +40,7 @@ COPY frontend/.eslintrc.json     \
      frontend/tailwind.config.js \
      frontend/tsconfig.json      \
      frontend/vite.config.ts     \
-     .env                       ./
+     frontend/.env              ./
 
 COPY frontend/public public
 COPY frontend/src    src

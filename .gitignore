@@ -1,9 +1,11 @@
-node_modules/
-.DS_Store
-dist/
-dist-ssr/
+/frontend/node_modules/
+/frontend/.DS_Store
+/frontend/dist/
+/frontend/dist-ssr/
+/frontend/storybook-static
+/frontend/.gzipper
+/frontend/*.env*
 *.local
 *.log
 /dev
 .vscode
-storybook-static
