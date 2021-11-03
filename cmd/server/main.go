@@ -16,6 +16,7 @@ import (
 
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 	"github.com/teal-finance/rainbow/pkg/webserver"
 )
 
@@ -23,7 +24,10 @@ func main() {
 	parseFlags()
 
 	// Start the service in background
-	service := rainbow.NewService(provider.AllProvider{})
+	service := rainbow.NewService(
+		provider.AllProvider{},
+		&dbram.DB{},
+	)
 	go service.Run()
 
 	server := http.Server{
