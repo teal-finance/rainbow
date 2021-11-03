@@ -151,7 +151,7 @@ Usage of ./server:
   -opa string
         Policy files (comma-separated filenames) for the Open Policy Agent using the Datalog/Rego format
   -port int
-        API port, has precedence over MAIN_PORT (default 1234)
+        API port, has precedence over MAIN_PORT (default 8090)
   -rate int
         Max requests per minute, has precedence over REQ_PER_MINUTE (default 30)
   -www string
