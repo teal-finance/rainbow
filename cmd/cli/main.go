@@ -15,13 +15,13 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 
 	"github.com/teal-finance/rainbow/pkg/provider"
-	//"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
 func main() {
-	service := rainbow.NewService(provider.AllProvider{})
-	options, err := service.Options()
+	service := rainbow.NewService(provider.AllProvider{}, &dbram.DB{})
+	options, err := service.OptionsFromProviders()
 	if err != nil {
 		log.Print("ERROR: ", err)
 		return

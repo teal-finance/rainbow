@@ -26,7 +26,13 @@ func (s Service) Handler() http.Handler {
 
 func (h handler) getOptions(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Last-Modified", lastUpdate.Format(time.RFC3339))
+	w.Header().Set("Last-Modified", h.s.lastUpdate.Format(time.RFC3339))
+
+	options, err := h.s.Options()
+	if err != nil {
+		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
+		return
+	}
 
 	if err := json.NewEncoder(w).Encode(options); err != nil {
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
