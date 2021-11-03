@@ -43,7 +43,7 @@ func main() {
 func handler(s rainbow.Service) http.Handler {
 	r := chi.NewRouter()
 
-	r.Handle("/", webserver.Handler(reserr.New(*mainAddr+listenAddr+"/doc"), *wwwDir))
+	r.Mount("/", webserver.Handler(reserr.New(*mainAddr+listenAddr+"/doc"), *wwwDir))
 	r.Mount("/v0", s.Handler())
 
 	return r
