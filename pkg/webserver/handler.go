@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/teal-finance/server/fileserver"
-	"github.com/teal-finance/server/reserr"
+	"github.com/teal-finance/garcon/fileserver"
+	"github.com/teal-finance/garcon/reserr"
 )
 
-// Handler to server static web frontend files
+// Handler to server the static web files of the front-end.
 func Handler(resErr reserr.ResErr, wwwDir string) http.Handler {
 	r := chi.NewRouter()
 
@@ -18,8 +18,6 @@ func Handler(resErr reserr.ResErr, wwwDir string) http.Handler {
 	r.Get("/favicon.png", fs.ServeFile("favicon.png", "image/x-icon"))
 	r.Get("/assets/js/*", fs.ServeDir("text/javascript; charset=utf-8"))
 	r.Get("/assets/css/*", fs.ServeDir("text/css; charset=utf-8"))
-	r.Get("/font/*", fs.ServeDir("font/woff2"))
-	r.Get("/images/*", fs.ServeImages())
 
 	return r
 }

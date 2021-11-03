@@ -12,11 +12,11 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/teal-finance/garcon/reserr"
 
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/webserver"
-	"github.com/teal-finance/server/reserr"
 )
 
 func main() {
