@@ -127,9 +127,7 @@ Some of these features can be customized using environments variables.
 
 The Dockerfile has been successfully tested with Docker-20.10.8 and Podman-3.3.1.
 
-## API
-
-### Command line flags
+## Command line flags
 
 Rainbow provides a complete HTTP server,
 including a rate limiter, an export port (Prometheus monitoring),
@@ -158,10 +156,57 @@ Usage of ./server:
         Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
 
-### Data structure
+## API
 
-The API endpoint /v0/options replies an array of options.
-Each option is described with the following JSON structure:
+The API endpoints are designed to simplify the front-end source code.
+
+![Idea of table to display on the web front-end](doc/frontend-table.png)
+
+### /v0/expiries
+
+<http://localhost:8090/v0/expiries>
+
+List the available values for the two selectors above the table: Expiration date and Asset.
+
+```json
+{"expiries":
+{"BTC":{"2021-10-29 23:59:59":16,"2021-11-26 08:00:00":16,"2021-12-31 08:00:00":12},
+"ETH":{"2021-10-29 23:59:59":11,"2021-11-26 08:00:00":16,"2021-12-31 08:00:00":16},
+"WBTC":{"2021-11-05 08:00:00":2,"2021-11-26 08:00:00":1},
+"WETH":{"2021-11-04 08:00:00":1,"2021-11-05 08:00:00":2}}}
+```
+
+### /v0/tables/default
+
+<http://localhost:8090/v0/tables/default>
+
+Display the default table with the default selector values. The response also provide these selector values:
+
+```json
+{"asset":"BTC","expiry":"2021-10-29 23:59:59","table":
+[{"p":"PsyOptions","cb":128.9,"cp":0,"ca":134.09,"cc":0,"cv":153,"co":0,"s":50000,"pb":7.51,"pp":0,"pa":8.63,"pc":0,"pv":120,"po":0},
+{"p":"PsyOptions","cb":13.32,"cp":0,"ca":15.07,"cc":0,"cv":158,"co":0,"s":100000,"pb":0,"pp":0,"pa":0,"pc":0,"pv":0,"po":0},
+{"p":"PsyOptions","cb":221.24,"cp":0,"ca":228.32,"cc":0,"cv":162,"co":0,"s":40000,"pb":1,"pp":0,"pa":1.21,"pc":0,"pv":57,"po":0},
+{"p":"PsyOptions","cb":19.94,"cp":0,"ca":22.22,"cc":0,"cv":143,"co":0,"s":70000,"pb":95.64,"pp":0,"pa":99.8,"pc":0,"pv":149,"po":0},
+{"p":"PsyOptions","cb":11.68,"cp":0,"ca":13.37,"cc":0,"cv":113,"co":0,"s":75000,"pb":136.58,"pp":0,"pa":141.75,"pc":0,"pv":125,"po":0},
+{"p":"PsyOptions","cb":34.21,"cp":0,"ca":37.37,"cc":0,"cv":137,"co":0,"s":65000,"pb":60.54,"pp":0,"pa":64.18,"pc":0,"pv":114,"po":0},
+{"p":"PsyOptions","cb":56.91,"cp":0,"ca":60.3,"cc":0,"cv":126,"co":0,"s":60000,"pb":33.87,"pp":0,"pa":36.74,"pc":0,"pv":145,"po":0},
+{"p":"PsyOptions","cb":89.1,"cp":0,"ca":93.18,"cc":0,"cv":151,"co":0,"s":55000,"pb":16.71,"pp":0,"pa":18.71,"pc":0,"pv":139,"po":0}]}
+```
+
+### /v0/tables/{asset}/{expiry}
+
+[http://localhost:8090/v0/tables/BTC/2021-11-26 08:00:00](http://localhost:8090/v0/tables/BTC/2021-11-26%2008:00:00)
+
+Display the table when the user plays with the selectors.
+
+The response has the same structure as the previous endpoint.
+
+### /v0/options
+
+<http://localhost:8090/v0/options>
+
+List all the options and their order books.
 
 ```js
 {
