@@ -1,0 +1,14 @@
+[
+  {
+    "transformation": "En cours",
+    "pourcentage": 6
+  },
+  {
+    "transformation": "Perdu",
+    "pourcentage": 32
+  },
+  {
+    "transformation": "Gagné",
+    "pourcentage": 62
+  }
+]
