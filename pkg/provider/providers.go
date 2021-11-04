@@ -1,4 +1,4 @@
-// Copyright (c) 2021 teal.finance
+// Copyright (c) 2021 Teal.Finance
 //
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
@@ -15,7 +15,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-// AllProvider gets datas from all providers
+// AllProvider gets data from all providers.
 type AllProvider struct{}
 
 func (p AllProvider) Options() ([]rainbow.Option, error) {

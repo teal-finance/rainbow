@@ -1,4 +1,4 @@
-// Copyright (c) 2021 teal.finance
+// Copyright (c) 2021 Teal.Finance
 //
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
@@ -105,7 +105,6 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 		// only fetch those
 		if isExpiryAvailable(expiryTime) && isStrikeAvailable(i) {
 			filtered = append(filtered, i)
-
 		}
 	}
 
@@ -124,15 +123,13 @@ func isExpiryAvailable(expiry time.Time) bool {
 		t, _ := time.Parse(time.RFC3339, d)
 		if expiry.Equal(t) {
 			return true
-
 		}
-
 	}
-	return false
 
+	return false
 }
 
-//TODO change this quick and dirty way of filtering strikes from deribit
+// TODO change this quick and dirty way of filtering strikes from deribit
 func isStrikeAvailable(i instrument) bool {
 	ethStrike := []float64{1280, 3000, 3400, 3600, 3700, 4000, 4100, 4500, 4400, 4800, 5000, 5200, 8000}
 	btcStrike := []float64{40000, 50000, 55000, 60000, 65000, 66000, 70000, 100000}
@@ -140,8 +137,9 @@ func isStrikeAvailable(i instrument) bool {
 	if i.BaseCurrency == "BTC" {
 		strikes = btcStrike
 	}
+
 	for _, s := range strikes {
-		//if strike on deribit around strike anywhere else, keep it
+		// if strike on deribit around strike anywhere else, keep it
 		if i.Strike >= s*0.99 && i.Strike <= s*1.01 {
 			return true
 		}
