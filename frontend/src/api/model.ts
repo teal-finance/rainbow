@@ -10,8 +10,11 @@ class Api {
     this.verbose = verbose;
   }
 
-  async get<T>(uri: string): Promise<T> {
+  async get<T>(uri: string, local = false): Promise<T> {
     let url = this.serverUrl + uri;
+    if (local) {
+      url = uri;
+    }
     if (this.verbose) {
       console.log("Get", url)
     }
