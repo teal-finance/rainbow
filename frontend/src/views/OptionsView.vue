@@ -9,7 +9,7 @@ import api from '@/api';
 import Option from '@/models/options/option';
 import SwDataTableModel from "@/packages/datatable/models/datatable";
 import { user } from "@/state";
-import { OptionsJsonDataset } from '@/models/options/types';
+import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
 import OptionsDatatable from '@/components/OptionsDatatable.vue';
 
 export default defineComponent({
@@ -17,10 +17,10 @@ export default defineComponent({
     OptionsDatatable
   },
   setup() {
-    const datatable = ref(new SwDataTableModel<Record<string, number | string>>());
+    const datatable = ref(new SwDataTableModel<OptionsTable>());
 
     async function fetchData() {
-      const uri = "/mocks/data/options.json"
+      const uri = "/mocks/data/options_table.json"
       const data = await api.get<OptionsJsonDataset>(uri, true);
       //console.log("DATA", data)
       return data;
@@ -28,31 +28,27 @@ export default defineComponent({
 
     function loadData(dataset: OptionsJsonDataset) {
       // console.log("DATA", dataset)
-      const options = new Set<Record<string, number | string>>();
-      for (const line of dataset.table) {
+      const options = new Set<OptionsTable>();
+      for (const line of dataset.rows) {
         const opt = new Option(line).toRow();
         options.add(opt)
       }
-      console.log("OPTIONS", options);
+      //console.log("OPTIONS", options);
       const columns = {
         "provider": "Provider",
-        "putBid": "Bid",
-        "putAsk": "Ask",
-        "putIv": "Iv",
-        "putLastPrice": "Last price",
-        "putChange": "Change",
-        "putOpen": "Open",
-        "putVolume": "Volume",
+        "asset": "Asset",
+        "expiry": "Expiry",
+        "putBidPrice": "Bid",
+        "putBidSize": "Bid size",
+        "putAskPrice": "Ask",
+        "putAskSize": "Ask size",
         "strike": "strike",
-        "callBid": "Bid",
-        "callAsk": "Ask",
-        "callIv": "Iv",
-        "callLastPrice": "Last price",
-        "callChange": "Change",
-        "callOpen": "Open",
-        "callVolume": "Volume",
+        "callBidPrice": "Bid",
+        "callBidSize": "Bid size",
+        "callAskPrice": "Ask",
+        "callAskSize": "Ask size",
       }
-      datatable.value = new SwDataTableModel<Record<string, number | string>>({ columns: columns, rows: Array.from(options) });
+      datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
       //datatable.value.setColumnsFromData();
     }
 
