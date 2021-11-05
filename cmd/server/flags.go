@@ -11,7 +11,8 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
+
+	"github.com/teal-finance/garcon"
 )
 
 var (
@@ -22,20 +23,24 @@ var (
 	maxReqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 30), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	maxReqBurst     = flag.Int("burst", envInt("REQ_BURST", 10), "Max requests during a burst, has precedence over REQ_BURST")
 	wwwDir          = flag.String("www", envStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
-	opaFlag         = flag.String("opa", "", "Policy files (comma-separated filenames) for the Open Policy Agent using the Datalog/Rego format")
+	opaFlag         = flag.String("opa", envStr("OPA_FILES", ""), "Datalog/Rego files for the Open Policy Agent, has precedence over OPA_FILES")
 	opaFilenames    []string
-
-	listenAddr string
+	listenAddr      string
 )
 
 func parseFlags() {
 	flag.Parse()
 
 	if *opaFlag != "" {
-		opaFilenames = strings.Split(*opaFlag, ",")
+		opaFilenames = garcon.SplitClean(*opaFlag)
 	}
 
 	listenAddr = ":" + strconv.Itoa(*mainPort)
+
+	if !*dev && *mainAddr == "http://localhost" && *mainPort == 8090 {
+		log.Print("Enable -dev mode because -addr and -port are not used")
+		*dev = true
+	}
 
 	log.Print("Dev. mode      -dev   = ", *dev)
 	log.Print("MAIN_ADDR      -addr  = ", *mainAddr)
