@@ -33,6 +33,10 @@ export default defineComponent({
     @apply bg-light text-light-r dark:bg-light-dark dark:text-light-r-dark
   td
     @apply px-3 py-1
+  td:nth-child(1), td:nth-child(2), td:nth-child(3)
+    @apply bg-gray-300 dark:bg-gray-600
+  td:nth-child(8)
+    @apply bg-gray-400 dark:bg-gray-900
   tbody
     @apply bg-gray-50 dark:bg-gray-700
 </style>
