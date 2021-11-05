@@ -49,4 +49,3 @@ func (c *Cache) CPFormat() (CPFormat, error) {
 
 	return c.cpFormat, nil
 }
-
