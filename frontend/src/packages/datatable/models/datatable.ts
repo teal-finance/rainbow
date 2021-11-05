@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive, computed, unref } from 'vue';
 import { TableInterface, TableParams } from '../interfaces';
 import { FilterSet } from './filters';
 
@@ -6,9 +6,10 @@ import { FilterSet } from './filters';
 export default class SwDatatableModel<T = Record<string, any>> {
   state = reactive<TableInterface<T>>({ columns: {}, rows: [] });
   _initialState = reactive<TableInterface<T>>({ columns: {}, rows: [] });
-  _filtersets: Record<string, FilterSet> = {};
+  filterset = new FilterSet();
+  idCol: string | null = null;
 
-  constructor({ columns, rows }: TableParams<T> = {}) {
+  constructor({ columns, rows, idCol }: TableParams<T> = {}) {
     this._initialState = reactive<TableInterface<T>>({
       columns: columns ?? {},
       rows: rows ?? [],
@@ -17,27 +18,44 @@ export default class SwDatatableModel<T = Record<string, any>> {
       columns: columns ?? {},
       rows: rows ?? [],
     });
+    if (idCol) {
+      this.idCol = idCol;
+    }
   }
 
-  get hasData(): boolean {
+  get numCols(): number {
+    return Object.keys(this.state.columns).length
+  }
+
+  hasData = computed<boolean>(() => {
     return this._initialState.rows.length > 0;
+  });
+
+  addExcludeFilter(col: string, value: any) {
+    this.filterset.appendExcludeFilterValue(col, value)
+    console.log(this.filterset.exclude)
+    this.filter();
+  };
+
+  removeExcludeFilter(col: string, value: any) {
+    this.filterset.removeFilterValue(col, value)
+    console.log(this.filterset.exclude)
+    this.filter();
   }
 
-  filterExclude(col: string, value: any) {
-    this.state.rows = this.state.rows.filter((row: Record<string, any>) => {
-      if (row[col] != value) {
-        return true
-      }
-    });
-  }
-
-  filterInclude(col: string, value: any) {
+  filter() {
     const rows = this._initialState.rows.filter((row: Record<string, any>) => {
-      if (row[col] == value) {
-        return true
+      for (const col of Object.keys(this.filterset.exclude)) {
+        for (const values of this.filterset.exclude[col]) {
+          for (const ex of values as Set<any>)
+            if (row[col] == ex) {
+              return false
+            }
+        }
       }
+      return true
     });
-    this.state.rows = [...this.state.rows, ...rows]
+    this.state.rows = [...rows]
   }
 
   setColumnsFromData(): void {
