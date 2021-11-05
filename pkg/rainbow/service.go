@@ -8,20 +8,9 @@ package rainbow
 
 import (
 	"log"
+	"net/http"
 	"time"
 )
-
-type Service struct {
-	provider Provider
-	store    Store
-}
-
-func NewService(p Provider, s Store) Service {
-	return Service{
-		provider: p,
-		store:    s,
-	}
-}
 
 type Provider interface {
 	Options() ([]Option, error)
@@ -29,28 +18,61 @@ type Provider interface {
 
 type Store interface {
 	InsertOptions(options []Option) error
-	InsertCPFormat(CPFormat) error
-
 	GetAllOptions() ([]Option, error)
-	GetCPFormat() (CPFormat, error)
+}
+
+type Service struct {
+	provider Provider
+	store    Store
+	cache    Cache
+}
+
+func NewService(p Provider, s Store) Service {
+	service := Service{
+		provider: p,
+		store:    s,
+		cache:    Cache{},
+	}
+
+	service.initCache()
+
+	return service
+}
+
+func (s *Service) initCache() {
+	options, err := s.store.GetAllOptions()
+	if err != nil {
+		log.Print("ERROR store.GetAllOptions ", err)
+	} else {
+		s.cache.Refresh(options)
+	}
+}
+
+func (s *Service) Handler() http.Handler {
+	if s.cache.Empty() {
+		s.initCache()
+	}
+
+	h := handler{c: &s.cache}
+
+	return h.router()
 }
 
 // Run periodically gets and stores data from providers.
 func (s *Service) Run() {
 	ticker := time.NewTicker(10 * time.Minute)
 	for ; true; <-ticker.C {
-		o, err := s.OptionsFromProviders()
+		options, err := s.OptionsFromProviders()
 		if err != nil {
 			log.Print("ERROR options from providers : ", err)
 			continue // do not erase previously valid data (options, expiries, tables)
 		}
 
-		cp := buildCPFormat(o)
+		s.cache.Refresh(options)
 
-		_ = s.store.InsertOptions(o)
-		_ = s.store.InsertCPFormat(cp)
+		_ = s.store.InsertOptions(options)
 
-		log.Printf("Update options=%v rows=%v", len(o), len(cp.Rows))
+		log.Print("Fetch options=", len(options))
 	}
 }
 
