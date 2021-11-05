@@ -33,9 +33,9 @@ export default class SwDatatableModel<T = Record<string, any>> {
     return Object.keys(this.state.columns).length
   }
 
-  hasData = computed<boolean>(() => {
+  /*hasData = computed<boolean>(() => {
     return this._initialState.rows.length > 0;
-  });
+  });*/
 
   addExcludeFilter(col: string, value: any) {
     this.filterset.appendExcludeFilterValue(col, value)
