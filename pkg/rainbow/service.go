@@ -23,12 +23,10 @@ type Provider interface {
 
 type Store interface {
 	InsertOptions(options []Option) error
-	InsertExpiries(Expiries) error
-	InsertTables(map[string]Table) error
+	InsertCPFormat(CPFormat) error
 
 	GetAllOptions() ([]Option, error)
-	GetExpiries() (Expiries, error)
-	GetTable(key string) (Table, error)
+	GetCPFormat() (CPFormat, error)
 }
 
 // Run periodically gets and stores data from providers.
@@ -41,15 +39,12 @@ func (s *Service) Run() {
 			continue // do not erase previously valid data (options, expiries, tables)
 		}
 
-		e := buildExpiries(o)
-		t := buildTables(o)
+		cp := buildCPFormat(o)
 
 		_ = s.store.InsertOptions(o)
-		_ = s.store.InsertExpiries(e)
-		_ = s.store.InsertTables(t)
+		_ = s.store.InsertCPFormat(cp)
 
-		log.Printf("Update options=%v expiries=%v tables=%v",
-			len(o), len(e.AssetToExpiries), len(t))
+		log.Printf("Update options=%v rows=%v", len(o), len(cp.Rows))
 	}
 }
 

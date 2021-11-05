@@ -158,55 +158,9 @@ Usage of ./server:
 
 ## API
 
-The API endpoints are designed to simplify the front-end source code.
-
-![Idea of table to display on the web front-end](doc/frontend-table.png)
-
-### /v0/expiries
-
-<http://localhost:8090/v0/expiries>
-
-List the available values for the two selectors above the table: Expiration date and Asset.
-
-```json
-{"expiries":
-{"BTC":{"2021-10-29 23:59:59":16,"2021-11-26 08:00:00":16,"2021-12-31 08:00:00":12},
-"ETH":{"2021-10-29 23:59:59":11,"2021-11-26 08:00:00":16,"2021-12-31 08:00:00":16},
-"WBTC":{"2021-11-05 08:00:00":2,"2021-11-26 08:00:00":1},
-"WETH":{"2021-11-04 08:00:00":1,"2021-11-05 08:00:00":2}}}
-```
-
-### /v0/tables/default
-
-<http://localhost:8090/v0/tables/default>
-
-Display the default table with the default selector values. The response also provide these selector values:
-
-```json
-{"asset":"BTC","expiry":"2021-10-29 23:59:59","table":
-[{"p":"PsyOptions","cb":128.9,"cp":0,"ca":134.09,"cc":0,"cv":153,"co":0,"s":50000,"pb":7.51,"pp":0,"pa":8.63,"pc":0,"pv":120,"po":0},
-{"p":"PsyOptions","cb":13.32,"cp":0,"ca":15.07,"cc":0,"cv":158,"co":0,"s":100000,"pb":0,"pp":0,"pa":0,"pc":0,"pv":0,"po":0},
-{"p":"PsyOptions","cb":221.24,"cp":0,"ca":228.32,"cc":0,"cv":162,"co":0,"s":40000,"pb":1,"pp":0,"pa":1.21,"pc":0,"pv":57,"po":0},
-{"p":"PsyOptions","cb":19.94,"cp":0,"ca":22.22,"cc":0,"cv":143,"co":0,"s":70000,"pb":95.64,"pp":0,"pa":99.8,"pc":0,"pv":149,"po":0},
-{"p":"PsyOptions","cb":11.68,"cp":0,"ca":13.37,"cc":0,"cv":113,"co":0,"s":75000,"pb":136.58,"pp":0,"pa":141.75,"pc":0,"pv":125,"po":0},
-{"p":"PsyOptions","cb":34.21,"cp":0,"ca":37.37,"cc":0,"cv":137,"co":0,"s":65000,"pb":60.54,"pp":0,"pa":64.18,"pc":0,"pv":114,"po":0},
-{"p":"PsyOptions","cb":56.91,"cp":0,"ca":60.3,"cc":0,"cv":126,"co":0,"s":60000,"pb":33.87,"pp":0,"pa":36.74,"pc":0,"pv":145,"po":0},
-{"p":"PsyOptions","cb":89.1,"cp":0,"ca":93.18,"cc":0,"cv":151,"co":0,"s":55000,"pb":16.71,"pp":0,"pa":18.71,"pc":0,"pv":139,"po":0}]}
-```
-
-### /v0/tables/{asset}/{expiry}
-
-[http://localhost:8090/v0/tables/BTC/2021-11-26 08:00:00](http://localhost:8090/v0/tables/BTC/2021-11-26%2008:00:00)
-
-Display the table when the user plays with the selectors.
-
-The response has the same structure as the previous endpoint.
-
 ### /v0/options
 
-<http://localhost:8090/v0/options>
-
-List all the options and their order books.
+List all the options and their order books: <http://localhost:8090/v0/options>
 
 ```js
 {
@@ -244,4 +198,54 @@ List all the options and their order books.
     }
   ]
 }
+```
+
+### /v0/options/cp
+
+List the options in Call/Put format: <http://localhost:8090/v0/options/cp>
+
+Rainbow API is currently only used by its web front-end and has been influenced by
+the [BFF pattern](https://blog.bitsrc.io/e4fa965128bf) (Backend for Frontend pattern).
+This endpoints aims simplifying the front-end processing.
+
+![Idea of table to display on the web front-end](doc/frontend-table.png)
+
+```js
+{ "rows":[
+    { "asset": "ETH",
+      "expiry": "Dec 31 08:00",
+      "provider": "Deribit",
+      "call": { "bid": {"px": 0.1805, "size": 24},
+                "ask":  {"px": 0.183,  "size": 459},
+                "other_indicators_will_be_added_soon": 0},
+      "strike": 4400,
+      "put": { "bid": {"px": 0.1305, "size": 26},
+               "ask": {"px": 0.133, "size": 37},
+               "other_indicators_will_be_added_soon": 0}
+    },
+    { "asset": "ETH",
+      "expiry": "Dec 31 08:00",
+      "provider": "Deribit",
+      "call": { "bid": {"px": 0.114, "size": 258},
+                "ask": {"px": 0.116,"size": 33},
+                "other_indicators_will_be_added_soon": 0},
+      "strike": 5200,
+      "put": { "bid": {"px": 0.1235, "size": 80},
+               "ask": {"px": 0, "size": 0},
+               "other_indicators_will_be_added_soon": 0}
+    },
+
+  // [...]
+
+  { "asset": "BTC",
+    "expiry": "Nov 26 08:00",
+    "provider": "Deribit",
+    "call": { "bid": {"px":0.2045, "size":7.5},
+              "ask": {"px":0.2105, "size":5.3},
+              "other_indicators_will_be_added_soon":0},
+    "strike":50000,
+    "put": { "bid": {"px":0.0125, "size":27.2},
+             "ask": {"px":0.0135, "size":70.2},
+             "other_indicators_will_be_added_soon":0}}
+]}
 ```

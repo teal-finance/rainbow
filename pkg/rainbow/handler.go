@@ -2,6 +2,7 @@ package rainbow
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -17,64 +18,47 @@ func (s *Service) Handler() http.Handler {
 	r := chi.NewRouter()
 
 	r.Route("/", func(r chi.Router) {
-		// Deprecated API
 		r.Get("/options", h.getOptions)
-		// New API
-		r.Get("/expiries", h.getExpiries)
-		r.Get("/tables/default", h.getTable)
-		r.Get("/tables/{asset}/{expiry}", h.getTable)
+		r.Get("/options/cp", h.getCPFormat)
 	})
 
 	return r
 }
 
-// deprecated API.
 func (h handler) getOptions(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
 	options, err := h.s.Options()
 	if err != nil {
-		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
+		log.Print("ERROR getOptions ", err)
+		http.Error(w, "No Content", http.StatusNoContent)
+
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewEncoder(w).Encode(options); err != nil {
+		log.Print("ERROR getOptions ", err)
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
+
 		return
 	}
 }
 
-// new API endpoints
-
-func (h handler) getExpiries(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	e, err := h.s.store.GetExpiries()
+func (h handler) getCPFormat(w http.ResponseWriter, r *http.Request) {
+	t, err := h.s.store.GetCPFormat()
 	if err != nil {
+		log.Print("ERROR getCPFormat ", err)
 		http.Error(w, "No Content", http.StatusNoContent)
+
 		return
 	}
-
-	if err := json.NewEncoder(w).Encode(e); err != nil {
-		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
-		return
-	}
-}
-
-func (h handler) getTable(w http.ResponseWriter, r *http.Request) {
-	asset := chi.URLParam(r, "asset")
-	expiry := chi.URLParam(r, "expiry")
 
 	w.Header().Set("Content-Type", "application/json")
-
-	t, err := h.s.store.GetTable(asset + expiry)
-	if err != nil {
-		http.Error(w, "No data for asset="+asset+" expiry="+expiry, http.StatusNoContent)
-		return
-	}
 
 	if err := json.NewEncoder(w).Encode(t); err != nil {
+		log.Print("ERROR getCPFormat ", err)
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
+
 		return
 	}
 }
