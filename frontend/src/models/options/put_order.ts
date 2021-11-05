@@ -1,21 +1,15 @@
 import { OrderContract } from "./types";
 
 export default class PutOrder {
-  putBid: number;
-  putAsk: number;
-  putIv: number;
-  putLastPrice: number;
-  putChange: number;
-  putVolume: number;
-  putOpen: number;
+  putBidPrice: number;
+  putBidSize: number;
+  putAskPrice: number;
+  putAskSize: number;
 
   constructor(data: OrderContract) {
-    this.putBid = data.bid;
-    this.putAsk = data.ask;
-    this.putIv = data.iva;
-    this.putLastPrice = data.last_price;
-    this.putChange = data.change;
-    this.putVolume = data.volume;
-    this.putOpen = data.open;
+    this.putBidPrice = data.bid.px;
+    this.putBidSize = data.bid.size;
+    this.putAskPrice = data.ask.px;
+    this.putAskSize = data.ask.size;
   }
 }

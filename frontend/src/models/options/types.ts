@@ -1,57 +1,73 @@
-type ProviderType = "PsyOptions" | "Deribit";
+type ProviderType = "PsyOptions" | "Deribit" | "Opyn";
 
 // contracts for the json
 
+interface OrderFrameContract {
+  px: number;
+  size: number;
+}
+
 interface OrderContract {
-  bid: number;
-  ask: number;
-  iva: number;
-  last_price: number;
-  change: number;
-  volume: number;
-  open: number;
+  bid: OrderFrameContract;
+  ask: OrderFrameContract;
 }
 
 interface OptionContract {
+  provider: ProviderType
+  asset: string;
+  expiry: string;
   put: OrderContract;
   call: OrderContract;
   strike: number;
-  provider: ProviderType
 }
 
 // internal types
 
+type OrderFrameType = {
+  px: number;
+  size: number;
+}
+
 type PutOrderType = {
-  putBid: number;
-  putAsk: number;
-  putIv: number;
-  putLastPrice: number;
-  putChange: number;
-  putVolume: number;
-  putOpen: number;
+  putBidPrice: number;
+  putBidSize: number;
+  putAskPrice: number;
+  putAskSize: number;
 }
 
 type CallOrderType = {
-  callBid: number;
-  callAsk: number;
-  callIv: number;
-  callLastPrice: number;
-  callChange: number;
-  callVolume: number;
-  callOpen: number;
+  callBidPrice: number;
+  callBidSize: number;
+  callAskPrice: number;
+  callAskSize: number;
 }
 
 type OptionType = {
+  provider: ProviderType;
+  asset: string;
+  expiry: Date;
   put: PutOrderType;
   call: CallOrderType;
   strike: number;
-  provider: ProviderType
 }
 
 type OptionsJsonDataset = {
+  provider: ProviderType
   asset: string;
-  expriry: string;
-  table: Array<OptionContract>;
+  expiry: string;
+  rows: Array<OptionContract>;
 }
 
-export { ProviderType, OrderContract, OptionContract, PutOrderType, CallOrderType, OptionType, OptionsJsonDataset }
+type OptionsTable = Record<string, number | string | Date>;
+
+export {
+  ProviderType,
+  OrderContract,
+  OptionContract,
+  PutOrderType,
+  CallOrderType,
+  OptionType,
+  OptionsJsonDataset,
+  OrderFrameType,
+  OptionsTable,
+}

@@ -10,6 +10,7 @@
 import SwDatatableModel from '@/packages/datatable/models/datatable'
 import { defineComponent } from 'vue'
 import SwDatatable from '@/packages/datatable/SwDatatable.vue'
+import { OptionsTable } from '@/models/options/types'
 
 export default defineComponent({
   components: {
@@ -17,7 +18,7 @@ export default defineComponent({
   },
   props: {
     model: {
-      type: Object as () => SwDatatableModel<Record<string, number | string>>,
+      type: Object as () => SwDatatableModel<OptionsTable>,
       required: true
     }
   },
