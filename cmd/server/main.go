@@ -32,7 +32,7 @@ func main() {
 
 	server := http.Server{
 		Addr:              listenAddr,
-		Handler:           handler(service),
+		Handler:           handler(&service),
 		ReadTimeout:       1 * time.Second,
 		ReadHeaderTimeout: 1 * time.Second,
 		WriteTimeout:      1 * time.Second,
@@ -44,7 +44,7 @@ func main() {
 	log.Fatal(server.ListenAndServe())
 }
 
-func handler(s rainbow.Service) http.Handler {
+func handler(s *rainbow.Service) http.Handler {
 	r := chi.NewRouter()
 
 	r.Mount("/", webserver.Handler(reserr.New(*mainAddr+listenAddr+"/doc"), *wwwDir))

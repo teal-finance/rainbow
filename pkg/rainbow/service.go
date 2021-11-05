@@ -8,8 +8,6 @@ import (
 type Service struct {
 	provider Provider
 	store    Store
-
-	lastUpdate time.Time
 }
 
 func NewService(p Provider, s Store) Service {
@@ -25,29 +23,33 @@ type Provider interface {
 
 type Store interface {
 	InsertOptions(options []Option) error
+	InsertCPFormat(CPFormat) error
+
 	GetAllOptions() ([]Option, error)
+	GetCPFormat() (CPFormat, error)
 }
 
-// Run periodically gets and stores datas from providers.
+// Run periodically gets and stores data from providers.
 func (s *Service) Run() {
 	ticker := time.NewTicker(10 * time.Minute)
 	for ; true; <-ticker.C {
 		o, err := s.OptionsFromProviders()
 		if err != nil {
 			log.Print("ERROR options from providers : ", err)
+			continue // do not erase previously valid data (options, expiries, tables)
 		}
-		log.Println("Store options from providers")
-		s.lastUpdate = time.Now()
-		s.store.InsertOptions(o)
+
+		cp := buildCPFormat(o)
+
+		_ = s.store.InsertOptions(o)
+		_ = s.store.InsertCPFormat(cp)
+
+		log.Printf("Update options=%v rows=%v", len(o), len(cp.Rows))
 	}
 }
 
 func (s *Service) OptionsFromProviders() ([]Option, error) {
-	options, err := s.provider.Options()
-	if err != nil {
-		return []Option{}, err
-	}
-	return options, nil
+	return s.provider.Options()
 }
 
 func (s *Service) Options() ([]Option, error) {

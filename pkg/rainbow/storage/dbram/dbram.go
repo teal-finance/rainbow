@@ -6,7 +6,8 @@ import (
 
 // DB client.
 type DB struct {
-	options []rainbow.Option
+	options  []rainbow.Option
+	cpFormat rainbow.CPFormat
 }
 
 func (db *DB) InsertOptions(options []rainbow.Option) error {
@@ -14,6 +15,15 @@ func (db *DB) InsertOptions(options []rainbow.Option) error {
 	return nil
 }
 
+func (db *DB) InsertCPFormat(table rainbow.CPFormat) error {
+	db.cpFormat = table
+	return nil
+}
+
 func (db *DB) GetAllOptions() ([]rainbow.Option, error) {
 	return db.options, nil
+}
+
+func (db *DB) GetCPFormat() (rainbow.CPFormat, error) {
+	return db.cpFormat, nil
 }

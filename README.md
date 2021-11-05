@@ -127,9 +127,7 @@ Some of these features can be customized using environments variables.
 
 The Dockerfile has been successfully tested with Docker-20.10.8 and Podman-3.3.1.
 
-## API
-
-### Command line flags
+## Command line flags
 
 Rainbow provides a complete HTTP server,
 including a rate limiter, an export port (Prometheus monitoring),
@@ -158,10 +156,11 @@ Usage of ./server:
         Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
 
-### Data structure
+## API
 
-The API endpoint /v0/options replies an array of options.
-Each option is described with the following JSON structure:
+### /v0/options
+
+List all the options and their order books: <http://localhost:8090/v0/options>
 
 ```js
 {
@@ -199,4 +198,54 @@ Each option is described with the following JSON structure:
     }
   ]
 }
+```
+
+### /v0/options/cp
+
+List the options in Call/Put format: <http://localhost:8090/v0/options/cp>
+
+Rainbow API is currently only used by its web front-end and has been influenced by
+the [BFF pattern](https://blog.bitsrc.io/e4fa965128bf) (Backend for Frontend pattern).
+This endpoints aims simplifying the front-end processing.
+
+![Idea of table to display on the web front-end](doc/frontend-table.png)
+
+```js
+{ "rows":[
+    { "asset": "ETH",
+      "expiry": "Dec 31 08:00",
+      "provider": "Deribit",
+      "call": { "bid": {"px": 0.1805, "size": 24},
+                "ask":  {"px": 0.183,  "size": 459},
+                "other_indicators_will_be_added_soon": 0},
+      "strike": 4400,
+      "put": { "bid": {"px": 0.1305, "size": 26},
+               "ask": {"px": 0.133, "size": 37},
+               "other_indicators_will_be_added_soon": 0}
+    },
+    { "asset": "ETH",
+      "expiry": "Dec 31 08:00",
+      "provider": "Deribit",
+      "call": { "bid": {"px": 0.114, "size": 258},
+                "ask": {"px": 0.116,"size": 33},
+                "other_indicators_will_be_added_soon": 0},
+      "strike": 5200,
+      "put": { "bid": {"px": 0.1235, "size": 80},
+               "ask": {"px": 0, "size": 0},
+               "other_indicators_will_be_added_soon": 0}
+    },
+
+  // [...]
+
+  { "asset": "BTC",
+    "expiry": "Nov 26 08:00",
+    "provider": "Deribit",
+    "call": { "bid": {"px":0.2045, "size":7.5},
+              "ask": {"px":0.2105, "size":5.3},
+              "other_indicators_will_be_added_soon":0},
+    "strike":50000,
+    "put": { "bid": {"px":0.0125, "size":27.2},
+             "ask": {"px":0.0135, "size":70.2},
+             "other_indicators_will_be_added_soon":0}}
+]}
 ```
