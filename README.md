@@ -1,6 +1,6 @@
 # ![rainbow](doc/rainbow-chancery.png)
 
-![logo](doc/small.png) | Rainbow is a dashboard for Decentralized Finance options trading. <br><br> It's developed during Solana's Ignition & Ethereum's EthGlobal Hackathons by members of [Teal.Finance](https://teal.finance/).
+![logo](doc/small.png) | Dashboard for DEX/CEX options trading highlighting market opportunities to ease strategies decision. To achieve this goal, Rainbow continuously scans CEX/DEX/DeFi market data. <br><br> This project has been initiated by [Teal.Finance](https://teal.finance/) and has already won two prices during the Ethereum's EthGlobal Hackathon. :trophy:
 ---|---
 
 ## Motivation
@@ -37,7 +37,7 @@ the options, prices, expiries, liquidities across layers L1/L2.
 ## Current status
 
 The current version is a tool to compare market data
-across multiple venues, CEX and DEXes.
+across multiple venues, CEX and DEX.
 
 Deribit is supported since the beginning, because Deribit
 is the main options trading place.
@@ -56,6 +56,40 @@ in the near future: Thales, Lyra, Hegic...
 Now, using Rainbow, you can compare to arbitrage options
 across these markets, or simply get the best prices.
 
+## In progress
+
+Our target is to be the most helpful possible, thus offering the highest possible user experience.
+
+Please open a GitHub issue or contact us at Teal.Finance@protonmail.com to suggest ideas or to share your feeling.
+
+To improve the decision-making, we are currently implementing more data retrieval and computing indicators to provide:
+
+- fine asset information
+- easy browsing and comparison within the expiration dates
+- grouping by same strike
+- filtering and aggregate data across markets and providers
+- computing of indicators based on bid/ask orders
+- Mark IV (quoted bid and ask volatilities)
+- the [Greeks](https://en.wikipedia.org/wiki/Greeks_(finance))
+- strategy outcome:
+    - buy an option at the lowest price
+    - sell an option at the highest price
+    - arbitrage between two markets (e.g. buy an option at a low price and sell the same size in another market)
+
+We are open to your ideas for a better clear view of the options markets.
+
+The rainbow dashboard will also display some graphs as the aggregated order books,
+and others ones to determine at-the-money option depending on spot price,
+to highlight volatilities according to strikes above/below the spot price,
+and to compare mark IV and delta buckets (smallest .10 increment).
+
+We are also designing the sending of real-time buy/sell signals (e.g. mobile notifications).
+
+To go further, we want to decrease the latency between to decision and the market transaction.
+
+Please contact us to encourage us or for any other help. :-)
+You may want machine learning prediction, customized Buy/Sell buttons or sending your orders directly... we need your feedback. ;-)
+
 ## Technology
 
 The back-end is developed in Go.
@@ -65,12 +99,12 @@ was pretty straightforward to implement.
 Deribit even have an API playground, which all projects should also provide.
 
 To support Opyn, Rainbow retrieves the options list using the TheGraph API.
-This is our first GraphQL client implementation in Go and we spent days
-to test and compare the different solutions:
-we are proud to use the GraphQL state-of-the-art in Go,
+This is our first GraphQL client implementation in Go.
+We spent two days to compare and test the different solutions.
+We are proud to have found the GraphQL state-of-the-art in Go,
 based on the library <https://github.com/Khan/genqlient>
 with type-safe code generation.
-We got help from the Opyn team for the query examples.
+We also got help from the Opyn team for the query examples.
 
 Opyn support also requires to use the 0x protocol.
 We have battled to correctly get the bid/ask prices from 0x API.
@@ -86,11 +120,32 @@ See also the Go documentation: <https://pkg.go.dev/github.com/teal-finance/rainb
 Next step is to implement on a proper UI that enables users to trade,
 based on Typescript/Vue3.
 
+## Requirements
+
+* Go v1.17 or later
+* Node v14 or later
+* Yarn
+
+[Snap](https://en.wikipedia.org/wiki/Snap_(package_manager)) provides a simple way to install these requirements on many Linux distributions:
+
+    snap install go   --classic
+    snap install node --classic  # also installs yarn
+
+    # check
+    go   version
+    yarn versions
+
+On Debian/Ubuntu, the command `sudo apt install golang` may be for an older version.
+You can check that with `apt list --all-versions golang`.
+If this is your case, you may install Go v1.17 using a different package name:
+
+    sudo apt remove  golang
+    sudo apt install golang-1.17
+
 ## Build
 
     git clone https://github.com/teal-finance/rainbow
     cd rainbow
-    go generate ./...
 
 ### CLI
 
@@ -102,25 +157,32 @@ You may just use the pretty nice table printed by the command `./cli`.
 
 ### Back-end
 
-If you prefer the API, use `./server`.
+The front-end requires the server API.
 
-    go build ./cmd/server && ./server -dev
-
-The flag `-dev` enables CORS for `http://localhost:*`.
+    go build ./cmd/server && ./server
 
 ### Front-end
 
-This project also provides a pretty nice Vue3 front-end that uses the API.
+To run the Vue3 front-end in dev mode:
 
     cd frontend
     yarn
     yarn dev
 
+Else, in prod mode, the back-end serves the web static files from `frontend/dist`.
+
+    cd frontend
+    yarn
+    yarn build
+
+Finally open <http://localhost:8090>
+
 ## Container
 
-See also the [Dockerfile](Dockerfile) for a light container image: 30 MB.
+See also the [Dockerfile](Dockerfile) for a light all-in-one container image: 30 MB.
 
-The image contains the hardened sever executable (with dynamic library) and the front-end.
+The image contains the hardened sever executable (with dynamic library)
+and the front-end static files.
 
 The container enables by default the CORS, the export ports and a rate limiter.
 Some of these features can be customized using environments variables.
@@ -134,7 +196,7 @@ The Dockerfile has been successfully tested with Docker-20.10.8 and Podman-3.3.1
 Rainbow provides a complete HTTP server,
 including a rate limiter, an export port (Prometheus monitoring),
 and more. For more details see the underlying project
-[Teal.Finance/Server](https://github.com/teal-finance/teal/).
+[Teal.Finance/Garcon](https://github.com/teal-finance/garcon/).
 
 ```
 $ go build ./cmd/server
