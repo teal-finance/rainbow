@@ -168,11 +168,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@popperjs/core@^2.9.2":
-  version "2.10.2"
-  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.10.2.tgz#0798c03351f0dea1a5a4cabddf26a55a7cbee590"
-  integrity sha512-IXf3XA7+XyN7CP9gGh/XB0UxVMlvARGEgGXLubFICsUMGz6Q+DU+i4gGlpOxTjKvXjkJDJC8YdqdKkDj9qZHEQ==
-
 "@rollup/pluginutils@^4.1.0", "@rollup/pluginutils@^4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-4.1.1.tgz#1d4da86dd4eded15656a57d933fda2b9a08d47ec"
@@ -1014,11 +1009,6 @@ d3-shape@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/d3-timer/-/d3-timer-2.0.0.tgz#055edb1d170cfe31ab2da8968deee940b56623e6"
   integrity sha512-TO4VLh0/420Y/9dO3+f9abDEFYeCUr2WZRlxJvbp4HPTQcSylXNiL6yZa9FIUvV1yRiFufl1bszTCLDqv9PWNA==
-
-debounce@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.1.tgz#38881d8f4166a5c5848020c11827b834bcb3e0a5"
-  integrity sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==
 
 debug@^4.0.1, debug@^4.1.1, debug@^4.3.2:
   version "4.3.2"
@@ -3838,14 +3828,6 @@ vue-tsc@^0.28.7:
   integrity sha512-s3H29Aa2PVpJ0EKPGKllTIwgmcOTNe+Uo3jHkX+F+wSYBmVLt7ZHeYJD5K35PwM6QZ2ryKcaDn5cDIq683Gb1g==
   dependencies:
     vscode-vue-languageservice "0.28.7"
-
-vue3-popper@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/vue3-popper/-/vue3-popper-1.3.0.tgz#15ae49e169ecf52643052e7a73dbede2287e2291"
-  integrity sha512-lUJsGPtXKu2rPJpkXyeVcpKBE4srJsuFb6H4j4ugCW5m2p8/4QNtYZ6R0RzkHxugcUg4fSDpftjM3WILLM5SCg==
-  dependencies:
-    "@popperjs/core" "^2.9.2"
-    debounce "^1.2.1"
 
 vue@^3.2.19:
   version "3.2.20"

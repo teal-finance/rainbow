@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/garcon/reserr"
 
 	"github.com/teal-finance/rainbow/pkg/provider"
@@ -30,13 +31,26 @@ func main() {
 	)
 	go service.Run()
 
+	g := garcon.Garcon{
+		Version:        "Rainbow-v0",
+		ResErr:         "https:teal.finance/rainbow/doc",
+		AllowedOrigins: []string{*mainAddr},
+		OPAFilenames:   opaFilenames,
+	}
+
+	middlewares, connState, err := g.Setup(0, *expPort, *maxReqBurst, *maxReqPerMinute, *dev)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	server := http.Server{
 		Addr:              listenAddr,
-		Handler:           handler(&service),
+		Handler:           middlewares.Then(handler(&service)),
 		ReadTimeout:       1 * time.Second,
 		ReadHeaderTimeout: 1 * time.Second,
 		WriteTimeout:      1 * time.Second,
 		IdleTimeout:       1 * time.Second,
+		ConnState:         connState,
 		ErrorLog:          log.Default(),
 	}
 
