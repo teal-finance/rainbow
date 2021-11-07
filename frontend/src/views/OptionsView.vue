@@ -1,58 +1,58 @@
 <template>
-  <rainbow-datatable :model="datatable" v-if="datatable.hasData"></rainbow-datatable>
+  <options-datatable :model="datatable"></options-datatable>
 </template>
 
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
-import RainbowDatatable from '@/components/RainbowDatatable.vue'
 import api from '@/api';
-import Option from '@/models/option';
-import { OptionData } from '@/types';
-import SwDataTableModel from "@/datatable/models/datatable";
+import Option from '@/models/options/option';
+import SwDataTableModel from "@/packages/datatable/models/datatable";
 import { user } from "@/state";
+import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
+import OptionsDatatable from '@/components/OptionsDatatable.vue';
 
 export default defineComponent({
   components: {
-    RainbowDatatable,
+    OptionsDatatable
   },
   setup() {
-    const datatable = ref(new SwDataTableModel<Option>());
+    const datatable = ref(new SwDataTableModel<OptionsTable>());
 
     async function fetchData() {
-      const data = await api.get<Array<Record<string, string | number | Array<Record<string, string | number>>>>>("/v0/tables/default");
+      const uri = "/mocks/data/options_table.json"
+      const data = await api.get<OptionsJsonDataset>(uri, true);
+      //console.log("DATA", data)
       return data;
     }
 
-    function loadData(dataset: Array<Record<string, string | number | Array<Record<string, string | number>>>>) {
+    function loadData(dataset: OptionsJsonDataset) {
       // console.log("DATA", dataset)
-      const options = new Set<Option>();
-      for (const line of dataset) {
-        const opt = new Option(line as OptionData);
+      const options = new Set<OptionsTable>();
+      for (const line of dataset.rows) {
+        const opt = new Option(line).toRow();
         options.add(opt)
       }
-      //console.log("OPTS", options);
+      //console.log("OPTIONS", options);
       const columns = {
         "provider": "Provider",
         "asset": "Asset",
-        "type": "Type",
-        "bid": "Bid",
-        "bestBidQty": "Bid size",
-        "bestBidPx": "Bid price",
-        "strike": "Strike",
-        "ask": "Ask",
-        "bestAskPx": "Ask price",
-        "bestAskQty": "Ask size",
-        "chain": "Chain",
-        "name": "Instrument",
+        "expiry": "Expiry",
+        "putBidPrice": "Bid",
+        "putBidSize": "Bid size",
+        "putAskPrice": "Ask",
+        "putAskSize": "Ask size",
+        "strike": "strike",
+        "callBidPrice": "Bid",
+        "callBidSize": "Bid size",
+        "callAskPrice": "Ask",
+        "callAskSize": "Ask size",
       }
-      datatable.value = new SwDataTableModel<Option>({ columns: columns, rows: Array.from(options) });
+      datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
       //datatable.value.setColumnsFromData();
-      //console.log(datatable.value.state.columns)
     }
 
     onMounted(() => {
-      //console.log("DATA", data)
       fetchData().then((d) => loadData(d));
       //loadData(data)
     })

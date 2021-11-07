@@ -8,22 +8,9 @@ package rainbow
 
 import (
 	"log"
+	"net/http"
 	"time"
 )
-
-type Service struct {
-	provider Provider
-	store    Store
-
-	lastUpdate time.Time
-}
-
-func NewService(p Provider, s Store) Service {
-	return Service{
-		provider: p,
-		store:    s,
-	}
-}
 
 type Provider interface {
 	Options() ([]Option, error)
@@ -34,26 +21,63 @@ type Store interface {
 	GetAllOptions() ([]Option, error)
 }
 
-// Run periodically gets and stores datas from providers.
+type Service struct {
+	provider Provider
+	store    Store
+	cache    Cache
+}
+
+func NewService(p Provider, s Store) Service {
+	service := Service{
+		provider: p,
+		store:    s,
+		cache:    Cache{},
+	}
+
+	service.initCache()
+
+	return service
+}
+
+func (s *Service) initCache() {
+	options, err := s.store.GetAllOptions()
+	if err != nil {
+		log.Print("ERROR store.GetAllOptions ", err)
+	} else {
+		s.cache.Refresh(options)
+	}
+}
+
+func (s *Service) Handler() http.Handler {
+	if s.cache.Empty() {
+		s.initCache()
+	}
+
+	h := handler{c: &s.cache}
+
+	return h.router()
+}
+
+// Run periodically gets and stores data from providers.
 func (s *Service) Run() {
 	ticker := time.NewTicker(10 * time.Minute)
 	for ; true; <-ticker.C {
-		o, err := s.OptionsFromProviders()
+		options, err := s.OptionsFromProviders()
 		if err != nil {
 			log.Print("ERROR options from providers : ", err)
+			continue // do not erase previously valid data (options, expiries, tables)
 		}
-		log.Println("Store options from providers")
-		s.lastUpdate = time.Now()
-		s.store.InsertOptions(o)
+
+		s.cache.Refresh(options)
+
+		_ = s.store.InsertOptions(options)
+
+		log.Print("Fetch options=", len(options))
 	}
 }
 
 func (s *Service) OptionsFromProviders() ([]Option, error) {
-	options, err := s.provider.Options()
-	if err != nil {
-		return []Option{}, err
-	}
-	return options, nil
+	return s.provider.Options()
 }
 
 func (s *Service) Options() ([]Option, error) {

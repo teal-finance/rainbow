@@ -12,7 +12,7 @@ import (
 
 // DB client.
 type DB struct {
-	options []rainbow.Option
+	options  []rainbow.Option
 }
 
 func (db *DB) InsertOptions(options []rainbow.Option) error {
