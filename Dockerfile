@@ -72,15 +72,15 @@ COPY pkg pkg
 
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
-RUN set -x                                                               &&\
-    ls -lA                                                               &&\
-    export GOOS=linux                                                    &&\
-    export CGO_ENABLED=0                                                 &&\
-    export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"  &&\
-    export GOLDFLAGS="-linkmode=external -s -w"                          &&\
-    go build ./cmd/server                                                &&\
-    ls -sh server                                                        &&\
-    ldd server                                                           &&\
+RUN set -x                                                &&\
+    ls -lA                                                &&\
+    export GOOS=linux                                     &&\
+    export CGO_ENABLED=0                                  &&\
+    export GOFLAGS="-buildmode=pie -trimpath -modcacherw" &&\
+    export GOLDFLAGS="-linkmode=external -s -w"           &&\
+    go build ./cmd/server                                 &&\
+    ls -sh server                                         &&\
+    ldd server                                            &&\
     ./server -help  # smoke test
 
 # To go further in Go hardening and FIPS 140-2 certification:
