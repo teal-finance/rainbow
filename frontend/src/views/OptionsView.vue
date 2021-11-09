@@ -43,8 +43,6 @@ export default defineComponent({
     const isReady = ref(false);
 
     async function fetchData() {
-      //const uri = "/mocks/data/options_table.json"
-      //const data = await api.get<OptionsJsonDataset>(uri, true);
       const uri = "/v0/options/cp"
       const data = await api.get<OptionsJsonDataset>(uri);
       //console.log("DATA", data)

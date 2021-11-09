@@ -46,13 +46,13 @@ export default class SwDatatableModel<T = Record<string, any>> {
   }
 
   filter() {
-    console.log("FILTERSET", JSON.stringify(this.filterset, null, "  "))
+    //console.log("FILTERSET", JSON.stringify(this.filterset, null, "  "))
     const rows = this._initialState.rows.filter((row: Record<string, any>) => {
       for (const col of Object.keys(this.filterset.exclude)) {
         //console.log("COL", col)
         for (const exval of this.filterset.exclude[col]) {
           //console.log("FVAL", values)
-          console.log(row[col], "==", exval);
+          //console.log(row[col], "==", exval);
           if (row[col] == exval) {
             return false
           }
