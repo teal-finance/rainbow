@@ -9,14 +9,14 @@ export class FilterSet {
     }
   }
 
-  removeFilterValue(col: string, value: any) {
+  removeExcludeFilterValue(col: string, value: any) {
     if (this._hasExcludeFilter(col)) {
       this.exclude[col].delete(value)
     }
   }
 
   _hasExcludeFilter(col: string): boolean {
-    return Object.keys(this.exclude).length > 0
+    return col in Object.keys(this.exclude)
   }
 }
 

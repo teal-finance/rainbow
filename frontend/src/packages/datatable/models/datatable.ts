@@ -33,30 +33,29 @@ export default class SwDatatableModel<T = Record<string, any>> {
     return Object.keys(this.state.columns).length
   }
 
-  /*hasData = computed<boolean>(() => {
-    return this._initialState.rows.length > 0;
-  });*/
-
   addExcludeFilter(col: string, value: any) {
     this.filterset.appendExcludeFilterValue(col, value)
-    console.log(this.filterset.exclude)
+    //console.log(this.filterset.exclude)
     this.filter();
   };
 
   removeExcludeFilter(col: string, value: any) {
-    this.filterset.removeFilterValue(col, value)
-    console.log(this.filterset.exclude)
+    this.filterset.removeExcludeFilterValue(col, value)
+    //console.log(this.filterset.exclude)
     this.filter();
   }
 
   filter() {
+    console.log("FILTERSET", JSON.stringify(this.filterset, null, "  "))
     const rows = this._initialState.rows.filter((row: Record<string, any>) => {
       for (const col of Object.keys(this.filterset.exclude)) {
-        for (const values of this.filterset.exclude[col]) {
-          for (const ex of values as Set<any>)
-            if (row[col] == ex) {
-              return false
-            }
+        //console.log("COL", col)
+        for (const exval of this.filterset.exclude[col]) {
+          //console.log("FVAL", values)
+          console.log(row[col], "==", exval);
+          if (row[col] == exval) {
+            return false
+          }
         }
       }
       return true

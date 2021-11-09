@@ -54,6 +54,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
+      //console.log("MODEL", JSON.stringify(model.value, null, "  "))
       distinctValues();
     })
 
