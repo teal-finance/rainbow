@@ -1,10 +1,12 @@
 const colors = require('tailwindcss/colors');
 
 module.exports = {
-  purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-  // purge: false
-  // purge is disabled to be able to deploy the storybook on GitHub pages
-
+  purge: {
+    content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+    options: {
+      safelist: ['sm:block', 'sm:hidden'],
+    }
+  },
   darkMode: 'class',
 
   jit: true,
