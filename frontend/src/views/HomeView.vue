@@ -1,6 +1,6 @@
 <template>
   <div>Landing page in construction</div>
-  <a class="mt-5 btn" href="options">Dashboard page</a>
+  <button class="mt-5 btn" @click="$router.push('/options')">Dashboard page</button>
 </template>
 
 <script lang="ts">

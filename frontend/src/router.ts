@@ -13,13 +13,6 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: "Options"
     }
-  },
-  {
-    path: "/chart",
-    component: () => import("./views/ChartView.vue"),
-    meta: {
-      title: "Chart proto"
-    }
   }
 ]
 
