@@ -4,9 +4,9 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-import { reactive, computed, unref } from 'vue';
+import { reactive, toRaw } from 'vue';
 import { TableInterface, TableParams } from '../interfaces';
-import { FilterSet } from './filters';
+import { FilterSet } from './filterset';
 
 
 export default class SwDatatableModel<T = Record<string, any>> {
@@ -34,8 +34,8 @@ export default class SwDatatableModel<T = Record<string, any>> {
   }
 
   addExcludeFilter(col: string, value: any) {
-    this.filterset.appendExcludeFilterValue(col, value)
-    //console.log(this.filterset.exclude)
+    //console.log("Add ex filter", col, value)
+    this.filterset.appendExcludeFilterValue(col, toRaw(value))
     this.filter();
   };
 
@@ -49,10 +49,7 @@ export default class SwDatatableModel<T = Record<string, any>> {
     //console.log("FILTERSET", JSON.stringify(this.filterset, null, "  "))
     const rows = this._initialState.rows.filter((row: Record<string, any>) => {
       for (const col of Object.keys(this.filterset.exclude)) {
-        //console.log("COL", col)
-        for (const exval of this.filterset.exclude[col]) {
-          //console.log("FVAL", values)
-          //console.log(row[col], "==", exval);
+        for (const exval of this.filterset.exclude[col].values) {
           if (row[col] == exval) {
             return false
           }

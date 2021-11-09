@@ -42,19 +42,14 @@ export default defineComponent({
     }
 
     function exclude(evt: any) {
-      console.log("exclude", evt);
-      //model.value.filterInclude(evt)
       model.value.addExcludeFilter(col.value, evt)
     }
 
     function include(evt: any) {
-      console.log("include", evt);
-      //model.value.filterInclude(evt)
       model.value.removeExcludeFilter(col.value, evt)
     }
 
     onMounted(() => {
-      //console.log("MODEL", JSON.stringify(model.value, null, "  "))
       distinctValues();
     })
 
