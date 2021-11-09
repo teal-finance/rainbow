@@ -246,10 +246,10 @@ func oldNormalize(instruments []getOptionsOtokensOToken, provider string) ([]rai
 }
 
 type Orders struct {
+	Records []Record `json:"records"`
 	Total   int      `json:"total"`
 	Page    int      `json:"page"`
 	PerPage int      `json:"perPage"`
-	Records []Record `json:"records"`
 }
 
 type OrderBook struct {
@@ -258,13 +258,13 @@ type OrderBook struct {
 }
 
 type Record struct {
+	MetaData struct {
+		CreatedAt                    time.Time `json:"createdAt"`
+		OrderHash                    string    `json:"orderHash"`
+		RemainingFillableTakerAmount string    `json:"remainingFillableTakerAmount"`
+	} `json:"metaData"`
 	Order struct {
-		Signature struct {
-			SignatureType int    `json:"signatureType"`
-			R             string `json:"r"`
-			S             string `json:"s"`
-			V             int    `json:"v"`
-		} `json:"signature"`
+		Pool                string `json:"pool"`
 		Sender              string `json:"sender"`
 		Maker               string `json:"maker"`
 		Taker               string `json:"taker"`
@@ -277,14 +277,14 @@ type Record struct {
 		VerifyingContract   string `json:"verifyingContract"`
 		FeeRecipient        string `json:"feeRecipient"`
 		Expiry              string `json:"expiry"`
-		ChainID             int    `json:"chainId"`
-		Pool                string `json:"pool"`
+		Signature           struct {
+			R             string `json:"r"`
+			S             string `json:"s"`
+			SignatureType int    `json:"signatureType"`
+			V             int    `json:"v"`
+		} `json:"signature"`
+		ChainID int `json:"chainId"`
 	} `json:"order"`
-	MetaData struct {
-		OrderHash                    string    `json:"orderHash"`
-		RemainingFillableTakerAmount string    `json:"remainingFillableTakerAmount"`
-		CreatedAt                    time.Time `json:"createdAt"`
-	} `json:"metaData"`
 }
 
 // The result is false because I don't properly take into account the decimals
@@ -419,7 +419,7 @@ func convertFromSolidity(s string, decimals int) (float64, error) {
 }
 
 type Quote struct {
-	ChainID            int    `json:"chainId"`
+	BuyTokenToEthRate  string `json:"buyTokenToEthRate"`
 	Price              string `json:"price"`
 	GuaranteedPrice    string `json:"guaranteedPrice"`
 	To                 string `json:"to"`
@@ -434,12 +434,9 @@ type Quote struct {
 	SellTokenAddress   string `json:"sellTokenAddress"`
 	BuyAmount          string `json:"buyAmount"`
 	SellAmount         string `json:"sellAmount"`
-	Sources            []struct {
-		Name       string `json:"name"`
-		Proportion string `json:"proportion"`
-	} `json:"sources"`
-	Orders []struct {
-		Type        int    `json:"type"`
+	SellTokenToEthRate string `json:"sellTokenToEthRate"`
+	AllowanceTarget    string `json:"allowanceTarget"`
+	Orders             []struct {
 		Source      string `json:"source"`
 		MakerToken  string `json:"makerToken"`
 		TakerToken  string `json:"takerToken"`
@@ -459,22 +456,25 @@ type Quote struct {
 				VerifyingContract   string `json:"verifyingContract"`
 				FeeRecipient        string `json:"feeRecipient"`
 				Expiry              string `json:"expiry"`
-				ChainID             int    `json:"chainId"`
 				Pool                string `json:"pool"`
+				ChainID             int    `json:"chainId"`
 			} `json:"order"`
-			Signature struct {
-				SignatureType int    `json:"signatureType"`
-				R             string `json:"r"`
-				S             string `json:"s"`
-				V             int    `json:"v"`
-			} `json:"signature"`
-			Type                   int    `json:"type"`
 			FillableTakerAmount    string `json:"fillableTakerAmount"`
 			FillableMakerAmount    string `json:"fillableMakerAmount"`
 			FillableTakerFeeAmount string `json:"fillableTakerFeeAmount"`
+			Signature              struct {
+				R             string `json:"r"`
+				S             string `json:"s"`
+				SignatureType int    `json:"signatureType"`
+				V             int    `json:"v"`
+			} `json:"signature"`
+			Type int `json:"type"`
 		} `json:"fillData"`
+		Type int `json:"type"`
 	} `json:"orders"`
-	AllowanceTarget    string `json:"allowanceTarget"`
-	SellTokenToEthRate string `json:"sellTokenToEthRate"`
-	BuyTokenToEthRate  string `json:"buyTokenToEthRate"`
+	Sources []struct {
+		Name       string `json:"name"`
+		Proportion string `json:"proportion"`
+	} `json:"sources"`
+	ChainID int `json:"chainId"`
 }

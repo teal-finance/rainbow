@@ -8,7 +8,7 @@ import (
 )
 
 type instrument struct {
-	Expiry                       int64
+	PsyOptionsProgramID          string
 	OptionMarketAddress          string
 	OptionContractMintAddress    string
 	OptionWriterTokenMintAddress string
@@ -20,7 +20,7 @@ type instrument struct {
 	QuoteAssetPerContract        string
 	SerumMarketAddress           string
 	SerumProgramID               string
-	PsyOptionsProgramID          string
+	Expiry                       int64
 }
 
 // Expiration will be used in .Name() when fixed.
