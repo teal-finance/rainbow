@@ -2,6 +2,7 @@
   <sw-datatable
     :model="model"
     :sortable-cols="Object.keys(model.state.columns)"
+    :extra-header="ExtraHeader"
     class="w-full border border-collapse table-auto dark:border-neutral border-light"
     id="rtable"
   ></sw-datatable>
@@ -11,7 +12,8 @@
 import { defineComponent, toRef, onMounted } from 'vue'
 import SwDatatableModel from '@/packages/datatable/models/datatable'
 import SwDatatable from '@/packages/datatable/SwDatatable.vue'
-import { OptionsTable } from '@/models/options/types'
+import { OptionsTable } from '@/models/options/types';
+import ExtraHeader from './widgets/ExtraHeader.vue';
 
 export default defineComponent({
   components: {
@@ -27,8 +29,12 @@ export default defineComponent({
     const model = toRef(props, "model");
 
     onMounted(() => {
-      model.value.addSortFilterDesc("strike")
-    })
+      //model.value.addSortFilterDesc("strike")
+    });
+
+    return {
+      ExtraHeader
+    }
   },
 })
 </script>

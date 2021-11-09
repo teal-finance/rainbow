@@ -1,12 +1,7 @@
 <template>
   <table>
     <thead v-if="!isSmallScreen">
-      <tr>
-        <td colspan="3" class="border-none"></td>
-        <td colspan="4" class="text-center bg-neutral">PUT</td>
-        <td class="border-none"></td>
-        <td colspan="4" class="text-center bg-neutral">CALL</td>
-      </tr>
+      <component v-if="extraHeader != null" :is="extraHeader"></component>
       <tr>
         <th v-for="(colslug, i) in Object.keys(model.state.columns)" :key="i">
           {{ model.state.columns[colslug] }}
@@ -79,6 +74,10 @@ export default defineComponent({
     sortableCols: {
       type: Array as () => Array<string>,
       default: () => []
+    },
+    extraHeader: {
+      type: Object,
+      default: () => null,
     }
   },
   emits: ["onClickCell"],
