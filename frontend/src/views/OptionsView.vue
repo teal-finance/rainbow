@@ -1,5 +1,24 @@
 <template>
-  <options-datatable :model="datatable"></options-datatable>
+  <div class="flex flex-row mt-3" v-if="isReady">
+    <div class="w-4/5">
+      <options-datatable :model="datatable"></options-datatable>
+    </div>
+    <div class="pl-5 pr-3">
+      <div>
+        <div class="text-xl">Asset</div>
+        <hr class="my-3" />
+        <values-filter :model="datatable" col="asset"></values-filter>
+      </div>
+      <div class="mt-2">
+        <div class="text-xl">Provider</div>
+        <hr class="my-3" />
+        <values-filter :model="datatable" col="provider"></values-filter>
+      </div>
+    </div>
+  </div>
+  <div v-else>
+    <loading-indicator></loading-indicator>
+  </div>
 </template>
 
 
@@ -8,20 +27,24 @@ import { defineComponent, ref, onMounted } from 'vue'
 import api from '@/api';
 import Option from '@/models/options/option';
 import SwDataTableModel from "@/packages/datatable/models/datatable";
-import { user } from "@/state";
+import ValuesFilter from '@/packages/datatable/filters/ValuesFilter.vue'
 import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
 import OptionsDatatable from '@/components/OptionsDatatable.vue';
+import LoadingIndicator from '@/components/widgets/LoadingIndicator.vue';
 
 export default defineComponent({
   components: {
-    OptionsDatatable
+    OptionsDatatable,
+    ValuesFilter,
+    LoadingIndicator,
   },
   setup() {
     const datatable = ref(new SwDataTableModel<OptionsTable>());
+    const isReady = ref(false);
 
     async function fetchData() {
-      const uri = "/mocks/data/options_table.json"
-      const data = await api.get<OptionsJsonDataset>(uri, true);
+      const uri = "/v0/options/cp"
+      const data = await api.get<OptionsJsonDataset>(uri);
       //console.log("DATA", data)
       return data;
     }
@@ -53,12 +76,15 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      fetchData().then((d) => loadData(d));
+      fetchData().then((d) => {
+        loadData(d);
+        isReady.value = true;
+      });
       //loadData(data)
     })
 
     return {
-      user,
+      isReady,
       datatable,
     }
   }

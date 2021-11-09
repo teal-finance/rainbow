@@ -4,9 +4,9 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-import { reactive, computed, unref } from 'vue';
+import { reactive, toRaw } from 'vue';
 import { TableInterface, TableParams } from '../interfaces';
-import { FilterSet } from './filters';
+import { FilterSet } from './filterset';
 
 
 export default class SwDatatableModel<T = Record<string, any>> {
@@ -33,30 +33,26 @@ export default class SwDatatableModel<T = Record<string, any>> {
     return Object.keys(this.state.columns).length
   }
 
-  /*hasData = computed<boolean>(() => {
-    return this._initialState.rows.length > 0;
-  });*/
-
   addExcludeFilter(col: string, value: any) {
-    this.filterset.appendExcludeFilterValue(col, value)
-    console.log(this.filterset.exclude)
+    //console.log("Add ex filter", col, value)
+    this.filterset.appendExcludeFilterValue(col, toRaw(value))
     this.filter();
   };
 
   removeExcludeFilter(col: string, value: any) {
-    this.filterset.removeFilterValue(col, value)
-    console.log(this.filterset.exclude)
+    this.filterset.removeExcludeFilterValue(col, value)
+    //console.log(this.filterset.exclude)
     this.filter();
   }
 
   filter() {
+    //console.log("FILTERSET", JSON.stringify(this.filterset, null, "  "))
     const rows = this._initialState.rows.filter((row: Record<string, any>) => {
       for (const col of Object.keys(this.filterset.exclude)) {
-        for (const values of this.filterset.exclude[col]) {
-          for (const ex of values as Set<any>)
-            if (row[col] == ex) {
-              return false
-            }
+        for (const exval of this.filterset.exclude[col].values) {
+          if (row[col] == exval) {
+            return false
+          }
         }
       }
       return true
