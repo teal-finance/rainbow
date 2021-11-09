@@ -35,7 +35,6 @@
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <button class="border-none btn" @click="openView('/options')">Options</button>
-          <button class="border-none btn" @click="openView('/chart')">Chart proto</button>
           <div class="px-5 text-lg cursor-pointer" @click="user.toggleDarkMode()">
             <i-fa-solid-moon v-if="user.isDarkMode.value == false"></i-fa-solid-moon>
             <i-fa-solid-sun v-else></i-fa-solid-sun>
