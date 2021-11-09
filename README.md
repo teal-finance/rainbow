@@ -235,28 +235,25 @@ List all the options and their order books: <http://localhost:8090/v0/options>
   "Chain": "Solana",          // Ethereum, Solana...
   "Layer": "L1",
   "Provider": "PsyOptions",   // Opyn, Lyra, Thales, Deribit, Psyoptions
+  "QuoteCurrency": "USDC" // ETH, BTC...
   "Bid": [
     {
       "Price": 13.3,
       "Quantity": 5,
-      "QuoteCurrency": "USDC" // ETH, BTC...
     },
     {
       "Price": 13.1,
       "Quantity": 10,
-      "QuoteCurrency": "USDC"
     }
   ],
   "Ask": [
     {
       "Price": 15.12,
       "Quantity": 5,
-      "QuoteCurrency": "USDC"
     },
     {
       "Price": 15.25,
       "Quantity": 9,
-      "QuoteCurrency": "USDC"
     }
   ]
 }

@@ -84,17 +84,18 @@ func Options() ([]rainbow.Option, error) {
 		}
 
 		options = append(options, rainbow.Option{
-			Name:         i.name(),
-			Type:         i.optionType(),
-			Asset:        i.asset(),
-			Expiry:       Expiration,
-			Strike:       i.strike(),
-			ExchangeType: "DEX",
-			Chain:        "Solana",
-			Layer:        "L1",
-			Provider:     "PsyOptions",
-			Bid:          bids,
-			Ask:          asks,
+			Name:          i.name(),
+			Type:          i.optionType(),
+			Asset:         i.asset(),
+			Expiry:        Expiration,
+			Strike:        i.strike(),
+			ExchangeType:  "DEX",
+			Chain:         "Solana",
+			Layer:         "L1",
+			Provider:      "PsyOptions",
+			QuoteCurrency: PsyQuoteCurrency,
+			Bid:           bids,
+			Ask:           asks,
 		})
 	}
 
@@ -137,9 +138,8 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 
 		offers = append(offers,
 			rainbow.Order{
-				Price:         price,
-				Quantity:      qty,
-				QuoteCurrency: PsyQuoteCurrency,
+				Price:    price,
+				Quantity: qty,
 			},
 		)
 	}

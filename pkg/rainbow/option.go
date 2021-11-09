@@ -11,23 +11,23 @@ import (
 )
 
 type Option struct {
-	Name         string // ASSET-DATE-Strike-OptionsType
-	Type         string // CALL / PUT
-	Asset        string // ETH, BTC, SOL
-	Expiry       string // Expiry date in format 2021-12-31
-	Strike       float64
-	ExchangeType string // CEX / DEX
-	Chain        string // Ethereum, Solana and "–" for CEX (Deribit)
-	Layer        string // L1, L2 and "–" for CEX (Deribit)
-	Provider     string // Opyn, Lyra, Thales, Deribit, Psyoptions
-	Bid          []Order
-	Ask          []Order
+	Name          string // ASSET-DATE-Strike-OptionsType
+	Type          string // CALL / PUT
+	Asset         string // ETH, BTC, SOL
+	Expiry        string // Expiry date in format 2021-12-31
+	Strike        float64
+	ExchangeType  string // CEX / DEX
+	Chain         string // Ethereum, Solana and "–" for CEX (Deribit)
+	Layer         string // L1, L2 and "–" for CEX (Deribit)
+	Provider      string // Opyn, Lyra, Thales, Deribit, Psyoptions
+	QuoteCurrency string // ETH, BTC, USDT...
+	Bid           []Order
+	Ask           []Order
 }
 
 type Order struct {
-	Price         float64
-	Quantity      float64
-	QuoteCurrency string // ETH, BTC, USDT...
+	Price    float64
+	Quantity float64
 }
 
 func BestLimitStr(option Option) (bestBidPx, bestBidQty, bestAskPx, bestAskQty string) {

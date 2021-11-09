@@ -215,28 +215,30 @@ func oldNormalize(instruments []getOptionsOtokensOToken, provider string) ([]rai
 
 		optionType, expiry, strike := extract(i)
 
-		bids, err := normalizeOrders(ob.Bids.Records, i.UnderlyingAsset.Symbol)
+		bids, err := normalizeOrders(ob.Bids.Records)
 		if err != nil {
 			return nil, err
 		}
 
-		asks, err := normalizeOrders(ob.Asks.Records, i.UnderlyingAsset.Symbol)
+		asks, err := normalizeOrders(ob.Asks.Records)
 		if err != nil {
 			return nil, err
 		}
 
 		options = append(options, rainbow.Option{
-			Name:         i.Name,
-			Type:         optionType,
-			Asset:        i.CollateralAsset.Symbol,
-			Expiry:       expiry,
-			Strike:       strike,
-			ExchangeType: "DEX",
-			Chain:        "Ethereum",
-			Layer:        "L1",
-			Provider:     provider,
-			Bid:          bids,
-			Ask:          asks,
+			Name:          i.Name,
+			Type:          optionType,
+			Asset:         i.CollateralAsset.Symbol,
+			Expiry:        expiry,
+			Strike:        strike,
+			ExchangeType:  "DEX",
+			Chain:         "Ethereum",
+			Layer:         "L1",
+			Provider:      provider,
+			QuoteCurrency: i.UnderlyingAsset.Symbol,
+
+			Bid: bids,
+			Ask: asks,
 		})
 	}
 
@@ -289,7 +291,7 @@ type Record struct {
 
 // The result is false because I don't properly take into account the decimals
 // Use GetQuote instead.
-func normalizeOrders(records []Record, quote string) ([]rainbow.Order, error) {
+func normalizeOrders(records []Record) ([]rainbow.Order, error) {
 	offers := make([]rainbow.Order, 0, len(records))
 
 	for _, r := range records {
@@ -306,9 +308,8 @@ func normalizeOrders(records []Record, quote string) ([]rainbow.Order, error) {
 		offers = append(
 			offers,
 			rainbow.Order{
-				Price:         makerAmount / takerAmount,
-				Quantity:      takerAmount * math.Pow(10, -float64(OTokensDecimals)),
-				QuoteCurrency: quote,
+				Price:    makerAmount / takerAmount,
+				Quantity: takerAmount * math.Pow(10, -float64(OTokensDecimals)),
 			})
 	}
 
@@ -324,24 +325,25 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 		optionType, expiry, strike := extract(i)
 
 		var decimals int
-		var quote string
+		var quoteCcy string
 		if provider == "Opyn" {
 			decimals = OTokensDecimals
-			quote = i.StrikeAsset.Symbol
+			quoteCcy = i.StrikeAsset.Symbol
 		}
 
 		o := rainbow.Option{
-			Name:         i.Name,
-			Type:         optionType,
-			Asset:        i.UnderlyingAsset.Symbol,
-			Expiry:       expiry,
-			Strike:       strike,
-			ExchangeType: "DEX",
-			Chain:        "Ethereum",
-			Layer:        "L1",
-			Provider:     provider,
-			Bid:          nil,
-			Ask:          nil,
+			Name:          i.Name,
+			Type:          optionType,
+			Asset:         i.UnderlyingAsset.Symbol,
+			Expiry:        expiry,
+			Strike:        strike,
+			ExchangeType:  "DEX",
+			Chain:         "Ethereum",
+			Layer:         "L1",
+			Provider:      provider,
+			QuoteCurrency: quoteCcy,
+			Bid:           nil,
+			Ask:           nil,
 		}
 
 		b, err := sr.getQuote("BUY", i.Id, USDC, amount, decimals)
@@ -358,15 +360,13 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 			}
 
 			o.Bid = append(o.Bid, rainbow.Order{
-				Price:         price,
-				Quantity:      amount,
-				QuoteCurrency: quote,
+				Price:    price,
+				Quantity: amount,
 			})
 		} else {
 			o.Bid = append(o.Bid, rainbow.Order{
-				Price:         0.0,
-				Quantity:      0.0,
-				QuoteCurrency: quote,
+				Price:    0.0,
+				Quantity: 0.0,
 			})
 		}
 
@@ -383,15 +383,13 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 			}
 
 			o.Ask = append(o.Ask, rainbow.Order{
-				Price:         price,
-				Quantity:      amount,
-				QuoteCurrency: quote,
+				Price:    price,
+				Quantity: amount,
 			})
 		} else {
 			o.Ask = append(o.Ask, rainbow.Order{
-				Price:         0.0,
-				Quantity:      0.0,
-				QuoteCurrency: quote,
+				Price:    0.0,
+				Quantity: 0.0,
 			})
 		}
 
