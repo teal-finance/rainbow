@@ -26,8 +26,15 @@ type Option struct {
 }
 
 type Order struct {
-	Px   float64 `json:"px"`   // Px is an abbreviation for "Price" (e.g. FIX protocol).
-	Size float64 `json:"size"` // Size is often used in lieu of the longer word "Quantity".
+	// Px is a known abbreviation for "Price" used by many Centralized Exchanges
+	// such as in the FIX protocol: https://fiximate.fixtrading.org/legacy/en/FIX.5.0SP2/abbreviations.html
+	// Independently of the FIX protocol, "Px" is intensively used at Euronext.
+	// "Px" is also a French abbreviation for "Prix". :-)
+	// Rainbow uses "px" in the API (JSON)) but uses "price" on the front-end side.
+	Px float64 `json:"px"`
+
+	// Size is often used in lieu of the longer word "Quantity".
+	Size float64 `json:"size"`
 }
 
 func BestLimitStr(option Option) (bestBidPx, bestBidSz, bestAskPx, bestAskSz string) {
