@@ -308,8 +308,8 @@ func normalizeOrders(records []Record) ([]rainbow.Order, error) {
 		offers = append(
 			offers,
 			rainbow.Order{
-				Price:    makerAmount / takerAmount,
-				Quantity: takerAmount * math.Pow(10, -float64(OTokensDecimals)),
+				Px:   makerAmount / takerAmount,
+				Size: takerAmount * math.Pow(10, -float64(OTokensDecimals)),
 			})
 	}
 
@@ -360,13 +360,13 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 			}
 
 			o.Bid = append(o.Bid, rainbow.Order{
-				Price:    price,
-				Quantity: amount,
+				Px:   price,
+				Size: amount,
 			})
 		} else {
 			o.Bid = append(o.Bid, rainbow.Order{
-				Price:    0.0,
-				Quantity: 0.0,
+				Px:   0.0,
+				Size: 0.0,
 			})
 		}
 
@@ -383,13 +383,13 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 			}
 
 			o.Ask = append(o.Ask, rainbow.Order{
-				Price:    price,
-				Quantity: amount,
+				Px:   price,
+				Size: amount,
 			})
 		} else {
 			o.Ask = append(o.Ask, rainbow.Order{
-				Price:    0.0,
-				Quantity: 0.0,
+				Px:   0.0,
+				Size: 0.0,
 			})
 		}
 

@@ -138,8 +138,8 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 
 		offers = append(offers,
 			rainbow.Order{
-				Price:    price,
-				Quantity: qty,
+				Px:   price,
+				Size: qty,
 			},
 		)
 	}

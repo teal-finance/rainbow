@@ -179,12 +179,12 @@ func normalize(instruments []instrument, depth uint32) ([]rainbow.Option, error)
 
 		bids := normalizeOrders(result.Result.Bids)
 		sort.Slice(bids, func(i, j int) bool {
-			return bids[i].Price > bids[j].Price
+			return bids[i].Px > bids[j].Px
 		})
 
 		asks := normalizeOrders(result.Result.Asks)
 		sort.Slice(asks, func(i, j int) bool {
-			return asks[i].Price < asks[j].Price
+			return asks[i].Px < asks[j].Px
 		})
 
 		options = append(options, rainbow.Option{
@@ -250,12 +250,12 @@ func normalizeOrders(orders [][]float64) []rainbow.Order {
 	// if there is no offer, send price=0.0, quant=0.0
 	// hopefully we never an array of empty array
 	if len(orders) == 0 {
-		return []rainbow.Order{{Price: 0.0, Quantity: 0.0}}
+		return []rainbow.Order{{Px: 0.0, Size: 0.0}}
 	}
 
 	offers := make([]rainbow.Order, 0, len(orders))
 	for _, ord := range orders {
-		offers = append(offers, rainbow.Order{Price: ord[0], Quantity: ord[1]})
+		offers = append(offers, rainbow.Order{Px: ord[0], Size: ord[1]})
 	}
 
 	return offers

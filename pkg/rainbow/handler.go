@@ -84,13 +84,8 @@ type Row struct {
 }
 
 type OptionIndicators struct {
-	Bid SimpleOrder `json:"bid"`
-	Ask SimpleOrder `json:"ask"`
-}
-
-type SimpleOrder struct {
-	Price float64 `json:"px"`
-	Size  float64 `json:"size"`
+	Bid Order `json:"bid"`
+	Ask Order `json:"ask"`
 }
 
 func buildCPFormat(options []Option) CPFormat {
@@ -186,18 +181,16 @@ func groupByProvider(options []Option) (providerToOptions map[string][]Option) {
 
 func newOptionIndicators(o Option) OptionIndicators {
 	oi := OptionIndicators{
-		Bid: SimpleOrder{Price: 0, Size: 0},
-		Ask: SimpleOrder{Price: 0, Size: 0},
+		Bid: Order{Px: 0, Size: 0},
+		Ask: Order{Px: 0, Size: 0},
 	}
 
 	if len(o.Bid) > 0 {
-		oi.Bid.Price = o.Bid[0].Price
-		oi.Bid.Size = o.Bid[0].Quantity
+		oi.Bid = o.Bid[0]
 	}
 
 	if len(o.Ask) > 0 {
-		oi.Ask.Price = o.Ask[0].Price
-		oi.Ask.Size = o.Ask[0].Quantity
+		oi.Ask = o.Ask[0]
 	}
 
 	return oi

@@ -21,16 +21,12 @@ import (
 
 func main() {
 	service := rainbow.NewService(provider.AllProvider{}, &dbram.DB{})
+
 	options, err := service.OptionsFromProviders()
 	if err != nil {
 		log.Print("ERROR: ", err)
 		return
 	}
-	/*options, err := deribit.Options()
-	if err != nil {
-		log.Print("ERROR: ", err)
-		return
-	}*/
 
 	printTable(options)
 }
@@ -42,12 +38,12 @@ func printTable(options []rainbow.Option) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.SetStyle(table.StyleLight)
-	t.SetTitle(fmt.Sprint("\t\t 2021 CeDeFi options: ", len(options)))
+	t.SetTitle(fmt.Sprint("\t\t CeDeFi options: ", len(options)))
 
 	t.AppendHeader(table.Row{
 		"Provider", "Asset", "Type",
-		"Bid size", "Bid Price", "Strike",
-		"Ask Price", "Ask size", "Instrument",
+		"Bid size", "Bid px", "Strike",
+		"Ask px", "Ask size", "Instrument",
 	})
 
 	for _, option := range options {

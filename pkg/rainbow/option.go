@@ -26,22 +26,22 @@ type Option struct {
 }
 
 type Order struct {
-	Price    float64
-	Quantity float64
+	Px   float64 `json:"px"`   // Px is an abbreviation for "Price" (e.g. FIX protocol).
+	Size float64 `json:"size"` // Size is often used in lieu of the longer word "Quantity".
 }
 
-func BestLimitStr(option Option) (bestBidPx, bestBidQty, bestAskPx, bestAskQty string) {
-	bestBidPx, bestBidQty = none, none
-	bestAskPx, bestAskQty = none, none
+func BestLimitStr(option Option) (bestBidPx, bestBidSz, bestAskPx, bestAskSz string) {
+	bestBidPx, bestBidSz = none, none
+	bestAskPx, bestAskSz = none, none
 
 	if len(option.Bid) > 0 {
-		bestBidPx = alignFloatOnDecimalPoint(option.Bid[0].Price)
-		bestBidQty = alignFloatOnDecimalPoint(option.Bid[0].Quantity)
+		bestBidPx = alignFloatOnDecimalPoint(option.Bid[0].Px)
+		bestBidSz = alignFloatOnDecimalPoint(option.Bid[0].Size)
 	}
 
 	if len(option.Ask) > 0 {
-		bestAskPx = alignFloatOnDecimalPoint(option.Ask[0].Price)
-		bestAskQty = alignFloatOnDecimalPoint(option.Ask[0].Quantity)
+		bestAskPx = alignFloatOnDecimalPoint(option.Ask[0].Px)
+		bestAskSz = alignFloatOnDecimalPoint(option.Ask[0].Size)
 	}
 
 	return
