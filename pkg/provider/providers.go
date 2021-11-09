@@ -24,21 +24,24 @@ func (p AllProvider) Options() ([]rainbow.Option, error) {
 	// psy
 	psy, err := psyoptions.Options()
 	if err != nil {
-		return nil, fmt.Errorf("getting datas from psy : %w", err)
+		return nil, fmt.Errorf("getting data from psy : %w", err)
 	}
+
 	options = append(options, psy...)
 
 	// opyn
 	op, err := zerox.Options()
 	if err != nil {
-		return nil, fmt.Errorf("getting datas from opyn : %w", err)
+		return nil, fmt.Errorf("getting data from opyn : %w", err)
 	}
+
 	options = append(options, op...)
 
 	der, err := deribit.Options()
 	if err != nil {
-		return nil, fmt.Errorf("getting datas from deribit : %w", err)
+		return nil, fmt.Errorf("getting data from deribit : %w", err)
 	}
+
 	options = append(options, der...)
 
 	return options, nil

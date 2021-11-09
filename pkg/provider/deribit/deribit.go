@@ -134,6 +134,7 @@ func isStrikeAvailable(i instrument) bool {
 	ethStrike := []float64{1280, 3000, 3400, 3600, 3700, 4000, 4100, 4500, 4400, 4800, 5000, 5200, 8000}
 	btcStrike := []float64{40000, 50000, 55000, 60000, 65000, 66000, 70000, 100000}
 	strikes := ethStrike
+
 	if i.BaseCurrency == "BTC" {
 		strikes = btcStrike
 	}
@@ -144,6 +145,7 @@ func isStrikeAvailable(i instrument) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
