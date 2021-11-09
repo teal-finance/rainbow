@@ -1,8 +1,7 @@
 <template>
-  <div>Landing page</div>
-  <button class="mt-5 btn" @click="fetchData()">Test fetch data</button>
+  <div>Landing page in construction</div>
+  <a class="mt-5 btn" href="options">Dashboard page</a>
 </template>
-
 
 <script lang="ts">
 import { defineComponent } from 'vue'
