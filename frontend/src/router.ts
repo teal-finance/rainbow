@@ -5,7 +5,7 @@ const baseTitle = "Rainbow"
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    component: () => import("./views/HomeView.vue")
+    component: () => import("./views/OptionsView.vue")
   },
   {
     path: "/options",

@@ -1,19 +1,24 @@
 <template>
-  <div class="flex flex-row mt-3" v-if="isReady">
-    <div class="w-4/5">
-      <options-datatable :model="datatable"></options-datatable>
+  <div v-if="isReady">
+    <div class="flex flex-row mt-3" v-if="!isMobile">
+      <div class="w-4/5">
+        <options-datatable :model="datatable"></options-datatable>
+      </div>
+      <div class="pl-5 pr-3">
+        <div>
+          <div class="text-xl">Asset</div>
+          <hr class="my-3" />
+          <values-filter :model="datatable" col="asset"></values-filter>
+        </div>
+        <div class="mt-2">
+          <div class="text-xl">Provider</div>
+          <hr class="my-3" />
+          <values-filter :model="datatable" col="provider"></values-filter>
+        </div>
+      </div>
     </div>
-    <div class="pl-5 pr-3">
-      <div>
-        <div class="text-xl">Asset</div>
-        <hr class="my-3" />
-        <values-filter :model="datatable" col="asset"></values-filter>
-      </div>
-      <div class="mt-2">
-        <div class="text-xl">Provider</div>
-        <hr class="my-3" />
-        <values-filter :model="datatable" col="provider"></values-filter>
-      </div>
+    <div v-else>
+      <options-datatable :model="datatable"></options-datatable>
     </div>
   </div>
   <div v-else>
@@ -31,6 +36,7 @@ import ValuesFilter from '@/packages/datatable/filters/ValuesFilter.vue'
 import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
 import OptionsDatatable from '@/components/OptionsDatatable.vue';
 import LoadingIndicator from '@/components/widgets/LoadingIndicator.vue';
+import { isMobile } from '@/state';
 
 export default defineComponent({
   components: {
@@ -86,6 +92,7 @@ export default defineComponent({
     return {
       isReady,
       datatable,
+      isMobile,
     }
   }
 })

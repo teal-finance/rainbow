@@ -3,6 +3,7 @@
     :model="model"
     :sortable-cols="Object.keys(model.state.columns)"
     :extra-header="ExtraHeader"
+    :mobile-renderer="MobileRenderer"
     class="w-full border border-collapse table-auto dark:border-neutral border-light"
     id="rtable"
   ></sw-datatable>
@@ -14,10 +15,12 @@ import SwDatatableModel from '@/packages/datatable/models/datatable'
 import SwDatatable from '@/packages/datatable/SwDatatable.vue'
 import { OptionsTable } from '@/models/options/types';
 import ExtraHeader from './widgets/ExtraHeader.vue';
+import MobileRenderer from './widgets/MobileRenderer.vue';
 
 export default defineComponent({
   components: {
     SwDatatable,
+    MobileRenderer,
   },
   props: {
     model: {
@@ -33,7 +36,8 @@ export default defineComponent({
     });
 
     return {
-      ExtraHeader
+      ExtraHeader,
+      MobileRenderer,
     }
   },
 })
@@ -43,13 +47,13 @@ export default defineComponent({
 #rtable
   @apply border-none
   th
-    @apply bg-light text-light-r dark:bg-gray-500 dark:text-white
+    @apply sm:bg-light sm:text-light-r sm:dark:bg-gray-500 sm:dark:text-white
   tbody
-    @apply bg-gray-50 dark:bg-gray-700
+    @apply sm:bg-gray-50 sm:dark:bg-gray-700
     td
       @apply px-3 py-1
     td:nth-child(1), td:nth-child(2), td:nth-child(3)
-      @apply bg-gray-300 dark:bg-gray-600
+      @apply sm:bg-gray-300 sm:dark:bg-gray-600
     td:nth-child(8)
-      @apply bg-gray-400 dark:bg-gray-900
+      @apply sm:bg-gray-400 sm:dark:bg-gray-900
 </style>
