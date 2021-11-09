@@ -65,7 +65,7 @@ export default defineComponent({
         "putBidSize": "Bid size",
         "putAskPrice": "Ask",
         "putAskSize": "Ask size",
-        "strike": "strike",
+        "strike": "Strike",
         "callBidPrice": "Bid",
         "callBidSize": "Bid size",
         "callAskPrice": "Ask",

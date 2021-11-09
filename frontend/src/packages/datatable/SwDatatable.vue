@@ -2,11 +2,21 @@
   <table>
     <thead v-if="!isSmallScreen">
       <tr>
-        <th
-          v-for="(colslug, i) in Object.keys(model.state.columns)"
-          :key="i"
-          v-html="model.state.columns[colslug]"
-        ></th>
+        <td colspan="3" class="border-none"></td>
+        <td colspan="4" class="text-center bg-neutral">PUT</td>
+        <td class="border-none"></td>
+        <td colspan="4" class="text-center bg-neutral">CALL</td>
+      </tr>
+      <tr>
+        <th v-for="(colslug, i) in Object.keys(model.state.columns)" :key="i">
+          {{ model.state.columns[colslug] }}
+          <div
+            class="inline-block align-middle cursor-pointer"
+            v-if="sortableCols.includes(colslug)"
+          >
+            <carret-sorter :model="model" :col="colslug"></carret-sorter>
+          </div>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -43,8 +53,12 @@ import { defineComponent, toRefs, ref, toRaw } from "vue";
 import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
 import SwDatatableModel from "./models/datatable";
 import DefaultCellRenderer from "./renderers/DefaultCellRenderer.vue";
+import CarretSorter from "./widgets/CarretSorter.vue";
 
 export default defineComponent({
+  components: {
+    CarretSorter,
+  },
   props: {
     model: {
       type: Object as () => SwDatatableModel,
@@ -62,18 +76,21 @@ export default defineComponent({
       type: String as () => "sm" | "md" | "lg" | "xl" | "2xl",
       default: () => "sm",
     },
+    sortableCols: {
+      type: Array as () => Array<string>,
+      default: () => []
+    }
   },
   emits: ["onClickCell"],
   setup(props, { emit }) {
     const breakpoints = useBreakpoints(breakpointsTailwind)
-    const { model, renderers, mobileRenderer, breakpoint } = toRefs(props);
+    const { model, renderers, mobileRenderer, breakpoint, sortableCols } = toRefs(props);
     const isResponsive = ref(mobileRenderer.value !== null);
     let isSmallScreen = ref(false);
     if (isResponsive.value === true) {
       //console.log("BP", breakpoint.value);
       isSmallScreen.value = breakpoints.isSmaller(breakpoint.value);
     }
-
 
     function getRenderer(k: string) {
       if (renderers.value !== undefined) {
@@ -105,7 +122,7 @@ export default defineComponent({
       onChange,
       onClick,
       isResponsive,
-      isSmallScreen,
+      isSmallScreen
     };
   },
 });

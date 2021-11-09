@@ -10,6 +10,7 @@
     "esModuleInterop": true,
     "allowJs": true,
     "lib": [
+      "ES2018",
       "esnext",
       "dom"
     ],

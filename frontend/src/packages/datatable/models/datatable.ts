@@ -14,6 +14,7 @@ export default class SwDatatableModel<T = Record<string, any>> {
   _initialState = reactive<TableInterface<T>>({ columns: {}, rows: [] });
   filterset = new FilterSet();
   idCol: string | null = null;
+  sortFilter: { col: string, direction: "asc" | "desc" } | null = null
 
   constructor({ columns, rows, idCol }: TableParams<T> = {}) {
     this._initialState = reactive<TableInterface<T>>({
@@ -31,6 +32,48 @@ export default class SwDatatableModel<T = Record<string, any>> {
 
   get numCols(): number {
     return Object.keys(this.state.columns).length
+  }
+
+  addSortFilterDesc(col: string) {
+    this.sortFilter = { col: col, direction: "desc" };
+    this.filterDesc(col)
+  }
+
+  addSortFilterAsc(col: string) {
+    this.sortFilter = { col: col, direction: "asc" };
+    this.filterAsc(col)
+  }
+
+  filterAsc(col: string) {
+    const s = (a: any, b: any) => {
+      if (a[col] < b[col]) {
+        return -1;
+      }
+      if (a[col] > b[col]) {
+        return 1;
+      }
+      return 0;
+    }
+    this.state.rows.sort(s);
+  }
+
+  filterDesc(col: string) {
+    const s = (a: any, b: any) => {
+      if (a[col] > b[col]) {
+        return -1;
+      }
+      if (a[col] < b[col]) {
+        return 1;
+      }
+      return 0;
+    }
+    this.state.rows.sort(s);
+  }
+
+  removeSortFilter() {
+    console.log("Remove sort filter");
+    this.sortFilter = null;
+    this.filter();
   }
 
   addExcludeFilter(col: string, value: any) {
@@ -58,6 +101,14 @@ export default class SwDatatableModel<T = Record<string, any>> {
       return true
     });
     this.state.rows = [...rows]
+    // apply sorting
+    if (this.sortFilter != null) {
+      if (this.sortFilter.direction == "asc") {
+        this.filterAsc(this.sortFilter.col);
+      } else {
+        this.filterDesc(this.sortFilter.col);
+      }
+    }
   }
 
   setColumnsFromData(): void {
