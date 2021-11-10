@@ -49,7 +49,7 @@ func (h handler) getOptions(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h handler) getCPFormat(w http.ResponseWriter, r *http.Request) {
-	cp, err := h.c.CPFormat()
+	cp, err := h.c.CallPut()
 	if err != nil {
 		log.Print("ERROR getCPFormat ", err)
 		http.Error(w, "No Content", http.StatusNoContent)
@@ -67,7 +67,7 @@ func (h handler) getCPFormat(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type CPFormat struct {
+type CallPut struct {
 	Rows []Row `json:"rows"`
 }
 
@@ -84,16 +84,11 @@ type Row struct {
 }
 
 type OptionIndicators struct {
-	Bid SimpleOrder `json:"bid"`
-	Ask SimpleOrder `json:"ask"`
+	Bid Order `json:"bid"`
+	Ask Order `json:"ask"`
 }
 
-type SimpleOrder struct {
-	Price float64 `json:"px"`
-	Size  float64 `json:"size"`
-}
-
-func buildCPFormat(options []Option) CPFormat {
+func buildCPFormat(options []Option) CallPut {
 	rows := make([]Row, 0, len(options)/2)
 
 	for asset, optionsSameAsset := range groupByAsset(options) {
@@ -121,7 +116,7 @@ func buildCPFormat(options []Option) CPFormat {
 		}
 	}
 
-	return CPFormat{Rows: rows}
+	return CallPut{Rows: rows}
 }
 
 func groupByAsset(options []Option) (assetToOptions map[string][]Option) {
@@ -186,18 +181,16 @@ func groupByProvider(options []Option) (providerToOptions map[string][]Option) {
 
 func newOptionIndicators(o Option) OptionIndicators {
 	oi := OptionIndicators{
-		Bid: SimpleOrder{Price: 0, Size: 0},
-		Ask: SimpleOrder{Price: 0, Size: 0},
+		Bid: Order{Px: 0, Size: 0},
+		Ask: Order{Px: 0, Size: 0},
 	}
 
 	if len(o.Bid) > 0 {
-		oi.Bid.Price = o.Bid[0].Price
-		oi.Bid.Size = o.Bid[0].Quantity
+		oi.Bid = o.Bid[0]
 	}
 
 	if len(o.Ask) > 0 {
-		oi.Ask.Price = o.Ask[0].Price
-		oi.Ask.Size = o.Ask[0].Quantity
+		oi.Ask = o.Ask[0]
 	}
 
 	return oi

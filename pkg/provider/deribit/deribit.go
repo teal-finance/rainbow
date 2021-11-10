@@ -177,28 +177,29 @@ func normalize(instruments []instrument, depth uint32) ([]rainbow.Option, error)
 		expiryTime := time.Unix(seconds, ns).UTC()
 		expiryStr := expiryTime.Format("2006-01-02 15:04:05")
 
-		bids := normalizeOrders(result.Result.Bids, i.QuoteCurrency)
+		bids := normalizeOrders(result.Result.Bids)
 		sort.Slice(bids, func(i, j int) bool {
-			return bids[i].Price > bids[j].Price
+			return bids[i].Px > bids[j].Px
 		})
 
-		asks := normalizeOrders(result.Result.Asks, i.QuoteCurrency)
+		asks := normalizeOrders(result.Result.Asks)
 		sort.Slice(asks, func(i, j int) bool {
-			return asks[i].Price < asks[j].Price
+			return asks[i].Px < asks[j].Px
 		})
 
 		options = append(options, rainbow.Option{
-			Name:         i.InstrumentName,
-			Type:         strings.ToUpper(i.OptionType),
-			Asset:        i.BaseCurrency,
-			Expiry:       expiryStr,
-			Strike:       i.Strike,
-			ExchangeType: "CEX",
-			Chain:        "–",
-			Layer:        "–",
-			Provider:     "Deribit",
-			Bid:          bids,
-			Ask:          asks,
+			Name:          i.InstrumentName,
+			Type:          strings.ToUpper(i.OptionType),
+			Asset:         i.BaseCurrency,
+			Expiry:        expiryStr,
+			Strike:        i.Strike,
+			ExchangeType:  "CEX",
+			Chain:         "–",
+			Layer:         "–",
+			Provider:      "Deribit",
+			QuoteCurrency: i.QuoteCurrency,
+			Bid:           bids,
+			Ask:           asks,
 		})
 	}
 
@@ -245,16 +246,16 @@ type OrderBook struct {
 	AskIv                  float64 `json:"ask_iv"`
 }
 
-func normalizeOrders(orders [][]float64, quote string) []rainbow.Order {
+func normalizeOrders(orders [][]float64) []rainbow.Order {
 	// if there is no offer, send price=0.0, quant=0.0
 	// hopefully we never an array of empty array
 	if len(orders) == 0 {
-		return []rainbow.Order{{Price: 0.0, Quantity: 0.0, QuoteCurrency: quote}}
+		return []rainbow.Order{{Px: 0.0, Size: 0.0}}
 	}
 
 	offers := make([]rainbow.Order, 0, len(orders))
 	for _, ord := range orders {
-		offers = append(offers, rainbow.Order{Price: ord[0], Quantity: ord[1], QuoteCurrency: quote})
+		offers = append(offers, rainbow.Order{Px: ord[0], Size: ord[1]})
 	}
 
 	return offers

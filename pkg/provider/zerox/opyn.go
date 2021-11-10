@@ -49,8 +49,6 @@ func QueryTheGraph() []getOptionsOtokensOToken {
 }
 
 func filterExpired(instruments []getOptionsOtokensOToken, date time.Time) (filtered []getOptionsOtokensOToken) {
-	// oct29th, _ := time.Parse(time.RFC3339, "2021-10-29T08:00:00Z")
-
 	for _, i := range instruments {
 		seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
 		if err != nil {
