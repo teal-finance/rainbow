@@ -49,7 +49,7 @@ func (h handler) getOptions(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h handler) getCPFormat(w http.ResponseWriter, r *http.Request) {
-	cp, err := h.c.CPFormat()
+	cp, err := h.c.CallPut()
 	if err != nil {
 		log.Print("ERROR getCPFormat ", err)
 		http.Error(w, "No Content", http.StatusNoContent)
@@ -67,7 +67,7 @@ func (h handler) getCPFormat(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type CPFormat struct {
+type CallPut struct {
 	Rows []Row `json:"rows"`
 }
 
@@ -88,7 +88,7 @@ type OptionIndicators struct {
 	Ask Order `json:"ask"`
 }
 
-func buildCPFormat(options []Option) CPFormat {
+func buildCPFormat(options []Option) CallPut {
 	rows := make([]Row, 0, len(options)/2)
 
 	for asset, optionsSameAsset := range groupByAsset(options) {
@@ -116,7 +116,7 @@ func buildCPFormat(options []Option) CPFormat {
 		}
 	}
 
-	return CPFormat{Rows: rows}
+	return CallPut{Rows: rows}
 }
 
 func groupByAsset(options []Option) (assetToOptions map[string][]Option) {

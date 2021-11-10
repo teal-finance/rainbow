@@ -12,7 +12,7 @@ import (
 
 type Cache struct {
 	options     []Option
-	cpFormat    CPFormat
+	callPut     CallPut
 	initialized bool
 }
 
@@ -20,7 +20,7 @@ func NewCache() Cache {
 	return Cache{
 		initialized: false,
 		options:     []Option{},
-		cpFormat:    CPFormat{Rows: []Row{}},
+		callPut:     CallPut{Rows: []Row{}},
 	}
 }
 
@@ -31,7 +31,7 @@ func (c Cache) Empty() bool {
 func (c *Cache) Refresh(options []Option) {
 	c.initialized = true
 	c.options = options
-	c.cpFormat = buildCPFormat(options)
+	c.callPut = buildCPFormat(options)
 }
 
 func (c *Cache) Options() ([]Option, error) {
@@ -42,10 +42,10 @@ func (c *Cache) Options() ([]Option, error) {
 	return c.options, nil
 }
 
-func (c *Cache) CPFormat() (CPFormat, error) {
+func (c *Cache) CallPut() (CallPut, error) {
 	if c.Empty() {
-		return c.cpFormat, fmt.Errorf("Cache is empty")
+		return c.callPut, fmt.Errorf("Cache is empty")
 	}
 
-	return c.cpFormat, nil
+	return c.callPut, nil
 }
