@@ -15,6 +15,7 @@
     "@snowind/sidebar": "^0.0.3",
     "@snowind/switch": "^0.0.3",
     "@snowind/header": "^0.0.6",
+    "@snowind/state": "^0.0.1",
     "@vueuse/core": "^6.6.2",
     "gzipper": "^6.0.0",
     "vue": "^3.2.19",
