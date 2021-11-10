@@ -11,18 +11,18 @@ import (
 )
 
 type Option struct {
-	Name          string // ASSET-DATE-Strike-OptionsType
-	Type          string // CALL / PUT
-	Asset         string // ETH, BTC, SOL
-	Expiry        string // Expiry date in format 2021-12-31
-	Strike        float64
-	ExchangeType  string // CEX / DEX
-	Chain         string // Ethereum, Solana and "–" for CEX (Deribit)
-	Layer         string // L1, L2 and "–" for CEX (Deribit)
-	Provider      string // Opyn, Lyra, Thales, Deribit, Psyoptions
-	QuoteCurrency string // ETH, BTC, USDT...
-	Bid           []Order
-	Ask           []Order
+	Name          string  `json:"name"`     // ASSET-DATE-Strike-OptionsType
+	Type          string  `json:"type"`     // CALL / PUT
+	Asset         string  `json:"asset"`    // ETH, BTC, SOL
+	Expiry        string  `json:"expiry"`   // Expiry date in format 2021-12-31
+	ExchangeType  string  `json:"exchange"` // CEX / DEX
+	Chain         string  `json:"chain"`    // Ethereum, Solana and "–" for CEX (Deribit)
+	Layer         string  `json:"layer"`    // L1, L2 and "–" for CEX (Deribit)
+	Provider      string  `json:"provider"` // Opyn, Lyra, Thales, Deribit, Psyoptions
+	QuoteCurrency string  `json:"currency"` // ETH, BTC, USDT...
+	Bid           []Order `json:"bid"`
+	Ask           []Order `json:"ask"`
+	Strike        float64 `json:"strike"`
 }
 
 type Order struct {
