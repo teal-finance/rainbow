@@ -77,22 +77,22 @@ func query(coin string) ([]instrument, error) {
 }
 
 type instrument struct {
-	TickSize             float64 `json:"tick_size"`
-	TakerCommission      float64 `json:"taker_commission"`
-	Strike               float64 `json:"strike"`
+	OptionType           string  `json:"option_type"`
+	InstrumentName       string  `json:"instrument_name"`
+	Kind                 string  `json:"kind"`
 	SettlementPeriod     string  `json:"settlement_period"`
 	QuoteCurrency        string  `json:"quote_currency"`
-	OptionType           string  `json:"option_type"`
+	BaseCurrency         string  `json:"base_currency"`
 	MinTradeAmount       float64 `json:"min_trade_amount"`
 	MakerCommission      float64 `json:"maker_commission"`
-	Kind                 string  `json:"kind"`
-	IsActive             bool    `json:"is_active"`
-	InstrumentName       string  `json:"instrument_name"`
+	Strike               float64 `json:"strike"`
+	TickSize             float64 `json:"tick_size"`
+	TakerCommission      float64 `json:"taker_commission"`
 	ExpirationTimestamp  int64   `json:"expiration_timestamp"`
 	CreationTimestamp    int64   `json:"creation_timestamp"`
 	ContractSize         float64 `json:"contract_size"`
 	BlockTradeCommission float64 `json:"block_trade_commission"`
-	BaseCurrency         string  `json:"base_currency"`
+	IsActive             bool    `json:"is_active"`
 }
 
 func filterTooFar(instruments []instrument) (filtered []instrument) {
@@ -134,6 +134,7 @@ func isStrikeAvailable(i instrument) bool {
 	ethStrike := []float64{1280, 3000, 3400, 3600, 3700, 4000, 4100, 4500, 4400, 4800, 5000, 5200, 8000}
 	btcStrike := []float64{40000, 50000, 55000, 60000, 65000, 66000, 70000, 100000}
 	strikes := ethStrike
+
 	if i.BaseCurrency == "BTC" {
 		strikes = btcStrike
 	}
@@ -144,6 +145,7 @@ func isStrikeAvailable(i instrument) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -204,26 +206,11 @@ func normalize(instruments []instrument, depth uint32) ([]rainbow.Option, error)
 }
 
 type OrderBook struct {
-	UnderlyingPrice float64 `json:"underlying_price"`
-	UnderlyingIndex string  `json:"underlying_index"`
-	Timestamp       int64   `json:"timestamp"`
-	Stats           struct {
-		Volume      float64 `json:"volume"`
-		PriceChange float64 `json:"price_change"`
-		Low         float64 `json:"low"`
-		High        float64 `json:"high"`
-	} `json:"stats"`
-	State           string  `json:"state"`
-	SettlementPrice float64 `json:"settlement_price"`
-	OpenInterest    float64 `json:"open_interest"`
-	MinPrice        float64 `json:"min_price"`
-	MaxPrice        float64 `json:"max_price"`
-	MarkPrice       float64 `json:"mark_price"`
-	MarkIv          float64 `json:"mark_iv"`
-	LastPrice       float64 `json:"last_price"`
-	InterestRate    float64 `json:"interest_rate"`
-	InstrumentName  string  `json:"instrument_name"`
-	IndexPrice      float64 `json:"index_price"`
+	InstrumentName  string      `json:"instrument_name"`
+	UnderlyingIndex string      `json:"underlying_index"`
+	State           string      `json:"state"`
+	Asks            [][]float64 `json:"asks"`
+	Bids            [][]float64 `json:"bids"`
 	Greeks          struct {
 		Vega  float64 `json:"vega"`
 		Theta float64 `json:"theta"`
@@ -231,16 +218,31 @@ type OrderBook struct {
 		Gamma float64 `json:"gamma"`
 		Delta float64 `json:"delta"`
 	} `json:"greeks"`
-	EstimatedDeliveryPrice float64     `json:"estimated_delivery_price"`
-	ChangeID               int64       `json:"change_id"`
-	Bids                   [][]float64 `json:"bids"`
-	BidIv                  float64     `json:"bid_iv"`
-	BestBidPrice           float64     `json:"best_bid_price"`
-	BestBidAmount          float64     `json:"best_bid_amount"`
-	BestAskPrice           float64     `json:"best_ask_price"`
-	BestAskAmount          float64     `json:"best_ask_amount"`
-	Asks                   [][]float64 `json:"asks"`
-	AskIv                  float64     `json:"ask_iv"`
+	Stats struct {
+		Volume      float64 `json:"volume"`
+		PriceChange float64 `json:"price_change"`
+		Low         float64 `json:"low"`
+		High        float64 `json:"high"`
+	} `json:"stats"`
+	UnderlyingPrice        float64 `json:"underlying_price"`
+	MaxPrice               float64 `json:"max_price"`
+	MarkPrice              float64 `json:"mark_price"`
+	MarkIv                 float64 `json:"mark_iv"`
+	LastPrice              float64 `json:"last_price"`
+	InterestRate           float64 `json:"interest_rate"`
+	MinPrice               float64 `json:"min_price"`
+	IndexPrice             float64 `json:"index_price"`
+	OpenInterest           float64 `json:"open_interest"`
+	EstimatedDeliveryPrice float64 `json:"estimated_delivery_price"`
+	ChangeID               int64   `json:"change_id"`
+	SettlementPrice        float64 `json:"settlement_price"`
+	BidIv                  float64 `json:"bid_iv"`
+	BestBidPrice           float64 `json:"best_bid_price"`
+	BestBidAmount          float64 `json:"best_bid_amount"`
+	BestAskPrice           float64 `json:"best_ask_price"`
+	BestAskAmount          float64 `json:"best_ask_amount"`
+	Timestamp              int64   `json:"timestamp"`
+	AskIv                  float64 `json:"ask_iv"`
 }
 
 func normalizeOrders(orders [][]float64, quote string) []rainbow.Order {

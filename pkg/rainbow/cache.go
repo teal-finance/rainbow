@@ -11,9 +11,9 @@ import (
 )
 
 type Cache struct {
-	initialized bool
 	options     []Option
 	cpFormat    CPFormat
+	initialized bool
 }
 
 func NewCache() Cache {

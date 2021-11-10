@@ -101,7 +101,7 @@ linters-settings:
         json: snake # should also be "goCamel"
 run:
   skip-files:
-    - cmd/serum/serum_get_market.go
+    - poc/serum/serum_get_market.go
 
 output:
   format: tab

@@ -56,10 +56,12 @@ func oldInstruments(coin string) []string {
 	}
 }
 
-func Options() (options []rainbow.Option, err error) {
+func Options() ([]rainbow.Option, error) {
 	// instruments := append(oldInstruments("ETH"), oldInstruments("BTC")...)
 	instruments := query()
 	client := rpc.NewClient(mainnet)
+
+	options := make([]rainbow.Option, 0, len(instruments))
 
 	for _, i := range instruments {
 		pubKey := solana.MustPublicKeyFromBase58(i.SerumMarketAddress)
@@ -96,7 +98,7 @@ func Options() (options []rainbow.Option, err error) {
 		})
 	}
 
-	return options, err
+	return options, nil
 }
 
 // I don't really need the totalsize but I am keeping it since it was in the original func:
