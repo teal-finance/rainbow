@@ -79,21 +79,3 @@ func alignFloatOnDecimalPoint(f float64) string {
 
 	return string(b)
 }
-
-// WIP new implementation
-//
-// type Order struct{ Px, Qty string }
-// type Limit struct{ Bid, Ask Order }
-//
-// func NewLimit() Limit {
-// 	return Limit{
-// 		Bid: Order{
-// 			Px:  none,
-// 			Qty: none,
-// 		},
-// 		Ask: Order{
-// 			Px:  none,
-// 			Qty: none,
-// 		},
-// 	}
-// }
