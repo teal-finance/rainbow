@@ -1,6 +1,6 @@
 <template>
   <table>
-    <thead v-if="!isSmallScreen">
+    <thead v-if="!isResponsive || isDesktop">
       <component v-if="extraHeader != null" :is="extraHeader"></component>
       <tr>
         <th v-for="(colslug, i) in Object.keys(model.state.columns)" :key="i">
@@ -14,12 +14,12 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody v-if="isResponsive">
       <tr v-for="(row, i) in model.state.rows" :key="i.toString()">
         <td
           v-for="(cell, ii) in Object.keys(model.state.columns)"
           :key="ii"
-          v-if="!isSmallScreen"
+          v-if="isDesktop"
           @click="onClick(row, cell)"
         >
           <component
@@ -27,6 +27,14 @@
             :is="getRenderer(cell)"
             :k="cell"
             :v="row[cell]"
+            @update:v="onChange($event, parseInt(i.toString()))"
+          ></component>
+        </td>
+        <td v-else-if="isTablet" :colspan="model.numCols">
+          <component
+            :key="i.toString() + 'm'"
+            :is="tabletRenderer"
+            :row="row"
             @update:v="onChange($event, parseInt(i.toString()))"
           ></component>
         </td>
@@ -50,6 +58,8 @@ import SwDatatableModel from "./models/datatable";
 import DefaultCellRenderer from "./renderers/DefaultCellRenderer.vue";
 import CarretSorter from "./widgets/CarretSorter.vue";
 
+const twbreakpoints = useBreakpoints(breakpointsTailwind)
+
 export default defineComponent({
   components: {
     CarretSorter,
@@ -61,15 +71,23 @@ export default defineComponent({
     },
     renderers: {
       type: Object,
-      default: () => { }, // eslint-disable-line
+      default: () => { },
     },
     mobileRenderer: {
       type: Object,
-      default: () => null, // eslint-disable-line
+      default: () => null,
     },
-    breakpoint: {
+    mobileBreakpoint: {
       type: String as () => "sm" | "md" | "lg" | "xl" | "2xl",
       default: () => "sm",
+    },
+    tabletRenderer: {
+      type: Object,
+      default: () => null,
+    },
+    tabletBreakpoint: {
+      type: String as () => "md" | "lg" | "xl" | "2xl",
+      default: () => "md",
     },
     sortableCols: {
       type: Array as () => Array<string>,
@@ -83,13 +101,18 @@ export default defineComponent({
   emits: ["onClickCell"],
   setup(props, { emit }) {
     const breakpoints = useBreakpoints(breakpointsTailwind)
-    const { model, renderers, mobileRenderer, breakpoint, sortableCols } = toRefs(props);
-    const isResponsive = ref(mobileRenderer.value !== null);
-    let isSmallScreen = ref(false);
-    if (isResponsive.value === true) {
-      //console.log("BP", breakpoint.value);
-      isSmallScreen.value = breakpoints.isSmaller(breakpoint.value);
-    }
+    const {
+      model,
+      renderers,
+      mobileRenderer,
+      mobileBreakpoint,
+      tabletRenderer,
+      tabletBreakpoint
+    } = toRefs(props);
+    const isResponsive = ref(mobileRenderer.value !== null || tabletRenderer.value !== null);
+    const isMobile = twbreakpoints.smaller(mobileBreakpoint.value);
+    const isTablet = twbreakpoints.between(mobileBreakpoint.value, tabletBreakpoint.value);
+    const isDesktop = twbreakpoints.greater(tabletBreakpoint.value);
 
     function getRenderer(k: string) {
       if (renderers.value !== undefined) {
@@ -121,7 +144,9 @@ export default defineComponent({
       onChange,
       onClick,
       isResponsive,
-      isSmallScreen
+      isMobile,
+      isTablet,
+      isDesktop,
     };
   },
 });
