@@ -53,12 +53,10 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, ref, toRaw } from "vue";
-import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
+import { TwBreakpoint, useScreenSize } from "@snowind/state";
 import SwDatatableModel from "./models/datatable";
 import DefaultCellRenderer from "./renderers/DefaultCellRenderer.vue";
 import CarretSorter from "./widgets/CarretSorter.vue";
-
-const twbreakpoints = useBreakpoints(breakpointsTailwind)
 
 export default defineComponent({
   components: {
@@ -78,7 +76,7 @@ export default defineComponent({
       default: () => null,
     },
     mobileBreakpoint: {
-      type: String as () => "sm" | "md" | "lg" | "xl" | "2xl",
+      type: String as () => TwBreakpoint,
       default: () => "sm",
     },
     tabletRenderer: {
@@ -86,7 +84,7 @@ export default defineComponent({
       default: () => null,
     },
     tabletBreakpoint: {
-      type: String as () => "md" | "lg" | "xl" | "2xl",
+      type: String as () => TwBreakpoint,
       default: () => "md",
     },
     sortableCols: {
@@ -100,7 +98,6 @@ export default defineComponent({
   },
   emits: ["onClickCell"],
   setup(props, { emit }) {
-    const breakpoints = useBreakpoints(breakpointsTailwind)
     const {
       model,
       renderers,
@@ -110,9 +107,7 @@ export default defineComponent({
       tabletBreakpoint
     } = toRefs(props);
     const isResponsive = ref(mobileRenderer.value !== null || tabletRenderer.value !== null);
-    const isMobile = twbreakpoints.smaller(mobileBreakpoint.value);
-    const isTablet = twbreakpoints.between(mobileBreakpoint.value, tabletBreakpoint.value);
-    const isDesktop = twbreakpoints.greater(tabletBreakpoint.value);
+    const { isMobile, isTablet, isDesktop } = useScreenSize(mobileBreakpoint.value, tabletBreakpoint.value)
 
     function getRenderer(k: string) {
       if (renderers.value !== undefined) {
