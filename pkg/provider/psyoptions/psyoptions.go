@@ -25,7 +25,13 @@ const (
 	devnet           = "https://api.devnet.solana.com"
 )
 
-func Options() ([]rainbow.Option, error) {
+type Provider struct{}
+
+func (Provider) Name() string {
+	return "PsyOptions"
+}
+
+func (p Provider) Options() ([]rainbow.Option, error) {
 	// instruments := append(oldInstruments("ETH"), oldInstruments("BTC")...)
 	instruments := query()
 	client := rpc.NewClient(mainnet)

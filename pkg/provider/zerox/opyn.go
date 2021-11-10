@@ -17,7 +17,13 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-func Options() ([]rainbow.Option, error) {
+type Provider struct{}
+
+func (Provider) Name() string {
+	return "Opyn"
+}
+
+func (Provider) Options() ([]rainbow.Option, error) {
 	instruments := QueryTheGraph()
 
 	options, err := normalize(instruments, "Opyn", 1.0)

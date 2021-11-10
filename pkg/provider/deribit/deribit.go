@@ -19,7 +19,13 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-func Options() ([]rainbow.Option, error) {
+type Provider struct{}
+
+func (Provider) Name() string {
+	return "Deribit"
+}
+
+func (Provider) Options() ([]rainbow.Option, error) {
 	instruments, err := query("BTC")
 	if err != nil {
 		log.Print(err)
