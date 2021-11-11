@@ -14,19 +14,19 @@ export default class Option {
     this.provider = data.provider;
     this.asset = data.asset;
     this.expiry = new Date(data.expiry);
-    this.put = new PutOrder(data.put);
     this.call = new CallOrder(data.call);
     this.strike = data.strike;
+    this.put = new PutOrder(data.put);
   }
 
   toRow(): Record<string, number | string | Date> {
     return {
       provider: this.provider,
       asset: this.asset,
-      expiry: this.expiry.toLocaleDateString("en-US"),
-      ...this.put,
-      strike: this.strike,
+      expiry: this.expiry.toLocaleDateString(),
       ...this.call,
+      strike: this.strike,
+      ...this.put,
     }
   }
 }
