@@ -8,6 +8,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("./views/OptionsView.vue")
   },
   {
+    path: "/about",
+    component: () => import("./pages/About.vue")
+  },
+  {
     path: "/options",
     component: () => import("./views/OptionsView.vue"),
     meta: {
