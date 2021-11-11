@@ -41,12 +41,12 @@ func BestLimitStr(option Option) (bestBidPx, bestBidSz, bestAskPx, bestAskSz str
 	bestBidPx, bestBidSz = none, none
 	bestAskPx, bestAskSz = none, none
 
-	if len(option.Bid) > 0 {
+	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
 		bestBidPx = alignFloatOnDecimalPoint(option.Bid[0].Px)
 		bestBidSz = alignFloatOnDecimalPoint(option.Bid[0].Size)
 	}
 
-	if len(option.Ask) > 0 {
+	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
 		bestAskPx = alignFloatOnDecimalPoint(option.Ask[0].Px)
 		bestAskSz = alignFloatOnDecimalPoint(option.Ask[0].Size)
 	}

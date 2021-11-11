@@ -3,8 +3,8 @@ type ProviderType = "PsyOptions" | "Deribit" | "Opyn";
 // contracts for the json
 
 interface OrderContract {
-  px: number;
-  size: number;
+  px: string;
+  size: string;
 }
 
 interface LimitContract {
@@ -24,22 +24,22 @@ interface CallPutContract {
 // internal types
 
 type OrderType = {
-  px: number;
-  size: number;
+  px: string;
+  size: string;
 }
 
 type CallType = {
-  callBidPrice: number;
-  callBidSize: number;
-  callAskPrice: number;
-  callAskSize: number;
+  callBidPrice: string;
+  callBidSize: string;
+  callAskPrice: string;
+  callAskSize: string;
 }
 
 type PutType = {
-  putBidPrice: number;
-  putBidSize: number;
-  putAskPrice: number;
-  putAskSize: number;
+  putBidPrice: string;
+  putBidSize: string;
+  putAskPrice: string;
+  putAskSize: string;
 }
 
 type RowType = {

@@ -84,8 +84,27 @@ type Row struct {
 }
 
 type Limit struct {
-	Bid Order `json:"bid"`
-	Ask Order `json:"ask"`
+	Bid StrOrder `json:"bid"`
+	Ask StrOrder `json:"ask"`
+}
+
+func NoneLimit() Limit {
+	return Limit{
+		Bid: StrOrder{Px: none, Size: none},
+		Ask: StrOrder{Px: none, Size: none},
+	}
+}
+
+type StrOrder struct {
+	// Px is a known abbreviation for "Price" used by many Centralized Exchanges
+	// such as in the FIX protocol: https://fiximate.fixtrading.org/legacy/en/FIX.5.0SP2/abbreviations.html
+	// Independently of the FIX protocol, "Px" is intensively used at Euronext.
+	// "Px" is also a French abbreviation for "Prix". :-)
+	// Rainbow uses "px" in the API (JSON)) but uses "price" on the front-end side.
+	Px string `json:"px"`
+
+	// Size is often used in lieu of the longer word "Quantity".
+	Size string `json:"size"`
 }
 
 func buildCallPut(options []Option) CallPut {
@@ -95,7 +114,8 @@ func buildCallPut(options []Option) CallPut {
 		for expiry, optionsSameExpiry := range groupByExpiry(optionsSameAsset) {
 			for strike, optionsSameStrike := range groupByStrike(optionsSameExpiry) {
 				for provider, optionsSameProvider := range groupByProvider(optionsSameStrike) {
-					var put, call Limit
+					call := NoneLimit()
+					put := NoneLimit()
 
 					for _, o := range optionsSameProvider {
 						if o.Type == "PUT" {
@@ -182,18 +202,10 @@ func groupByProvider(options []Option) (providerToOptions map[string][]Option) {
 }
 
 func newOptionIndicators(o Option) Limit {
-	oi := Limit{
-		Bid: Order{Px: 0, Size: 0},
-		Ask: Order{Px: 0, Size: 0},
-	}
+	bPx, bSz, aPx, aSz := BestLimitStr(o)
 
-	if len(o.Bid) > 0 {
-		oi.Bid = o.Bid[0]
+	return Limit{
+		Bid: StrOrder{Px: bPx, Size: bSz},
+		Ask: StrOrder{Px: aPx, Size: aSz},
 	}
-
-	if len(o.Ask) > 0 {
-		oi.Ask = o.Ask[0]
-	}
-
-	return oi
 }
