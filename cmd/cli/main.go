@@ -37,8 +37,8 @@ func printTable(options []rainbow.Option) {
 
 	t.AppendHeader(table.Row{
 		"Provider", "Asset", "Type",
-		"Bid size", "Bid px", "Strike",
-		"Ask px", "Ask size", "Instrument",
+		"Bid size", "Bid price", "Strike",
+		"Ask price", "Ask size", "Instrument",
 	})
 
 	for _, option := range options {
