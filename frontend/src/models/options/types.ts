@@ -52,9 +52,6 @@ type OptionType = {
 }
 
 type OptionsJsonDataset = {
-  provider: ProviderType
-  asset: string;
-  expiry: string;
   rows: Array<OptionContract>;
 }
 
