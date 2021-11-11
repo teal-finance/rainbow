@@ -38,8 +38,9 @@ func parseFlags() {
 	listenAddr = ":" + strconv.Itoa(*mainPort)
 
 	if !*dev && *mainAddr == "http://localhost" && *mainPort == 8090 {
-		log.Print("Enable -dev mode because -addr and -port are not used")
 		*dev = true
+
+		log.Print("Enable -dev mode because -addr and -port are not used")
 	}
 
 	log.Print("Dev. mode      -dev   = ", *dev)
