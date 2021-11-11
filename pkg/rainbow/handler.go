@@ -23,7 +23,7 @@ func (h *handler) router() http.Handler {
 
 	r.Route("/", func(r chi.Router) {
 		r.Get("/options", h.getOptions)
-		r.Get("/options/cp", h.getCPFormat)
+		r.Get("/options/cp", h.getCallPut)
 	})
 
 	return r
@@ -48,10 +48,10 @@ func (h handler) getOptions(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h handler) getCPFormat(w http.ResponseWriter, r *http.Request) {
+func (h handler) getCallPut(w http.ResponseWriter, r *http.Request) {
 	cp, err := h.c.CallPut()
 	if err != nil {
-		log.Print("ERROR getCPFormat ", err)
+		log.Print("ERROR getCallPut ", err)
 		http.Error(w, "No Content", http.StatusNoContent)
 
 		return
@@ -60,7 +60,7 @@ func (h handler) getCPFormat(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewEncoder(w).Encode(cp); err != nil {
-		log.Print("ERROR getCPFormat ", err)
+		log.Print("ERROR getCallPut ", err)
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 
 		return
@@ -88,7 +88,7 @@ type Limit struct {
 	Ask Order `json:"ask"`
 }
 
-func buildCPFormat(options []Option) CallPut {
+func buildCallPut(options []Option) CallPut {
 	rows := make([]Row, 0, len(options)/2)
 
 	for asset, optionsSameAsset := range groupByAsset(options) {
