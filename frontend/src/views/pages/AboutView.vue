@@ -10,8 +10,8 @@
             This project has been initiated by <a href="https://teal.finance">Teal.Finance</a> and has already won two
             prices during the Ethereum's EthGlobal Hackathon.</p>
         </div>
-        <div class="w-1/2 mb-10 md:mb-0">
-          <img class="object-cover object-center w-3/4 rounded" alt="Rainbow dashboard" src="@/assets/dashboard.svg">
+        <div class="mb-10 md:mb-0">
+          <img class="object-cover object-center rounded" alt="Rainbow dashboard" src="@/assets/dashboard.svg">
         </div>
       </div>
     </section>
@@ -158,7 +158,7 @@
         <div class="flex flex-wrap justify-center m-4">
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="team" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/o.jpg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">0uep</h2>
@@ -174,7 +174,7 @@
           </div>
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="team" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/syn.jpg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">Synwx</h2>
@@ -189,7 +189,7 @@
           </div>
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="team" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/kahlys.jpeg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">kahlys</h2>
@@ -205,7 +205,7 @@
           </div>
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="team" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/jy.jpg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">Cryptohazard</h2>
@@ -222,7 +222,7 @@
           </div>
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="team" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/arad.jpg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">Arad</h2>
