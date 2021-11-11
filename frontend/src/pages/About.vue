@@ -175,10 +175,10 @@
       
       <div class="p-4 lg:w-1/5 md:w-1/2">
         <div class="flex flex-col items-center h-full text-center">
-          <img alt="team" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58" src="@/assets/profile/c.jpeg">
+          <img alt="team" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58" src="@/assets/profile/jy.jpg">
           <div class="w-full">
             <h2 class="text-lg font-medium text-gray-900 title-font dark:text-gray-300">Cryptohazard</h2>
-            <p class="mb-4 dark:text-gray-400">Cryptohazard is the historical founder, deploying proof-of-stake on the server and developing a front-end (hedge fund).</p>
+            <p class="mb-4 dark:text-gray-400">Cryptohazard is a blockchain researcher contributing to the success of the DeFi.</p>
             <span class="inline-flex">
               <a class="text-gray-500" href="https://github.com/cryptohazard">
                 <i-akar-icons-github-fill />
