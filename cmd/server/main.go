@@ -38,7 +38,7 @@ func main() {
 		OPAFilenames:   opaFilenames,
 	}
 
-	middlewares, connState, err := g.Setup(0, *expPort, *maxReqBurst, *maxReqPerMinute, *dev)
+	middlewares, connState, err := g.Setup(0, *expPort, *reqBurst, *reqPerMinute, *dev)
 	if err != nil {
 		log.Fatal(err)
 	}
