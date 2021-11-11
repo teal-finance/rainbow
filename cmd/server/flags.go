@@ -11,8 +11,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-
-	"github.com/teal-finance/garcon"
 )
 
 var (
@@ -23,17 +21,11 @@ var (
 	reqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 88), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	reqBurst     = flag.Int("burst", envInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
 	wwwDir       = flag.String("www", envStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
-	opaFlag      = flag.String("opa", envStr("OPA_FILES", ""), "Datalog/Rego files for the Open Policy Agent, has precedence over OPA_FILES")
-	opaFilenames []string
 	listenAddr   string
 )
 
 func parseFlags() {
 	flag.Parse()
-
-	if *opaFlag != "" {
-		opaFilenames = garcon.SplitClean(*opaFlag)
-	}
 
 	listenAddr = ":" + strconv.Itoa(*mainPort)
 
@@ -50,7 +42,6 @@ func parseFlags() {
 	log.Print("REQ_PER_MINUTE -rate  = ", *reqPerMinute)
 	log.Print("REQ_BURST      -burst = ", *reqBurst)
 	log.Print("WWW_DIR        -www   = ", *wwwDir)
-	log.Printf("Policy files   -opa   = #%v %q", len(opaFilenames), opaFilenames)
 }
 
 func envStr(varName, defaultValue string) string {
