@@ -61,9 +61,6 @@
           </div>
         </div>
         <div class="relative flex pb-12">
-          <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
-            <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
-          </div>
           <div class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
             <i-bi-check-all />
           </div>
@@ -72,7 +69,14 @@
             <p class="leading-relaxed dark:text-gray-400">filtering and aggregate data across markets and providers</p>
           </div>
         </div>
-        <div class="relative flex">
+        
+      </div>
+      <div class="md:w-1/2 md:pl-10 md:py-6">
+      <div class="relative flex pb-12">
+          <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
+            <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
+          </div>
+          <div class="relative flex">
           <div class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
             <i-bi-check-all />
           </div>
@@ -81,8 +85,8 @@
             <p class="leading-relaxed dark:text-gray-400">computing of indicators based on bid/ask orders</p>
           </div>
         </div>
-      </div>
-      <div class="md:w-1/2 md:pl-10 md:py-6">
+        </div>
+      
         <div class="relative flex pb-12">
           <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
             <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
