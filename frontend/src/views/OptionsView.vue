@@ -1,6 +1,6 @@
 <template>
   <div v-if="isReady">
-    <div class="flex flex-row mt-3" v-if="!isMobile">
+    <div class="flex flex-row" v-if="!isMobile">
       <div class="w-4/5">
         <options-datatable :model="datatable"></options-datatable>
       </div>
@@ -67,15 +67,15 @@ export default defineComponent({
         "provider": "Provider",
         "asset": "Asset",
         "expiry": "Expiry",
-        "putBidPrice": "Bid",
-        "putBidSize": "Bid size",
-        "putAskPrice": "Ask",
-        "putAskSize": "Ask size",
+        "putBidSize": "Size",
+        "putBidPrice": "Price",
+        "putAskPrice": "Price",
+        "putAskSize": "Size",
         "strike": "Strike",
-        "callBidPrice": "Bid",
-        "callBidSize": "Bid size",
-        "callAskPrice": "Ask",
-        "callAskSize": "Ask size",
+        "callBidSize": "Size",
+        "callBidPrice": "Price",
+        "callAskPrice": "Price",
+        "callAskSize": "Size",
       }
       datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
       //datatable.value.setColumnsFromData();
