@@ -6,12 +6,12 @@
 import { useBreakpoints, breakpointsTailwind } from '@vueuse/core'
 import User from "./models/user";
 
-const breakpoints = useBreakpoints(breakpointsTailwind)
+const breakpoints = useBreakpoints(breakpointsTailwind);
 
-const isMobile = breakpoints.isSmaller('sm');
-
-
+const isMobile = breakpoints.smaller('sm');
+const isTablet = breakpoints.between('sm', 'lg');
+const isDesktop = breakpoints.greater('lg');
 
 const user = new User();
 
-export { user, isMobile }
+export { user, isMobile, isTablet, isDesktop }

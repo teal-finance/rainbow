@@ -205,6 +205,13 @@
     "@vueuse/core" "^6.5.3"
     vue "^3.2.19"
 
+"@snowind/state@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@snowind/state/-/state-0.0.1.tgz#0a282347b4051fa5d2902e8045707fef823087c1"
+  integrity sha512-nAK+qczzAy3nJ/FmnJ9ZvRd/t1JGktyxJ+8rTtMEYfsoV6J+RRaWk8lqMg3XRqhLkmP61smNanu3JnHoylKrpQ==
+  dependencies:
+    vue "^3.2.19"
+
 "@snowind/switch@^0.0.3":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@snowind/switch/-/switch-0.0.3.tgz#ba669ef771db8f30b2c34822840617c6095e53a7"

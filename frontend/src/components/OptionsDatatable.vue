@@ -4,6 +4,8 @@
     :sortable-cols="Object.keys(model.state.columns)"
     :extra-header="ExtraHeader"
     :mobile-renderer="MobileRenderer"
+    :tablet-renderer="MobileRenderer"
+    tablet-breakpoint="xl"
     class="w-full border border-collapse table-auto dark:border-neutral border-light"
     id="rtable"
   ></sw-datatable>
@@ -47,13 +49,13 @@ export default defineComponent({
 #rtable
   @apply border-none
   th
-    @apply sm:bg-light sm:text-light-r sm:dark:bg-gray-500 sm:dark:text-white
+    @apply xl:bg-light xl:text-light-r xl:dark:bg-gray-500 xl:dark:text-white
   tbody
-    @apply sm:bg-gray-50 sm:dark:bg-gray-700
+    @apply xl:bg-gray-50 xl:dark:bg-gray-700
     td
       @apply px-3 py-1
     td:nth-child(1), td:nth-child(2), td:nth-child(3)
-      @apply sm:bg-gray-300 sm:dark:bg-gray-600
+      @apply xl:bg-gray-300 xl:dark:bg-gray-600
     td:nth-child(8)
-      @apply sm:bg-gray-400 sm:dark:bg-gray-900
+      @apply xl:bg-gray-400 xl:dark:bg-gray-900
 </style>
