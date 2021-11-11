@@ -76,14 +76,14 @@ type Row struct {
 	Expiry   string `json:"expiry"`
 	Provider string `json:"provider"`
 
-	Call OptionIndicators `json:"call"`
+	Call Limit `json:"call"`
 
 	Strike float64 `json:"strike"`
 
-	Put OptionIndicators `json:"put"`
+	Put Limit `json:"put"`
 }
 
-type OptionIndicators struct {
+type Limit struct {
 	Bid Order `json:"bid"`
 	Ask Order `json:"ask"`
 }
@@ -95,22 +95,24 @@ func buildCPFormat(options []Option) CallPut {
 		for expiry, optionsSameExpiry := range groupByExpiry(optionsSameAsset) {
 			for strike, optionsSameStrike := range groupByStrike(optionsSameExpiry) {
 				for provider, optionsSameProvider := range groupByProvider(optionsSameStrike) {
-					r := Row{
-						Asset:    asset,
-						Expiry:   expiry,
-						Provider: provider,
-						Strike:   strike,
-					}
+					var put, call Limit
 
 					for _, o := range optionsSameProvider {
 						if o.Type == "PUT" {
-							r.Put = newOptionIndicators(o)
+							put = newOptionIndicators(o)
 						} else {
-							r.Call = newOptionIndicators(o)
+							call = newOptionIndicators(o)
 						}
 					}
 
-					rows = append(rows, r)
+					rows = append(rows, Row{
+						Asset:    asset,
+						Expiry:   expiry,
+						Provider: provider,
+						Call:     call,
+						Strike:   strike,
+						Put:      put,
+					})
 				}
 			}
 		}
@@ -179,8 +181,8 @@ func groupByProvider(options []Option) (providerToOptions map[string][]Option) {
 	return providerToOptions
 }
 
-func newOptionIndicators(o Option) OptionIndicators {
-	oi := OptionIndicators{
+func newOptionIndicators(o Option) Limit {
+	oi := Limit{
 		Bid: Order{Px: 0, Size: 0},
 		Ask: Order{Px: 0, Size: 0},
 	}
