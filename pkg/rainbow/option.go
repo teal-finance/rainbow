@@ -8,6 +8,7 @@ package rainbow
 
 import (
 	"strconv"
+	"strings"
 )
 
 type Option struct {
@@ -74,8 +75,9 @@ func alignFloatOnDecimalPoint(f float64) string {
 	}
 
 	if i < len(spaces) {
-		return string(append(spaces[:len(spaces)-i-1], b...))
+		s := string(append(spaces[:len(spaces)-i-1], b...))
+		return strings.ReplaceAll(s, " ", "&nbsp;")
 	}
 
-	return string(b)
+	return strings.ReplaceAll(string(b), " ", "&nbsp;")
 }
