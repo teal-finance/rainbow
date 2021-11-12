@@ -1,10 +1,10 @@
 import { LimitContract } from "./types";
 
 export default class PutLimit {
-  putBidPrice: number;
-  putBidSize: number;
-  putAskPrice: number;
-  putAskSize: number;
+  putBidPrice: string;
+  putBidSize: string;
+  putAskPrice: string;
+  putAskSize: string;
 
   constructor(data: LimitContract) {
     this.putBidPrice = data.bid.px;

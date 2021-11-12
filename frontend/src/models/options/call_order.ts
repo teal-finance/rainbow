@@ -1,10 +1,10 @@
 import { LimitContract } from "./types";
 
 export default class CallLimit {
-  callBidPrice: number;
-  callBidSize: number;
-  callAskPrice: number;
-  callAskSize: number;
+  callBidPrice: string;
+  callBidSize: string;
+  callAskPrice: string;
+  callAskSize: string;
 
   constructor(data: LimitContract) {
     this.callBidPrice = data.bid.px;
