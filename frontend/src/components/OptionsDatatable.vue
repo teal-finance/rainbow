@@ -5,6 +5,7 @@
     :extra-header="ExtraHeader"
     :mobile-renderer="MobileRenderer"
     :tablet-renderer="MobileRenderer"
+    :default-renderer="HtmlCellRenderer"
     tablet-breakpoint="xl"
     class="w-full border border-collapse table-auto dark:border-neutral border-light"
     id="rtable"
@@ -15,6 +16,7 @@
 import { defineComponent } from 'vue'
 import SwDatatableModel from '@/packages/datatable/models/datatable'
 import SwDatatable from '@/packages/datatable/SwDatatable.vue'
+import HtmlCellRenderer from '@/packages/datatable/renderers/HtmlCellRenderer.vue';
 import { OptionsTable } from '@/models/options/types';
 import ExtraHeader from './widgets/ExtraHeader.vue';
 import MobileRenderer from './widgets/MobileRenderer.vue';
@@ -34,6 +36,7 @@ export default defineComponent({
     return {
       ExtraHeader,
       MobileRenderer,
+      HtmlCellRenderer,
     }
   },
 })

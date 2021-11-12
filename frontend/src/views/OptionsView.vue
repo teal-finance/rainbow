@@ -62,7 +62,7 @@ export default defineComponent({
         const opt = new Option(line).toRow();
         options.add(opt)
       }
-      //console.log("OPTIONS", options);
+      console.log("OPTIONS", options);
       const columns = {
         "provider": "Provider",
         "asset": "Asset",
