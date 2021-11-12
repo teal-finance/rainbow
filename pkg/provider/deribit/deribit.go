@@ -100,7 +100,6 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 		seconds := i.ExpirationTimestamp / 1000
 		ns := (i.ExpirationTimestamp % 1000) * 1000_000
 		expiryTime := time.Unix(seconds, ns).UTC()
-		// we want market only for the 29OCT
 		// we should filter by taking what is available elsewhere and then
 		// only fetch those
 		if isExpiryAvailable(expiryTime) && isStrikeAvailable(i) {
@@ -114,8 +113,6 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 //TODO change this quick and dirty way of filtering date from deribit
 func isExpiryAvailable(expiry time.Time) bool {
 	dates := []string{
-		"2021-11-4T08:00:00Z",
-		"2021-11-5T08:00:00Z",
 		"2021-11-26T08:00:00Z",
 		"2021-12-31T08:00:00Z",
 	}

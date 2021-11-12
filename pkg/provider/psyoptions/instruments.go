@@ -25,9 +25,9 @@ type instrument struct {
 
 // Expiration will be used in .Name() when fixed.
 func (i instrument) expiration() string {
-	seconds := i.Expiry / 1000
-	ns := (i.Expiry % 1000) * 1000_000
-	expiryTime := time.Unix(seconds, ns).UTC()
+	seconds := i.Expiry // 1000
+	//ns := (i.Expiry % 1000) * 1000_000
+	expiryTime := time.Unix(seconds, 0).UTC()
 
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
@@ -72,7 +72,7 @@ func (i instrument) strike() float64 {
 }
 
 func (i instrument) name() string {
-	return i.asset() + "-" + Expiration + "-" +
+	return i.asset() + "-" + i.expiration() + "-" +
 		fmt.Sprintf("%.0f", i.strike()) + "-" + i.optionType()
 }
 
