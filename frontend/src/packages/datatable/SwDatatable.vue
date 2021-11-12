@@ -18,13 +18,15 @@
       <tr v-for="(row, i) in model.state.rows" :key="i.toString()">
         <td
           v-for="(cell, ii) in Object.keys(model.state.columns)"
-          :key="ii"
           v-if="isDesktop"
+          :key="ii"
+          :id="cell"
           @click="onClick(row, cell)"
         >
           <component
             :key="i.toString() + cell"
             :is="getRenderer(cell)"
+            :id="cell"
             :k="cell"
             :v="row[cell]"
             @update:v="onChange($event, parseInt(i.toString()))"
