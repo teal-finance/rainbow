@@ -17,7 +17,7 @@ interface CallPutContract {
   asset: string;
   expiry: string;
   call: LimitContract;
-  strike: number;
+  strike: string;
   put: LimitContract;
 }
 
@@ -47,7 +47,7 @@ type RowType = {
   asset: string;
   expiry: Date;
   call: CallType;
-  strike: number;
+  strike: string;
   put: PutType;
 }
 
