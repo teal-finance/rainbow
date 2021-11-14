@@ -28,7 +28,9 @@ const (
 // these two variables avoid unnecessary allocation by alignFloatOnDecimalPoint().
 var (
 	dotZrs = []byte{byte('.'), byte('0'), byte('0')} // len(dotZrs) must be 1+digitsInfractionalPart
-	spaces = [5]byte{32, 32, 32, 32, 32}             // len(spaces) must be the max digits wanted before the decimal point
+	thinSp = []byte{byte('&'), byte('t'), byte('h'), byte('i'), byte('n'), byte('s'), byte('p'), byte(';')}
+	nonBSp = []byte{byte('&'), byte('n'), byte('b'), byte('s'), byte('p'), byte(';')}
+	spaces = [5]byte{32, 32, 32, 32, 32} // len(spaces) must be the max digits wanted before the decimal point
 	buffer = make([]byte, 0, 20)
 )
 
@@ -78,7 +80,7 @@ func leftAlignFloatOnDecimalPointHTML(f float64) string {
 }
 
 func rightAlignFloatOnDecimalPointHTML(f float64) string {
-	return string(rightAlign(f))
+	return string(RightAlign(f, true))
 }
 
 func leftAlignFloatOnDecimalPoint(f float64) []byte {
@@ -98,7 +100,7 @@ func leftAlignFloatOnDecimalPoint(f float64) []byte {
 	return append(spaces[:len(spaces)-i-1], buffer...)
 }
 
-func rightAlign(f float64) []byte {
+func RightAlign(f float64, addMissingDot bool) []byte {
 	buffer = strconv.AppendFloat(buffer[:0], f, 'f', -1, 64)
 
 	var i int // position of the '.'
@@ -107,13 +109,35 @@ func rightAlign(f float64) []byte {
 			end := i + 1 + digitsInfractionalPart
 
 			if end > len(buffer) {
-				return append(buffer, byte('0'))
+				buffer = append(buffer, byte('0'))
+			} else {
+				buffer = buffer[:end]
 			}
 
-			return buffer[:end]
+			if i > 3 {
+				buffer = insertThousandSeparator(buffer, i-3)
+			}
+
+			return buffer
 		}
 	}
 
-	// missing dot
-	return append(buffer, dotZrs...)
+	// Missing dot
+
+	if len(buffer) > 3 {
+		buffer = insertThousandSeparator(buffer, len(buffer)-3)
+	}
+
+	if addMissingDot {
+		buffer = append(buffer, dotZrs...)
+	}
+
+	return buffer
+}
+
+// insertThousandSeparator inserts "&nbsp;".
+// Recommendation is to use "&thinsp;" but it may break the line.
+// "&numsp;" is too wide.
+func insertThousandSeparator(b []byte, i int) []byte {
+	return append(b[:i], append(nonBSp, b[i:]...)...)
 }
