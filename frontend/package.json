@@ -11,18 +11,15 @@
     "compress": "gzipper compress --incremental --brotli --brotli-param-mode font --exclude avif,jpg --threshold 999 --remove-larger ./dist"
   },
   "dependencies": {
+    "@snowind/header": "^0.0.6",
     "@snowind/input": "^0.0.3",
     "@snowind/sidebar": "^0.0.3",
+    "@snowind/state": "^0.0.2",
     "@snowind/switch": "^0.0.3",
-    "@snowind/header": "^0.0.6",
-    "@snowind/state": "^0.0.1",
     "@vueuse/core": "^6.6.2",
     "gzipper": "^6.0.0",
     "vue": "^3.2.19",
-    "vue-router": "4",
-    "vega": "^5.20.0",
-    "vega-embed": "^6.16.0",
-    "vega-lite": "^5.0.0"
+    "vue-router": "4"
   },
   "devDependencies": {
     "@iconify/json": "^1.1.416",
