@@ -72,12 +72,12 @@ type CallPut struct {
 }
 
 type Row struct {
-	Asset    string `json:"asset"`
-	Expiry   string `json:"expiry"`
-	Provider string `json:"provider"`
-	Call     Limit  `json:"call"`
-	Strike   string `json:"strike"`
-	Put      Limit  `json:"put"`
+	Asset    string  `json:"asset"`
+	Expiry   string  `json:"expiry"`
+	Provider string  `json:"provider"`
+	Call     Limit   `json:"call"`
+	Strike   float64 `json:"strike"`
+	Put      Limit   `json:"put"`
 }
 
 type Limit struct {
@@ -129,7 +129,7 @@ func buildCallPut(options []Option) CallPut {
 						Expiry:   expiry,
 						Provider: provider,
 						Call:     call,
-						Strike:   string(RightAlign(strike, false)),
+						Strike:   strike,
 						Put:      put,
 					})
 				}

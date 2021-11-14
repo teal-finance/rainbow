@@ -7,7 +7,7 @@ export default class Option {
   asset: string;
   expiry: Date;
   call: CallType;
-  strike: string;
+  strike: number;
   put: PutType;
 
   constructor(data: CallPutContract) {
