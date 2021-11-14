@@ -60,7 +60,7 @@ export default defineComponent({
       &#provider, &#asset, &expiry
         @apply bg-gray-100 dark:bg-gray-700
       &#strike
-        @apply bg-gray-200 dark:bg-gray-900
+        @apply bg-gray-200 dark:bg-gray-900 text-right
       &#callBidSize, &#putBidSize, &#callBidPrice, &#putBidPrice
         @apply bg-rainbow-400 dark:text-foreground
       &#callAskSize, &#putAskSize, &#callAskPrice, &#putAskPrice
