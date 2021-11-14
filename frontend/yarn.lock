@@ -176,11 +176,12 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@snowind/header@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@snowind/header/-/header-0.0.6.tgz#8d4626ceba9eed4fc9b1d784c100fd605fa08a20"
-  integrity sha512-CT9I5cx7YRlXELLfqiMiWHAIO8bdTe/dCk1Ut0yMFpAn69j4Fg9zR2dOf9x+Q1Wiw4u+dDEVYjwzIdShoPzlyw==
+"@snowind/header@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@snowind/header/-/header-0.0.7.tgz#cd16f40eea53a3d978ac337e76c9d409fa7cf284"
+  integrity sha512-QhV6l73i3pdzUWv0Vv/5K8MkJPigYPBY/NBdBHustNVDEJYngHel82q/0odCh3ztivKHTltuc8s0YShX1ZnGeA==
   dependencies:
+    "@snowind/state" "^0.0.2"
     vue "^3.2.19"
 
 "@snowind/input@^0.0.3":

@@ -11,7 +11,7 @@
     "compress": "gzipper compress --incremental --brotli --brotli-param-mode font --exclude avif,jpg --threshold 999 --remove-larger ./dist"
   },
   "dependencies": {
-    "@snowind/header": "^0.0.6",
+    "@snowind/header": "^0.0.7",
     "@snowind/input": "^0.0.3",
     "@snowind/sidebar": "^0.0.3",
     "@snowind/state": "^0.0.2",
