@@ -8,7 +8,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/gookit/color"
@@ -20,13 +19,9 @@ import (
 )
 
 func main() {
-	service := rainbow.NewService(provider.AllProvider{}, &dbram.DB{})
+	service := rainbow.NewService(provider.AllProviders(), &dbram.DB{})
 
-	options, err := service.OptionsFromProviders()
-	if err != nil {
-		log.Print("ERROR: ", err)
-		return
-	}
+	options := service.OptionsFromProviders()
 
 	printTable(options)
 }

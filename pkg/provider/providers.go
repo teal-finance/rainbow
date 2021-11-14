@@ -7,42 +7,17 @@
 package provider
 
 import (
-	"fmt"
-
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
 	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-// AllProvider gets data from all providers.
-type AllProvider struct{}
-
-func (p AllProvider) Options() ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
-
-	// psy
-	psy, err := psyoptions.Options()
-	if err != nil {
-		return nil, fmt.Errorf("getting data from psy : %w", err)
+// AllProviders returns all active providers.
+func AllProviders() []rainbow.Provider {
+	return []rainbow.Provider{
+		psyoptions.Provider{},
+		zerox.Provider{},
+		deribit.Provider{},
 	}
-
-	options = append(options, psy...)
-
-	// opyn
-	op, err := zerox.Options()
-	if err != nil {
-		return nil, fmt.Errorf("getting data from opyn : %w", err)
-	}
-
-	options = append(options, op...)
-
-	der, err := deribit.Options()
-	if err != nil {
-		return nil, fmt.Errorf("getting data from deribit : %w", err)
-	}
-
-	options = append(options, der...)
-
-	return options, nil
 }

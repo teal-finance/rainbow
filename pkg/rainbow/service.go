@@ -9,29 +9,32 @@ package rainbow
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 type Provider interface {
+	Name() string
 	Options() ([]Option, error)
 }
 
 type Store interface {
-	InsertOptions(options []Option) error
+	InsertOptions(provider string, options []Option) error
+	GetOptions(provider string) ([]Option, error)
 	GetAllOptions() ([]Option, error)
 }
 
 type Service struct {
-	provider Provider
-	store    Store
-	cache    Cache
+	providers []Provider
+	store     Store
+	cache     Cache
 }
 
-func NewService(p Provider, s Store) Service {
+func NewService(p []Provider, s Store) Service {
 	service := Service{
-		provider: p,
-		store:    s,
-		cache:    Cache{},
+		providers: p,
+		store:     s,
+		cache:     Cache{},
 	}
 
 	service.initCache()
@@ -40,44 +43,66 @@ func NewService(p Provider, s Store) Service {
 }
 
 func (s *Service) initCache() {
-	options, err := s.store.GetAllOptions()
-	if err != nil {
-		log.Print("ERROR store.GetAllOptions ", err)
-	} else {
+	if s.cache.Empty() {
+		options, err := s.store.GetAllOptions()
+		if err != nil {
+			log.Print("ERROR store.GetAllOptions ", err)
+			return
+		}
+
 		s.cache.Refresh(options)
 	}
 }
 
 func (s *Service) Handler() http.Handler {
-	if s.cache.Empty() {
-		s.initCache()
-	}
+	s.initCache()
 
 	h := handler{c: &s.cache}
 
 	return h.router()
 }
 
-// Run periodically gets and stores data from providers.
+// Run periodically fetch data from providers API and stores it in DB.
 func (s *Service) Run() {
 	ticker := time.NewTicker(10 * time.Minute)
+
 	for ; true; <-ticker.C {
-		options, err := s.OptionsFromProviders()
-		if err != nil {
-			log.Print("ERROR options from providers : ", err)
-			continue // do not erase previously valid data (options, expiries, tables)
-		}
-
+		options := s.OptionsFromProviders()
 		s.cache.Refresh(options)
-
-		_ = s.store.InsertOptions(options)
-
-		log.Print("Fetch options=", len(options))
 	}
 }
 
-func (s *Service) OptionsFromProviders() ([]Option, error) {
-	return s.provider.Options()
+func (s *Service) OptionsFromProviders() []Option {
+	var options []Option
+
+	stat := ""
+
+	for _, p := range s.providers {
+		o, err := p.Options()
+		if err != nil {
+			log.Print("WARN fetching data from ", p, " : ", err)
+
+			o, err = s.store.GetOptions(p.Name())
+			if err != nil {
+				log.Print("WARN no data in DB for ", p, " : ", err)
+				continue
+			}
+		}
+
+		err = s.store.InsertOptions(p.Name(), o)
+		if err != nil {
+			log.Print("WARN cannot store data in DB for ", p, " : ", err)
+		}
+
+		stat += " " + p.Name() + "=" + strconv.Itoa(len(o))
+		options = append(options, o...)
+	}
+
+	if stat != "" {
+		log.Print("Fetched" + stat)
+	}
+
+	return options
 }
 
 func (s *Service) Options() ([]Option, error) {
