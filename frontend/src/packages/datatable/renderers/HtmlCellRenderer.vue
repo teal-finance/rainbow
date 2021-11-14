@@ -1,4 +1,6 @@
-<template>{{ v }}</template>
+<template>
+  <div v-html="v"></div>
+</template>
 
 <script lang="ts">
 import { defineComponent } from "vue";

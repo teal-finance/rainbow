@@ -1,12 +1,12 @@
-import { OrderContract } from "./types";
+import { LimitContract } from "./types";
 
-export default class PutOrder {
-  putBidPrice: number;
-  putBidSize: number;
-  putAskPrice: number;
-  putAskSize: number;
+export default class PutLimit {
+  putBidPrice: string;
+  putBidSize: string;
+  putAskPrice: string;
+  putAskSize: string;
 
-  constructor(data: OrderContract) {
+  constructor(data: LimitContract) {
     this.putBidPrice = data.bid.px;
     this.putBidSize = data.bid.size;
     this.putAskPrice = data.ask.px;

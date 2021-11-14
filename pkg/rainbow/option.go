@@ -8,6 +8,7 @@ package rainbow
 
 import (
 	"strconv"
+	"strings"
 )
 
 type Option struct {
@@ -41,12 +42,12 @@ func BestLimitStr(option Option) (bestBidPx, bestBidSz, bestAskPx, bestAskSz str
 	bestBidPx, bestBidSz = none, none
 	bestAskPx, bestAskSz = none, none
 
-	if len(option.Bid) > 0 {
+	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
 		bestBidPx = alignFloatOnDecimalPoint(option.Bid[0].Px)
 		bestBidSz = alignFloatOnDecimalPoint(option.Bid[0].Size)
 	}
 
-	if len(option.Ask) > 0 {
+	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
 		bestAskPx = alignFloatOnDecimalPoint(option.Ask[0].Px)
 		bestAskSz = alignFloatOnDecimalPoint(option.Ask[0].Size)
 	}
@@ -74,8 +75,9 @@ func alignFloatOnDecimalPoint(f float64) string {
 	}
 
 	if i < len(spaces) {
-		return string(append(spaces[:len(spaces)-i-1], b...))
+		s := string(append(spaces[:len(spaces)-i-1], b...))
+		return strings.ReplaceAll(s, " ", "&nbsp;")
 	}
 
-	return string(b)
+	return strings.ReplaceAll(string(b), " ", "&nbsp;")
 }

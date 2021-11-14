@@ -1,32 +1,32 @@
-import CallOrder from "./call_order";
-import PutOrder from "./put_order";
-import { PutOrderType, CallOrderType, ProviderType, OptionContract } from "./types";
+import CallLimit from "./call_order";
+import PutLimit from "./put_order";
+import { CallType, PutType, ProviderType, CallPutContract } from "./types";
 
 export default class Option {
   provider: ProviderType;
   asset: string;
   expiry: Date;
-  put: PutOrderType;
-  call: CallOrderType;
+  call: CallType;
   strike: number;
+  put: PutType;
 
-  constructor(data: OptionContract) {
+  constructor(data: CallPutContract) {
     this.provider = data.provider;
     this.asset = data.asset;
     this.expiry = new Date(data.expiry);
-    this.put = new PutOrder(data.put);
-    this.call = new CallOrder(data.call);
+    this.call = new CallLimit(data.call);
     this.strike = data.strike;
+    this.put = new PutLimit(data.put);
   }
 
   toRow(): Record<string, number | string | Date> {
     return {
       provider: this.provider,
       asset: this.asset,
-      expiry: this.expiry.toLocaleDateString("en-US"),
-      ...this.put,
-      strike: this.strike,
+      expiry: this.expiry.toLocaleDateString(),
       ...this.call,
+      strike: this.strike,
+      ...this.put,
     }
   }
 }

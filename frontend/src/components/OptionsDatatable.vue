@@ -5,6 +5,7 @@
     :extra-header="ExtraHeader"
     :mobile-renderer="MobileRenderer"
     :tablet-renderer="MobileRenderer"
+    :default-renderer="HtmlCellRenderer"
     tablet-breakpoint="xl"
     class="w-full border border-collapse table-auto dark:border-neutral border-light"
     id="rtable"
@@ -15,6 +16,7 @@
 import { defineComponent } from 'vue'
 import SwDatatableModel from '@/packages/datatable/models/datatable'
 import SwDatatable from '@/packages/datatable/SwDatatable.vue'
+import HtmlCellRenderer from '@/packages/datatable/renderers/HtmlCellRenderer.vue';
 import { OptionsTable } from '@/models/options/types';
 import ExtraHeader from './widgets/ExtraHeader.vue';
 import MobileRenderer from './widgets/MobileRenderer.vue';
@@ -34,19 +36,19 @@ export default defineComponent({
     return {
       ExtraHeader,
       MobileRenderer,
+      HtmlCellRenderer,
     }
   },
 })
 </script>
 
 <style lang="sass">
+
 #rtable
   @apply border-none
   tr:nth-child(3)
     th
       @apply bg-rainbow-300 dark:bg-rainbow-700-dark
-    th:nth-child(1), th:nth-child(2)
-      @apply bg-light dark:bg-light-dark
     th:nth-child(4), th:nth-child(5), th:nth-child(9), th:nth-child(10)
       @apply bg-secondary text-secondary-r p-3
     th:nth-child(6), th:nth-child(7), th:nth-child(11), th:nth-child(12)
@@ -55,16 +57,16 @@ export default defineComponent({
     @apply xl:bg-gray-50 xl:dark:bg-gray-700
     td
       @apply px-3 py-1
-    td:nth-child(1), td:nth-child(2), td:nth-child(3),td:nth-child(8)
-      @apply bg-gray-100 dark:bg-gray-700
-    td:nth-child(4), td:nth-child(5), td:nth-child(9), td:nth-child(10)
-      @apply bg-rainbow-300 dark:text-foreground
-    td:nth-child(6), td:nth-child(7), td:nth-child(11), td:nth-child(12)
-      @apply bg-rainbow-400 dark:text-foreground
-    td:nth-child(5), td:nth-child(10)
-      @apply text-success dark:text-success-dark font-bold
-    td:nth-child(6), td:nth-child(11)
-      @apply text-danger dark:text-danger-dark font-bold
-    td:nth-child(8)
-      @apply bg-gray-400 dark:bg-gray-900
+      &#provider, &#asset, &expiry
+        @apply bg-gray-100 dark:bg-gray-700
+      &#callBidSize, &#callBidPrice, &#putBidSize, &#putBidPrice
+        @apply bg-rainbow-300 dark:text-foreground
+      &#callAskSize, &#callAskPrice, &#putAskSize, &#putAskPrice
+        @apply bg-rainbow-400 dark:text-foreground
+      &#callBidPrice, &#putBidPrice
+        @apply text-success dark:text-success-dark font-bold text-right
+      &#callAskPrice, &#putAskPrice
+        @apply text-danger dark:text-danger-dark font-bold text-left
+      &#strike
+        @apply bg-gray-200 dark:bg-gray-900
 </style>

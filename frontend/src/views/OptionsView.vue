@@ -62,20 +62,20 @@ export default defineComponent({
         const opt = new Option(line).toRow();
         options.add(opt)
       }
-      //console.log("OPTIONS", options);
+      console.log("OPTIONS", options);
       const columns = {
         "provider": "Provider",
         "asset": "Asset",
         "expiry": "Expiry",
-        "putBidSize": "Size",
-        "putBidPrice": "Price",
-        "putAskPrice": "Price",
-        "putAskSize": "Size",
-        "strike": "Strike",
         "callBidSize": "Size",
         "callBidPrice": "Price",
         "callAskPrice": "Price",
         "callAskSize": "Size",
+        "strike": "Strike",
+        "putBidSize": "Size",
+        "putBidPrice": "Price",
+        "putAskPrice": "Price",
+        "putAskSize": "Size",
       }
       datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
       //datatable.value.setColumnsFromData();

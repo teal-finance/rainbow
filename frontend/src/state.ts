@@ -4,7 +4,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 import { useBreakpoints, breakpointsTailwind } from '@vueuse/core'
-import User from "./models/user";
+import { User } from "@snowind/state";
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 

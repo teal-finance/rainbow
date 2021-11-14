@@ -18,13 +18,15 @@
       <tr v-for="(row, i) in model.state.rows" :key="i.toString()">
         <td
           v-for="(cell, ii) in Object.keys(model.state.columns)"
-          :key="ii"
           v-if="isDesktop"
+          :key="ii"
+          :id="cell"
           @click="onClick(row, cell)"
         >
           <component
             :key="i.toString() + cell"
             :is="getRenderer(cell)"
+            :id="cell"
             :k="cell"
             :v="row[cell]"
             @update:v="onChange($event, parseInt(i.toString()))"
@@ -94,6 +96,10 @@ export default defineComponent({
     extraHeader: {
       type: Object,
       default: () => null,
+    },
+    defaultRenderer: {
+      type: Object,
+      default: () => null,
     }
   },
   emits: ["onClickCell"],
@@ -104,10 +110,12 @@ export default defineComponent({
       mobileRenderer,
       mobileBreakpoint,
       tabletRenderer,
-      tabletBreakpoint
+      tabletBreakpoint,
+      defaultRenderer,
     } = toRefs(props);
     const isResponsive = ref(mobileRenderer.value !== null || tabletRenderer.value !== null);
-    const { isMobile, isTablet, isDesktop } = useScreenSize(mobileBreakpoint.value, tabletBreakpoint.value)
+    const { isMobile, isTablet, isDesktop } = useScreenSize(mobileBreakpoint.value, tabletBreakpoint.value);
+    const _defaultRenderer = defaultRenderer.value ?? DefaultCellRenderer;
 
     function getRenderer(k: string) {
       if (renderers.value !== undefined) {
@@ -116,7 +124,7 @@ export default defineComponent({
           return renderers.value[k];
         }
       }
-      return DefaultCellRenderer;
+      return _defaultRenderer;
     }
 
     // eslint-disable-next-line
