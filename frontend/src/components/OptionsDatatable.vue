@@ -65,15 +65,15 @@ export default defineComponent({
       &.provider, &.asset, &expiry
         @apply bg-background dark:bg-background-dark
       &.strike
-        @apply bg-background dark:bg-background-dark text-left
+        @apply bg-background dark:bg-background-dark text-right
       &.callBidSize, &.putBidSize, &.callBidPrice, &.putBidPrice
         @apply bg-primary bg-opacity-10 dark:text-primary-r
       &.callAskSize, &.putAskSize, &.callAskPrice, &.putAskPrice
-        @apply bg-primaryTable dark:bg-primaryTable-dark bg-opacity-10 dark:text-primary-r dark:bg-opacity-60
+        @apply bg-primaryTable dark:bg-primaryTable-dark bg-opacity-10 dark:text-primary-r dark:bg-opacity-60 text-right
       &.callBidPrice, &.putBidPrice
-        @apply text-success dark:text-success-dark font-bold text-left
+        @apply text-success dark:text-success-dark font-bold text-right
       &.callAskPrice, &.putAskPrice
-        @apply text-danger dark:text-danger-dark font-bold text-left
+        @apply text-danger dark:text-danger-dark font-bold
     tr
       @apply border-gray-200 border-b dark:border-gray-700
 </style>
