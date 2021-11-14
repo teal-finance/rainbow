@@ -33,7 +33,7 @@ func printTable(options []rainbow.Option) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.SetStyle(table.StyleLight)
-	t.SetTitle(fmt.Sprint("\t\t CeDeFi options: ", len(options)))
+	t.SetTitle(fmt.Sprint(" Available options: ", len(options)))
 
 	t.AppendHeader(table.Row{
 		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", red(" Ask"), "Size", "Instrument",

@@ -1,38 +1,28 @@
 # ![rainbow](doc/rainbow-chancery.png)
 
-![logo](doc/small.png) | Dashboard for DEX/CEX options trading highlighting market opportunities to ease strategies decision. To achieve this goal, Rainbow continuously scans CEX/DEX/DeFi market data. <br><br> This project has been initiated by [Teal.Finance](https://teal.finance/) and has already won two prices during the Ethereum's EthGlobal Hackathon. :trophy:
+![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With Rainbow, users can scan CEX/DEX markets to fetch available options data. <br><br> This project has been initiated by [Teal.Finance](https://teal.finance/)  during the [Ethereum's EthGlobal Hackathon](https://showcase.ethglobal.com/ethonline2021/rainbow) & [Solana's Ignition Hacakthon](https://devpost.com/software/rainbow-ai5p7m).
 ---|---
 
-## Motivation
+## Live Demo
+Rainbow is live at https://teal.finance/rainbow/
+Please gives some feedback via  GitHub issue or contact us at Teal.Finance[at]protonmail.com.
 
-The crypto derivatives markets are expected
-to grow a lot more in the upcoming years.
-Specifically, the options markets will see the bigger growth.
 
-In traditional finance, option market is much bigger
-than the underlying assets market.
-This is lagging in Crypto, when we look at Deribit's volume,
-the main (centralized) venue for Crypto Options,
-compared to Perpetuals future.
-
-**Rainbow** profits from the following trends:
+## Motivations
+**Rainbow** was inspired by the following trends:
 
 * Crypto-assets and DeFi becoming mainstream,
 
-* DeFi composability & complexity abstraction
-  for easy onboarding of users,
+* Advent of the Internet of Blockchains’ world  with more cross-chain applications and communications,
 
-* Advent of the Internet of Blockchains’ world
-  with more cross-chain applications and communications,
+* Crypto options trading growing (hopefully) bigger  than the spot market, like in traditional Finance.
 
-* Crypto options trading growing (hopefully) bigger
-  than the spot market, like in tradFi.
+The crypto derivatives markets are expected to grow a lot more in the upcoming years.
+Specifically, the options markets will see the biggest growth because in Finance, Option market is much bigger
+than the underlying spot market. This is lagging in Crypto, when we look at Deribit's volume, the main (centralized) venue for Crypto Options, compared to Perpetuals future.
 
-## Target
+More info on our motivations: https://cryptonuage.com/posts/internet-of-decentralized-options/
 
-**Rainbow** is a first step in that direction:
-a place where users, traders and market makers can see
-the options, prices, expiries, liquidities across layers L1/L2.
 
 ## Current status
 
@@ -58,9 +48,6 @@ across these markets, or simply get the best prices.
 
 ## In progress
 
-Our target is to be the most helpful possible, thus offering the highest possible user experience.
-
-Please open a GitHub issue or contact us at Teal.Finance@protonmail.com to suggest ideas or to share your feeling.
 
 To improve the decision-making, we are currently implementing more data retrieval and computing indicators to provide:
 
@@ -76,49 +63,7 @@ To improve the decision-making, we are currently implementing more data retrieva
     - sell an option at the highest price
     - arbitrage between two markets (e.g. buy an option at a low price and sell the same size in another market)
 
-We are open to your ideas for a better clear view of the options markets.
 
-The rainbow dashboard will also display some graphs as the aggregated order books,
-and others ones to determine at-the-money option depending on spot price,
-to highlight volatilities according to strikes above/below the spot price,
-and to compare mark IV and delta buckets (smallest .10 increment).
-
-We are also designing the sending of real-time buy/sell signals (e.g. mobile notifications).
-
-To go further, we want to decrease the latency between to decision and the market transaction.
-
-Please contact us to encourage us or for any other help. :-)
-You may want machine learning prediction, customized Buy/Sell buttons or sending your orders directly... we need your feedback. ;-)
-
-## Technology
-
-The back-end is developed in Go.
-
-Deribit API is well documented, and the data retrieval
-was pretty straightforward to implement.
-Deribit even have an API playground, which all projects should also provide.
-
-To support Opyn, Rainbow retrieves the options list using the TheGraph API.
-This is our first GraphQL client implementation in Go.
-We spent two days to compare and test the different solutions.
-We are proud to have found the GraphQL state-of-the-art in Go,
-based on the library <https://github.com/Khan/genqlient>
-with type-safe code generation.
-We also got help from the Opyn team for the query examples.
-
-Opyn support also requires to use the 0x protocol.
-We have battled to correctly get the bid/ask prices from 0x API.
-We got some help from the 0x team to identify which API call was the most suitable.
-This help advances our work a lot and enables us to add,
-in a near future, other protocols like Thales.
-
-To support PsyOptions, we took our first plunge
-in the Solana ecosystem to understand and use the Serum Go library.
-
-See also the Go documentation: <https://pkg.go.dev/github.com/teal-finance/rainbow>
-
-Next step is to implement on a proper UI that enables users to trade,
-based on Typescript/Vue3.
 
 ## Requirements
 
@@ -266,8 +211,6 @@ List the options in Call/Put format: <http://localhost:8090/v0/options/cp>
 Rainbow API is currently only used by its web front-end and has been influenced by
 the [BFF pattern](https://blog.bitsrc.io/e4fa965128bf) (Backend for Frontend pattern).
 This endpoints aims simplifying the front-end processing.
-
-![Idea of table to display on the web front-end](doc/frontend-table.png)
 
 ```js
 { "rows":[
