@@ -108,6 +108,8 @@ func buildCallPut(options []Option) CallPut {
 	rows := make([]Row, 0, len(options)/2)
 
 	for asset, optionsSameAsset := range groupByAsset(options) {
+		asset = cleanAsset(asset)
+
 		for expiry, optionsSameExpiry := range groupByExpiry(optionsSameAsset) {
 			for strike, optionsSameStrike := range groupByStrike(optionsSameExpiry) {
 				for provider, optionsSameProvider := range groupByProvider(optionsSameStrike) {
