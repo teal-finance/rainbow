@@ -69,11 +69,11 @@ export default defineComponent({
       &.callBidSize, &.putBidSize, &.callBidPrice, &.putBidPrice
         @apply bg-primary bg-opacity-10 dark:text-primary-r
       &.callAskSize, &.putAskSize, &.callAskPrice, &.putAskPrice
-        @apply bg-primaryTable dark:bg-primaryTable-dark bg-opacity-10 dark:text-primary-r dark:bg-opacity-60 text-right
+        @apply bg-primaryTable dark:bg-primaryTable-dark bg-opacity-10 dark:text-primary-r dark:bg-opacity-60
       &.callBidPrice, &.putBidPrice
         @apply text-success dark:text-success-dark font-bold text-right
       &.callAskPrice, &.putAskPrice
-        @apply text-danger dark:text-danger-dark font-bold
+        @apply text-danger dark:text-danger-dark font-bold text-right
     tr
       @apply border-gray-200 border-b dark:border-gray-700
 </style>
