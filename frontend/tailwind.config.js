@@ -79,6 +79,19 @@ module.exports = {
           DEFAULT: "#FFFFFF",
           dark: "#FFFFFF",
         },
+        'foreground': {
+          DEFAULT: colors.gray[600],
+          dark: colors.white
+        },
+        'primaryTable': {
+          DEFAULT: '#2A8598',
+          dark: '#172437',
+        },
+        'secondaryTable': {
+          DEFAULT: '#45DDFA',
+          dark: '#172437',
+        },
+
       }
     },
   },
