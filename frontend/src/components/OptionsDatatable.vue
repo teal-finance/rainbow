@@ -46,27 +46,34 @@ export default defineComponent({
 
 #rtable
   @apply border-none
+  tr:nth-child(2)
+    th:nth-child(2), th:nth-child(5)
+      @apply bg-primary dark:bg-primaryTable text-primary-r p-3 rounded-tl-lg
+    th:nth-child(3), th:nth-child(6)
+      @apply dark:bg-primaryTable-dark text-primary-r p-3 rounded-tr-lg
   tr:nth-child(3)
     th
-      @apply bg-rainbow-300 dark:bg-rainbow-700-dark
+      @apply bg-primaryTable dark:bg-primaryTable-dark text-primary-r
     th:nth-child(4), th:nth-child(5), th:nth-child(9), th:nth-child(10)
-      @apply bg-secondary text-secondary-r p-3
+      @apply bg-primary bg-opacity-10 text-primary-dark p-3 dark:text-primary-r
     th:nth-child(6), th:nth-child(7), th:nth-child(11), th:nth-child(12)
-      @apply bg-rainbow-800 text-secondary-r
+      @apply bg-primaryTable dark:bg-primaryTable-dark dark:bg-opacity-60 bg-opacity-10 text-primary-dark dark:text-primary-r
   tbody
-    @apply xl:bg-gray-50 xl:dark:bg-gray-700
+    @apply xl:bg-background xl:dark:bg-background-dark
     td
       @apply px-3 py-1
-      &#provider, &#asset, &expiry
-        @apply bg-gray-100 dark:bg-gray-700
-      &#strike
-        @apply bg-gray-200 dark:bg-gray-900 text-right
-      &#callBidSize, &#putBidSize, &#callBidPrice, &#putBidPrice
-        @apply bg-rainbow-400 dark:text-foreground
-      &#callAskSize, &#putAskSize, &#callAskPrice, &#putAskPrice
-        @apply bg-rainbow-300 dark:text-foreground
-      &#callBidPrice, &#putBidPrice
+      &.provider, &.asset, &expiry
+        @apply bg-background dark:bg-background-dark
+      &.strike
+        @apply bg-background dark:bg-background-dark text-right
+      &.callBidSize, &.putBidSize, &.callBidPrice, &.putBidPrice
+        @apply bg-primary bg-opacity-10 dark:text-primary-r
+      &.callAskSize, &.putAskSize, &.callAskPrice, &.putAskPrice
+        @apply bg-primaryTable dark:bg-primaryTable-dark bg-opacity-10 dark:text-primary-r dark:bg-opacity-60
+      &.callBidPrice, &.putBidPrice
         @apply text-success dark:text-success-dark font-bold text-right
-      &#callAskPrice, &#putAskPrice
+      &.callAskPrice, &.putAskPrice
         @apply text-danger dark:text-danger-dark font-bold text-right
+    tr
+      @apply border-gray-200 border-b dark:border-gray-700
 </style>

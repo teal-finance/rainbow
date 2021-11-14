@@ -20,13 +20,13 @@
           v-for="(cell, ii) in Object.keys(model.state.columns)"
           v-if="isDesktop"
           :key="ii"
-          :id="cell"
+          :class="cell"
           @click="onClick(row, cell)"
         >
           <component
             :key="i.toString() + cell"
             :is="getRenderer(cell)"
-            :id="cell"
+            :class="cell"
             :k="cell"
             :v="row[cell]"
             @update:v="onChange($event, parseInt(i.toString()))"
