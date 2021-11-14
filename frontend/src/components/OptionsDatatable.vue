@@ -59,14 +59,14 @@ export default defineComponent({
       @apply px-3 py-1
       &#provider, &#asset, &expiry
         @apply bg-gray-100 dark:bg-gray-700
-      &#callBidSize, &#callBidPrice, &#putBidSize, &#putBidPrice
-        @apply bg-rainbow-300 dark:text-foreground
-      &#callAskSize, &#callAskPrice, &#putAskSize, &#putAskPrice
-        @apply bg-rainbow-400 dark:text-foreground
-      &#callBidPrice, &#putBidPrice
-        @apply text-success dark:text-success-dark font-bold text-right
-      &#callAskPrice, &#putAskPrice
-        @apply text-danger dark:text-danger-dark font-bold text-left
       &#strike
         @apply bg-gray-200 dark:bg-gray-900
+      &#callBidSize, &#putBidSize, &#callBidPrice, &#putBidPrice
+        @apply bg-rainbow-400 dark:text-foreground
+      &#callAskSize, &#putAskSize, &#callAskPrice, &#putAskPrice
+        @apply bg-rainbow-300 dark:text-foreground
+      &#callBidPrice, &#putBidPrice
+        @apply text-success dark:text-success-dark font-bold text-left
+      &#callAskPrice, &#putAskPrice
+        @apply text-danger dark:text-danger-dark font-bold text-left
 </style>
