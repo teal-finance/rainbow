@@ -35,10 +35,10 @@ func main() {
 		Version:        "Rainbow-v0",
 		ResErr:         "https:teal.finance/rainbow/doc",
 		AllowedOrigins: []string{*mainAddr},
-		OPAFilenames:   opaFilenames,
+		OPAFilenames:   nil,
 	}
 
-	middlewares, connState, err := g.Setup(0, *expPort, *maxReqBurst, *maxReqPerMinute, *dev)
+	middlewares, connState, err := g.Setup(0, *expPort, *reqBurst, *reqPerMinute, *dev)
 	if err != nil {
 		log.Fatal(err)
 	}

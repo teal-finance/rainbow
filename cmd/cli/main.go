@@ -36,9 +36,7 @@ func printTable(options []rainbow.Option) {
 	t.SetTitle(fmt.Sprint("\t\t CeDeFi options: ", len(options)))
 
 	t.AppendHeader(table.Row{
-		"Provider", "Asset", "Type",
-		"Bid size", "Bid px", "Strike",
-		"Ask px", "Ask size", "Instrument",
+		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", red(" Ask"), "Size", "Instrument",
 	})
 
 	for _, option := range options {

@@ -31,7 +31,7 @@ func (c Cache) Empty() bool {
 func (c *Cache) Refresh(options []Option) {
 	c.initialized = true
 	c.options = options
-	c.callPut = buildCPFormat(options)
+	c.callPut = buildCallPut(options)
 }
 
 func (c *Cache) Options() ([]Option, error) {

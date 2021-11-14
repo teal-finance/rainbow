@@ -11,45 +11,37 @@ import (
 	"log"
 	"os"
 	"strconv"
-
-	"github.com/teal-finance/garcon"
 )
 
 var (
-	dev             = flag.Bool("dev", false, "Run rainbow in dev. mode")
-	mainAddr        = flag.String("addr", envStr("MAIN_ADDR", "http://localhost"), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
-	mainPort        = flag.Int("port", envInt("MAIN_PORT", 8090), "API port, has precedence over MAIN_PORT")
-	expPort         = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
-	maxReqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 30), "Max requests per minute, has precedence over REQ_PER_MINUTE")
-	maxReqBurst     = flag.Int("burst", envInt("REQ_BURST", 10), "Max requests during a burst, has precedence over REQ_BURST")
-	wwwDir          = flag.String("www", envStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
-	opaFlag         = flag.String("opa", envStr("OPA_FILES", ""), "Datalog/Rego files for the Open Policy Agent, has precedence over OPA_FILES")
-	opaFilenames    []string
-	listenAddr      string
+	dev          = flag.Bool("dev", false, "Run rainbow in dev. mode")
+	mainAddr     = flag.String("addr", envStr("MAIN_ADDR", "http://localhost"), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
+	mainPort     = flag.Int("port", envInt("MAIN_PORT", 8090), "API port, has precedence over MAIN_PORT")
+	expPort      = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
+	reqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 88), "Max requests per minute, has precedence over REQ_PER_MINUTE")
+	reqBurst     = flag.Int("burst", envInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
+	wwwDir       = flag.String("www", envStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
+	listenAddr   string
 )
 
 func parseFlags() {
 	flag.Parse()
 
-	if *opaFlag != "" {
-		opaFilenames = garcon.SplitClean(*opaFlag)
-	}
-
 	listenAddr = ":" + strconv.Itoa(*mainPort)
 
 	if !*dev && *mainAddr == "http://localhost" && *mainPort == 8090 {
-		log.Print("Enable -dev mode because -addr and -port are not used")
 		*dev = true
+
+		log.Print("Enable -dev mode because -addr and -port are not used")
 	}
 
 	log.Print("Dev. mode      -dev   = ", *dev)
 	log.Print("MAIN_ADDR      -addr  = ", *mainAddr)
 	log.Print("MAIN_PORT      -port  = ", *mainPort)
 	log.Print("EXP_PORT       -exp   = ", *expPort)
-	log.Print("REQ_PER_MINUTE -rate  = ", *maxReqPerMinute)
-	log.Print("REQ_BURST      -burst = ", *maxReqBurst)
+	log.Print("REQ_PER_MINUTE -rate  = ", *reqPerMinute)
+	log.Print("REQ_BURST      -burst = ", *reqBurst)
 	log.Print("WWW_DIR        -www   = ", *wwwDir)
-	log.Printf("Policy files   -opa   = #%v %q", len(opaFilenames), opaFilenames)
 }
 
 func envStr(varName, defaultValue string) string {

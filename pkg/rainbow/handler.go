@@ -23,7 +23,7 @@ func (h *handler) router() http.Handler {
 
 	r.Route("/", func(r chi.Router) {
 		r.Get("/options", h.getOptions)
-		r.Get("/options/cp", h.getCPFormat)
+		r.Get("/options/cp", h.getCallPut)
 	})
 
 	return r
@@ -48,10 +48,10 @@ func (h handler) getOptions(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h handler) getCPFormat(w http.ResponseWriter, r *http.Request) {
+func (h handler) getCallPut(w http.ResponseWriter, r *http.Request) {
 	cp, err := h.c.CallPut()
 	if err != nil {
-		log.Print("ERROR getCPFormat ", err)
+		log.Print("ERROR getCallPut ", err)
 		http.Error(w, "No Content", http.StatusNoContent)
 
 		return
@@ -60,7 +60,7 @@ func (h handler) getCPFormat(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewEncoder(w).Encode(cp); err != nil {
-		log.Print("ERROR getCPFormat ", err)
+		log.Print("ERROR getCallPut ", err)
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 
 		return
@@ -76,41 +76,43 @@ type Row struct {
 	Expiry   string `json:"expiry"`
 	Provider string `json:"provider"`
 
-	Call OptionIndicators `json:"call"`
+	Call Limit `json:"call"`
 
 	Strike float64 `json:"strike"`
 
-	Put OptionIndicators `json:"put"`
+	Put Limit `json:"put"`
 }
 
-type OptionIndicators struct {
+type Limit struct {
 	Bid Order `json:"bid"`
 	Ask Order `json:"ask"`
 }
 
-func buildCPFormat(options []Option) CallPut {
+func buildCallPut(options []Option) CallPut {
 	rows := make([]Row, 0, len(options)/2)
 
 	for asset, optionsSameAsset := range groupByAsset(options) {
 		for expiry, optionsSameExpiry := range groupByExpiry(optionsSameAsset) {
 			for strike, optionsSameStrike := range groupByStrike(optionsSameExpiry) {
 				for provider, optionsSameProvider := range groupByProvider(optionsSameStrike) {
-					r := Row{
-						Asset:    asset,
-						Expiry:   expiry,
-						Provider: provider,
-						Strike:   strike,
-					}
+					var put, call Limit
 
 					for _, o := range optionsSameProvider {
 						if o.Type == "PUT" {
-							r.Put = newOptionIndicators(o)
+							put = newOptionIndicators(o)
 						} else {
-							r.Call = newOptionIndicators(o)
+							call = newOptionIndicators(o)
 						}
 					}
 
-					rows = append(rows, r)
+					rows = append(rows, Row{
+						Asset:    asset,
+						Expiry:   expiry,
+						Provider: provider,
+						Call:     call,
+						Strike:   strike,
+						Put:      put,
+					})
 				}
 			}
 		}
@@ -179,8 +181,8 @@ func groupByProvider(options []Option) (providerToOptions map[string][]Option) {
 	return providerToOptions
 }
 
-func newOptionIndicators(o Option) OptionIndicators {
-	oi := OptionIndicators{
+func newOptionIndicators(o Option) Limit {
+	oi := Limit{
 		Bid: Order{Px: 0, Size: 0},
 		Ask: Order{Px: 0, Size: 0},
 	}
