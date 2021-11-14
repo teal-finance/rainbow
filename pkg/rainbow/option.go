@@ -38,46 +38,76 @@ type Order struct {
 	Size float64 `json:"size"`
 }
 
-func BestLimitStr(option Option) (bestBidPx, bestBidSz, bestAskPx, bestAskSz string) {
-	bestBidPx, bestBidSz = none, none
-	bestAskPx, bestAskSz = none, none
-
+func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
-		bestBidPx = alignFloatOnDecimalPoint(option.Bid[0].Px)
-		bestBidSz = alignFloatOnDecimalPoint(option.Bid[0].Size)
+		bidPx = alignFloatOnDecimalPointHTML(option.Bid[0].Px)
+		bidSz = alignFloatOnDecimalPointHTML(option.Bid[0].Size)
+	} else {
+		bidPx, bidSz = dashHTML, dashHTML
 	}
 
 	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
-		bestAskPx = alignFloatOnDecimalPoint(option.Ask[0].Px)
-		bestAskSz = alignFloatOnDecimalPoint(option.Ask[0].Size)
+		askPx = alignFloatOnDecimalPointHTML(option.Ask[0].Px)
+		askSz = alignFloatOnDecimalPointHTML(option.Ask[0].Size)
+	} else {
+		askPx, askSz = dashHTML, dashHTML
 	}
 
-	return
+	return bidPx, bidSz, askPx, askSz
 }
 
-// none must contain the same number of runes as len(spaces)-1.
-const none = "   —"
+func BestLimitStr(option Option) (bidPx, bidSz, askPx, askSz string) {
+	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
+		bidPx = alignFloatOnDecimalPointStr(option.Bid[0].Px)
+		bidSz = alignFloatOnDecimalPointStr(option.Bid[0].Size)
+	} else {
+		bidPx, bidSz = dash, dash
+	}
+
+	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
+		askPx = alignFloatOnDecimalPointStr(option.Ask[0].Px)
+		askSz = alignFloatOnDecimalPointStr(option.Ask[0].Size)
+	} else {
+		askPx, askSz = dash, dash
+	}
+
+	return bidPx, bidSz, askPx, askSz
+}
+
+// dashHTML visual width must same the number of digits defined by len(spaces)-1.
+const dashHTML = "&numsp;&numsp;&mdash;"
+
+// dash must contain the same number of runes as len(spaces)-1.
+const dash = "   —"
 
 // these two variables avoid unnecessary allocation by alignFloatOnDecimalPoint().
 var (
 	spaces = [5]byte{32, 32, 32, 32, 32} // len(spaces) must be the max digits wanted before the decimal point
-	b      = make([]byte, 0, 10)
+	buffer = make([]byte, 0, 10)
 )
 
-func alignFloatOnDecimalPoint(f float64) string {
-	b = strconv.AppendFloat(b[:0], f, 'f', -1, 64)
+func alignFloatOnDecimalPointStr(f float64) string {
+	return string(alignFloatOnDecimalPoint(f))
+}
 
-	var i int // position of the '.' (else i=len(b) if not found)
-	for i = 1; i < len(b); i++ {
-		if b[i] == '.' {
+func alignFloatOnDecimalPointHTML(f float64) string {
+	s := string(alignFloatOnDecimalPoint(f))
+	return strings.ReplaceAll(s, " ", "&numsp;")
+}
+
+func alignFloatOnDecimalPoint(f float64) []byte {
+	buffer = strconv.AppendFloat(buffer[:0], f, 'f', -1, 64)
+
+	var i int // position of the '.' (if no '.' => i = len(b))
+	for i = 1; i < len(buffer); i++ {
+		if buffer[i] == '.' {
 			break
 		}
 	}
 
-	if i < len(spaces) {
-		s := string(append(spaces[:len(spaces)-i-1], b...))
-		return strings.ReplaceAll(s, " ", "&nbsp;")
+	if i >= len(spaces) {
+		return buffer
 	}
 
-	return strings.ReplaceAll(string(b), " ", "&nbsp;")
+	return append(spaces[:len(spaces)-i-1], buffer...)
 }

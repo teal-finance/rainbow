@@ -90,8 +90,8 @@ type Limit struct {
 
 func NoneLimit() Limit {
 	return Limit{
-		Bid: StrOrder{Px: none, Size: none},
-		Ask: StrOrder{Px: none, Size: none},
+		Bid: StrOrder{Px: dashHTML, Size: dashHTML},
+		Ask: StrOrder{Px: dashHTML, Size: dashHTML},
 	}
 }
 
@@ -202,7 +202,7 @@ func groupByProvider(options []Option) (providerToOptions map[string][]Option) {
 }
 
 func newOptionIndicators(o Option) Limit {
-	bPx, bSz, aPx, aSz := BestLimitStr(o)
+	bPx, bSz, aPx, aSz := BestLimitHTML(o)
 
 	return Limit{
 		Bid: StrOrder{Px: bPx, Size: bSz},
