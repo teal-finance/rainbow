@@ -62,17 +62,23 @@ export default defineComponent({
     @apply xl:bg-background xl:dark:bg-background-dark
     td
       @apply px-3 py-1
-      &#provider, &#asset, &expiry
+      &.provider, &.asset, &expiry
         @apply bg-background dark:bg-background-dark
-      &#strike
+      &.strike
         @apply bg-background dark:bg-background-dark text-left
-      &#callBidSize, &#putBidSize, &#callBidPrice, &#putBidPrice
+      &.callBidSize, &.putBidSize, &.callBidPrice, &.putBidPrice
         @apply bg-primary bg-opacity-10 dark:text-primary-r
-      &#callAskSize, &#putAskSize, &#callAskPrice, &#putAskPrice
+      &.callAskSize, &.putAskSize, &.callAskPrice, &.putAskPrice
         @apply bg-primaryTable dark:bg-primaryTable-dark bg-opacity-10 dark:text-primary-r dark:bg-opacity-60
+<<<<<<< HEAD
       &#callBidPrice, &#putBidPrice
         @apply text-success dark:text-success-dark font-bold text-right
       &#callAskPrice, &#putAskPrice
+=======
+      &.callBidPrice, &.putBidPrice
+        @apply text-success dark:text-success-dark font-bold text-left
+      &.callAskPrice, &.putAskPrice
+>>>>>>> change id to class
         @apply text-danger dark:text-danger-dark font-bold text-left
     tr
       @apply border-gray-200 border-b dark:border-gray-700
