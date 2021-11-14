@@ -45,4 +45,6 @@ export default defineConfig({
       { find: '@/', replacement: '/src/' }
     ]
   },
+
+  base: process.env.NODE_ENV === 'production' ? '/rainbow/' : './',
 })
