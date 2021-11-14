@@ -66,7 +66,7 @@ export default defineComponent({
       &#callAskSize, &#putAskSize, &#callAskPrice, &#putAskPrice
         @apply bg-rainbow-300 dark:text-foreground
       &#callBidPrice, &#putBidPrice
-        @apply text-success dark:text-success-dark font-bold text-left
+        @apply text-success dark:text-success-dark font-bold text-right
       &#callAskPrice, &#putAskPrice
-        @apply text-danger dark:text-danger-dark font-bold text-left
+        @apply text-danger dark:text-danger-dark font-bold text-right
 </style>

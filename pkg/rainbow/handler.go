@@ -87,8 +87,8 @@ type Limit struct {
 
 func NoneLimit() Limit {
 	return Limit{
-		Bid: StrOrder{Px: dashHTML, Size: dashHTML},
-		Ask: StrOrder{Px: dashHTML, Size: dashHTML},
+		Bid: StrOrder{Px: dashRightAlignHTML, Size: dashLeftAlignHTML},
+		Ask: StrOrder{Px: dashRightAlignHTML, Size: dashLeftAlignHTML},
 	}
 }
 

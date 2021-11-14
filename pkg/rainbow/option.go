@@ -11,6 +11,25 @@ import (
 	"strings"
 )
 
+// digitsInfractionalPart is the number of digits to keep in the fractional part.
+const digitsInfractionalPart = 2
+
+// dashRightAlignHTML must show the dash with the number of trailing digits defined by digitsInfractionalPart.
+const dashRightAlignHTML = "&mdash;&numsp;&numsp;"
+
+// dashLeftAlignHTML visual width must be same as the the number of digits defined by len(spaces)-1.
+const dashLeftAlignHTML = "&numsp;&numsp;&mdash;"
+
+// dashLeftAlign must contain the same number of runes as len(spaces)-1.
+const dashLeftAlign = "   —"
+
+// these two variables avoid unnecessary allocation by alignFloatOnDecimalPoint().
+var (
+	dotZrs = []byte{byte('.'), byte('0'), byte('0')} // len(dotZrs) must be 1+digitsInfractionalPart
+	spaces = [5]byte{32, 32, 32, 32, 32}             // len(spaces) must be the max digits wanted before the decimal point
+	buffer = make([]byte, 0, 20)
+)
+
 type Option struct {
 	Name          string  `json:"name"`     // ASSET-DATE-Strike-OptionsType
 	Type          string  `json:"type"`     // CALL / PUT
@@ -40,17 +59,17 @@ type Order struct {
 
 func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
-		bidPx = alignFloatOnDecimalPointHTML(option.Bid[0].Px)
-		bidSz = alignFloatOnDecimalPointHTML(option.Bid[0].Size)
+		bidPx = rightAlignFloatOnDecimalPointHTML(option.Bid[0].Px)
+		bidSz = leftAlignFloatOnDecimalPointHTML(option.Bid[0].Size)
 	} else {
-		bidPx, bidSz = dashHTML, dashHTML
+		bidPx, bidSz = dashRightAlignHTML, dashLeftAlignHTML
 	}
 
 	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
-		askPx = alignFloatOnDecimalPointHTML(option.Ask[0].Px)
-		askSz = alignFloatOnDecimalPointHTML(option.Ask[0].Size)
+		askPx = rightAlignFloatOnDecimalPointHTML(option.Ask[0].Px)
+		askSz = leftAlignFloatOnDecimalPointHTML(option.Ask[0].Size)
 	} else {
-		askPx, askSz = dashHTML, dashHTML
+		askPx, askSz = dashRightAlignHTML, dashLeftAlignHTML
 	}
 
 	return bidPx, bidSz, askPx, askSz
@@ -58,44 +77,36 @@ func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
 
 func BestLimitStr(option Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
-		bidPx = alignFloatOnDecimalPointStr(option.Bid[0].Px)
-		bidSz = alignFloatOnDecimalPointStr(option.Bid[0].Size)
+		bidPx = leftAlignFloatOnDecimalPointStr(option.Bid[0].Px)
+		bidSz = leftAlignFloatOnDecimalPointStr(option.Bid[0].Size)
 	} else {
-		bidPx, bidSz = dash, dash
+		bidPx, bidSz = dashLeftAlign, dashLeftAlign
 	}
 
 	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
-		askPx = alignFloatOnDecimalPointStr(option.Ask[0].Px)
-		askSz = alignFloatOnDecimalPointStr(option.Ask[0].Size)
+		askPx = leftAlignFloatOnDecimalPointStr(option.Ask[0].Px)
+		askSz = leftAlignFloatOnDecimalPointStr(option.Ask[0].Size)
 	} else {
-		askPx, askSz = dash, dash
+		askPx, askSz = dashLeftAlign, dashLeftAlign
 	}
 
 	return bidPx, bidSz, askPx, askSz
 }
 
-// dashHTML visual width must same the number of digits defined by len(spaces)-1.
-const dashHTML = "&numsp;&numsp;&mdash;"
-
-// dash must contain the same number of runes as len(spaces)-1.
-const dash = "   —"
-
-// these two variables avoid unnecessary allocation by alignFloatOnDecimalPoint().
-var (
-	spaces = [5]byte{32, 32, 32, 32, 32} // len(spaces) must be the max digits wanted before the decimal point
-	buffer = make([]byte, 0, 10)
-)
-
-func alignFloatOnDecimalPointStr(f float64) string {
-	return string(alignFloatOnDecimalPoint(f))
+func leftAlignFloatOnDecimalPointStr(f float64) string {
+	return string(leftAlignFloatOnDecimalPoint(f))
 }
 
-func alignFloatOnDecimalPointHTML(f float64) string {
-	s := string(alignFloatOnDecimalPoint(f))
+func leftAlignFloatOnDecimalPointHTML(f float64) string {
+	s := string(leftAlignFloatOnDecimalPoint(f))
 	return strings.ReplaceAll(s, " ", "&numsp;")
 }
 
-func alignFloatOnDecimalPoint(f float64) []byte {
+func rightAlignFloatOnDecimalPointHTML(f float64) string {
+	return string(rightAlign(f))
+}
+
+func leftAlignFloatOnDecimalPoint(f float64) []byte {
 	buffer = strconv.AppendFloat(buffer[:0], f, 'f', -1, 64)
 
 	var i int // position of the '.' (if no '.' => i = len(b))
@@ -110,4 +121,24 @@ func alignFloatOnDecimalPoint(f float64) []byte {
 	}
 
 	return append(spaces[:len(spaces)-i-1], buffer...)
+}
+
+func rightAlign(f float64) []byte {
+	buffer = strconv.AppendFloat(buffer[:0], f, 'f', -1, 64)
+
+	var i int // position of the '.'
+	for i = 1; i < len(buffer); i++ {
+		if buffer[i] == '.' {
+			end := i + 1 + digitsInfractionalPart
+
+			if end > len(buffer) {
+				return append(buffer, byte('0'))
+			}
+
+			return buffer[:end]
+		}
+	}
+
+	// missing dot
+	return append(buffer, dotZrs...)
 }
