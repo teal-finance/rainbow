@@ -84,7 +84,7 @@ func rightAlignFloatOnDecimalPointHTML(f float64) string {
 }
 
 func leftAlignFloatOnDecimalPoint(f float64) []byte {
-	buffer = strconv.AppendFloat(buffer[:0], f, 'f', -1, 64)
+	buffer = strconv.AppendFloat(buffer[:0], f, 'f', 2, 64)
 
 	var i int // position of the '.' (if no '.' => i = len(b))
 	for i = 1; i < len(buffer); i++ {
