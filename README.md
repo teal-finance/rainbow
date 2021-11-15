@@ -26,43 +26,13 @@ More info on our motivations: https://cryptonuage.com/posts/internet-of-decentra
 
 ## Current status
 
-The current version is a tool to compare market data
-across multiple venues, CEX and DEX.
+Supported Options exchanges:
 
-Deribit is supported since the beginning, because Deribit
-is the main options trading place.
+* Deribit: Centralized exchange. Main venue for crypto Options trading.
 
-Opyn is also supported, because we are active users of this protocol.
-Opyn use the 0x Protocol for the exchange of their options.
-Rainbow uses both Opyn and 0x APIs to retrieve their trading data.
-TheGraph is also used to list the available options from Opyn.
+* Opyn(Ethereum):  DeFi protocol using TheGraph & 0x.
 
-Most recently, PsyOptions (from the Solana ecosystem) has also been integrated.
-PsyOptions is the main DeFi options protocol.
-
-More Ethereum and Solana protocols are planed to also be supported
-in the near future: Thales, Lyra, Hegic...
-
-Now, using Rainbow, you can compare to arbitrage options
-across these markets, or simply get the best prices.
-
-## In progress
-
-
-To improve the decision-making, we are currently implementing more data retrieval and computing indicators to provide:
-
-- fine asset information
-- easy browsing and comparison within the expiration dates
-- grouping by same strike
-- filtering and aggregate data across markets and providers
-- computing of indicators based on bid/ask orders
-- Mark IV (quoted bid and ask volatilities)
-- the [Greeks](https://en.wikipedia.org/wiki/Greeks_(finance))
-- strategy outcome:
-    - buy an option at the lowest price
-    - sell an option at the highest price
-    - arbitrage between two markets (e.g. buy an option at a low price and sell the same size in another market)
-
+* PsyOptions(Solana): DeFi protocol build on Serum order books.
 
 
 ## Requirements
