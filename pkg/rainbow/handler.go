@@ -73,6 +73,7 @@ type CallPut struct {
 
 type Row struct {
 	Asset    string  `json:"asset"`
+	Date     string  `json:"date"`
 	Expiry   string  `json:"expiry"`
 	Provider string  `json:"provider"`
 	Call     Limit   `json:"call"`
@@ -110,7 +111,9 @@ func buildCallPut(options []Option) CallPut {
 	for asset, optionsSameAsset := range groupByAsset(options) {
 		asset = cleanAsset(asset)
 
-		for expiry, optionsSameExpiry := range groupByExpiry(optionsSameAsset) {
+		for date, optionsSameExpiry := range groupByExpiry(optionsSameAsset) {
+			expiry := prettyDate(date)
+
 			for strike, optionsSameStrike := range groupByStrike(optionsSameExpiry) {
 				for provider, optionsSameProvider := range groupByProvider(optionsSameStrike) {
 					call := NoneLimit()
@@ -126,6 +129,7 @@ func buildCallPut(options []Option) CallPut {
 
 					rows = append(rows, Row{
 						Asset:    asset,
+						Date:     date,
 						Expiry:   expiry,
 						Provider: provider,
 						Call:     call,

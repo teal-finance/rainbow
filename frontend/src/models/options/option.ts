@@ -5,7 +5,8 @@ import { CallType, PutType, ProviderType, CallPutContract } from "./types";
 export default class Option {
   provider: ProviderType;
   asset: string;
-  expiry: Date;
+  date: Date;
+  expiry: string;
   call: CallType;
   strike: number;
   put: PutType;
@@ -13,7 +14,8 @@ export default class Option {
   constructor(data: CallPutContract) {
     this.provider = data.provider;
     this.asset = data.asset;
-    this.expiry = new Date(data.expiry);
+    this.date = new Date(data.date);
+    this.expiry = data.expiry;
     this.call = new CallLimit(data.call);
     this.strike = data.strike;
     this.put = new PutLimit(data.put);
@@ -23,7 +25,8 @@ export default class Option {
     return {
       provider: this.provider,
       asset: this.asset,
-      expiry: this.expiry.toLocaleDateString(),
+      date: this.date.toLocaleDateString(),
+      expiry: this.expiry,
       ...this.call,
       strike: this.strike,
       ...this.put,
