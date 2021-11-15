@@ -71,9 +71,9 @@ export default defineComponent({
       &.callAskSize, &.putAskSize, &.callAskPrice, &.putAskPrice
         @apply bg-primaryTable dark:bg-primaryTable-dark bg-opacity-10 dark:text-primary-r dark:bg-opacity-60
       &.callBidPrice, &.putBidPrice
-        @apply text-success dark:text-success-dark font-bold text-right
+        @apply text-success dark:text-success-dark text-right
       &.callAskPrice, &.putAskPrice
-        @apply text-danger dark:text-danger-dark font-bold text-right
+        @apply text-danger dark:text-danger-dark text-right
     tr
       @apply border-gray-200 border-b dark:border-gray-700
 </style>
