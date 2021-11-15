@@ -12,8 +12,11 @@ import (
 )
 
 const (
-	// digitsInfractionalPart is the number of digits to keep in the fractional part.
-	digitsInfractionalPart = 2
+	// digitsInFractionalPart is the number of digits to keep in the fractional part.
+	digitsInFractionalPart = 2
+
+	//  boldEndLen = len("</b>")
+	boldEndLen = 4
 
 	// dashRightAlignHTML must show the dash with the number of trailing digits defined by digitsInfractionalPart.
 	dashRightAlignHTML = "&mdash;&numsp;&numsp;"
@@ -27,11 +30,14 @@ const (
 
 // these two variables avoid unnecessary allocation by alignFloatOnDecimalPoint().
 var (
-	dotZrs = []byte{byte('.'), byte('0'), byte('0')} // len(dotZrs) must be 1+digitsInfractionalPart
-	thinSp = []byte{byte('&'), byte('t'), byte('h'), byte('i'), byte('n'), byte('s'), byte('p'), byte(';')}
-	nonBSp = []byte{byte('&'), byte('n'), byte('b'), byte('s'), byte('p'), byte(';')}
-	spaces = [5]byte{32, 32, 32, 32, 32} // len(spaces) must be the max digits wanted before the decimal point
-	buffer = make([]byte, 0, 20)
+	dotZrs  = []byte{byte('.'), byte('0'), byte('0')} // len(dotZrs) must be 1+digitsInfractionalPart
+	thinSp  = []byte{byte('&'), byte('t'), byte('h'), byte('i'), byte('n'), byte('s'), byte('p'), byte(';')}
+	noBkSp  = []byte{byte('&'), byte('n'), byte('b'), byte('s'), byte('p'), byte(';')}
+	boldTag = []byte{byte('<'), byte('b'), byte('>')}
+	boldEnd = []byte{byte('<'), byte('/'), byte('b'), byte('>')}
+	spaces  = [5]byte{32, 32, 32, 32, 32} // len(spaces) must be the max digits wanted before the decimal point
+	buffer  = make([]byte, 0, 10)
+	htmlBuf = boldTag
 )
 
 func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
@@ -101,43 +107,50 @@ func leftAlignFloatOnDecimalPoint(f float64) []byte {
 }
 
 func RightAlign(f float64, addMissingDot bool) []byte {
-	buffer = strconv.AppendFloat(buffer[:0], f, 'f', -1, 64)
+	htmlBuf = strconv.AppendFloat(htmlBuf[:len(boldTag)], f, 'f', -1, 64)
 
-	var i int // position of the '.'
-	for i = 1; i < len(buffer); i++ {
-		if buffer[i] == '.' {
-			end := i + 1 + digitsInfractionalPart
+	// i is the position of the '.'
+	for i := 1 + len(boldTag); i < len(htmlBuf); i++ {
+		if htmlBuf[i] == '.' {
+			tinyIntegralPart := i == 1+len(boldTag)
 
-			if end > len(buffer) {
-				buffer = append(buffer, byte('0'))
+			if end := i + 1 + digitsInFractionalPart; end > len(htmlBuf) {
+				htmlBuf = append(htmlBuf, byte('0'))
 			} else {
-				buffer = buffer[:end]
+				htmlBuf = htmlBuf[:end]
 			}
 
-			if i > 3 {
-				buffer = insertThousandSeparator(buffer, i-3)
+			if i > 3+len(boldTag) {
+				htmlBuf = insertThousandSeparator(htmlBuf, i-3)
+				i += len(noBkSp)
 			}
 
-			return buffer
+			if tinyIntegralPart {
+				return append(htmlBuf, byte('<'), byte('/'), byte('b'), byte('>'))
+			}
+
+			return append(htmlBuf[:i], append(boldEnd, htmlBuf[i:]...)...)
 		}
 	}
 
 	// Missing dot
 
-	if len(buffer) > 3 {
-		buffer = insertThousandSeparator(buffer, len(buffer)-3)
+	if len(htmlBuf) > 3+len(boldTag) {
+		htmlBuf = insertThousandSeparator(htmlBuf, len(htmlBuf)-3)
 	}
+
+	htmlBuf = append(htmlBuf, byte('<'), byte('/'), byte('b'), byte('>'))
 
 	if addMissingDot {
-		buffer = append(buffer, dotZrs...)
+		htmlBuf = append(htmlBuf, byte('.'), byte('0'), byte('0'))
 	}
 
-	return buffer
+	return htmlBuf
 }
 
 // insertThousandSeparator inserts "&nbsp;".
 // Recommendation is to use "&thinsp;" but it may break the line.
 // "&numsp;" is too wide.
 func insertThousandSeparator(b []byte, i int) []byte {
-	return append(b[:i], append(nonBSp, b[i:]...)...)
+	return append(b[:i], append(noBkSp, b[i:]...)...)
 }
