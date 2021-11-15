@@ -48,12 +48,12 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			return nil, fmt.Errorf("serum.FetchMarket: %w", err)
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
-		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true)
+		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.contractSize())
 		if err != nil {
 			return nil, err
 		}
 
-		asks, _, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false)
+		asks, _, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false, i.contractSize())
 		if err != nil {
 			return nil, err
 		}
@@ -80,7 +80,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 // I don't really need the totalsize but I am keeping it since it was in the original func:
 //     - ASK on the top so desc=true
 //     - BID down so desc=false
-func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool) (offers []rainbow.Order, totalSize float64, err error) {
+func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, totalSize float64, err error) {
 	var o serum.Orderbook
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
 		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
@@ -113,7 +113,7 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 
 		offers = append(offers,
 			rainbow.Order{
-				Px:   price,
+				Px:   price / contractSize, //to get the price for 1 asset since psyoptions has <1 contract size
 				Size: qty,
 			},
 		)

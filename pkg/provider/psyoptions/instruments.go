@@ -25,8 +25,7 @@ type instrument struct {
 
 // Expiration will be used in .Name() when fixed.
 func (i instrument) expiration() string {
-	seconds := i.Expiry // 1000
-	//ns := (i.Expiry % 1000) * 1000_000
+	seconds := i.Expiry
 	expiryTime := time.Unix(seconds, 0).UTC()
 
 	return expiryTime.Format("2006-01-02 15:04:05")
@@ -42,6 +41,18 @@ func (i instrument) asset() string {
 		return "SOL"
 	default:
 		return "???"
+	}
+}
+
+func (i instrument) contractSize() float64 {
+	switch {
+	case i.asset() == "ETH":
+		return 0.1
+	case i.asset() == "BTC":
+		return 0.01
+
+	default:
+		return 1
 	}
 }
 
