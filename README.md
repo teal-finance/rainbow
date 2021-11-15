@@ -1,6 +1,6 @@
 # ![rainbow](doc/rainbow-chancery.png)
 
-![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With Rainbow, users can scan CEX/DEX markets to fetch available options data. <br><br> This project has been initiated by [Teal.Finance](https://teal.finance/)  during the [Ethereum's EthGlobal Hackathon](https://showcase.ethglobal.com/ethonline2021/rainbow) & [Solana's Ignition Hacakthon](https://devpost.com/software/rainbow-ai5p7m).
+![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With Rainbow, users can scan CEX/DEX markets to fetch available options data. <br><br> This project has been initiated by [Teal.Finance](https://teal.finance/)  during the [Ethereum's EthGlobal Hackathon](https://showcase.ethglobal.com/ethonline2021/rainbow), [Solana's Ignition Hackathon](https://devpost.com/software/rainbow-ai5p7m) and [Encode Club's Hack DeFi](https://www.encode.club/hack-defi).
 ---|---
 
 ## Live Demo
@@ -28,11 +28,11 @@ More info on our motivations: https://cryptonuage.com/posts/internet-of-decentra
 
 Supported Options exchanges:
 
-* Deribit: Centralized exchange. Main venue for crypto Options trading.
+* [Deribit](https://www.deribit.com): Centralized exchange. Main venue for crypto Options trading.
 
-* Opyn(Ethereum):  DeFi protocol using TheGraph & 0x.
+* [Opyn(Ethereum)](https://www.opyn.co/):  DeFi protocol using TheGraph & 0x.
 
-* PsyOptions(Solana): DeFi protocol build on Serum order books.
+* [PsyOptions(Solana)](https://www.psyoptions.io/): DeFi protocol build on Serum order books.
 
 
 ## Requirements
