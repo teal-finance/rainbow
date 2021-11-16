@@ -21,7 +21,9 @@ func Handler(resErr reserr.ResErr, wwwDir string) http.Handler {
 	// Static website files
 	fs := fileserver.FileServer{Dir: wwwDir, ResErr: resErr}
 	r.NotFound(fs.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
-	r.Get("/favicon.png", fs.ServeFile("favicon.png", "image/x-icon"))
+	r.Get("/favicon.ico", fs.ServeFile("favicon.ico", "image/x-icon"))
+	r.Get("/favicon.png", fs.ServeFile("favicon.png", "image/png"))
+	r.Get("/preview.jpg", fs.ServeFile("preview.jpg", "image/jpeg"))
 	r.Get("/assets/js/*", fs.ServeDir("text/javascript; charset=utf-8"))
 	r.Get("/assets/css/*", fs.ServeDir("text/css; charset=utf-8"))
 
