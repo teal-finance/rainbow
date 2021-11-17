@@ -10,8 +10,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/teal-finance/garcon/fileserver"
 	"github.com/teal-finance/garcon/reserr"
+	"github.com/teal-finance/garcon/webserver"
 )
 
 // Handler to server the static web files of the front-end.
@@ -19,7 +19,7 @@ func Handler(resErr reserr.ResErr, wwwDir string) http.Handler {
 	r := chi.NewRouter()
 
 	// Static website files
-	fs := fileserver.FileServer{Dir: wwwDir, ResErr: resErr}
+	fs := webserver.WebServer{Dir: wwwDir, ResErr: resErr}
 	r.NotFound(fs.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
 	r.Get("/favicon.ico", fs.ServeFile("favicon.ico", "image/x-icon"))
 	r.Get("/favicon.png", fs.ServeFile("favicon.png", "image/png"))
