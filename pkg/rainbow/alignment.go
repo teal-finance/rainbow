@@ -15,9 +15,6 @@ const (
 	// digitsInFractionalPart is the number of digits to keep in the fractional part.
 	digitsInFractionalPart = 2
 
-	//  boldEndLen = len("</b>")
-	boldEndLen = 4
-
 	// dashRightAlignHTML must show the dash with the number of trailing digits defined by digitsInfractionalPart.
 	dashRightAlignHTML = "&mdash;&numsp;&numsp;"
 
@@ -30,8 +27,6 @@ const (
 
 // these two variables avoid unnecessary allocation by alignFloatOnDecimalPoint().
 var (
-	dotZrs  = []byte{byte('.'), byte('0'), byte('0')} // len(dotZrs) must be 1+digitsInfractionalPart
-	thinSp  = []byte{byte('&'), byte('t'), byte('h'), byte('i'), byte('n'), byte('s'), byte('p'), byte(';')}
 	noBkSp  = []byte{byte('&'), byte('n'), byte('b'), byte('s'), byte('p'), byte(';')}
 	boldTag = []byte{byte('<'), byte('b'), byte('>')}
 	boldEnd = []byte{byte('<'), byte('/'), byte('b'), byte('>')}
