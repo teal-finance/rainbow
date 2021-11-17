@@ -60,8 +60,8 @@ func main() {
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
 
-	r.Mount("/", webserver.Handler(g.ResErr, *wwwDir))
-	r.Mount("/v0", s.Handler())
+	r.With(g.JWTChecker.SetCookie).Mount("/", webserver.Handler(g.ResErr, *wwwDir))
+	r.With(g.JWTChecker.ChkCookie).Mount("/v0", s.Handler())
 
 	return r
 }
