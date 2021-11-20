@@ -26,18 +26,16 @@ func main() {
 	// Start the service in background
 	service := rainbow.NewService(
 		provider.AllProviders(),
-		&dbram.DB{},
-	)
+		&dbram.DB{})
 	go service.Run()
 
 	g, err := garcon.New(
 		garcon.WithOrigins(*mainAddr),
-		garcon.WithDocURL("https:teal.finance/rainbow/doc"),
-		garcon.WithServerHeader("Rainbow-v0.3"),
+		garcon.WithDocURL("https://teal.finance/rainbow/doc"),
+		garcon.WithServerHeader("Rainbow-v0"),
 		garcon.WithLimiter(*reqBurst, *reqPerMinute),
 		garcon.WithProm(*expPort),
-		garcon.WithDev(*dev),
-	)
+		garcon.WithDev(*dev))
 	if err != nil {
 		log.Fatal(err)
 	}
