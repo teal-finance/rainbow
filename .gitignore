@@ -8,4 +8,5 @@
 *.local
 *.log
 /dev
+/server
 .vscode
