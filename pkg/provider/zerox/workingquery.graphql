@@ -1,0 +1,25 @@
+{
+	otokens (where: {expiryTimestamp_gt:"1638300000"}){
+    id
+    name
+    symbol
+    underlyingAsset {
+      id
+      symbol
+      decimals
+    }
+    collateralAsset {
+      id
+      symbol
+      decimals
+    }
+    strikeAsset {
+      id
+      symbol
+      decimals
+    }
+    strikePrice
+    expiryTimestamp
+    isPut
+  }
+}
