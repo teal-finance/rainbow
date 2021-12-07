@@ -88,11 +88,11 @@ module.exports = {
           dark: colors.black
         },
         'bid': {
-          DEFAULT: '#00DD55',
+          DEFAULT: '#00DD66',
           dark: '#008822',
         },
         'ask': {
-          DEFAULT: '#DD0055',
+          DEFAULT: '#DD0066',
           dark: '#880022',
         },
       }

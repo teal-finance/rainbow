@@ -50,21 +50,25 @@ export default defineComponent({
 
     // Bid headers for CALL and PUT
     th:nth-child(2)
-      @apply bg-secondary dark:bg-secondary-dark bg-opacity-20 p-1 rounded-t-lg
+      @apply bg-secondary dark:bg-secondary-dark bg-opacity-20  dark:bg-opacity-80 p-1 rounded-t-lg
 
     // Ask headers for CALL and PUT
     th:nth-child(4)
-      @apply bg-secondary dark:bg-secondary-dark bg-opacity-20 p-1 rounded-t-lg
+      @apply bg-secondary dark:bg-secondary-dark bg-opacity-20  dark:bg-opacity-80 p-1 rounded-t-lg
 
   tr:nth-child(2)
 
+    // Top left corner
+    th:nth-child(1)
+      @apply rounded-tl-lg
+
     // Bid headers for CALL and PUT
     th:nth-child(4), th:nth-child(5), th:nth-child(9), th:nth-child(10)
-      @apply bg-bid dark:bg-bid-dark bg-opacity-20 dark:bg-opacity-80
+      @apply bg-bid dark:bg-bid-dark bg-opacity-20 dark:bg-opacity-40
 
     // Ask headers for CALL and PUT
     th:nth-child(6), th:nth-child(7), th:nth-child(11), th:nth-child(12)
-      @apply bg-ask dark:bg-ask-dark bg-opacity-20 dark:bg-opacity-50
+      @apply bg-ask dark:bg-ask-dark bg-opacity-20 dark:bg-opacity-40
 
     // Price Bid headers
     th:nth-child(5), th:nth-child(10)
@@ -75,7 +79,7 @@ export default defineComponent({
       @apply text-ask-dark dark:text-ask
 
     th
-      @apply bg-secondary dark:bg-secondary-dark bg-opacity-20
+      @apply bg-secondary dark:bg-secondary-dark bg-opacity-20 dark:bg-opacity-80
 
   tbody
     @apply xl:bg-background xl:dark:bg-background-dark
@@ -88,11 +92,11 @@ export default defineComponent({
 
       // Bid values with same background
       &.callBidSize, &.putBidSize, &.callBidPrice, &.putBidPrice
-        @apply bg-bid bg-opacity-5
+        @apply bg-bid bg-opacity-5 dark:bg-opacity-10
 
       // Ask values with another background
       &.callAskSize, &.putAskSize, &.callAskPrice, &.putAskPrice
-        @apply bg-ask bg-opacity-5
+        @apply bg-ask bg-opacity-5 dark:bg-opacity-10
 
       // Bid prices with same foreground color
       &.callBidPrice, &.putBidPrice
