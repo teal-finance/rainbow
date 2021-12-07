@@ -8,6 +8,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/gookit/color v1.5.0
 	github.com/jedib0t/go-pretty/v6 v6.2.4
+	github.com/mattn/go-sqlite3 v1.14.9
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/streamingfast/solana-go v0.3.0
 	github.com/teal-finance/garcon v0.7.1
@@ -79,6 +80,8 @@ require (
 	github.com/alexflint/go-scalar v1.1.0 // indirect
 	github.com/daaku/go.zipexe v1.0.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/streamingfast/logging v0.0.0-20211130053023-cb3ab619b508 // indirect
@@ -86,4 +89,6 @@ require (
 	github.com/vektah/gqlparser/v2 v2.2.0 // indirect
 	golang.org/x/mod v0.5.1 // indirect
 	golang.org/x/tools v0.1.8 // indirect
+	gorm.io/driver/sqlite v1.2.6 // indirect
+	gorm.io/gorm v1.22.4 // indirect
 )
