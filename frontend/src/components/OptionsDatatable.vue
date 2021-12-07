@@ -64,11 +64,11 @@ export default defineComponent({
 
     // Bid headers for CALL and PUT
     th:nth-child(4), th:nth-child(5), th:nth-child(9), th:nth-child(10)
-      @apply bg-bid dark:bg-bid-dark bg-opacity-20 dark:bg-opacity-40
+      @apply bg-bid dark:bg-bid-dark bg-opacity-10 dark:bg-opacity-40
 
     // Ask headers for CALL and PUT
     th:nth-child(6), th:nth-child(7), th:nth-child(11), th:nth-child(12)
-      @apply bg-ask dark:bg-ask-dark bg-opacity-20 dark:bg-opacity-40
+      @apply bg-ask dark:bg-ask-dark bg-opacity-10 dark:bg-opacity-40
 
     // Price Bid headers
     th:nth-child(5), th:nth-child(10)
