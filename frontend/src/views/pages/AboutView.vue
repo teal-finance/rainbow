@@ -5,9 +5,14 @@
         <div
           class="flex flex-col items-center text-center lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 md:items-start md:text-left">
           <h1 class="mb-4 font-bold text-9xl sm:text-4xl text-rainbow">Rainbow</h1>
-          <p class="mb-8 leading-8 sm:w-full">Is a dashboard for DEX/CEX options trading highlighting market opportunities to
-            ease strategies decision. To achieve this goal, Rainbow continuously scans CEX/DEX/DeFi market data.
-            This project has been initiated by <a class="text-green-500 hover:text-primary" href="https://teal.finance">Teal.Finance</a></p>
+          <p class="mb-8 leading-8 sm:w-full">
+            Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With Rainbow, users can scan CEX/DEX markets to fetch available options data.
+<br>
+This project has been initiated by <a class="text-green-500 hover:text-primary" href="https://teal.finance">Teal.Finance</a> during the 
+<a class="text-green-500 hover:text-primary" href="https://showcase.ethglobal.com/ethonline2021/rainbow">Ethereum's EthGlobal Hackathon</a>, Solana's Ignition Hackathon and Encode .
+<a class="text-green-500 hover:text-primary" href="https://www.encode.club/hack-defi">Club's Hack DeFi</a>
+<br> 
+</p>
         </div>
         <div class="mb-10 md:mb-0">
           <img class="object-cover object-center rounded" alt="Rainbow dashboard" src="@/assets/dashboard.svg">
@@ -34,7 +39,7 @@
                 </div>
                 <div
                   class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-secondary">
-                  <i-bi-check-all />
+                  <i-carbon:number-1 class="text-3xl"/>
                 </div>
                 <div class="flex-grow pl-4">
                   <p class="leading-relaxed text-left">Crypto-assets and DeFi becoming mainstream.</p>
@@ -46,7 +51,7 @@
                 </div>
                 <div
                   class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-secondary">
-                  <i-bi-check-all />
+                  <i-carbon:number-2 class="text-3xl"/>
                 </div>
                 <div class="flex-grow pl-4">
                   <p class="leading-relaxed text-left">Advent of the Internet of Blockchains’ world with more
@@ -57,7 +62,7 @@
 
                 <div
                   class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-secondary">
-                  <i-bi-check-all />
+                  <i-carbon:number-3 class="text-3xl"/>
                 </div>
                 <div class="flex-grow pl-4">
                   <p class="leading-relaxed text-left">Crypto options trading growing (hopefully) bigger than the spot
@@ -101,7 +106,7 @@
                   <h2 class="text-lg font-medium text-primary-dark dark:text-primary-r title-font">Opyn(Ethereum)</h2>
                 </div>
                 <div class="flex-grow">
-                  <p class="text-base leading-relaxed text-left"> DeFi protocol using TheGraph & 0x.</p>
+                  <p class="text-base leading-relaxed text-left"> DeFi protocol using TheGraph &amp; 0x.</p>
                   <a href="https://www.opyn.co/" class="inline-flex items-center mt-3 text-green-500 hover:text-primary">Visit Opyn
                   </a>
                 </div>
@@ -173,7 +178,7 @@
                 src="@/assets/profile/kahlys.jpeg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">kahlys</h2>
-                <p class="mb-4">Kahlys is a very smart & pragmatic coder knowing many techs(Go, Rust,
+                <p class="mb-4">Kahlys is a very smart &amp; pragmatic coder knowing many techs(Go, Rust,
                   Docker, web).</p>
                 <span class="inline-flex">
                   <a class="text-gray-500 hover:text-foreground" href="https://github.com/kahlys">
@@ -255,8 +260,7 @@
             </div>
             <div class="flex-grow">
               <h2 class="mb-3 text-lg font-medium">FTX-NFT</h2>
-              <p class="leading-relaxed">We provide cryptocurrencies market data for trading. We also provide
-                blockchain data and the tools to explore blockchains..</p>
+              <p class="leading-relaxed">A NFT market data explorer for FTX &amp; FTX US marketplaces..</p>
               <a href="https://teal.finance/nft" class="inline-flex items-center mt-3 text-green-500">Learn More
                 <i-akar-icons-arrow-right />
               </a>
