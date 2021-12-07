@@ -43,21 +43,40 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-
 #rtable
   @apply border-none
+
+  tr:nth-child(1)
+
+    // Bid headers for CALL and PUT
+    th:nth-child(2)
+      @apply bg-secondary dark:bg-secondary-dark bg-opacity-20 p-1 rounded-t-lg
+
+    // Ask headers for CALL and PUT
+    th:nth-child(4)
+      @apply bg-secondary dark:bg-secondary-dark bg-opacity-20 p-1 rounded-t-lg
+
   tr:nth-child(2)
-    th:nth-child(2), th:nth-child(5)
-      @apply bg-primary dark:bg-primaryTable text-primary-r p-3 rounded-tl-lg
-    th:nth-child(3), th:nth-child(6)
-      @apply dark:bg-primaryTable-dark text-primary-r p-3 rounded-tr-lg
-  tr:nth-child(3)
-    th
-      @apply bg-primaryTable dark:bg-primaryTable-dark text-primary-r
+
+    // Bid headers for CALL and PUT
     th:nth-child(4), th:nth-child(5), th:nth-child(9), th:nth-child(10)
-      @apply bg-primary bg-opacity-10 text-primary-dark p-3 dark:text-primary-r
+      @apply bg-bid dark:bg-bid-dark bg-opacity-20 dark:bg-opacity-80
+
+    // Ask headers for CALL and PUT
     th:nth-child(6), th:nth-child(7), th:nth-child(11), th:nth-child(12)
-      @apply bg-primaryTable dark:bg-primaryTable-dark dark:bg-opacity-60 bg-opacity-10 text-primary-dark dark:text-primary-r
+      @apply bg-ask dark:bg-ask-dark bg-opacity-20 dark:bg-opacity-50
+
+    // Price Bid headers
+    th:nth-child(5), th:nth-child(10)
+      @apply text-bid-dark dark:text-bid
+
+    // Price Ask headers
+    th:nth-child(6), th:nth-child(11)
+      @apply text-ask-dark dark:text-ask
+
+    th
+      @apply bg-secondary dark:bg-secondary-dark bg-opacity-20
+
   tbody
     @apply xl:bg-background xl:dark:bg-background-dark
     td
@@ -66,14 +85,23 @@ export default defineComponent({
         @apply bg-background dark:bg-background-dark
       &.strike
         @apply bg-background dark:bg-background-dark text-right
+
+      // Bid values with same background
       &.callBidSize, &.putBidSize, &.callBidPrice, &.putBidPrice
-        @apply bg-primary bg-opacity-10 dark:text-primary-r
+        @apply bg-bid bg-opacity-5
+
+      // Ask values with another background
       &.callAskSize, &.putAskSize, &.callAskPrice, &.putAskPrice
-        @apply bg-primaryTable dark:bg-primaryTable-dark bg-opacity-10 dark:text-primary-r dark:bg-opacity-60
+        @apply bg-ask bg-opacity-5
+
+      // Bid prices with same foreground color
       &.callBidPrice, &.putBidPrice
-        @apply text-success dark:text-success-dark text-right
+        @apply text-bid-dark dark:text-bid text-right
+
+      // Ask prices with another foreground color
       &.callAskPrice, &.putAskPrice
-        @apply text-danger dark:text-danger-dark text-right
+        @apply text-ask-dark dark:text-ask text-right
+
     tr
       @apply border-gray-200 border-b dark:border-gray-700
 </style>
