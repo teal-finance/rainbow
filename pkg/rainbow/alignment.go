@@ -15,9 +15,6 @@ const (
 	// digitsInFractionalPart is the number of digits to keep in the fractional part.
 	digitsInFractionalPart = 2
 
-	//  boldEndLen = len("</b>")
-	boldEndLen = 4
-
 	// dashRightAlignHTML must show the dash with the number of trailing digits defined by digitsInfractionalPart.
 	dashRightAlignHTML = "&mdash;&numsp;&numsp;"
 
@@ -30,14 +27,13 @@ const (
 
 // these two variables avoid unnecessary allocation by alignFloatOnDecimalPoint().
 var (
-	dotZrs  = []byte{byte('.'), byte('0'), byte('0')} // len(dotZrs) must be 1+digitsInfractionalPart
-	thinSp  = []byte{byte('&'), byte('t'), byte('h'), byte('i'), byte('n'), byte('s'), byte('p'), byte(';')}
-	noBkSp  = []byte{byte('&'), byte('n'), byte('b'), byte('s'), byte('p'), byte(';')}
-	boldTag = []byte{byte('<'), byte('b'), byte('>')}
-	boldEnd = []byte{byte('<'), byte('/'), byte('b'), byte('>')}
-	spaces  = [5]byte{32, 32, 32, 32, 32} // len(spaces) must be the max digits wanted before the decimal point
-	buffer  = make([]byte, 0, 10)
-	htmlBuf = boldTag
+	// noBkSp= []byte{byte('&'), byte('n'), byte('b'), byte('s'), byte('p'), byte(';')}
+	narrowSp = []byte{byte('&'), byte('#'), byte('x'), byte('2'), byte('0'), byte('2'), byte('f'), byte(';')}
+	boldTag  = []byte{byte('<'), byte('b'), byte('>')}
+	boldEnd  = []byte{byte('<'), byte('/'), byte('b'), byte('>')}
+	spaces   = [5]byte{32, 32, 32, 32, 32} // len(spaces) must be the max digits wanted before the decimal point
+	buffer   = make([]byte, 0, 10)
+	htmlBuf  = boldTag
 )
 
 func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
@@ -122,7 +118,7 @@ func RightAlign(f float64, addMissingDot bool) []byte {
 
 			if i > 3+len(boldTag) {
 				htmlBuf = insertThousandSeparator(htmlBuf, i-3)
-				i += len(noBkSp)
+				i += len(narrowSp)
 			}
 
 			if tinyIntegralPart {
@@ -148,9 +144,8 @@ func RightAlign(f float64, addMissingDot bool) []byte {
 	return htmlBuf
 }
 
-// insertThousandSeparator inserts "&nbsp;".
-// Recommendation is to use "&thinsp;" but it may break the line.
-// "&numsp;" is too wide.
+// insertThousandSeparator inserts "&#x202f;" (narrow no-break space) that is thinner than "&nbsp;".
+// Recommendation is to use "&thinsp;" but it may break the line and "&numsp;" is too wide.
 func insertThousandSeparator(b []byte, i int) []byte {
-	return append(b[:i], append(noBkSp, b[i:]...)...)
+	return append(b[:i], append(narrowSp, b[i:]...)...)
 }

@@ -68,13 +68,13 @@ export default defineComponent({
         "asset": "Asset",
         "expiry": "Expiry",
         "callBidSize": "Size",
-        "callBidPrice": "Price",
-        "callAskPrice": "Price",
+        "callBidPrice": "  BID",
+        "callAskPrice": " ASK",
         "callAskSize": "Size",
         "strike": "Strike",
         "putBidSize": "Size",
-        "putBidPrice": "Price",
-        "putAskPrice": "Price",
+        "putBidPrice": "  BID",
+        "putAskPrice": " ASK",
         "putAskSize": "Size",
       }
       datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });

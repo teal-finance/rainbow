@@ -72,13 +72,13 @@ type CallPut struct {
 }
 
 type Row struct {
-	Asset    string  `json:"asset"`
+	Put      Limit   `json:"put"`
+	Call     Limit   `json:"call"`
 	Date     string  `json:"date"`
 	Expiry   string  `json:"expiry"`
 	Provider string  `json:"provider"`
-	Call     Limit   `json:"call"`
+	Asset    string  `json:"asset"`
 	Strike   float64 `json:"strike"`
-	Put      Limit   `json:"put"`
 }
 
 type Limit struct {

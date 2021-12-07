@@ -64,7 +64,7 @@ module.exports = {
       colors: {
         'rainbow': rainbowColors,
         'primary': {
-          DEFAULT: rainbowColors['500'].DEFAULT,
+          DEFAULT: rainbowColors['700'].DEFAULT,
           dark: colors.gray[700],
         },
         'primary-r': {
@@ -83,15 +83,18 @@ module.exports = {
           DEFAULT: colors.gray[600],
           dark: colors.white
         },
-        'primaryTable': {
-          DEFAULT: '#2A8598',
-          dark: '#172437',
+        'background': {
+          DEFAULT: colors.white,
+          dark: colors.black
         },
-        'secondaryTable': {
-          DEFAULT: '#45DDFA',
-          dark: '#172437',
+        'bid': {
+          DEFAULT: '#00DD66',
+          dark: '#008822',
         },
-
+        'ask': {
+          DEFAULT: '#DD0066',
+          dark: '#880022',
+        },
       }
     },
   },

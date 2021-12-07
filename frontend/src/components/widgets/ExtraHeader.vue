@@ -5,14 +5,6 @@
     <th class="border-none"></th>
     <th colspan="4" class="text-center">PUT</th>
   </tr>
-  <tr>
-    <th colspan="3" class="border-none"></th>
-    <th colspan="2" class="text-center">Bid</th>
-    <th colspan="2" class="text-center">Ask</th>
-    <th class="border-none"></th>
-    <th colspan="2" class="text-center">Bid</th>
-    <th colspan="2" class="text-center">Ask</th>
-  </tr>
 </template>
 
 <style lang="sass" scoped>

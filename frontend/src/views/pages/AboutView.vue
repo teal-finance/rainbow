@@ -5,142 +5,127 @@
         <div
           class="flex flex-col items-center text-center lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 md:items-start md:text-left">
           <h1 class="mb-4 font-bold text-9xl sm:text-4xl text-rainbow">Rainbow</h1>
-          <p class="mb-8 leading-8 sm:w-full">Dashboard for DEX/CEX options trading highlighting market opportunities to
-            ease strategies decision. To achieve this goal, Rainbow continuously scans CEX/DEX/DeFi market data.
-            This project has been initiated by <a href="https://teal.finance">Teal.Finance</a> and has already won two
-            prices during the Ethereum's EthGlobal Hackathon.</p>
+          <p class="mb-8 leading-8 sm:w-full">
+            Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With Rainbow, users can scan CEX/DEX markets to fetch available options data.
+<br>
+This project has been initiated by <a class="text-green-500 hover:text-primary" href="https://teal.finance">Teal.Finance</a> during the 
+<a class="text-green-500 hover:text-primary" href="https://showcase.ethglobal.com/ethonline2021/rainbow">Ethereum's EthGlobal Hackathon</a>, Solana's Ignition Hackathon and Encode .
+<a class="text-green-500 hover:text-primary" href="https://www.encode.club/hack-defi">Club's Hack DeFi</a>
+<br> 
+</p>
         </div>
         <div class="mb-10 md:mb-0">
           <img class="object-cover object-center rounded" alt="Rainbow dashboard" src="@/assets/dashboard.svg">
         </div>
       </div>
     </section>
-    <!-- Vision section -->
+    <!-- Inspired section -->
     <section>
       <div class="container flex flex-wrap px-5 py-24 mx-auto">
         <div class="flex flex-col w-full mb-20 text-center">
-          <h1 class="mb-4 text-2xl font-medium">In progress</h1>
-          <p class="mx-auto leading-relaxed lg:w-2/3">Our target is to be the most helpful possible,
-            thus offering the highest possible user experience.Please open a GitHub issue or contact us at <a
-              class="text-green-500" href="mailto:Teal.Finance@protonmail.com">Teal.Finance@protonmail.com</a> to
-            suggest
-            ideas or to share your feeling.To improve the decision-making, we are currently implementing more data
-            retrieval and computing indicators to provide:</p>
-        </div>
-        <div class="flex flex-wrap w-full">
-          <div class="md:w-1/2 md:pr-10 md:py-6">
-            <div class="relative flex pb-12">
-              <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
-                <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
-              </div>
-              <div
-                class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
-                <i-bi-check-all />
-              </div>
-              <div class="flex-grow pl-4">
-                <h2 class="mb-1 text-sm font-medium tracking-wider">STEP 1
-                </h2>
-                <p class="leading-relaxed">fine asset information.</p>
-              </div>
+          <h1 class="mb-4 text-2xl font-medium">Rainbow was inspired by the following trends</h1>
+          <div class="flex flex-wrap w-full">
+            <div class="pr-6 my-10 md:w-1/2 md:py-6">
+            <p class="p-6 leading-relaxed text-left shadow-md">The crypto derivatives markets are expected to grow a lot more in the upcoming years. Specifically, the options markets will see the biggest growth because in Finance, Option market is much bigger than the underlying spot market. This is lagging in Crypto, when we look at Deribit's volume, the main (centralized) venue for Crypto Options, compared to Perpetuals future.
+              <a class="text-green-500 hover:text-primary" href="https://cryptonuage.com/posts/internet-of-decentralized-options/">
+               Read more...
+               </a>
+          </p>
             </div>
-            <div class="relative flex pb-12">
-              <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
-                <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
+            <div class="my-10 md:w-1/2 md:py-6">
+              <div class="relative flex pb-5">
+                <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
+                  <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
+                </div>
+                <div
+                  class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-secondary">
+                  <i-carbon:number-1 class="text-3xl"/>
+                </div>
+                <div class="flex-grow pl-4">
+                  <p class="leading-relaxed text-left">Crypto-assets and DeFi becoming mainstream.</p>
+                </div>
               </div>
-              <div
-                class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
-                <i-bi-check-all />
+              <div class="relative flex pb-5">
+                <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
+                  <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
+                </div>
+                <div
+                  class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-secondary">
+                  <i-carbon:number-2 class="text-3xl"/>
+                </div>
+                <div class="flex-grow pl-4">
+                  <p class="leading-relaxed text-left">Advent of the Internet of Blockchains’ world with more
+                    cross-chain applications and communications.</p>
+                </div>
               </div>
-              <div class="flex-grow pl-4">
-                <h2 class="mb-1 text-sm font-medium tracking-wider">STEP 2
-                </h2>
-                <p class="leading-relaxed">easy browsing and comparison within the expiration dates</p>
-              </div>
-            </div>
-            <div class="relative flex pb-12">
-              <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
-                <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
-              </div>
-              <div
-                class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
-                <i-bi-check-all />
-              </div>
-              <div class="flex-grow pl-4">
-                <h2 class="mb-1 text-sm font-medium tracking-wider">STEP 3
-                </h2>
-                <p class="leading-relaxed">grouping by same strike</p>
-              </div>
-            </div>
-            <div class="relative flex pb-12">
-              <div
-                class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
-                <i-bi-check-all />
-              </div>
-              <div class="flex-grow pl-4">
-                <h2 class="mb-1 text-sm font-medium tracking-wider">STEP 4
-                </h2>
-                <p class="leading-relaxed">filtering and aggregate data across markets and providers
-                </p>
+              <div class="relative flex pb-5">
+
+                <div
+                  class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-secondary">
+                  <i-carbon:number-3 class="text-3xl"/>
+                </div>
+                <div class="flex-grow pl-4">
+                  <p class="leading-relaxed text-left">Crypto options trading growing (hopefully) bigger than the spot
+                    market, like in traditional Finance.</p>
+                </div>
               </div>
             </div>
           </div>
-          <div class="md:w-1/2 md:pl-10 md:py-6">
-            <div class="relative flex pb-12">
-              <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
-                <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
-              </div>
-              <div class="relative flex">
-                <div
-                  class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
-                  <i-bi-check-all />
+        </div>
+      </div>
+    </section>
+    <!-- current State -->
+    <section>
+      <div class="container flex flex-wrap px-5 py-24 mx-auto">
+        <div class="flex flex-col w-full mb-20 text-center">
+          <h1 class="mb-4 text-2xl font-medium">Current status</h1>
+          <div class="flex flex-wrap w-full">
+            <div class="p-4 md:w-1/3">
+              <div class="flex flex-col h-full p-8 bg-gray-100 rounded-lg dark:bg-primary-dark">
+                <div class="flex items-center mb-3">
+                  <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 mr-3 rounded-full">
+                    <img src="@/assets/deribit.webp" alt="Deribit">
+                  </div>
+                  <h2 class="text-lg font-medium text-primary-dark dark:text-primary-r title-font">Deribit</h2>
                 </div>
-                <div class="flex-grow pl-4">
-                  <h2 class="mb-1 text-sm font-medium tracking-wider">STEP 5
-                  </h2>
-                  <p class="leading-relaxed">computing of indicators based on bid/ask orders</p>
+                <div class="flex-grow">
+                  <p class="text-base leading-relaxed text-left">Centralized exchange. Main venue for crypto Options
+                    trading.</p>
+                  <a href="https://www.deribit.com/" class="inline-flex items-center mt-3 text-green-500 hover:text-primary">Visit
+                    Deribit
+                  </a>
                 </div>
               </div>
             </div>
-
-            <div class="relative flex pb-12">
-              <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
-                <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
-              </div>
-              <div
-                class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
-                <i-bi-check-all />
-              </div>
-              <div class="flex-grow pl-4">
-                <h2 class="mb-1 text-sm font-medium tracking-wider">STEP 6
-                </h2>
-                <p class="leading-relaxed">Mark IV (quoted bid and ask volatilities).</p>
-              </div>
-            </div>
-            <div class="relative flex pb-12">
-              <div class="absolute inset-0 flex items-center justify-center w-10 h-full">
-                <div class="w-1 h-full bg-gray-200 pointer-events-none"></div>
-              </div>
-              <div
-                class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
-                <i-bi-check-all />
-              </div>
-              <div class="flex-grow pl-4">
-                <h2 class="mb-1 text-sm font-medium tracking-wider">STEP 7
-                </h2>
-                <p class="leading-relaxed">the <a class="text-green-500"
-                    href="https://en.wikipedia.org/wiki/Greeks_(finance)">Greeks</a></p>
+            <div class="p-4 md:w-1/3">
+              <div class="flex flex-col h-full p-8 bg-gray-100 rounded-lg dark:bg-primary-dark">
+                <div class="flex items-center mb-3">
+                  <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 mr-3 rounded-full">
+                    <img src="@/assets/75.png" alt="Opyn(Ethereum)">
+                  </div>
+                  <h2 class="text-lg font-medium text-primary-dark dark:text-primary-r title-font">Opyn(Ethereum)</h2>
+                </div>
+                <div class="flex-grow">
+                  <p class="text-base leading-relaxed text-left"> DeFi protocol using TheGraph &amp; 0x.</p>
+                  <a href="https://www.opyn.co/" class="inline-flex items-center mt-3 text-green-500 hover:text-primary">Visit Opyn
+                  </a>
+                </div>
               </div>
             </div>
-            <div class="relative flex pb-12">
-              <div
-                class="relative z-10 inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-full bg-primary dark:bg-indigo-800">
-                <i-bi-check-all />
-              </div>
-              <div class="flex-grow pl-4">
-                <h2 class="mb-1 text-sm font-medium tracking-wider">Final
-                </h2>
-                <p class="leading-relaxed">strategy outcome:(1-buy an option at the lowest price.
-                  2-sell an option at the highest price. 3-arbitrage between two markets)</p>
+            <div class="p-4 md:w-1/3">
+              <div class="flex flex-col h-full p-8 bg-gray-100 rounded-lg dark:bg-primary-dark">
+                <div class="flex items-center mb-3">
+                  <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 mr-3 rounded-full">
+                    <img src="@/assets/1.png" alt="PsyOptions(Solana)">
+                  </div>
+                  <h2 class="text-lg font-medium text-primary-dark dark:text-primary-r title-font">PsyOptions(Solana)</h2>
+                </div>
+                <div class="flex-grow">
+                  <p class="text-base leading-relaxed text-left">DeFi protocol build on Serum order books.</p>
+                  <a href="https://www.psyoptions.io/" class="inline-flex items-center mt-3 text-green-500 hover:text-primary">Visit
+                    PsyOptions
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -193,7 +178,7 @@
                 src="@/assets/profile/kahlys.jpeg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">kahlys</h2>
-                <p class="mb-4">Kahlys is a very smart & pragmatic coder knowing many techs(Go, Rust,
+                <p class="mb-4">Kahlys is a very smart &amp; pragmatic coder knowing many techs(Go, Rust,
                   Docker, web).</p>
                 <span class="inline-flex">
                   <a class="text-gray-500 hover:text-foreground" href="https://github.com/kahlys">
@@ -256,27 +241,26 @@
         <div class="flex flex-wrap -mx-4 -mt-4 -mb-10 space-y-6 sm:-m-4 md:space-y-0">
           <div class="flex flex-col items-center p-4 text-center md:w-1/3">
             <div
-              class="inline-flex items-center justify-center flex-shrink-0 w-20 h-20 mb-5 text-white rounded-full dark:bg-indigo-800 bg-primary">
+              class="inline-flex items-center justify-center flex-shrink-0 w-20 h-20 mb-5 text-white rounded-full dark:bg-secondary bg-primary">
               <i-eos-icons-blockchain class="text-2xl" />
             </div>
             <div class="flex-grow">
-              <h2 class="mb-3 text-lg font-medium">Teal.Finance</h2>
-              <p class="leading-relaxed">We provide cryptocurrencies market data for trading. We also provide
-                blockchain data and the tools to explore blockchains..</p>
-              <a href="https://teal.finance" class="inline-flex items-center mt-3 text-green-500">Learn More
+              <h2 class="mb-3 text-lg font-medium">Rainbow</h2>
+              <p class="leading-relaxed">dashboard for DEX/CEX options trading highlighting market opportunities to
+            ease strategies decision.</p>
+              <a href="https://teal.finance/rainbow" class="inline-flex items-center mt-3 text-green-500">See More
                 <i-akar-icons-arrow-right />
               </a>
             </div>
           </div>
           <div class="flex flex-col items-center p-4 text-center md:w-1/3">
             <div
-              class="inline-flex items-center justify-center flex-shrink-0 w-20 h-20 mb-5 text-white rounded-full bg-primary dark:bg-indigo-800">
+              class="inline-flex items-center justify-center flex-shrink-0 w-20 h-20 mb-5 text-white rounded-full bg-primary dark:bg-secondary">
               <i-eos-icons-blockchain class="text-2xl" />
             </div>
             <div class="flex-grow">
               <h2 class="mb-3 text-lg font-medium">FTX-NFT</h2>
-              <p class="leading-relaxed">We provide cryptocurrencies market data for trading. We also provide
-                blockchain data and the tools to explore blockchains..</p>
+              <p class="leading-relaxed">A NFT market data explorer for FTX &amp; FTX US marketplaces..</p>
               <a href="https://teal.finance/nft" class="inline-flex items-center mt-3 text-green-500">Learn More
                 <i-akar-icons-arrow-right />
               </a>
@@ -284,7 +268,7 @@
           </div>
           <div class="flex flex-col items-center p-4 text-center md:w-1/3">
             <div
-              class="inline-flex items-center justify-center flex-shrink-0 w-20 h-20 mb-5 text-white rounded-full bg-primary dark:bg-indigo-800">
+              class="inline-flex items-center justify-center flex-shrink-0 w-20 h-20 mb-5 text-white rounded-full bg-primary dark:bg-secondary">
               <i-eos-icons-blockchain class="text-2xl" />
             </div>
             <div class="flex-grow">
@@ -310,8 +294,8 @@ export default {
 
 <style lang="sass" scoped>
 .text-rainbow
-    font-size: 70px
-    line-height: 70px
+    font-size: 4em
+    line-height: 1em
     background: linear-gradient(to right, #ee82ee, #ee82ee, #0000ff, #008000, #ffff00, #ffa500, #ff0000)
     -webkit-background-clip: text
     -webkit-text-fill-color: transparent

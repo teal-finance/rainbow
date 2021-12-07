@@ -28,5 +28,15 @@ func prettyDate(date string) string {
 		return date
 	}
 
-	return t.Format("Jan _2")
+	const (
+		monthLayout = "Jan"
+		dayLayout   = "_2"
+	)
+
+	b := make([]byte, 0, len(monthLayout)+len(narrowSp)+len(dayLayout))
+	b = t.AppendFormat(b, monthLayout)
+	b = append(b, narrowSp...)
+	b = t.AppendFormat(b, dayLayout)
+
+	return string(b)
 }
