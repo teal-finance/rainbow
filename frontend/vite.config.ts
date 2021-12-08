@@ -46,5 +46,5 @@ export default defineConfig({
     ]
   },
 
-  base: process.env.NODE_ENV === 'production' ? '/rainbow/' : './',
+  base: process.env.VITE_BASE as string || '/',
 })

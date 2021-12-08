@@ -10,7 +10,7 @@ require (
 	github.com/jedib0t/go-pretty/v6 v6.2.4
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/streamingfast/solana-go v0.3.0
-	github.com/teal-finance/garcon v0.7.1
+	github.com/teal-finance/garcon v0.8.1
 )
 
 require (
@@ -85,5 +85,6 @@ require (
 	github.com/tidwall/gjson v1.12.1 // indirect
 	github.com/vektah/gqlparser/v2 v2.2.0 // indirect
 	golang.org/x/mod v0.5.1 // indirect
+	golang.org/x/net v0.0.0-20211208012354-db4efeb81f4b // indirect
 	golang.org/x/tools v0.1.8 // indirect
 )

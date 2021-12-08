@@ -1,24 +1,30 @@
 # Build:
 #
 #    DOCKER_BUILDKIT=1 
-#    docker  build --build-arg addr=http://my.dns.co --build-arg port=8088 -t rainbow .
-#    podman  build --build-arg addr=http://my.dns.co --build-arg port=8088 -t rainbow .
-#    buildah build --build-arg addr=http://my.dns.co --build-arg port=8088 -t rainbow .
+#    docker  build --build-arg url=http://my.dns.co:8088/rainbow --build-arg base=/rainbow/ -t rainbow .
+#    podman  build --build-arg url=http://my.dns.co:8088/rainbow --build-arg base=/rainbow/ -t rainbow .
+#    buildah build --build-arg url=http://my.dns.co:8088/rainbow --build-arg base=/rainbow/ -t rainbow .
 #
 # Run:
 #
-#    docker run -p 0.0.0.0:8088:8088 -d -e EXP_PORT=9868 --name rainbow rainbow
-#    podman run -p 0.0.0.0:8088:8088 -d -e EXP_PORT=9868 --name rainbow rainbow
-#
-# One command line:
-#
-#    ( set -x ; podman  build -t rainbow --build-arg port=8088 . && { podman stop rainbow ; podman rm rainbow ; podman run -p 0.0.0.0:8088:8088 -d --name rainbow rainbow && sleep 1 && podman logs --follow rainbow ; } )
-
+#    docker run -p 0.0.0.0:8088:8884 -d -e EXP_PORT=9868 --name rainbow rainbow
+#    podman run -p 0.0.0.0:8088:8884 -d -e EXP_PORT=9868 --name rainbow rainbow
 
 # --------------------------------------------------------------------
-# Arguments to control server address (CORS, API, front-end)
-ARG addr=http://localhost
+# Arguments to configure the build:
+# - url is used by frontend to request the backend API, and also by backend to set CORS origin ard Cookie domain
+# - base is the path prefix that is stripped by the reverse-proxy
+# - port is the backend listennig port for API and static website server
+
+# Default values are for dev mode:
+ARG url=http://localhost:8884
+ARG base=/
 ARG port=8884
+
+# Example of Prod values:
+# url  = https://my.dns.co/rainbow
+# base = /rainbow/
+# port = 8884
 
 # --------------------------------------------------------------------
 FROM docker.io/node:16-alpine3.14 AS web_builder
@@ -45,15 +51,15 @@ COPY frontend/.eslintrc.json     \
 COPY frontend/public public
 COPY frontend/src    src
 
-ARG addr
-ARG port
+ARG url
+ARG base
 
-RUN set -x                                                     &&\
-    ls -lA                                                     &&\
-    sed -e "s|^VITE_API_ADDR=.*|VITE_API_ADDR=$addr|"            \
-        -e "s|^VITE_API_PORT=.*|VITE_API_PORT=$port|" -i .env  &&\
-    head .env                                                  &&\
-    yarn build                                                 &&\
+RUN set -x                                                  &&\
+    ls -lA                                                  &&\
+    sed -e "s|^VITE_API_URL=.*|VITE_API_URL=$url|" -i .env  &&\
+    sed -e "s|^VITE_BASE=.*|VITE_BASE=$base|"      -i .env  &&\
+    head .env                                               &&\
+    yarn build                                              &&\
     yarn compress
 
 # --------------------------------------------------------------------
@@ -119,7 +125,7 @@ RUN mkdir lib        &&\
 # --------------------------------------------------------------------
 FROM scratch AS final
 
-ARG addr
+ARG url
 ARG port
 
 COPY --chown=5505:5505 --from=integrator /target /
@@ -130,7 +136,7 @@ USER teal:teal
 # Use UTC time zone by default
 ENV TZ        UTC0
 ENV WWW_DIR   /var/www
-ENV MAIN_ADDR "$addr"
+ENV MAIN_ADDR "$url"
 ENV MAIN_PORT "$port"
 ENV EXP_PORT  9868
 
