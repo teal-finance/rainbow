@@ -6,10 +6,10 @@
 
 import Api from "./model";
 
-const url = import.meta.env.VITE_API_URL as string || "http://localhost:8090/"
+const addr = import.meta.env.VITE_ADDR as string || "http://localhost:8090"
 
 const api = new Api({
-  url: url,
+  url: addr + import.meta.env.BASE_URL,
   verbose: true,
 });
 

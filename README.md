@@ -104,7 +104,7 @@ Some of these features can be customized using environments variables.
 The Dockerfile supports Docker-20 and Podman-3. The following build configures CORS with `http://localhost:1111` and backend listening on port 2222:
 
 ```
-podman build --build-arg url=http://localhost:1111/ --build-arg port=2222 -t rainbow .
+podman build --build-arg addr=http://localhost:1111 --build-arg port=2222 -t rainbow .
 podman stop rainbow # if already running in background
 podman run --rm -p 0.0.0.0:1111:2222 -d --name rainbow rainbow
 podman logs --follow rainbow
