@@ -1,30 +1,29 @@
 # Build:
 #
 #    DOCKER_BUILDKIT=1 
-#    docker  build --build-arg url=http://my.dns.co:8088/rainbow --build-arg base=/rainbow/ -t rainbow .
-#    podman  build --build-arg url=http://my.dns.co:8088/rainbow --build-arg base=/rainbow/ -t rainbow .
-#    buildah build --build-arg url=http://my.dns.co:8088/rainbow --build-arg base=/rainbow/ -t rainbow .
+#    docker  build --build-arg url=http://my.dns.co:1111/rainbow/ -t rainbow .
+#    podman  build --build-arg url=http://my.dns.co:1111/rainbow/ -t rainbow .
+#    buildah build --build-arg url=http://my.dns.co:1111/rainbow/ -t rainbow .
 #
 # Run:
 #
-#    docker run -p 0.0.0.0:8088:8884 -d -e EXP_PORT=9868 --name rainbow rainbow
-#    podman run -p 0.0.0.0:8088:8884 -d -e EXP_PORT=9868 --name rainbow rainbow
+#    docker run -d --rm -p 0.0.0.0:1111:2222 -e EXP_PORT=9868 --name rainbow rainbow
+#    podman run -d --rm -p 0.0.0.0:1111:2222 -e EXP_PORT=9868 --name rainbow rainbow
 
 # --------------------------------------------------------------------
 # Arguments to configure the build:
-# - url is used by frontend to request the backend API, and also by backend to set CORS origin ard Cookie domain
-# - base is the path prefix that is stripped by the reverse-proxy
+# - url is used:
+#   - by frontend as --base (prefix) stripped by the reverse-proxy and as API URL
+#   - by backend to set CORS origin ard Cookie domain
 # - port is the backend listennig port for API and static website server
 
 # Default values are for dev mode:
-ARG url=http://localhost:8884
-ARG base=/
-ARG port=8884
+ARG url=http://localhost:8888/
+ARG port=8888
 
 # Example of Prod values:
-# url  = https://my.dns.co/rainbow
-# base = /rainbow/
-# port = 8884
+# url  = https://my.dns.co/rainbow/
+# port = 8888
 
 # --------------------------------------------------------------------
 FROM docker.io/node:16-alpine3.14 AS web_builder
@@ -52,14 +51,12 @@ COPY frontend/public public
 COPY frontend/src    src
 
 ARG url
-ARG base
 
 RUN set -x                                                  &&\
     ls -lA                                                  &&\
     sed -e "s|^VITE_API_URL=.*|VITE_API_URL=$url|" -i .env  &&\
-    sed -e "s|^VITE_BASE=.*|VITE_BASE=$base|"      -i .env  &&\
     head .env                                               &&\
-    yarn build                                              &&\
+    yarn build --base "$url"                                &&\
     yarn compress
 
 # --------------------------------------------------------------------

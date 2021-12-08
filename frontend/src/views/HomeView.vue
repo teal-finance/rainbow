@@ -14,7 +14,7 @@ export default defineComponent({
   },
   setup() {
     async function fetchData() {
-      const uri = "/v0/options/cp"
+      const uri = "v0/options/cp"
       const data = await api.get<Record<string, any>>(uri);
       console.log("DATA", data)
       return data;
