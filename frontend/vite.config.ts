@@ -8,9 +8,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 
 // https://vitejs.dev/config/ 
 export default defineConfig({
-  // https://rollupjs.org/guide/en/#outputentryfilenames
-  // https://rollupjs.org/guide/en/#outputchunkfilenames
-  // https://rollupjs.org/guide/en/#outputassetfilenames
+
   build: {
     rollupOptions: {
       output: {
@@ -19,6 +17,9 @@ export default defineConfig({
         entryFileNames: `assets/js/[name]-[hash].js`,
         chunkFileNames: `assets/js/[name]-[hash].js`,
         assetFileNames: `assets/css/[name]-[hash].[ext]`,
+        // https://rollupjs.org/guide/en/#outputentryfilenames
+        // https://rollupjs.org/guide/en/#outputchunkfilenames
+        // https://rollupjs.org/guide/en/#outputassetfilenames
       },
     },
   },
@@ -46,5 +47,4 @@ export default defineConfig({
     ]
   },
 
-  base: process.env.NODE_ENV === 'production' ? '/rainbow/' : './',
 })

@@ -49,7 +49,7 @@ export default defineComponent({
     const isReady = ref(false);
 
     async function fetchData() {
-      const uri = "/v0/options/cp"
+      const uri = "v0/options/cp"
       const data = await api.get<OptionsJsonDataset>(uri);
       //console.log("DATA", data)
       return data;
