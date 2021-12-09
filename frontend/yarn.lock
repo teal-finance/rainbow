@@ -184,10 +184,10 @@
     "@snowind/state" "^0.0.2"
     vue "^3.2.19"
 
-"@snowind/input@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@snowind/input/-/input-0.0.3.tgz#7ab0228079eddfeb2b2e49199acf9851a0bef1f3"
-  integrity sha512-OPIUavHDlYgwYphJXPmHfzugmBdo3a7QyscJECrHYsGexhAQNUQPpUesY8D5eGufRwKCmXdq3cgXvPfZjBNdKQ==
+"@snowind/input@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@snowind/input/-/input-0.0.4.tgz#5a9d60d9f4b3904ede4b8575dd6465d65e67ceba"
+  integrity sha512-uNMcLO518YDzgdZ4ffyVV2YDJF6m7UkCg7nwDujs4Jn8TaNHC1wR8U59RnAMXyeLXxp1D6JZ1VptFiJXbMMfow==
   dependencies:
     vue "^3.2.19"
 
@@ -213,10 +213,10 @@
   dependencies:
     vue "^3.2.19"
 
-"@snowind/switch@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@snowind/switch/-/switch-0.0.3.tgz#ba669ef771db8f30b2c34822840617c6095e53a7"
-  integrity sha512-Ssm+rDU2hR+9mTkzyIi5hrHOo1JypXciDI+OsJqSncXgsS0AtGu9z5YeEBtei+DAJZtPGWUXFhZpnlcsQxiqUQ==
+"@snowind/switch@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@snowind/switch/-/switch-0.0.4.tgz#0c7e3fe1df04f377825c7f3db0a9cbd80c05c1ea"
+  integrity sha512-8kbssby/nHf07o0d5OLQykeuHSEOsOC5QpYNMnquZ3S7eljzJCKHWfmh/g1wgHbJZEl6hYTEkBjBMWKwMSWxEA==
   dependencies:
     vue "^3.2.19"
 
