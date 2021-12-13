@@ -30,8 +30,8 @@ func main() {
 	go service.Run()
 
 	g, err := garcon.New(
-		garcon.WithOrigins(*mainAddr),
-		garcon.WithDocURL("https://teal.finance/rainbow/doc"),
+		garcon.WithURLs(*mainAddr),
+		garcon.WithDocURL("/doc"),
 		garcon.WithServerHeader("Rainbow-v0"),
 		garcon.WithLimiter(*reqBurst, *reqPerMinute),
 		garcon.WithProm(*expPort),
