@@ -128,6 +128,7 @@ RUN mkdir lib        &&\
 FROM scratch AS final
 
 ARG addr
+ARG base
 ARG port
 
 COPY --chown=5505:5505 --from=integrator /target /
@@ -138,7 +139,7 @@ USER teal:teal
 # Use UTC time zone by default
 ENV TZ        UTC0
 ENV WWW_DIR   /var/www
-ENV MAIN_ADDR "$addr"
+ENV MAIN_ADDR "$addr$base"
 ENV MAIN_PORT "$port"
 ENV EXP_PORT  9868
 
