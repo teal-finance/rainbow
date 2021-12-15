@@ -10,7 +10,7 @@ require (
 	github.com/jedib0t/go-pretty/v6 v6.2.4
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/streamingfast/solana-go v0.3.0
-	github.com/teal-finance/garcon v0.9.3
+	github.com/teal-finance/garcon v0.9.4
 )
 
 require (

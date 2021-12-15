@@ -591,8 +591,8 @@ github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69rRypqCw=
-github.com/teal-finance/garcon v0.9.3 h1:E8ty8nhw/cQUsjOvJVHKwJ0IilnoVXwERCU4/O/W7Bk=
-github.com/teal-finance/garcon v0.9.3/go.mod h1:bGso2FUz2I8bK0UZfgtcp2BQsF6rgEueetfo1rlvYhM=
+github.com/teal-finance/garcon v0.9.4 h1:nIYSuDuE0G+eocUSkN0QFkztzwB/L4ZoeNwEhdRU4E0=
+github.com/teal-finance/garcon v0.9.4/go.mod h1:bGso2FUz2I8bK0UZfgtcp2BQsF6rgEueetfo1rlvYhM=
 github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf/go.mod h1:M8agBzgqHIhgj7wEn9/0hJUZcrvt9VY+Ln+S1I5Mha0=
 github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 h1:3SNcvBmEPE1YlB1JpVZouslJpI3GBNoiqW7+wb0Rz7w=
 github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125/go.mod h1:M8agBzgqHIhgj7wEn9/0hJUZcrvt9VY+Ln+S1I5Mha0=
