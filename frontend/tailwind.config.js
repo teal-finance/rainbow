@@ -85,7 +85,11 @@ module.exports = {
         },
         'background': {
           DEFAULT: colors.white,
-          dark: colors.black
+          dark: "#111827"
+        },
+        'header': {
+          DEFAULT: colors.white,
+          dark: "#0e2b32"
         },
         'bid': {
           DEFAULT: '#00DD66',
@@ -94,6 +98,10 @@ module.exports = {
         'ask': {
           DEFAULT: '#DD0066',
           dark: '#880022',
+        },
+        'tr-border': {
+          DEFAULT: colors.white,
+          dark: '#ffffff0a',
         },
       }
     },
