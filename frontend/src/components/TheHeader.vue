@@ -35,9 +35,10 @@
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
-          <button class="border-none btn" @click="router.push('/about')">About</button>
-          <button class="border-none btn">Source code
-          <i-ant-design-github-filled></i-ant-design-github-filled>
+          <button class="border-none btn" @click="$router.push('/about')">About</button>
+          <button class="border-none btn" @click="openSourceCode()">
+            Source code
+            <i-ant-design-github-filled></i-ant-design-github-filled>
           </button>
           <div class="px-5 text-lg cursor-pointer" @click="user.toggleDarkMode()">
             <i-fa-solid-moon v-if="user.isDarkMode.value == false"></i-fa-solid-moon>
@@ -53,11 +54,12 @@
       <div class="flex flex-col items-center p-3 space-y-5">
         <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
         <div class="w-full border-b border-foreground">
-        <button class="w-full border-none btn" @click="router.push('/about')">About</button>
+          <button class="w-full border-none btn" @click="router.push('/about')">About</button>
         </div>
         <div class="w-full border-b border-foreground">
-          <button class="w-full border-none btn">Source code
-          <i-ant-design-github-filled></i-ant-design-github-filled>
+          <button class="w-full border-none btn">
+            Source code
+            <i-ant-design-github-filled></i-ant-design-github-filled>
           </button>
         </div>
         <div
@@ -107,6 +109,10 @@ export default defineComponent({
       closeMenu();
     }
 
+    function openSourceCode() {
+      window.location.href = 'https://github.com/teal-finance/rainbow'
+    }
+
     return {
       isMenuVisible,
       closeMenu,
@@ -114,6 +120,7 @@ export default defineComponent({
       isHome,
       openView,
       mobilePageTitle,
+      openSourceCode,
     }
   }
 });
