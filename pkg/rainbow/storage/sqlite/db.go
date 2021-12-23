@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -22,7 +23,22 @@ type Option struct {
 	// Ask           []Order `json:"ask"`
 }
 
-func (o Option) toOptions() rainbow.Option {
+func newOption(o rainbow.Option) *Option {
+	return &Option{
+		Name:          o.Name,
+		Type:          o.Type,
+		Asset:         o.Asset,
+		Expiry:        o.Expiry,
+		ExchangeType:  o.ExchangeType,
+		Chain:         o.Chain,
+		Layer:         o.Layer,
+		Provider:      o.Provider,
+		QuoteCurrency: o.QuoteCurrency,
+		Strike:        o.Strike,
+	}
+}
+
+func (o *Option) toOptions() rainbow.Option {
 	return rainbow.Option{
 		Name:          o.Name,
 		Type:          o.Type,
@@ -41,8 +57,8 @@ type DB struct {
 	*gorm.DB
 }
 
-func NewDB(file string) (*DB, error) {
-	db, err := gorm.Open(sqlite.Open(file), &gorm.Config{})
+func NewDB(dataSourceName string) (*DB, error) {
+	db, err := gorm.Open(sqlite.Open(dataSourceName), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
@@ -56,20 +72,15 @@ func NewDB(file string) (*DB, error) {
 }
 
 func (db *DB) InsertOptions(provider string, options []rainbow.Option) error {
+	res := db.Unscoped().Where("provider = ?", provider).Delete(&Option{})
+	if res.Error != nil {
+		return res.Error
+	}
+
 	for _, o := range options {
 		o.Provider = provider
-		res := db.Create(&Option{
-			Name:          o.Name,
-			Type:          o.Type,
-			Asset:         o.Asset,
-			Expiry:        o.Expiry,
-			ExchangeType:  o.ExchangeType,
-			Chain:         o.Chain,
-			Layer:         o.Layer,
-			Provider:      o.Provider,
-			QuoteCurrency: o.QuoteCurrency,
-			Strike:        o.Strike,
-		})
+
+		res := db.Create(newOption(o))
 		if res.Error != nil {
 			return res.Error
 		}
