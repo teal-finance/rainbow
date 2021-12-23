@@ -72,7 +72,7 @@ func NewDB(dataSourceName string) (*DB, error) {
 }
 
 func (db *DB) InsertOptions(provider string, options []rainbow.Option) error {
-	res := db.Unscoped().Where("provider = ?", provider).Delete(&Option{})
+	res := db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&Option{})
 	if res.Error != nil {
 		return res.Error
 	}
