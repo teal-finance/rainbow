@@ -38,14 +38,14 @@ var (
 
 func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
-		bidPx = rightAlignFloatOnDecimalPointHTML(option.Bid[0].Px)
+		bidPx = rightAlignFloatOnDecimalPointHTML(option.Bid[0].Price)
 		bidSz = leftAlignFloatOnDecimalPointHTML(option.Bid[0].Size)
 	} else {
 		bidPx, bidSz = dashRightAlignHTML, dashLeftAlignHTML
 	}
 
 	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
-		askPx = rightAlignFloatOnDecimalPointHTML(option.Ask[0].Px)
+		askPx = rightAlignFloatOnDecimalPointHTML(option.Ask[0].Price)
 		askSz = leftAlignFloatOnDecimalPointHTML(option.Ask[0].Size)
 	} else {
 		askPx, askSz = dashRightAlignHTML, dashLeftAlignHTML
@@ -56,14 +56,14 @@ func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
 
 func BestLimitStr(option Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
-		bidPx = leftAlignFloatOnDecimalPointStr(option.Bid[0].Px)
+		bidPx = leftAlignFloatOnDecimalPointStr(option.Bid[0].Price)
 		bidSz = leftAlignFloatOnDecimalPointStr(option.Bid[0].Size)
 	} else {
 		bidPx, bidSz = dashLeftAlign, dashLeftAlign
 	}
 
 	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
-		askPx = leftAlignFloatOnDecimalPointStr(option.Ask[0].Px)
+		askPx = leftAlignFloatOnDecimalPointStr(option.Ask[0].Price)
 		askSz = leftAlignFloatOnDecimalPointStr(option.Ask[0].Size)
 	} else {
 		askPx, askSz = dashLeftAlign, dashLeftAlign
