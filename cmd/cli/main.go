@@ -19,7 +19,7 @@ import (
 )
 
 func main() {
-	service := rainbow.NewService(provider.AllProviders(), &dbram.DB{})
+	service := rainbow.NewService(provider.AllProviders(), dbram.NewDB())
 
 	options := service.OptionsFromProviders()
 

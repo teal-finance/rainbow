@@ -25,7 +25,7 @@ func main() {
 	// Start the service in background
 	service := rainbow.NewService(
 		provider.AllProviders(),
-		&dbram.DB{})
+		dbram.NewDB())
 	go service.Run()
 
 	g, err := garcon.New(

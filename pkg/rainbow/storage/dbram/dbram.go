@@ -7,8 +7,6 @@
 package dbram
 
 import (
-	"fmt"
-
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -18,26 +16,28 @@ type DB struct {
 	optionsByProvider map[string][]rainbow.Option
 }
 
-func (db *DB) InsertOptions(p string, options []rainbow.Option) error {
-	if db.optionsByProvider == nil {
-		db.optionsByProvider = map[string][]rainbow.Option{p: options}
-	} else {
-		db.optionsByProvider[p] = options
+func NewDB() *DB {
+	return &DB{
+		optionsByProvider: map[string][]rainbow.Option{},
+	}
+}
+
+func (db *DB) InsertOptions(options []rainbow.Option) error {
+	for _, o := range options {
+		if _, ok := db.optionsByProvider[o.Provider]; !ok {
+			db.optionsByProvider[o.Provider] = []rainbow.Option{}
+		}
+		db.optionsByProvider[o.Provider] = append(db.optionsByProvider[o.Provider], o)
 	}
 
 	return nil
 }
 
-func (db *DB) GetOptions(p string) ([]rainbow.Option, error) {
-	options, ok := db.optionsByProvider[p]
-	if !ok {
-		return nil, fmt.Errorf("No data for %q", p)
-	}
-
-	return options, nil
+func (db *DB) OptionsByProvider(p string) ([]rainbow.Option, error) {
+	return db.optionsByProvider[p], nil
 }
 
-func (db *DB) GetAllOptions() ([]rainbow.Option, error) {
+func (db *DB) Options() ([]rainbow.Option, error) {
 	n := 0
 	for _, o := range db.optionsByProvider {
 		n += len(o)
