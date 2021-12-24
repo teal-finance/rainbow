@@ -40,7 +40,16 @@ func printTable(options []rainbow.Option) {
 	})
 
 	for _, option := range options {
-		bestBidPx, bestBidQty, bestAskPx, bestAskQty := rainbow.BestLimitStr(option)
+		bestBidPx, bestBidQty, bestAskPx, bestAskQty := "-", "-", "-", "-"
+		if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
+			bestBidPx = fmt.Sprintf("%.2f", option.Bid[0].Price)
+			bestBidQty = fmt.Sprintf("%.2f", option.Bid[0].Size)
+		}
+
+		if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
+			bestAskPx = fmt.Sprintf("%.2f", option.Ask[0].Price)
+			bestAskQty = fmt.Sprintf("%.2f", option.Ask[0].Size)
+		}
 
 		t.AppendRows([]table.Row{{
 			highlight(option.Provider), option.Asset, option.Type,

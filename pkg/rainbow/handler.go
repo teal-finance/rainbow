@@ -8,6 +8,7 @@ package rainbow
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -86,13 +87,6 @@ type Limit struct {
 	Ask StrOrder `json:"ask"`
 }
 
-func NoneLimit() Limit {
-	return Limit{
-		Bid: StrOrder{Px: dashRightAlignHTML, Size: dashLeftAlignHTML},
-		Ask: StrOrder{Px: dashRightAlignHTML, Size: dashLeftAlignHTML},
-	}
-}
-
 type StrOrder struct {
 	// Px is a known abbreviation for "Price" used by many Centralized Exchanges
 	// such as in the FIX protocol: https://fiximate.fixtrading.org/legacy/en/FIX.5.0SP2/abbreviations.html
@@ -109,21 +103,21 @@ func buildCallPut(options []Option) CallPut {
 	rows := make([]Row, 0, len(options)/2)
 
 	for asset, optionsSameAsset := range groupByAsset(options) {
-		asset = cleanAsset(asset)
+		asset = sanitizeAsset(asset)
 
 		for date, optionsSameExpiry := range groupByExpiry(optionsSameAsset) {
-			expiry := prettyDate(date)
+			expiry := sanitizeDate(date)
 
 			for strike, optionsSameStrike := range groupByStrike(optionsSameExpiry) {
 				for provider, optionsSameProvider := range groupByProvider(optionsSameStrike) {
-					call := NoneLimit()
-					put := NoneLimit()
+					call := Limit{}
+					put := Limit{}
 
 					for _, o := range optionsSameProvider {
 						if o.Type == "PUT" {
-							put = newOptionIndicators(o)
+							put = newLimit(o)
 						} else {
-							call = newOptionIndicators(o)
+							call = newLimit(o)
 						}
 					}
 
@@ -204,11 +198,15 @@ func groupByProvider(options []Option) (providerToOptions map[string][]Option) {
 	return providerToOptions
 }
 
-func newOptionIndicators(o Option) Limit {
-	bPx, bSz, aPx, aSz := BestLimitHTML(o)
-
-	return Limit{
-		Bid: StrOrder{Px: bPx, Size: bSz},
-		Ask: StrOrder{Px: aPx, Size: aSz},
+func newLimit(o Option) Limit {
+	l := Limit{}
+	if len(o.Bid) > 0 && o.Bid[0].Size != 0 {
+		l.Bid.Px = fmt.Sprintf("%.2f", o.Bid[0].Size)
+		l.Bid.Size = fmt.Sprintf("%.2f", o.Bid[0].Size)
 	}
+	if len(o.Ask) > 0 && o.Ask[0].Size != 0 {
+		l.Ask.Px = fmt.Sprintf("%.2f", o.Ask[0].Price)
+		l.Ask.Size = fmt.Sprintf("%.2f", o.Ask[0].Size)
+	}
+	return l
 }
