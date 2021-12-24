@@ -4,7 +4,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-package webserver
+package main
 
 import (
 	"net/http"
@@ -14,8 +14,8 @@ import (
 	"github.com/teal-finance/garcon/webserver"
 )
 
-// Handler serves the static web files of the front-end.
-func Handler(g *garcon.Garcon, wwwDir string) http.Handler {
+// WebHandler serves the static web files of the front-end.
+func WebHandler(g *garcon.Garcon, wwwDir string) http.Handler {
 	r := chi.NewRouter()
 
 	// Static website files

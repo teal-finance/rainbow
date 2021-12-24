@@ -17,7 +17,6 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
-	"github.com/teal-finance/rainbow/pkg/webserver"
 )
 
 func main() {
@@ -58,7 +57,7 @@ func main() {
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
 
-	r.With(g.JWT.Set).Mount("/", webserver.Handler(g, *wwwDir))
+	r.With(g.JWT.Set).Mount("/", WebHandler(g, *wwwDir))
 	r.With(g.JWT.Chk).Mount("/v0", s.Handler())
 
 	return r
