@@ -9,18 +9,11 @@ package rainbow
 import (
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 )
 
 type Provider interface {
 	Name() string
-	Options() ([]Option, error)
-}
-
-type Store interface {
-	InsertOptions(options []Option) error
-	OptionsByProvider(provider string) ([]Option, error)
 	Options() ([]Option, error)
 }
 
@@ -44,7 +37,7 @@ func NewService(p []Provider, s Store) Service {
 
 func (s *Service) initCache() {
 	if s.cache.Empty() {
-		options, err := s.store.Options()
+		options, err := s.store.Options(StoreArgs{})
 		if err != nil {
 			log.Print("ERROR store.GetAllOptions ", err)
 			return
@@ -75,36 +68,30 @@ func (s *Service) Run() {
 func (s *Service) OptionsFromProviders() []Option {
 	var options []Option
 
-	stat := ""
-
 	for _, p := range s.providers {
 		o, err := p.Options()
 		if err != nil {
 			log.Print("WARN fetching data from ", p, " : ", err)
-
-			o, err = s.store.OptionsByProvider(p.Name())
-			if err != nil {
-				log.Print("WARN no data in DB for ", p, " : ", err)
-				continue
-			}
+			continue
 		}
 
 		err = s.store.InsertOptions(o)
 		if err != nil {
 			log.Print("WARN cannot store data in DB for ", p, " : ", err)
+			continue
 		}
 
-		stat += " " + p.Name() + "=" + strconv.Itoa(len(o))
 		options = append(options, o...)
-	}
-
-	if stat != "" {
-		log.Print("Fetched" + stat)
+		log.Printf("Fetched %v=%v", p.Name(), len(o))
 	}
 
 	return options
 }
 
-func (s *Service) Options() ([]Option, error) {
-	return s.store.Options()
+func (s *Service) Options(args StoreArgs) ([]Option, error) {
+	return s.store.Options(args)
+}
+
+func (s *Service) CallPut() CallPut {
+	return s.cache.callPut
 }

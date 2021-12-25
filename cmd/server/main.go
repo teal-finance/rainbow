@@ -16,6 +16,7 @@ import (
 
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+	"github.com/teal-finance/rainbow/pkg/rainbow/api/apigraphql"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
@@ -59,6 +60,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 
 	r.With(g.JWT.Set).Mount("/", WebHandler(g, *wwwDir))
 	r.With(g.JWT.Chk).Mount("/v0", s.Handler())
+	r.With(g.JWT.Chk).Mount("/graphql", apigraphql.Handler(s))
 
 	return r
 }
