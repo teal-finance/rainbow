@@ -19,9 +19,9 @@ type Provider interface {
 }
 
 type Store interface {
-	InsertOptions(provider string, options []Option) error
-	GetOptions(provider string) ([]Option, error)
-	GetAllOptions() ([]Option, error)
+	InsertOptions(options []Option) error
+	OptionsByProvider(provider string) ([]Option, error)
+	Options() ([]Option, error)
 }
 
 type Service struct {
@@ -44,7 +44,7 @@ func NewService(p []Provider, s Store) Service {
 
 func (s *Service) initCache() {
 	if s.cache.Empty() {
-		options, err := s.store.GetAllOptions()
+		options, err := s.store.Options()
 		if err != nil {
 			log.Print("ERROR store.GetAllOptions ", err)
 			return
@@ -82,14 +82,14 @@ func (s *Service) OptionsFromProviders() []Option {
 		if err != nil {
 			log.Print("WARN fetching data from ", p, " : ", err)
 
-			o, err = s.store.GetOptions(p.Name())
+			o, err = s.store.OptionsByProvider(p.Name())
 			if err != nil {
 				log.Print("WARN no data in DB for ", p, " : ", err)
 				continue
 			}
 		}
 
-		err = s.store.InsertOptions(p.Name(), o)
+		err = s.store.InsertOptions(o)
 		if err != nil {
 			log.Print("WARN cannot store data in DB for ", p, " : ", err)
 		}
@@ -106,5 +106,5 @@ func (s *Service) OptionsFromProviders() []Option {
 }
 
 func (s *Service) Options() ([]Option, error) {
-	return s.store.GetAllOptions()
+	return s.store.Options()
 }
