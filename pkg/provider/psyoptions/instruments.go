@@ -9,18 +9,18 @@ import (
 
 type instrument struct {
 	PsyOptionsProgramID          string
-	OptionMarketAddress          string
-	OptionContractMintAddress    string
-	OptionWriterTokenMintAddress string
-	QuoteAssetMint               string
-	QuoteAssetPoolAddress        string
-	UnderlyingAssetMint          string
-	UnderlyingAssetPoolAddress   string
-	UnderlyingAssetPerContract   string
-	QuoteAssetPerContract        string
+	OptionMarketAddress          string //account
+	OptionContractMintAddress    string //OptionMint
+	OptionWriterTokenMintAddress string //WriterTokenMint
+	QuoteAssetMint               string //QuoteAssetMint
+	QuoteAssetPoolAddress        string //QuoteAssetPool
+	UnderlyingAssetMint          string //UnderlyingAssetMint
+	UnderlyingAssetPoolAddress   string //UnderlyingAssetPool
+	UnderlyingAssetPerContract   string //UnderlyingAmountPerContract
+	QuoteAssetPerContract        string //QuoteAmountPerContract
 	SerumMarketAddress           string
 	SerumProgramID               string
-	Expiry                       int64
+	Expiry                       int64 //ExpirationUnixTimestamp
 }
 
 // Expiration will be used in .Name() when fixed.
@@ -37,7 +37,7 @@ func (i instrument) asset() string {
 		return "ETH"
 	case i.QuoteAssetMint == BTCAddress || i.UnderlyingAssetMint == BTCAddress:
 		return "BTC"
-	case i.QuoteAssetMint == SolAddress || i.UnderlyingAssetMint == SolAddress:
+	case i.QuoteAssetMint == SOLAddress || i.UnderlyingAssetMint == SOLAddress:
 		return "SOL"
 	default:
 		return "???"
