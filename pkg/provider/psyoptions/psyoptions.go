@@ -1,9 +1,3 @@
-// Copyright (c) 2021 Teal.Finance
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT.
-
 package psyoptions
 
 import (
@@ -11,18 +5,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/streamingfast/solana-go"
-	"github.com/streamingfast/solana-go/programs/serum"
-	"github.com/streamingfast/solana-go/rpc"
-
+	"github.com/gagliardetto/solana-go"
+	"github.com/gagliardetto/solana-go/programs/serum"
+	"github.com/gagliardetto/solana-go/rpc"
+	"github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
-)
-
-const (
-	listMarketsURL   = "wss://api.psyoptions.io/v1/graphql"
-	PsyQuoteCurrency = "USDC"
-	mainnet          = "https://solana-api.projectserum.com" // https://api.mainnet-beta.solana.com"
-	devnet           = "https://api.devnet.solana.com"
 )
 
 type Provider struct{}
@@ -32,14 +19,16 @@ func (Provider) Name() string {
 }
 
 func (p Provider) Options() ([]rainbow.Option, error) {
-	// instruments := append(oldInstruments("ETH"), oldInstruments("BTC")...)
-	instruments := query()
-	client := rpc.NewClient(mainnet)
+	instruments, err := anchor.Query()
+	if err != nil {
+		return nil, fmt.Errorf("anchor.query: %w", err)
+	}
+	client := rpc.New(rpc.MainNetBeta_RPC)
 
 	options := make([]rainbow.Option, 0, len(instruments))
 
 	for _, i := range instruments {
-		pubKey := solana.MustPublicKeyFromBase58(i.SerumMarketAddress)
+		pubKey := solana.MustPublicKeyFromBase58(i.SerumMarketAddress())
 
 		ctx := context.TODO()
 
@@ -48,61 +37,61 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			return nil, fmt.Errorf("serum.FetchMarket: %w", err)
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
-		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.contractSize())
+		bids, _, err := normalizeOrders(ctx, out, client, out.MarketV2.Bids, true, i.ContractSize())
 		if err != nil {
 			return nil, err
 		}
 
-		asks, _, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false, i.contractSize())
+		asks, _, err := normalizeOrders(ctx, out, client, out.MarketV2.Asks, false, i.ContractSize())
 		if err != nil {
 			return nil, err
 		}
 
 		options = append(options, rainbow.Option{
-			Name:          i.name(),
-			Type:          i.optionType(),
-			Asset:         i.asset(),
-			Expiry:        i.expiration(),
-			Strike:        i.strike(),
+			Name:          i.Name(),
+			Type:          i.OptionType(),
+			Asset:         i.Asset(),
+			Expiry:        i.Expiration(),
+			Strike:        i.Strike(),
 			ExchangeType:  "DEX",
 			Chain:         "Solana",
 			Layer:         "L1",
 			Provider:      "PsyOptions",
-			QuoteCurrency: PsyQuoteCurrency,
+			QuoteCurrency: i.Quote(),
 			Bid:           bids,
 			Ask:           asks,
 		})
+
+		return options, nil
 	}
 
-	return options, nil
 }
 
 // I don't really need the totalsize but I am keeping it since it was in the original func:
 //     - ASK on the top so desc=true
 //     - BID down so desc=false
-func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, totalSize float64, err error) {
+func normalizeOrders(ctx context.Context, market *serum.MarketMeta, client *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, totalSize float64, err error) {
 	var o serum.Orderbook
-	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
-		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
+	if err := client.GetAccountDataInto(ctx, address, &o); err != nil {
+		return nil, 0, fmt.Errorf("getting orderbook: %w", err)
 	}
 
 	limit := 20
 	levels := [][]*big.Int{}
 
-	err = o.Items(desc, func(node *serum.SlabLeafNode) error {
+	o.Items(desc, func(node *serum.SlabLeafNode) error {
 		quantity := big.NewInt(int64(node.Quantity))
 		price := node.GetPrice()
 		if len(levels) > 0 && levels[len(levels)-1][0].Cmp(price) == 0 {
 			current := levels[len(levels)-1][1]
 			levels[len(levels)-1][1] = new(big.Int).Add(current, quantity)
-		} else if len(levels) != limit {
+		} else if len(levels) == limit {
+			return fmt.Errorf("done")
+		} else {
 			levels = append(levels, []*big.Int{price, quantity})
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
-	}
 
 	for _, level := range levels {
 		p := market.PriceLotsToNumber(level[0])

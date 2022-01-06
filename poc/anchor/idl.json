@@ -182,6 +182,67 @@
       ]
     },
     {
+      "name": "mintOptionV2",
+      "accounts": [
+        {
+          "name": "userAuthority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "underlyingAssetMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "underlyingAssetPool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "underlyingAssetSrc",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "optionMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintedOptionDest",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "writerTokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintedWriterTokenDest",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "optionMarket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "size",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "exerciseOption",
       "accounts": [
         {
@@ -720,6 +781,14 @@
       "code": 326,
       "name": "CannotPruneActiveMarket",
       "msg": "Cannot prune the market while it's still active"
+    },
+    {
+      "code": 327,
+      "name": "NumberOverflow",
+      "msg": "Numberical overflow"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
+  }
 }

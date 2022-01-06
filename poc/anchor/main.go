@@ -25,9 +25,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	spew.Dump(len(out[0:10]))
+	//spew.Dump(len(out[0:3]))
 	for _, i := range out[0:10] {
 		spew.Dump(i)
+		out, err := client.GetAccountInfo(
+			context.TODO(),
+			i.Pubkey,
+		)
+		spew.Dump(out)
+		if err != nil {
+			panic(err)
+		}
 		opt := new(OptionMarket)
 		err = bin.NewBinDecoder(i.Account.Data.GetBinary()).Decode(&opt)
 		if err != nil {

@@ -38,7 +38,9 @@ anchor idl parse -f lib.rs -o idl.json
 
 Note:
 There are 2 Solana go libraries and they are pretty similar:
+
 github.com/gagliardetto/solana-go
+
 github.com/streamingfast/solana-go
 
 We were using the second one but since `anchor-go` is from the same authors as the first one, we will switch all the code to use that lib.
