@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/friendsofgo/graphiql"
 	"github.com/go-chi/chi/v5"
 	"github.com/teal-finance/garcon"
 
@@ -58,9 +59,15 @@ func main() {
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
 
+	graphiqlHandler, err := graphiql.NewGraphiqlHandler("/graphql")
+	if err != nil {
+		panic(err)
+	}
+
 	r.With(g.JWT.Set).Mount("/", WebHandler(g, *wwwDir))
 	r.With(g.JWT.Chk).Mount("/v0", s.Handler())
 	r.With(g.JWT.Chk).Mount("/graphql", apigraphql.Handler(s))
+	r.With(g.JWT.Chk).Mount("/graphiql", graphiqlHandler)
 
 	return r
 }
