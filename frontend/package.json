@@ -17,6 +17,8 @@
     "@snowind/state": "^0.0.2",
     "@snowind/switch": "^0.0.4",
     "@vueuse/core": "^7.2.2",
+    "graphql": "^16.2.0",
+    "graphql-request": "^3.7.0",
     "gzipper": "^6.0.0",
     "vue": "^3.2.19",
     "vue-router": "4"
