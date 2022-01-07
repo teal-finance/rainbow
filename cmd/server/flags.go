@@ -13,10 +13,15 @@ import (
 	"strconv"
 )
 
+const (
+	defaultAddr = "http://localhost"
+	defaultPort = 8090
+)
+
 var (
 	dev          = flag.Bool("dev", false, "Run rainbow in dev. mode")
-	mainAddr     = flag.String("addr", envStr("MAIN_ADDR", "http://localhost"), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
-	mainPort     = flag.Int("port", envInt("MAIN_PORT", 8090), "API port, has precedence over MAIN_PORT")
+	mainAddr     = flag.String("addr", envStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
+	mainPort     = flag.Int("port", envInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
 	expPort      = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
 	reqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 88), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	reqBurst     = flag.Int("burst", envInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
@@ -29,7 +34,7 @@ func parseFlags() {
 
 	listenAddr = ":" + strconv.Itoa(*mainPort)
 
-	if !*dev && *mainAddr == "http://localhost" && *mainPort == 8090 {
+	if !*dev && *mainAddr == defaultAddr && *mainPort == defaultPort {
 		*dev = true
 
 		log.Print("Enable -dev mode because -addr and -port are not used")
