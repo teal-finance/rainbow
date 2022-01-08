@@ -21,7 +21,11 @@ import (
 func main() {
 	service := rainbow.NewService(provider.AllProviders(), dbram.NewDB())
 
-	options := service.OptionsFromProviders()
+	service.FetchOptionsFromProviders()
+	options, err := service.Options(rainbow.StoreArgs{})
+	if err != nil {
+		panic(err)
+	}
 
 	printTable(options)
 }
