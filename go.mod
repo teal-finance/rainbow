@@ -5,10 +5,9 @@ go 1.16
 require (
 	github.com/Khan/genqlient v0.3.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/gagliardetto/anchor-go v0.2.2 // indirect
 	github.com/gagliardetto/binary v0.5.2
 	github.com/gagliardetto/gofuzz v1.2.2
-	github.com/gagliardetto/solana-go v1.0.3
+	github.com/gagliardetto/solana-go v1.0.4
 	github.com/gagliardetto/treeout v0.1.4
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/gookit/color v1.5.0

@@ -19,16 +19,16 @@ func (Provider) Name() string {
 }
 
 func (p Provider) Options() ([]rainbow.Option, error) {
-	instruments, err := anchor.Query()
+	rawOptions, err := anchor.Query()
 	if err != nil {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
 	client := rpc.New(rpc.MainNetBeta_RPC)
 
-	options := make([]rainbow.Option, 0, len(instruments))
+	options := make([]rainbow.Option, 0, len(rawOptions))
 
-	for _, i := range instruments {
-		pubKey := solana.MustPublicKeyFromBase58(i.SerumMarketAddress())
+	for _, i := range rawOptions {
+		pubKey := i.SerumMarketAddress()
 
 		ctx := context.TODO()
 
@@ -62,9 +62,8 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			Ask:           asks,
 		})
 
-		return options, nil
 	}
-
+	return options, nil
 }
 
 // I don't really need the totalsize but I am keeping it since it was in the original func:

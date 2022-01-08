@@ -16,12 +16,12 @@ const PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
 
 func Query() ([]Option, error) {
 	var result []Option
-	pub := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
+	psyoptionsPubkey := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
 	client := rpc.New(rpc.MainNetBeta_RPC)
 
 	out, err := client.GetProgramAccounts(
 		context.TODO(),
-		pub,
+		psyoptionsPubkey,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("RPC GetProgramAccounts: %w", err)
@@ -29,19 +29,38 @@ func Query() ([]Option, error) {
 	}
 	for _, i := range out {
 		o := new(Option)
-		err = bin.NewBinDecoder(i.Account.Data.GetBinary()).Decode(&o.opt)
+		o.optionMarketAddress = i.Pubkey
+		err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&o.opt)
 		if err != nil {
 			return nil, fmt.Errorf("Parsing Options: %w", err)
 
 		}
+		if o.IsExpired() {
+			continue
+		}
+		if o.IsCall() {
+			o.serumMarketAddress, _, err = deriveSerumMarketAddress(o.optionMarketAddress, o.opt.QuoteAssetMint, psyoptionsPubkey)
+		} else {
+			o.serumMarketAddress, _, err = deriveSerumMarketAddress(o.optionMarketAddress, o.opt.UnderlyingAssetMint, psyoptionsPubkey)
+		}
+		if err != nil {
+			return nil, fmt.Errorf("Derivation Serum Address: %w", err)
+
+		}
+
 		result = append(result, *o)
 	}
 	return result, nil
 }
 
 type Option struct {
-	opt                psy.OptionMarket
-	serumMarketAddress string
+	opt                 psy.OptionMarket
+	optionMarketAddress solana.PublicKey
+	serumMarketAddress  solana.PublicKey
+}
+
+func (o Option) OptionMarketAddress() solana.PublicKey {
+	return o.optionMarketAddress
 }
 
 // Expiration will be used in .Name() when fixed.
@@ -52,10 +71,34 @@ func (o Option) Expiration() string {
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
 
-func (o Option) SerumMarketAddress() string {
+func (o Option) SerumMarketAddress() solana.PublicKey {
 	return o.serumMarketAddress
 }
 
+//https://github.com/mithraiclabs/psyoptions-ts/blob/87afa7280c33f341198c60676d2302c55bbfab5f/packages/psy-american/src/serumUtils.ts#L161-L174
+func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, programid solana.PublicKey) (solana.PublicKey, uint8, error) {
+	seed := [][]byte{
+		optionMarketAddress[:],
+		priceCurrencyAddress[:],
+		[]byte("serumMarket"),
+	}
+	return solana.FindProgramAddress(seed, programid)
+}
+
+//Expired
+//the Options have a field "Expired"(bool) but it is not set to false even for expired hence the function
+func (o Option) IsExpired() bool {
+	seconds := o.opt.ExpirationUnixTimestamp
+	expiryTime := time.Unix(seconds, 0).UTC()
+
+	//copy from opyn.go. should make a proper function
+
+	// we keep an option even 2 days after expiry
+	// mainly because not all protocol stop at expiry or right before
+	// TODO re-check later
+	date := time.Now()
+	return !expiryTime.After(date.Add(-time.Hour * 48))
+}
 func (o Option) Asset() string {
 	switch {
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(ETHAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(ETHAddress):
@@ -80,6 +123,19 @@ func (o Option) Quote() string {
 		return "USD"
 	}
 }
+
+func (o Option) QuotePublicKey() solana.PublicKey {
+	q := o.Quote()
+	switch {
+	case q == "USDC":
+		return solana.MustPublicKeyFromBase58(USDCAddress)
+	case q == "PAI":
+		return solana.MustPublicKeyFromBase58(PAIAddress)
+	default: // should be USD
+		return solana.MustPublicKeyFromBase58(USDCAddress)
+	}
+}
+
 func (o Option) ContractSize() float64 {
 	switch {
 	case o.Asset() == "ETH":
@@ -106,6 +162,10 @@ func (o Option) OptionType() string {
 	}
 
 	return "PUT"
+}
+
+func (o Option) IsCall() bool {
+	return o.OptionType() == "CALL"
 }
 
 func (o Option) Strike() float64 {
