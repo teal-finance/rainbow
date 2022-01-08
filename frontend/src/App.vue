@@ -12,19 +12,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
+import { defineComponent } from 'vue'
 import { user } from "@/state";
 import TheHeader from './components/TheHeader.vue';
-import { query } from './api/graphql';
 
 export default defineComponent({
   components: {
     TheHeader,
   },
   setup() {
-    onMounted(() => {
-      query()
-    })
+
     return {
       user,
     }
