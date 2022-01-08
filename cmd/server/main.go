@@ -65,7 +65,6 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	}
 
 	r.With(g.JWT.Set).Mount("/", WebHandler(g, *wwwDir))
-	r.With(g.JWT.Chk).Mount("/v0", s.Handler())
 	r.With(g.JWT.Chk).Mount("/graphql", apigraphql.Handler(s))
 	r.With(g.JWT.Chk).Mount("/graphiql", graphiqlHandler)
 
