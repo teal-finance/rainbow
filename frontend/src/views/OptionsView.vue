@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
-import api from '@/api';
 import Option from '@/models/options/option';
 import SwDataTableModel from "@/packages/datatable/models/datatable";
 import ValuesFilter from '@/packages/datatable/filters/ValuesFilter.vue'
@@ -37,6 +36,7 @@ import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
 import OptionsDatatable from '@/components/OptionsDatatable.vue';
 import LoadingIndicator from '@/components/widgets/LoadingIndicator.vue';
 import { isMobile } from '@/state';
+import { query } from '@/api/graphql';
 
 export default defineComponent({
   components: {
@@ -47,13 +47,6 @@ export default defineComponent({
   setup() {
     const datatable = ref(new SwDataTableModel<OptionsTable>());
     const isReady = ref(false);
-
-    async function fetchData() {
-      const uri = "v0/options/cp"
-      const data = await api.get<OptionsJsonDataset>(uri);
-      //console.log("DATA", data)
-      return data;
-    }
 
     function loadData(dataset: OptionsJsonDataset) {
       // console.log("DATA", dataset)
@@ -78,15 +71,13 @@ export default defineComponent({
         "putAskSize": "Size",
       }
       datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
-      //datatable.value.setColumnsFromData();
     }
 
     onMounted(() => {
-      fetchData().then((d) => {
+      query().then((d) => {
         loadData(d);
         isReady.value = true;
       });
-      //loadData(data)
     })
 
     return {

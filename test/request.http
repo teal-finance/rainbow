@@ -1,0 +1,41 @@
+GET http://localhost:8090/v0/options/cp
+
+###
+
+POST http://localhost:8090/graphql
+
+{
+    "query": "query { rows { date, expiry, provider, asset, strike, call{bid{px, size}, ask{px, size}}, put{bid{px, size}, ask{px, size}} } }"
+}
+
+###
+
+POST http://localhost:8090/graphql
+
+{
+    "query": "query { rows { date, expiry, provider, asset, strike } }"
+}
+
+###
+
+POST http://localhost:8090/graphql
+
+{
+    "query": "query { rows (assets: [\"BTC\",\"ETH\"]) { date, expiry, provider, asset, strike } }"
+}
+
+###
+
+POST http://localhost:8090/graphql
+
+{
+    "query": "query { rows (providers: [\"PsyOptions\"]) { date, provider, asset, strike } }"
+}
+
+###
+
+POST http://localhost:8090/graphql
+
+{
+    "query": "query { rows (assets: [\"BTC\"], providers: [\"PsyOptions\"]) { date, provider, asset, strike } }"
+}

@@ -53,31 +53,6 @@ func extract(i getOptionsOtokensOToken) (optionType, expiry string, strike float
 	return optionType, expiry, strike
 }
 
-func getOrderbook(i getOptionsOtokensOToken) (ob OrderBook, err error) {
-	var resp *http.Response
-
-	url := "https://api.0x.org/orderbook/v1?quoteToken=" + i.Id + "&baseToken=" + USDC
-	if resp, err = http.Get(url); err != nil {
-		err = fmt.Errorf("url=%v %w", url, err)
-		return
-	}
-
-	var j []byte
-	j, err = io.ReadAll(resp.Body)
-	resp.Body.Close()
-
-	if err != nil {
-		err = fmt.Errorf("cannot ReadAll: %w", err)
-		return
-	}
-
-	if err = json.Unmarshal(j, &ob); err != nil {
-		err = fmt.Errorf("WARN %w when json.Unmarshal: %v", err, string(j))
-	}
-
-	return
-}
-
 // getQuote you can get the quote in the side you want with 0x
 // but for us we will focus on always buying or selling a certain amount of options
 // so Asks/SELL side (so you send a buy inquiry): sellToken=usdc, buyToken=option address
@@ -158,25 +133,6 @@ func (sr *stubbornRequester) failure(err error) {
 	sr.sleep = newSleep
 }
 
-func (sr *stubbornRequester) getOrderBook(i getOptionsOtokensOToken) (ob OrderBook, err error) {
-	for n := 0; n < 22; n++ {
-		if sr.ok+sr.ko > 0 {
-			time.Sleep(sr.sleep)
-		}
-
-		ob, err = getOrderbook(i)
-
-		if err == nil {
-			sr.success(n)
-			break
-		}
-
-		sr.failure(err)
-	}
-
-	return ob, err
-}
-
 func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount float64, decimals int) (q Quote, err error) {
 	for n := 0; n < 22; n++ {
 		if sr.ok+sr.ko > 0 {
@@ -199,52 +155,6 @@ func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount f
 func (sr *stubbornRequester) logStats() {
 	log.Printf("stats: bad=%v sleep=%v ok=%v ko=%v",
 		sr.maxBad, sr.sleep, sr.ok, sr.ko)
-}
-
-func oldNormalize(instruments []getOptionsOtokensOToken, provider string) ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
-
-	sr := defaultStubbornRequester
-
-	for _, i := range instruments {
-		ob, err := sr.getOrderBook(i)
-		if err != nil {
-			log.Print("getOrderBook ", err)
-			continue
-		}
-
-		optionType, expiry, strike := extract(i)
-
-		bids, err := normalizeOrders(ob.Bids.Records)
-		if err != nil {
-			return nil, err
-		}
-
-		asks, err := normalizeOrders(ob.Asks.Records)
-		if err != nil {
-			return nil, err
-		}
-
-		options = append(options, rainbow.Option{
-			Name:          i.Name,
-			Type:          optionType,
-			Asset:         i.CollateralAsset.Symbol,
-			Expiry:        expiry,
-			Strike:        strike,
-			ExchangeType:  "DEX",
-			Chain:         "Ethereum",
-			Layer:         "L1",
-			Provider:      provider,
-			QuoteCurrency: i.UnderlyingAsset.Symbol,
-
-			Bid: bids,
-			Ask: asks,
-		})
-	}
-
-	sr.logStats()
-
-	return options, nil
 }
 
 type Orders struct {
@@ -287,33 +197,6 @@ type Record struct {
 		} `json:"signature"`
 		ChainID int `json:"chainId"`
 	} `json:"order"`
-}
-
-// The result is false because I don't properly take into account the decimals
-// Use GetQuote instead.
-func normalizeOrders(records []Record) ([]rainbow.Order, error) {
-	offers := make([]rainbow.Order, 0, len(records))
-
-	for _, r := range records {
-		takerAmount, err := strconv.ParseFloat(r.Order.TakerAmount, 64)
-		if err != nil {
-			return []rainbow.Order{}, err
-		}
-
-		makerAmount, err := strconv.ParseFloat(r.Order.MakerAmount, 64)
-		if err != nil {
-			return []rainbow.Order{}, err
-		}
-
-		offers = append(
-			offers,
-			rainbow.Order{
-				Price: makerAmount / takerAmount,
-				Size:  takerAmount * math.Pow(10, -float64(OTokensDecimals)),
-			})
-	}
-
-	return offers, nil
 }
 
 func normalize(instruments []getOptionsOtokensOToken, provider string, amount float64) ([]rainbow.Option, error) {

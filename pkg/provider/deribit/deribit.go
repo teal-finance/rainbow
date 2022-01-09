@@ -116,7 +116,7 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 	return filtered
 }
 
-//TODO change this quick and dirty way of filtering date from deribit
+//TODO change this quick and dirty way of filtering date from deribit.
 func isExpiryAvailable(expiry time.Time) bool {
 	dates := []string{
 		"2021-11-26T08:00:00Z",
@@ -132,7 +132,7 @@ func isExpiryAvailable(expiry time.Time) bool {
 	return false
 }
 
-// TODO change this quick and dirty way of filtering strikes from deribit
+// TODO change this quick and dirty way of filtering strikes from deribit.
 func isStrikeAvailable(i instrument) bool {
 	ethStrike := []float64{1280, 3000, 3400, 3600, 3700, 4000, 4100, 4500, 4400, 4800, 5000, 5200, 8000}
 	btcStrike := []float64{40000, 50000, 55000, 60000, 65000, 66000, 70000, 100000}
