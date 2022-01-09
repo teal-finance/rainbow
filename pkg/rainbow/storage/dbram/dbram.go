@@ -65,7 +65,7 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 	return filtered, nil
 }
 
-// TODO goA.18: use generics with constraint comparable
+// TODO go1.18: use generics with constraint comparable.
 func containsAsset(elem string, arr []string) bool {
 	for _, x := range arr {
 		// use of strings.Contains because we allow some cases like WETH as ETH

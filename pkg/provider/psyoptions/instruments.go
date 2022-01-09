@@ -87,7 +87,7 @@ func (i instrument) name() string {
 		fmt.Sprintf("%.0f", i.strike()) + "-" + i.optionType()
 }
 
-//TODO change this quick and dirty way of fetching the available options from PsyOptions
+//TODO change this quick and dirty way of fetching the available options from PsyOptions.
 func query() []instrument {
 	return []instrument{
 		{
