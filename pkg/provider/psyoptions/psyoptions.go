@@ -1,27 +1,19 @@
-// Copyright (c) 2021 Teal.Finance
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT.
-
 package psyoptions
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/big"
 
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
-
+	"github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const (
-	PsyQuoteCurrency = "USDC"
-	mainnet          = "https://solana-api.projectserum.com" // https://api.mainnet-beta.solana.com"
-)
+const serummainnet = "https://solana-api.projectserum.com"
 
 type Provider struct{}
 
@@ -30,48 +22,55 @@ func (Provider) Name() string {
 }
 
 func (p Provider) Options() ([]rainbow.Option, error) {
-	// instruments := append(oldInstruments("ETH"), oldInstruments("BTC")...)
-	instruments := query()
-	client := rpc.NewClient(mainnet)
+	rawOptions, err := anchor.Query()
+	if err != nil {
+		return nil, fmt.Errorf("anchor.query: %w", err)
+	}
+	client := rpc.NewClient(serummainnet)
 
-	options := make([]rainbow.Option, 0, len(instruments))
+	options := make([]rainbow.Option, 0, len(rawOptions))
 
-	for _, i := range instruments {
-		pubKey := solana.MustPublicKeyFromBase58(i.SerumMarketAddress)
+	for _, i := range rawOptions {
+		pubKey := solana.PublicKey(i.SerumMarketAddress())
 
 		ctx := context.TODO()
 
 		out, err := serum.FetchMarket(ctx, client, pubKey)
 		if err != nil {
-			return nil, fmt.Errorf("serum.FetchMarket: %w", err)
+			//for now because error in serumaddress generated
+			continue
+			//return nil, fmt.Errorf("serum.FetchMarket: %w", err)
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
-		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.contractSize())
+		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.ContractSize())
 		if err != nil {
 			return nil, err
 		}
 
-		asks, _, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false, i.contractSize())
+		asks, _, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false, i.ContractSize())
 		if err != nil {
 			return nil, err
 		}
 
 		options = append(options, rainbow.Option{
-			Name:          i.name(),
-			Type:          i.optionType(),
-			Asset:         i.asset(),
-			Expiry:        i.expiration(),
-			Strike:        i.strike(),
+			Name:          i.Name(),
+			Type:          i.OptionType(),
+			Asset:         i.Asset(),
+			Expiry:        i.Expiration(),
+			Strike:        i.Strike(),
 			ExchangeType:  "DEX",
 			Chain:         "Solana",
 			Layer:         "L1",
 			Provider:      "PsyOptions",
-			QuoteCurrency: PsyQuoteCurrency,
+			QuoteCurrency: i.Quote(),
 			Bid:           bids,
 			Ask:           asks,
 		})
-	}
 
+	}
+	if len(options) == 0 {
+		return nil, errors.New("empty options lists")
+	}
 	return options, nil
 }
 
