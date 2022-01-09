@@ -1,24 +1,33 @@
 # Build:
 #
-#    DOCKER_BUILDKIT=1 
-#    docker  build --build-arg addr=http://my.dns.co --build-arg port=8088 -t rainbow .
-#    podman  build --build-arg addr=http://my.dns.co --build-arg port=8088 -t rainbow .
-#    buildah build --build-arg addr=http://my.dns.co --build-arg port=8088 -t rainbow .
+#    export DOCKER_BUILDKIT=1 
+#    docker  build --build-arg addr=http://my.dns.co:1111 --build-arg port=2222 --build-arg base=/rainbow/ -t rainbow .
+#    podman  build --build-arg addr=http://my.dns.co:1111 --build-arg port=2222 --build-arg base=/rainbow/ -t rainbow .
+#    buildah build --build-arg addr=http://my.dns.co:1111 --build-arg port=2222 --build-arg base=/rainbow/ -t rainbow .
 #
 # Run:
 #
-#    docker run -p 0.0.0.0:8088:8088 -d -e EXP_PORT=9868 --name rainbow rainbow
-#    podman run -p 0.0.0.0:8088:8088 -d -e EXP_PORT=9868 --name rainbow rainbow
-#
-# One command line:
-#
-#    ( set -x ; podman  build -t rainbow --build-arg port=8088 . && { podman stop rainbow ; podman rm rainbow ; podman run -p 0.0.0.0:8088:8088 -d --name rainbow rainbow && sleep 1 && podman logs --follow rainbow ; } )
-
+#    docker run -d --rm -p 0.0.0.0:1111:2222 -e EXP_PORT=9868 --name rainbow rainbow
+#    podman run -d --rm -p 0.0.0.0:1111:2222 -e EXP_PORT=9868 --name rainbow rainbow
 
 # --------------------------------------------------------------------
-# Arguments to control server address (CORS, API, front-end)
-ARG addr=http://localhost
-ARG port=8884
+# Arguments:
+# - addr is used:
+#   - by frontend as the API scheme and host.
+#   - by backend to set CORS origin ard Cookie domain.
+# - base is passed to frontend with --base (the path prefix stripped by the reverse-proxy).
+#   The frontend also uses it to compose the API URL.
+# - port is used by backend as the litenning port to serve API and static website files.
+
+# Default values are for dev mode:
+ARG addr=http://localhost:8888
+ARG base=/
+ARG port=8888
+
+# Example of Prod values:
+# addr = https://my.dns.co
+# base = /rainbow/
+# port = 8888
 
 # --------------------------------------------------------------------
 FROM docker.io/node:16-alpine3.14 AS web_builder
@@ -46,14 +55,13 @@ COPY frontend/public public
 COPY frontend/src    src
 
 ARG addr
-ARG port
+ARG base
 
-RUN set -x                                                     &&\
-    ls -lA                                                     &&\
-    sed -e "s|^VITE_API_ADDR=.*|VITE_API_ADDR=$addr|"            \
-        -e "s|^VITE_API_PORT=.*|VITE_API_PORT=$port|" -i .env  &&\
-    head .env                                                  &&\
-    yarn build                                                 &&\
+RUN set -x                                             &&\
+    ls -lA                                             &&\
+    sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  &&\
+    head .env                                          &&\
+    yarn build --base "$base"                          &&\
     yarn compress
 
 # --------------------------------------------------------------------
@@ -120,6 +128,7 @@ RUN mkdir lib        &&\
 FROM scratch AS final
 
 ARG addr
+ARG base
 ARG port
 
 COPY --chown=5505:5505 --from=integrator /target /
@@ -130,7 +139,7 @@ USER teal:teal
 # Use UTC time zone by default
 ENV TZ        UTC0
 ENV WWW_DIR   /var/www
-ENV MAIN_ADDR "$addr"
+ENV MAIN_ADDR "$addr$base"
 ENV MAIN_PORT "$port"
 ENV EXP_PORT  9868
 

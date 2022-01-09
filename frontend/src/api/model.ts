@@ -7,16 +7,16 @@
 import ApiParams from "./interface";
 
 class Api {
-  serverUrl: string;
+  url: string;
   verbose: boolean;
 
-  constructor({ serverUrl, verbose, onError }: ApiParams) {
-    this.serverUrl = serverUrl;
+  constructor({ url, verbose, onError }: ApiParams) {
+    this.url = url;
     this.verbose = verbose;
   }
 
   async get<T>(uri: string, local = false): Promise<T> {
-    let url = this.serverUrl + uri;
+    let url = this.url + uri;
     if (local) {
       url = uri;
     }

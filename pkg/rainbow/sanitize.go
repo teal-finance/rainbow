@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-// cleanAsset removes "W" (or "w") in "WETC" and "WBTC".
-func cleanAsset(asset string) string {
+// sanitizeAsset removes "W" (or "w") in "WETC" and "WBTC".
+func sanitizeAsset(asset string) string {
 	if len(asset) >= 4 && (asset[0] == 'W' || asset[0] == 'w') {
 		return asset[1:]
 	}
@@ -21,12 +21,13 @@ func cleanAsset(asset string) string {
 }
 
 // prettyDate converts "2021-12-31 23:59:59" into "Dec 31".
-func prettyDate(date string) string {
+func sanitizeDate(date string) string {
 	t, err := time.Parse("2006-01-02 15:04:05", date)
 	if err != nil {
 		log.Printf("WARN prettyDate() cannot parse %q", date)
 		return date
 	}
+<<<<<<< HEAD:pkg/rainbow/clean.go
 
 	const (
 		monthLayout = "Jan"
@@ -39,4 +40,7 @@ func prettyDate(date string) string {
 	b = t.AppendFormat(b, dayLayout)
 
 	return string(b)
+=======
+	return t.Format("Jan 02")
+>>>>>>> main:pkg/rainbow/sanitize.go
 }

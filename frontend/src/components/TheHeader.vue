@@ -1,7 +1,7 @@
 <template>
   <div>
     <sw-header
-      class="h-20 bg-primary dark:bg-primary-dark text-primary-r dark:text-primary-r-dark"
+      class="h-20 bg-primary dark:bg-header-dark text-primary-r dark:text-primary-r-dark"
       @togglemenu="isMenuVisible = !isMenuVisible"
     >
       <template #branding>
@@ -35,6 +35,11 @@
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
+          <button class="border-none btn" @click="$router.push('/about')">About</button>
+          <button class="border-none btn" @click="openSourceCode()">
+            Source code
+            <i-ant-design-github-filled></i-ant-design-github-filled>
+          </button>
           <div class="px-5 text-lg cursor-pointer" @click="user.toggleDarkMode()">
             <i-fa-solid-moon v-if="user.isDarkMode.value == false"></i-fa-solid-moon>
             <i-fa-solid-sun v-else></i-fa-solid-sun>
@@ -44,12 +49,21 @@
     </sw-header>
     <sw-mobile-menu
       :is-visible="isMenuVisible"
-      class="bg-neutral text-neutral-r dark:bg-neutral-dark dark:text-neutral-r-dark"
+      class="bg-neutral text-neutral-r dark:bg-background-dark dark:text-neutral-r"
     >
       <div class="flex flex-col items-center p-3 space-y-5">
         <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
+        <div class="w-full border-b border-foreground">
+          <button class="w-full border-none btn" @click="router.push('/about')">About</button>
+        </div>
+        <div class="w-full border-b border-foreground">
+          <button class="w-full border-none btn">
+            Source code
+            <i-ant-design-github-filled></i-ant-design-github-filled>
+          </button>
+        </div>
         <div
-          class="px-5 text-lg cursor-pointer"
+          class="w-full px-5 text-lg text-center border-b cursor-pointer border-foreground"
           @click="user.toggleDarkMode(); isMenuVisible = false"
         >
           <div v-if="user.isDarkMode.value == false">
@@ -95,6 +109,10 @@ export default defineComponent({
       closeMenu();
     }
 
+    function openSourceCode() {
+      window.location.href = 'https://github.com/teal-finance/rainbow'
+    }
+
     return {
       isMenuVisible,
       closeMenu,
@@ -102,6 +120,7 @@ export default defineComponent({
       isHome,
       openView,
       mobilePageTitle,
+      openSourceCode,
     }
   }
 });

@@ -4,11 +4,12 @@
 ---|---
 
 ## Live Demo
-Rainbow is live at https://teal.finance/rainbow/
-Please gives some feedback via  GitHub issue or contact us at Teal.Finance[at]protonmail.com.
 
+Rainbow is live at <https://teal.finance/rainbow/>
+Please gives some feedback via  GitHub issue or contact us at Teal.Finance[at]protonmail.com or using Twitter [@TealFinance](https://twitter.com/TealFinance).
 
 ## Motivations
+
 **Rainbow** was inspired by the following trends:
 
 * Crypto-assets and DeFi becoming mainstream,
@@ -21,8 +22,7 @@ The crypto derivatives markets are expected to grow a lot more in the upcoming y
 Specifically, the options markets will see the biggest growth because in Finance, Option market is much bigger
 than the underlying spot market. This is lagging in Crypto, when we look at Deribit's volume, the main (centralized) venue for Crypto Options, compared to Perpetuals future.
 
-More info on our motivations: https://cryptonuage.com/posts/internet-of-decentralized-options/
-
+More info on our motivations: <https://cryptonuage.com/posts/internet-of-decentralized-options/>
 
 ## Current status
 
@@ -33,7 +33,6 @@ Supported Options exchanges:
 * [Opyn(Ethereum)](https://www.opyn.co/):  DeFi protocol using TheGraph & 0x.
 
 * [PsyOptions(Solana)](https://www.psyoptions.io/): DeFi protocol build on Serum order books.
-
 
 ## Requirements
 
@@ -82,7 +81,7 @@ To run the Vue3 front-end in dev mode:
 
     cd frontend
     yarn
-    yarn dev
+    yarn dev --open
 
 Else, in prod mode, the back-end serves the web static files from `frontend/dist`.
 
@@ -94,7 +93,7 @@ Finally open <http://localhost:8090>
 
 ## Container
 
-See also the [Dockerfile](Dockerfile) for a light all-in-one container image: 30 MB.
+This Git repo provides a [Dockerfile](Dockerfile) for a secured and light all-in-one container image: 30 MB.
 
 The image contains the hardened sever executable (with dynamic library)
 and the front-end static files.
@@ -102,7 +101,18 @@ and the front-end static files.
 The container enables by default the CORS, the export ports and a rate limiter.
 Some of these features can be customized using environments variables.
 
-The Dockerfile has been successfully tested with Docker-20.10.8 and Podman-3.3.1.
+The Dockerfile supports Docker-20 and Podman-3. The following build configures CORS with `http://localhost:1111` and backend listening on port 2222:
+
+```
+podman build --build-arg addr=http://localhost:1111 --build-arg port=2222 -t rainbow .
+podman stop rainbow # if already running in background
+podman run --rm -p 0.0.0.0:1111:2222 -d --name rainbow rainbow
+podman logs --follow rainbow
+```
+
+Open <http://localhost:1111>.
+
+See the comments within the [Dockerfile](Dockerfile) for more information.
 
 ## Command line flags
 
@@ -111,7 +121,7 @@ including a rate limiter, an export port (Prometheus monitoring),
 and more. For more details see the underlying project
 [Teal.Finance/Garcon](https://github.com/teal-finance/garcon/).
 
-```
+```sh
 $ go build ./cmd/server
 $ ./server -help
 Usage of ./server:
@@ -187,37 +197,33 @@ This endpoints aims simplifying the front-end processing.
     { "asset": "ETH",
       "expiry": "Dec 31 08:00",
       "provider": "Deribit",
-      "call": { "bid": {"px": 0.1805, "size": 24},
-                "ask":  {"px": 0.183,  "size": 459},
-                "other_indicators_will_be_added_soon": 0},
+      "call": { "bid": {"px": 1805, "size":  24},
+                "ask": {"px": 1830, "size": 459}},
       "strike": 4400,
-      "put": { "bid": {"px": 0.1305, "size": 26},
-               "ask": {"px": 0.133, "size": 37},
-               "other_indicators_will_be_added_soon": 0}
+      "put":  { "bid": {"px": 1305, "size":  26},
+                "ask": {"px": 1330, "size":  37}}
     },
+
     { "asset": "ETH",
       "expiry": "Dec 31 08:00",
       "provider": "Deribit",
-      "call": { "bid": {"px": 0.114, "size": 258},
-                "ask": {"px": 0.116,"size": 33},
-                "other_indicators_will_be_added_soon": 0},
+      "call": { "bid": {"px": 1140, "size": 258},
+                "ask": {"px": 1160, "size":  33}},
       "strike": 5200,
-      "put": { "bid": {"px": 0.1235, "size": 80},
-               "ask": {"px": 0, "size": 0},
-               "other_indicators_will_be_added_soon": 0}
+      "put":  { "bid": {"px": 1235, "size":  80},
+                "ask": {"px":    0, "size":   0}}
     },
 
-  // [...]
+    // ...
 
-  { "asset": "BTC",
-    "expiry": "Nov 26 08:00",
-    "provider": "Deribit",
-    "call": { "bid": {"px":0.2045, "size":7.5},
-              "ask": {"px":0.2105, "size":5.3},
-              "other_indicators_will_be_added_soon":0},
-    "strike":50000,
-    "put": { "bid": {"px":0.0125, "size":27.2},
-             "ask": {"px":0.0135, "size":70.2},
-             "other_indicators_will_be_added_soon":0}}
+    { "asset": "BTC",
+      "expiry": "Nov 26 08:00",
+      "provider": "Deribit",
+      "call": { "bid": {"px": 2045, "size":  7.5},
+                "ask": {"px": 2105, "size":  5.3}},
+      "strike":50000,
+      "put":  { "bid": {"px":  125, "size": 27.2},
+                "ask": {"px":  135, "size": 70.2}}
+    }
 ]}
 ```

@@ -107,5 +107,5 @@ export default defineComponent({
         @apply text-ask-dark dark:text-ask text-right
 
     tr
-      @apply border-gray-200 border-b dark:border-gray-700
+      @apply border-gray-200 border-b dark:border-tr-border-dark
 </style>

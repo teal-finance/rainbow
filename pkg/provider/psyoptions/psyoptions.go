@@ -110,8 +110,8 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 
 		offers = append(offers,
 			rainbow.Order{
-				Px:   price / contractSize, //to get the price for 1 asset since psyoptions has <1 contract size
-				Size: qty * contractSize,   // to convert the right quantity
+				Price: price / contractSize, //to get the price for 1 asset since psyoptions has <1 contract size
+				Size:  qty * contractSize,   // to convert the right quantity
 			},
 		)
 	}

@@ -5,7 +5,7 @@
 // https://opensource.org/licenses/MIT.
 
 interface ApiParams {
-  serverUrl: string,
+  url: string,
   verbose: boolean,
   onError?: (response: Response) => void
 }
