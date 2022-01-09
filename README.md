@@ -143,6 +143,19 @@ Usage of ./server:
         Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
 
+## Makefile commands
+
+### Build
+
+- `make build`: build the backend
+- `make buildfront`: build the frontend
+- `make buildall`: build the backend and the frontend
+
+### Run
+
+- `make run`: run the backend
+- `make runfront`: run the frontend in dev mode
+
 ## API
 
 ### /v0/options
