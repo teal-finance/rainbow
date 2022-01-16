@@ -11,11 +11,11 @@
 <script lang="ts">
 import { defineComponent, toRefs, ref, onMounted } from 'vue'
 import SwDatatableModel from '../models/datatable'
-import ValuesFilterBadgeRender from './ValuesFilterBadgeRender.vue';
+import ValuesFilterSwitchRender from './ValuesFilterSwitchRender.vue';
 
 export default defineComponent({
   components: {
-    ValuesFilterBadgeRender
+    ValuesFilterSwitchRender
   },
   props: {
     model: {
@@ -28,7 +28,7 @@ export default defineComponent({
     },
     renderer: {
       type: Object,
-      default: () => ValuesFilterBadgeRender
+      default: () => ValuesFilterSwitchRender
     },
   },
   setup(props) {
