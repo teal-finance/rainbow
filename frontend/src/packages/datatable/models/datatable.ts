@@ -19,7 +19,7 @@ export default class SwDatatableModel<T = Record<string, any>> {
   constructor({ columns, rows, idCol }: TableParams<T> = {}) {
     this._initialState = reactive<TableInterface<T>>({
       columns: columns ?? {},
-      rows: rows ?? [],
+      rows: [...rows ?? []],
     });
     this.state = reactive<TableInterface<T>>({
       columns: columns ?? {},
