@@ -44,15 +44,15 @@ const rainbowColors = {
 };
 
 module.exports = {
-  purge: {
-    content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-    options: {
-      safelist: ['hidden', 'block', 'sm:block', 'sm:hidden'],
-    }
+  content: [
+    './index.html',
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+    './node_modules/@snowind/**/*.{vue,js,ts}',
+  ],
+  options: {
+    safelist: ['hidden', 'block', 'sm:block', 'sm:hidden'],
   },
   darkMode: 'class',
-
-  jit: true,
 
   plugins: [
     require('@tailwindcss/forms'),
