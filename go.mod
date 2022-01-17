@@ -15,6 +15,7 @@ require (
 	github.com/graphql-go/graphql v0.8.0
 	github.com/graphql-go/handler v0.2.3
 	github.com/jedib0t/go-pretty/v6 v6.2.4
+	github.com/mattn/go-sqlite3 v1.14.10
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/streamingfast/solana-go v0.3.0
 	github.com/stretchr/testify v1.7.0
