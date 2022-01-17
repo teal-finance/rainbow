@@ -1,0 +1,2315 @@
+[
+  {
+    "name": "BTC-28JAN22-55000-C",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 43.130970000000005,
+        "size": 2.1
+      },
+      {
+        "px": 21.565485000000002,
+        "size": 134.3
+      }
+    ],
+    "ask": [
+      {
+        "px": 64.696455,
+        "size": 42.9
+      },
+      {
+        "px": 86.26194000000001,
+        "size": 67.9
+      },
+      {
+        "px": 107.827425,
+        "size": 23.5
+      },
+      {
+        "px": 129.39291,
+        "size": 60
+      },
+      {
+        "px": 150.958395,
+        "size": 20
+      }
+    ],
+    "strike": 55000
+  },
+  {
+    "name": "BTC-28JAN22-50000-P",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 6793.127775,
+        "size": 3
+      },
+      {
+        "px": 6771.56229,
+        "size": 12
+      },
+      {
+        "px": 6685.30035,
+        "size": 4
+      },
+      {
+        "px": 5779.549980000001,
+        "size": 1.2
+      },
+      {
+        "px": 21.565485000000002,
+        "size": 0.3
+      }
+    ],
+    "ask": [
+      {
+        "px": 7159.74102,
+        "size": 15
+      },
+      {
+        "px": 7246.002960000001,
+        "size": 4
+      }
+    ],
+    "strike": 50000
+  },
+  {
+    "name": "BTC-28JAN22-60000-C",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 43.130970000000005,
+        "size": 127.2
+      },
+      {
+        "px": 64.696455,
+        "size": 20
+      },
+      {
+        "px": 86.26194000000001,
+        "size": 22
+      },
+      {
+        "px": 129.39291,
+        "size": 80
+      },
+      {
+        "px": 323.482275,
+        "size": 0.7
+      }
+    ],
+    "strike": 60000
+  },
+  {
+    "name": "BTC-28JAN22-45000-C",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 927.3158549999999,
+        "size": 2.7
+      },
+      {
+        "px": 905.7503700000001,
+        "size": 51.4
+      },
+      {
+        "px": 884.184885,
+        "size": 59.1
+      },
+      {
+        "px": 819.48843,
+        "size": 68
+      },
+      {
+        "px": 797.922945,
+        "size": 1.5
+      }
+    ],
+    "ask": [
+      {
+        "px": 970.446825,
+        "size": 27.7
+      },
+      {
+        "px": 992.01231,
+        "size": 46
+      },
+      {
+        "px": 1013.577795,
+        "size": 25
+      },
+      {
+        "px": 1035.14328,
+        "size": 24.6
+      },
+      {
+        "px": 1078.2742500000002,
+        "size": 59
+      }
+    ],
+    "strike": 45000
+  },
+  {
+    "name": "BTC-28JAN22-40000-C",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 3601.4359950000003,
+        "size": 9
+      },
+      {
+        "px": 754.7919750000001,
+        "size": 0.5
+      }
+    ],
+    "ask": [
+      {
+        "px": 3903.352785,
+        "size": 9
+      }
+    ],
+    "strike": 40000
+  },
+  {
+    "name": "BTC-28JAN22-60000-P",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 16519.16151,
+        "size": 12
+      },
+      {
+        "px": 21.565485000000002,
+        "size": 0.1
+      }
+    ],
+    "ask": [
+      {
+        "px": 17036.73315,
+        "size": 12
+      }
+    ],
+    "strike": 60000
+  },
+  {
+    "name": "BTC-28JAN22-50000-C",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 150.958395,
+        "size": 89.1
+      },
+      {
+        "px": 129.39291,
+        "size": 52
+      },
+      {
+        "px": 107.827425,
+        "size": 17
+      },
+      {
+        "px": 86.26194000000001,
+        "size": 61.1
+      },
+      {
+        "px": 64.696455,
+        "size": 22.5
+      }
+    ],
+    "ask": [
+      {
+        "px": 194.089365,
+        "size": 30.4
+      },
+      {
+        "px": 215.65485,
+        "size": 55.2
+      },
+      {
+        "px": 237.220335,
+        "size": 36
+      },
+      {
+        "px": 258.78582,
+        "size": 9.5
+      },
+      {
+        "px": 280.35130499999997,
+        "size": 20
+      }
+    ],
+    "strike": 50000
+  },
+  {
+    "name": "BTC-28JAN22-75000-C",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 21.565485000000002,
+        "size": 50.4
+      },
+      {
+        "px": 43.130970000000005,
+        "size": 25.3
+      },
+      {
+        "px": 107.827425,
+        "size": 20
+      },
+      {
+        "px": 194.089365,
+        "size": 1.8
+      },
+      {
+        "px": 345.04776000000004,
+        "size": 19
+      }
+    ],
+    "strike": 75000
+  },
+  {
+    "name": "BTC-28JAN22-55000-P",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 11645.361900000002,
+        "size": 3
+      },
+      {
+        "px": 11602.230930000002,
+        "size": 12
+      },
+      {
+        "px": 4313.097000000001,
+        "size": 11.1
+      },
+      {
+        "px": 21.565485000000002,
+        "size": 0.2
+      }
+    ],
+    "ask": [
+      {
+        "px": 12011.975145000002,
+        "size": 3
+      },
+      {
+        "px": 12033.540630000001,
+        "size": 12
+      },
+      {
+        "px": 15095.8395,
+        "size": 0.5
+      }
+    ],
+    "strike": 55000
+  },
+  {
+    "name": "BTC-28JAN22-45000-P",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 2695.685625,
+        "size": 4.4
+      },
+      {
+        "px": 2674.12014,
+        "size": 4.6
+      },
+      {
+        "px": 2652.554655,
+        "size": 4.7
+      },
+      {
+        "px": 2630.98917,
+        "size": 4.6
+      },
+      {
+        "px": 2609.423685,
+        "size": 6
+      }
+    ],
+    "ask": [
+      {
+        "px": 2781.947565,
+        "size": 3.1
+      },
+      {
+        "px": 2803.51305,
+        "size": 3.2
+      },
+      {
+        "px": 2825.078535,
+        "size": 3.4
+      },
+      {
+        "px": 2846.64402,
+        "size": 2.9
+      },
+      {
+        "px": 2911.3404750000004,
+        "size": 6
+      }
+    ],
+    "strike": 45000
+  },
+  {
+    "name": "BTC-28JAN22-40000-P",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 517.5726000000001,
+        "size": 55.9
+      },
+      {
+        "px": 496.00707500000004,
+        "size": 76.9
+      },
+      {
+        "px": 474.44155,
+        "size": 10.7
+      },
+      {
+        "px": 452.8760250000001,
+        "size": 21.1
+      },
+      {
+        "px": 431.31050000000005,
+        "size": 75.5
+      }
+    ],
+    "ask": [
+      {
+        "px": 560.70365,
+        "size": 61.2
+      },
+      {
+        "px": 582.269175,
+        "size": 19
+      },
+      {
+        "px": 603.8347,
+        "size": 19
+      },
+      {
+        "px": 625.4002250000001,
+        "size": 33
+      },
+      {
+        "px": 646.9657500000001,
+        "size": 48
+      }
+    ],
+    "strike": 40000
+  },
+  {
+    "name": "BTC-28JAN22-75000-P",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 75000
+  },
+  {
+    "name": "BTC-28JAN22-100000-P",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 100000
+  },
+  {
+    "name": "BTC-28JAN22-100000-C",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "BTC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 21.565525,
+        "size": 50.3
+      },
+      {
+        "px": 43.13105,
+        "size": 27.5
+      },
+      {
+        "px": 107.82762500000001,
+        "size": 20
+      },
+      {
+        "px": 150.958675,
+        "size": 0.7
+      },
+      {
+        "px": 215.65525000000002,
+        "size": 0.1
+      }
+    ],
+    "strike": 100000
+  },
+  {
+    "name": "ETH-28JAN22-5000-P",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 5000
+  },
+  {
+    "name": "ETH-28JAN22-3700-P",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 372.09753,
+        "size": 120
+      },
+      {
+        "px": 164.25927000000001,
+        "size": 1
+      }
+    ],
+    "ask": [
+      {
+        "px": 398.91537,
+        "size": 120
+      }
+    ],
+    "strike": 3700
+  },
+  {
+    "name": "ETH-28JAN22-5000-C",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 1.676115,
+        "size": 228
+      },
+      {
+        "px": 3.35223,
+        "size": 952
+      },
+      {
+        "px": 6.70446,
+        "size": 600
+      },
+      {
+        "px": 10.05669,
+        "size": 400
+      },
+      {
+        "px": 43.57899,
+        "size": 5
+      }
+    ],
+    "strike": 5000
+  },
+  {
+    "name": "ETH-28JAN22-4800-C",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 3.35223,
+        "size": 702
+      },
+      {
+        "px": 5.028345,
+        "size": 451
+      },
+      {
+        "px": 6.70446,
+        "size": 600
+      },
+      {
+        "px": 10.05669,
+        "size": 400
+      },
+      {
+        "px": 43.57899,
+        "size": 5
+      }
+    ],
+    "strike": 4800
+  },
+  {
+    "name": "ETH-28JAN22-4200-C",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 5.028345,
+        "size": 700
+      },
+      {
+        "px": 3.35223,
+        "size": 255
+      },
+      {
+        "px": 1.676115,
+        "size": 219
+      }
+    ],
+    "ask": [
+      {
+        "px": 8.380575,
+        "size": 246
+      },
+      {
+        "px": 10.05669,
+        "size": 868
+      },
+      {
+        "px": 13.40892,
+        "size": 605
+      },
+      {
+        "px": 15.085035,
+        "size": 406
+      },
+      {
+        "px": 48.607335000000006,
+        "size": 3
+      }
+    ],
+    "strike": 4200
+  },
+  {
+    "name": "ETH-28JAN22-4200-P",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 831.35304,
+        "size": 120
+      }
+    ],
+    "ask": [
+      {
+        "px": 864.87534,
+        "size": 120
+      }
+    ],
+    "strike": 4200
+  },
+  {
+    "name": "ETH-28JAN22-3000-P",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 33.5223,
+        "size": 335
+      },
+      {
+        "px": 31.846185,
+        "size": 505
+      },
+      {
+        "px": 30.17007,
+        "size": 200
+      },
+      {
+        "px": 28.493955000000003,
+        "size": 400
+      },
+      {
+        "px": 26.81784,
+        "size": 601
+      }
+    ],
+    "ask": [
+      {
+        "px": 36.87453,
+        "size": 560
+      },
+      {
+        "px": 38.550645,
+        "size": 775
+      },
+      {
+        "px": 40.22676,
+        "size": 41
+      },
+      {
+        "px": 43.57899,
+        "size": 600
+      },
+      {
+        "px": 46.93122,
+        "size": 400
+      }
+    ],
+    "strike": 3000
+  },
+  {
+    "name": "ETH-28JAN22-4000-C",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 11.732805,
+        "size": 527
+      },
+      {
+        "px": 10.05669,
+        "size": 460
+      },
+      {
+        "px": 8.380575,
+        "size": 249
+      },
+      {
+        "px": 6.70446,
+        "size": 662
+      },
+      {
+        "px": 5.028345,
+        "size": 466
+      }
+    ],
+    "ask": [
+      {
+        "px": 15.085035,
+        "size": 537
+      },
+      {
+        "px": 16.76115,
+        "size": 573
+      },
+      {
+        "px": 18.437265,
+        "size": 33
+      },
+      {
+        "px": 20.11338,
+        "size": 611
+      },
+      {
+        "px": 21.789495,
+        "size": 400
+      }
+    ],
+    "strike": 4000
+  },
+  {
+    "name": "ETH-28JAN22-3000-C",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 201.13379999999998,
+        "size": 2
+      },
+      {
+        "px": 100.56689999999999,
+        "size": 5
+      },
+      {
+        "px": 90.51021,
+        "size": 1
+      },
+      {
+        "px": 83.80575,
+        "size": 2
+      },
+      {
+        "px": 67.0446,
+        "size": 2
+      }
+    ],
+    "ask": [
+      {
+        "px": 636.9237,
+        "size": 1
+      },
+      {
+        "px": 643.62816,
+        "size": 5
+      }
+    ],
+    "strike": 3000
+  },
+  {
+    "name": "ETH-28JAN22-3800-C",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 26.81784,
+        "size": 389
+      },
+      {
+        "px": 25.141724999999997,
+        "size": 474
+      },
+      {
+        "px": 23.46561,
+        "size": 230
+      },
+      {
+        "px": 20.11338,
+        "size": 1000
+      },
+      {
+        "px": 11.732805,
+        "size": 1
+      }
+    ],
+    "ask": [
+      {
+        "px": 30.17007,
+        "size": 527
+      },
+      {
+        "px": 31.846185,
+        "size": 263
+      },
+      {
+        "px": 33.5223,
+        "size": 359
+      },
+      {
+        "px": 35.198415000000004,
+        "size": 400
+      },
+      {
+        "px": 36.87453,
+        "size": 600
+      }
+    ],
+    "strike": 3800
+  },
+  {
+    "name": "ETH-28JAN22-3800-P",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 459.25551,
+        "size": 120
+      },
+      {
+        "px": 67.0446,
+        "size": 10
+      }
+    ],
+    "ask": [
+      {
+        "px": 486.07334999999995,
+        "size": 120
+      },
+      {
+        "px": 3452.7969000000003,
+        "size": 1
+      },
+      {
+        "px": 6905.593800000001,
+        "size": 1
+      }
+    ],
+    "strike": 3800
+  },
+  {
+    "name": "ETH-28JAN22-3700-C",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 40.22676,
+        "size": 350
+      },
+      {
+        "px": 38.550645,
+        "size": 447
+      },
+      {
+        "px": 36.87453,
+        "size": 200
+      },
+      {
+        "px": 33.5223,
+        "size": 880
+      },
+      {
+        "px": 21.789495,
+        "size": 20
+      }
+    ],
+    "ask": [
+      {
+        "px": 43.57899,
+        "size": 192
+      },
+      {
+        "px": 45.255105,
+        "size": 263
+      },
+      {
+        "px": 46.93122,
+        "size": 539
+      },
+      {
+        "px": 50.283449999999995,
+        "size": 480
+      },
+      {
+        "px": 51.959565,
+        "size": 400
+      }
+    ],
+    "strike": 3700
+  },
+  {
+    "name": "ETH-28JAN22-4800-P",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 4800
+  },
+  {
+    "name": "ETH-28JAN22-4400-P",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 4400
+  },
+  {
+    "name": "ETH-28JAN22-4000-P",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 640.27593,
+        "size": 120
+      },
+      {
+        "px": 469.3122000000001,
+        "size": 6
+      },
+      {
+        "px": 311.75739,
+        "size": 1
+      },
+      {
+        "px": 67.0446,
+        "size": 2
+      }
+    ],
+    "ask": [
+      {
+        "px": 670.446,
+        "size": 120
+      }
+    ],
+    "strike": 4000
+  },
+  {
+    "name": "ETH-28JAN22-3600-P",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 291.64401,
+        "size": 120
+      }
+    ],
+    "ask": [
+      {
+        "px": 318.46185,
+        "size": 120
+      }
+    ],
+    "strike": 3600
+  },
+  {
+    "name": "ETH-28JAN22-4400-C",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 3.35223,
+        "size": 34
+      },
+      {
+        "px": 1.676115,
+        "size": 776
+      }
+    ],
+    "ask": [
+      {
+        "px": 5.028345,
+        "size": 209
+      },
+      {
+        "px": 6.70446,
+        "size": 917
+      },
+      {
+        "px": 8.380575,
+        "size": 269
+      },
+      {
+        "px": 10.05669,
+        "size": 600
+      },
+      {
+        "px": 11.732805,
+        "size": 400
+      }
+    ],
+    "strike": 4400
+  },
+  {
+    "name": "ETH-28JAN22-3600-C",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "CEX",
+    "chain": "–",
+    "layer": "–",
+    "provider": "Deribit",
+    "currency": "ETH",
+    "bid": [
+      {
+        "px": 60.34014,
+        "size": 384
+      },
+      {
+        "px": 58.66402500000001,
+        "size": 450
+      },
+      {
+        "px": 56.98791000000001,
+        "size": 200
+      },
+      {
+        "px": 53.63568,
+        "size": 400
+      },
+      {
+        "px": 50.283449999999995,
+        "size": 480
+      }
+    ],
+    "ask": [
+      {
+        "px": 63.69237,
+        "size": 456
+      },
+      {
+        "px": 65.368485,
+        "size": 234
+      },
+      {
+        "px": 67.0446,
+        "size": 301
+      },
+      {
+        "px": 68.720715,
+        "size": 400
+      },
+      {
+        "px": 70.39683000000001,
+        "size": 480
+      }
+    ],
+    "strike": 3600
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-3800-PUT",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 486.59999999999997,
+        "size": 0.5
+      }
+    ],
+    "ask": [
+      {
+        "px": 518.5999999999999,
+        "size": 0.8
+      }
+    ],
+    "strike": 3800
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-3000-PUT",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 57.099999999999994,
+        "size": 0.8
+      },
+      {
+        "px": 56.6,
+        "size": 1.1
+      },
+      {
+        "px": 55.599999999999994,
+        "size": 1.1
+      },
+      {
+        "px": 30,
+        "size": 0.2
+      }
+    ],
+    "ask": [
+      {
+        "px": 68.8,
+        "size": 0.8
+      }
+    ],
+    "strike": 3000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-45000-PUT",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 2712,
+        "size": 1.21
+      },
+      {
+        "px": 2659,
+        "size": 0.54
+      }
+    ],
+    "ask": [
+      {
+        "px": 2915,
+        "size": 0.68
+      },
+      {
+        "px": 2926,
+        "size": 0.58
+      },
+      {
+        "px": 2951,
+        "size": 0.84
+      },
+      {
+        "px": 2982.9999999999995,
+        "size": 0.8
+      }
+    ],
+    "strike": 45000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-40000-PUT",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 538,
+        "size": 0.72
+      },
+      {
+        "px": 534,
+        "size": 1.04
+      }
+    ],
+    "ask": null,
+    "strike": 40000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-55000-PUT",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 11728,
+        "size": 0.88
+      },
+      {
+        "px": 11663,
+        "size": 1.11
+      }
+    ],
+    "ask": [
+      {
+        "px": 11984,
+        "size": 0.85
+      },
+      {
+        "px": 12027,
+        "size": 1.07
+      }
+    ],
+    "strike": 55000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-75000-CALL",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": null,
+    "ask": null,
+    "strike": 75000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-40000-CALL",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 500,
+        "size": 0.01
+      }
+    ],
+    "ask": null,
+    "strike": 40000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-35000-PUT",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": null,
+    "ask": null,
+    "strike": 35000
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-4400-CALL",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": null,
+    "ask": [
+      {
+        "px": 11.1,
+        "size": 1.1
+      }
+    ],
+    "strike": 4400
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-60000-PUT",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 16623,
+        "size": 0.64
+      },
+      {
+        "px": 16423,
+        "size": 0.77
+      }
+    ],
+    "ask": [
+      {
+        "px": 17052,
+        "size": 0.85
+      },
+      {
+        "px": 17150,
+        "size": 1.21
+      }
+    ],
+    "strike": 60000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-30000-PUT",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": null,
+    "ask": null,
+    "strike": 30000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-55000-CALL",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 11,
+        "size": 2.27
+      }
+    ],
+    "ask": null,
+    "strike": 55000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-50000-CALL",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": null,
+    "ask": [
+      {
+        "px": 164,
+        "size": 0.66
+      },
+      {
+        "px": 165,
+        "size": 1.12
+      },
+      {
+        "px": 167,
+        "size": 0.8200000000000001
+      }
+    ],
+    "strike": 50000
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-2800-PUT",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 24.900000000000002,
+        "size": 0.5
+      }
+    ],
+    "ask": [
+      {
+        "px": 32.099999999999994,
+        "size": 1.1
+      },
+      {
+        "px": 32.3,
+        "size": 0.9
+      }
+    ],
+    "strike": 2800
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-3600-CALL",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 92.2,
+        "size": 0.8
+      },
+      {
+        "px": 91.6,
+        "size": 1
+      },
+      {
+        "px": 10,
+        "size": 0.4
+      },
+      {
+        "px": 1,
+        "size": 0.1
+      }
+    ],
+    "ask": [
+      {
+        "px": 107.89999999999999,
+        "size": 1
+      },
+      {
+        "px": 120,
+        "size": 0.1
+      }
+    ],
+    "strike": 3600
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-4200-CALL",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 14.099999999999998,
+        "size": 0.8
+      },
+      {
+        "px": 13.799999999999999,
+        "size": 0.8
+      }
+    ],
+    "ask": [
+      {
+        "px": 19.2,
+        "size": 0.6000000000000001
+      },
+      {
+        "px": 19.4,
+        "size": 0.5
+      },
+      {
+        "px": 180,
+        "size": 0.1
+      }
+    ],
+    "strike": 4200
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-4000-CALL",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 25.9,
+        "size": 0.9
+      }
+    ],
+    "ask": [
+      {
+        "px": 34.9,
+        "size": 1.1
+      }
+    ],
+    "strike": 4000
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-4000-PUT",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 667,
+        "size": 0.5
+      },
+      {
+        "px": 655.4999999999999,
+        "size": 0.8
+      }
+    ],
+    "ask": [
+      {
+        "px": 688.3,
+        "size": 0.6000000000000001
+      },
+      {
+        "px": 694.5999999999999,
+        "size": 0.8
+      }
+    ],
+    "strike": 4000
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-2600-PUT",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 10.1,
+        "size": 1.1
+      }
+    ],
+    "ask": [
+      {
+        "px": 13.899999999999999,
+        "size": 0.9
+      },
+      {
+        "px": 13.999999999999998,
+        "size": 1.1
+      },
+      {
+        "px": 14.2,
+        "size": 1.1
+      }
+    ],
+    "strike": 2600
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-60000-CALL",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": null,
+    "ask": null,
+    "strike": 60000
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-3600-PUT",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 339.2,
+        "size": 0.5
+      },
+      {
+        "px": 338.5,
+        "size": 0.6000000000000001
+      },
+      {
+        "px": 337.09999999999997,
+        "size": 0.5
+      },
+      {
+        "px": 336.9,
+        "size": 0.5
+      },
+      {
+        "px": 332,
+        "size": 0.9
+      },
+      {
+        "px": 331.4,
+        "size": 1.1
+      }
+    ],
+    "ask": [
+      {
+        "px": 357.9,
+        "size": 0.9
+      }
+    ],
+    "strike": 3600
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-4400-PUT",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 1037,
+        "size": 0.8
+      },
+      {
+        "px": 1031.6,
+        "size": 0.8
+      }
+    ],
+    "ask": [
+      {
+        "px": 1066.6,
+        "size": 0.5
+      },
+      {
+        "px": 1077.1999999999998,
+        "size": 0.6000000000000001
+      }
+    ],
+    "strike": 4400
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-3000-CALL",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": null,
+    "ask": [
+      {
+        "px": 424.09999999999997,
+        "size": 0.8
+      },
+      {
+        "px": 429.09999999999997,
+        "size": 0.6000000000000001
+      },
+      {
+        "px": 434.7,
+        "size": 1
+      }
+    ],
+    "strike": 3000
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-4200-PUT",
+    "type": "PUT",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 853.4,
+        "size": 0.5
+      },
+      {
+        "px": 840.9,
+        "size": 0.9
+      }
+    ],
+    "ask": [
+      {
+        "px": 874.5,
+        "size": 0.5
+      },
+      {
+        "px": 882.6999999999999,
+        "size": 1
+      }
+    ],
+    "strike": 4200
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-3800-CALL",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 50.4,
+        "size": 0.8
+      },
+      {
+        "px": 50,
+        "size": 0.8
+      },
+      {
+        "px": 49.9,
+        "size": 0.6000000000000001
+      },
+      {
+        "px": 49,
+        "size": 0.5
+      },
+      {
+        "px": 10,
+        "size": 0.1
+      }
+    ],
+    "ask": [
+      {
+        "px": 61.6,
+        "size": 0.6000000000000001
+      }
+    ],
+    "strike": 3800
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-45000-CALL",
+    "type": "CALL",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 861.9999999999999,
+        "size": 0.64
+      }
+    ],
+    "ask": [
+      {
+        "px": 1051,
+        "size": 0.85
+      }
+    ],
+    "strike": 45000
+  },
+  {
+    "name": "BTC-2022-01-28 08:00:00-50000-PUT",
+    "type": "PUT",
+    "asset": "BTC",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 6912.999999999999,
+        "size": 0.55
+      },
+      {
+        "px": 6811,
+        "size": 0.9500000000000001
+      }
+    ],
+    "ask": [
+      {
+        "px": 7055,
+        "size": 0.56
+      },
+      {
+        "px": 7137.999999999999,
+        "size": 0.87
+      },
+      {
+        "px": 7181,
+        "size": 1.18
+      }
+    ],
+    "strike": 50000
+  },
+  {
+    "name": "ETH-2022-01-28 08:00:00-5000-CALL",
+    "type": "CALL",
+    "asset": "ETH",
+    "expiry": "2022-01-28 08:00:00",
+    "exchange": "DEX",
+    "chain": "Solana",
+    "layer": "L1",
+    "provider": "PsyOptions",
+    "currency": "USDC",
+    "bid": null,
+    "ask": [
+      {
+        "px": 11.999999999999998,
+        "size": 10
+      },
+      {
+        "px": 400,
+        "size": 6
+      }
+    ],
+    "strike": 5000
+  },
+  {
+    "name": "WETHUSDC 21-January-2022 2900Put sdFRAX3CRV-f Collateral",
+    "type": "PUT",
+    "asset": "WETH",
+    "expiry": "2022-01-21 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 2900
+  },
+  {
+    "name": "WBTCUSDC 21-January-2022 47000Call sdcrvRenWSBTC Collateral",
+    "type": "CALL",
+    "asset": "WBTC",
+    "expiry": "2022-01-21 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 47000
+  },
+  {
+    "name": "WETHUSDC 21-January-2022 2900Put yvUSDC Collateral",
+    "type": "PUT",
+    "asset": "WETH",
+    "expiry": "2022-01-21 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 2900
+  },
+  {
+    "name": "AAVEUSDC 21-January-2022 260Call AAVE Collateral",
+    "type": "CALL",
+    "asset": "AAVE",
+    "expiry": "2022-01-21 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 260
+  },
+  {
+    "name": "WETHUSDC 21-January-2022 3600Call wstETH Collateral",
+    "type": "CALL",
+    "asset": "WETH",
+    "expiry": "2022-01-21 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 3600
+  },
+  {
+    "name": "WETHUSDC 21-January-2022 3700Call WETH Collateral",
+    "type": "CALL",
+    "asset": "WETH",
+    "expiry": "2022-01-21 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 3700
+  },
+  {
+    "name": "WETHUSDC 21-January-2022 3700Call wstETH Collateral",
+    "type": "CALL",
+    "asset": "WETH",
+    "expiry": "2022-01-21 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 3700
+  },
+  {
+    "name": "WETHUSDC 21-January-2022 3650Call sdeCRV Collateral",
+    "type": "CALL",
+    "asset": "WETH",
+    "expiry": "2022-01-21 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 3650
+  },
+  {
+    "name": "WETHUSDC 27-May-2022 0.0000015Put USDC Collateral",
+    "type": "PUT",
+    "asset": "WETH",
+    "expiry": "2022-05-27 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 0.0000015
+  },
+  {
+    "name": "WBTCUSDC 21-January-2022 47000Call WBTC Collateral",
+    "type": "CALL",
+    "asset": "WBTC",
+    "expiry": "2022-01-21 08:00:00",
+    "exchange": "DEX",
+    "chain": "Ethereum",
+    "layer": "L1",
+    "provider": "Opyn",
+    "currency": "USDC",
+    "bid": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "ask": [
+      {
+        "px": 0,
+        "size": 0
+      }
+    ],
+    "strike": 47000
+  }
+]
