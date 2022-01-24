@@ -134,7 +134,7 @@ func groupByProvider(options []rainbow.Option) (providerToOptions map[string][]r
 func newLimit(o rainbow.Option) Limit {
 	l := Limit{}
 	if len(o.Bid) > 0 && o.Bid[0].Size != 0 {
-		l.Bid.Price = fmt.Sprintf("%.2f", o.Bid[0].Size)
+		l.Bid.Price = fmt.Sprintf("%.2f", o.Bid[0].Price)
 		l.Bid.Size = fmt.Sprintf("%.2f", o.Bid[0].Size)
 	}
 	if len(o.Ask) > 0 && o.Ask[0].Size != 0 {
