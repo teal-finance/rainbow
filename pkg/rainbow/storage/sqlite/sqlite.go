@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -38,23 +39,27 @@ const (
 func (db *DB) initTables() error {
 	const req = `
 		CREATE TABLE IF NOT EXISTS options (
-			name TEXT NOT NULL PRIMARY KEY,
+			name TEXT NOT NULL,
+			provider TEXT NOT NULL,
 			type TEXT,
 			asset TEXT,
 			expiry TEXT,
 			exchange TEXT,
 			chain TEXT,
 			layer TEXT,
-			provider TEXT,
 			currency TEXT,
-			strike TEXT
+			strike TEXT,
+			PRIMARY KEY (name, provider)
 		);
 		CREATE TABLE IF NOT EXISTS orders(
 			option TEXT NOT NULL,
+			provider TEXT NOT NULL,
 			side TEXT NOT NULL,
 			size REAL,
 			price REAL,
-			FOREIGN KEY(option) REFERENCES options(name)
+			timestamp TEXT NOT NULL,
+			FOREIGN KEY(option) REFERENCES options(name),
+			FOREIGN KEY(provider) REFERENCES options(provider)
 		);
 	`
 	_, err := db.Exec(req)
@@ -65,6 +70,8 @@ func (db *DB) initTables() error {
 	return nil
 }
 
+// InsertOptions save options in the database. For each option, it will
+// only keep best ask and bid orders.
 func (db *DB) InsertOptions(options []rainbow.Option) error {
 	tx, err := db.Begin()
 	if err != nil {
@@ -83,11 +90,15 @@ func (db *DB) InsertOptions(options []rainbow.Option) error {
 	}
 	defer stmt.Close()
 
-	stmtOrder, err := tx.Prepare(`INSERT INTO orders(option, side, size, price) VALUES (?, ?, ?, ?)`)
+	stmtOrder, err := tx.Prepare(
+		`INSERT INTO orders(option, provider, side, size, price, timestamp) VALUES (?, ?, ?, ?, ?, ?)`,
+	)
 	if err != nil {
 		return err
 	}
 	defer stmtOrder.Close()
+
+	now := time.Now().Format(time.RFC3339)
 
 	for _, o := range options {
 		_, err = stmt.Exec(
@@ -106,15 +117,41 @@ func (db *DB) InsertOptions(options []rainbow.Option) error {
 			return err
 		}
 
-		for _, a := range o.Ask {
-			_, err = stmtOrder.Exec(o.Name, orderAsk, a.Size, a.Price)
+		if len(o.Ask) > 0 {
+			best := o.Ask[0]
+			// only keep best
+			for _, a := range o.Ask {
+				if best.Price < a.Price {
+					best = a
+				}
+			}
+
+			// if timestamp is null, set current time
+			if best.Timestamp == "" {
+				best.Timestamp = now
+			}
+
+			_, err = stmtOrder.Exec(o.Name, o.Provider, orderAsk, best.Size, best.Price, best.Timestamp)
 			if err != nil {
 				return err
 			}
 		}
 
-		for _, a := range o.Bid {
-			_, err = stmtOrder.Exec(o.Name, orderBid, a.Size, a.Price)
+		if len(o.Bid) > 0 {
+			best := o.Bid[0]
+			// only keep best
+			for _, o := range o.Bid {
+				if best.Price > o.Price {
+					best = o
+				}
+			}
+
+			// if timestamp is null, set current time
+			if best.Timestamp == "" {
+				best.Timestamp = now
+			}
+
+			_, err = stmtOrder.Exec(o.Name, o.Provider, orderBid, best.Size, best.Price, best.Timestamp)
 			if err != nil {
 				return err
 			}
@@ -141,13 +178,13 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 		var o rainbow.Option
 		err = rows.Scan(
 			&o.Name,
+			&o.Provider,
 			&o.Type,
 			&o.Asset,
 			&o.Expiry,
 			&o.ExchangeType,
 			&o.Chain,
 			&o.Layer,
-			&o.Provider,
 			&o.QuoteCurrency,
 			&o.Strike)
 		if err != nil {
@@ -157,7 +194,11 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 	}
 
 	for i := range options {
-		rows, err := db.Query(`SELECT side, size, price FROM orders WHERE option = ?`, options[i].Name)
+		rows, err := db.Query(
+			`SELECT side, size, price, timestamp FROM orders WHERE option = ? AND provider = ?`,
+			options[i].Name,
+			options[i].Provider,
+		)
 		if err != nil {
 			return []rainbow.Option{}, err
 		}
@@ -165,7 +206,7 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 		for rows.Next() {
 			var side string
 			var o rainbow.Order
-			err = rows.Scan(&side, &o.Size, &o.Price)
+			err = rows.Scan(&side, &o.Size, &o.Price, &o.Timestamp)
 			if err != nil {
 				return []rainbow.Option{}, err
 			}

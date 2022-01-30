@@ -22,6 +22,7 @@ type Option struct {
 }
 
 type Order struct {
-	Price float64 `json:"px"`
-	Size  float64 `json:"size"`
+	Price     float64 `json:"px"`
+	Size      float64 `json:"size"`
+	Timestamp string  `json:"timestamp"`
 }
