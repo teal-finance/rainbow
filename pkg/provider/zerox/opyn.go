@@ -50,7 +50,7 @@ func QueryTheGraph() []getOptionsOtokensOToken {
 		return nil
 	}
 
-	// always filter to net get old options
+	// always filter to not get old options
 	return filterExpired(resp.Otokens, time.Now())
 }
 
