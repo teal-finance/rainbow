@@ -10,7 +10,7 @@ import (
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
 	sol "github.com/streamingfast/solana-go"
-	zeta "github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor/generated/zeta"
+	zeta "github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor/generated/zeta"
 )
 
 const PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"

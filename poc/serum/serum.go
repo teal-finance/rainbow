@@ -25,6 +25,7 @@ func getClient() *rpc.Client {
 
 func main() {
 	serumMarketAddresses := []string{
+		"2fH6seyt7sHqEPyPtwsgxoTeca3EVr2ndajcN1YwvQpF",
 		"2gKrDsubuvYKxTkWdT5b44Qdd9QoBRTQQebUoQNnsesw",
 		"7W2LGEDpitCoXLC5xhzjUKiE4NnNkgoAstM2EyFt7MaS",
 		"9ugAWZCSgUKjL11fJE9Zjn4QVTdTkAkSLgPu9ZC8mcfD",
