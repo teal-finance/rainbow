@@ -1,12 +1,12 @@
-Psyoptions uses Anchor, a framework for Solana's Sealevel runtime providing several convenient developer tools for writing smart contracts.
+Psyoptions & Zetamarkets uses Anchor (+ Serum), a framework for Solana's Sealevel runtime providing several convenient developer tools for writing smart contracts.
 https://github.com/project-serum/anchor
 
-We want to automcatically query all the available options from Psyoptions. To do so, we will use anchor-go which generates Go clients for Solana programs (smart contracts) written using the anchor framework.
+We want to automcatically query all the available options from Psyoptions/Zeta. To do so, we will use anchor-go which generates Go clients for Solana programs (smart contracts) written using the anchor framework.
 ```
 go get github.com/gagliardetto/anchor-go
 go run github.com/gagliardetto/anchor-go --src=idl.json
 ```
-We actually only need the structure:
+For PsyOptions (Zeta is coded way too diffrently), we actually only need the structure:
 ````go
 type OptionMarket struct {
 	OptionMint                  ag_solanago.PublicKey
@@ -24,7 +24,7 @@ type OptionMarket struct {
 	BumpSeed                    uint8
 }
 `````
-form the file `accounts.go`
+from the file `accounts.go`
 
 idl file is copied from :
 ````
@@ -43,6 +43,6 @@ github.com/gagliardetto/solana-go
 
 github.com/streamingfast/solana-go
 
-We were using the second one but since `anchor-go` is from the same authors as the first one, we will switch all the code to use that lib.
+We were using the second one but since `anchor-go` is from the same authors as the first one, we also have to use that lib. In a perfect world, we should only use one of them but that would require some refactoring that I am not doing now.
 
 
