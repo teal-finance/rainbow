@@ -1,4 +1,4 @@
-# ![rainbow](doc/rainbow-chancery.png)
+# ![Rainbow](doc/rainbow-chancery.png)
 
 ![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With Rainbow, users can scan CEX/DEX markets to fetch available options data. <br><br> This project has been initiated by [Teal.Finance](https://teal.finance/)  during the [Ethereum's EthGlobal Hackathon](https://showcase.ethglobal.com/ethonline2021/rainbow), [Solana's Ignition Hackathon](https://devpost.com/software/rainbow-ai5p7m) and [Encode Club's Hack DeFi](https://www.encode.club/hack-defi).
 ---|---
@@ -56,18 +56,50 @@ If this is your case, you may install Go v1.17 using a different package name:
     sudo apt remove  golang
     sudo apt install golang-1.17
 
-## Build
+## Clone
 
     git clone https://github.com/teal-finance/rainbow
     cd rainbow
 
-### CLI
+## CLI
 
-You may just use the pretty nice table printed by the command `./cli`.
+The Rainbow project provides a Command Line Interface (CLI) to let users play from their terminal. The command `./cli` retrieves (few minutes) and prints a pretty nice table of all options.
 
     go build ./cmd/cli && ./cli
 
 ![CLI screenshot](doc/cli.jpg)
+
+## Makefile
+
+See the `make help` [output](Makefile).
+
+### Build
+
+* `make build` to build the backend
+* `make buildfront` to build the frontend
+* `make buildall` to build the backend and the frontend
+
+### Run
+
+* `make run` to run the backend
+* `make runfront` to run the frontend in dev mode
+
+### Container
+
+The container reproduces similar behaviors as in production.
+
+The magic command `make runcontainer` builds and runs Rainbow within a container, by trying `docker` then `podman` if present. Once running, that command continues by automatically opening a browser window on <http://localhost:1111/> and by indefinitely printing the container logs.
+
+The exposed port can be change with `make runcontainer expose=12345` :slightly_smiling_face:
+
+To stop the container, first stop the container logs with CTRL+C in your current terminal, and then `make stopcontainer`.
+
+Other related commands:
+
+* `make buildimage` to only build the container image
+* `make rmi` to remove the Rainbow container images
+
+## Manual build/run of the server
 
 ### Back-end
 
@@ -91,7 +123,7 @@ Else, in prod mode, the back-end serves the web static files from `frontend/dist
 
 Finally open <http://localhost:8090>
 
-## Container
+## Manual build/run of the container
 
 This Git repo provides a [Dockerfile](Dockerfile) for a secured and light all-in-one container image: 30 MB.
 
@@ -103,18 +135,16 @@ Some of these features can be customized using environments variables.
 
 The Dockerfile supports Docker-20 and Podman-3. The following build configures CORS with `http://localhost:1111` and backend listening on port 2222:
 
-```
-podman build --build-arg addr=http://localhost:1111 --build-arg port=2222 -t rainbow .
-podman stop rainbow # if already running in background
-podman run --rm -p 0.0.0.0:1111:2222 -d --name rainbow rainbow
-podman logs --follow rainbow
-```
+    podman build --build-arg addr=http://localhost:1111 --build-arg port=2222 -t rainbow .
+    podman stop rainbow # if already running in background
+    podman run --rm -p 0.0.0.0:1111:2222 -d --name rainbow rainbow
+    podman logs --follow rainbow
 
 Open <http://localhost:1111>.
 
-See the comments within the [Dockerfile](Dockerfile) for more information.
+See also the comments within the [Dockerfile](Dockerfile) for more information.
 
-## Command line flags
+## Server command line flags
 
 Rainbow provides a complete HTTP server,
 including a rate limiter, an export port (Prometheus monitoring),
@@ -142,19 +172,6 @@ Usage of ./server:
   -www string
         Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
-
-## Makefile commands
-
-### Build
-
-- `make build`: build the backend
-- `make buildfront`: build the frontend
-- `make buildall`: build the backend and the frontend
-
-### Run
-
-- `make run`: run the backend
-- `make runfront`: run the frontend in dev mode
 
 ## API
 
