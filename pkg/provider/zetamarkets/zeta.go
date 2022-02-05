@@ -15,7 +15,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const serummainnet = "https://api.mainnet-beta.solana.com" //"https://solana-api.projectserum.com"
+const serummainnet = "https://solana-api.projectserum.com" //"https://api.mainnet-beta.solana.com"
 
 type Provider struct{}
 
@@ -69,9 +69,6 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			Ask:           asks,
 		})
 
-		//quit & dirty extra rate limit
-		time.Sleep(1000 * time.Microsecond)
-
 	}
 	if len(options) == 0 {
 		return nil, errors.New("empty options lists")
@@ -84,6 +81,8 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 //     - BID down so desc=false
 func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, totalSize float64, err error) {
 	var o serum.Orderbook
+	//quit & dirty extra rate limit
+	time.Sleep(300 * time.Microsecond)
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
 		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}

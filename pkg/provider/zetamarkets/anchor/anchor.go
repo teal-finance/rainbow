@@ -21,7 +21,8 @@ const SOLAddress = "So11111111111111111111111111111111111111112"
 func Query() ([]Option, error) {
 	var result []Option
 	pubKey := solana.MustPublicKeyFromBase58(ZetaID)
-	endpoint := rpc.MainNetBeta_RPC
+
+	endpoint := "https://api.mainnet-beta.solana.com" //rpc.MainNetBeta_RPC
 	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
 
 	client := rpc.NewWithCustomRPCClient(jsonrpcclient)

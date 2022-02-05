@@ -17,9 +17,10 @@ import (
 // AllProviders returns all active providers.
 func AllProviders() []rainbow.Provider {
 	return []rainbow.Provider{
-		psyoptions.Provider{},
 		zetamarkets.Provider{},
 		zerox.Provider{},
 		deribit.Provider{},
+		//changing the order to not exhaust our solana/serum rpc quota
+		psyoptions.Provider{},
 	}
 }

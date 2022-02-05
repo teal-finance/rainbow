@@ -17,7 +17,8 @@ const PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
 func Query() ([]Option, error) {
 	var result []Option
 	psyoptionsPubkey := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
-	jsonrpcclient := rpc.NewWithRateLimit(rpc.MainNetBeta_RPC, 10)
+	endpoint := "https://api.mainnet-beta.solana.com" //rpc.MainNetBeta_RPC
+	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
 
 	client := rpc.NewWithCustomRPCClient(jsonrpcclient)
 

@@ -14,7 +14,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const serummainnet = "https://api.mainnet-beta.solana.com" //"https://solana-api.projectserum.com"
+const serummainnet = "https://solana-api.projectserum.com"
 
 type Provider struct{}
 
@@ -67,8 +67,6 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			Bid:           bids,
 			Ask:           asks,
 		})
-		//quit & dirty extra rate limit
-		time.Sleep(1000 * time.Microsecond)
 
 	}
 	if len(options) == 0 {
@@ -85,6 +83,9 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
 		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
+
+	//quit & dirty extra rate limit
+	time.Sleep(300 * time.Microsecond)
 
 	limit := 20
 	levels := [][]*big.Int{}
