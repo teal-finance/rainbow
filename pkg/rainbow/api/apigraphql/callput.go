@@ -75,11 +75,14 @@ func groupByAsset(options []rainbow.Option) (assetToOptions map[string][]rainbow
 	assetToOptions = map[string][]rainbow.Option{}
 
 	for _, o := range options {
-		slice, ok := assetToOptions[o.Asset]
+		//sanitize to properly group assets
+
+		asset := sanitizeAsset(o.Asset)
+		slice, ok := assetToOptions[asset]
 		if ok {
-			assetToOptions[o.Asset] = append(slice, o)
+			assetToOptions[asset] = append(slice, o)
 		} else {
-			assetToOptions[o.Asset] = []rainbow.Option{o}
+			assetToOptions[asset] = []rainbow.Option{o}
 		}
 	}
 
@@ -144,7 +147,7 @@ func newLimit(o rainbow.Option) Limit {
 	return l
 }
 
-// sanitizeAsset removes "W" (or "w") in "WETC" and "WBTC".
+// sanitizeAsset removes "W" (or "w") in "WETH" and "WBTC".
 func sanitizeAsset(asset string) string {
 	if len(asset) >= 4 && (asset[0] == 'W' || asset[0] == 'w') {
 		return asset[1:]
