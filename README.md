@@ -30,9 +30,11 @@ Supported Options exchanges:
 
 * [Deribit](https://www.deribit.com): Centralized exchange. Main venue for crypto Options trading.
 
-* [Opyn(Ethereum)](https://www.opyn.co/):  DeFi protocol using TheGraph & 0x.
+* [Opyn(Ethereum)](https://www.opyn.co/):  DeFi options protocol using TheGraph & 0x.
 
-* [PsyOptions(Solana)](https://www.psyoptions.io/): DeFi protocol build on Serum order books.
+* [PsyOptions(Solana)](https://www.psyoptions.io/): DeFi options protocol build on Serum order books.
+
+* [Zeta(Solana)](https://zeta.markets/): DeFi options protocol build using also Serum order books. 
 
 ## Requirements
 
