@@ -74,6 +74,7 @@ func highlight(p string) string {
 	magenta := color.FgMagenta.Render
 	green := color.FgGreen.Render
 	blue := color.FgCyan.Render
+	gray := color.FgDarkGray.Render
 
 	switch p {
 	case "Opyn":
@@ -82,6 +83,8 @@ func highlight(p string) string {
 		return green(p)
 	case "PsyOptions":
 		return magenta(p)
+	case "Zeta":
+		return gray(p)
 	default:
 		return p
 	}

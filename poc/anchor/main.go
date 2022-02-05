@@ -10,27 +10,41 @@ import (
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
 	sol "github.com/streamingfast/solana-go"
+	zeta "github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor/generated/zeta"
 )
 
 const PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
+const ZetaID = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
 const test = "BPFLoaderUpgradeab1e11111111111111111111111"
 const USDCSolana = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 
 func main() {
-	pub := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
+	z := solana.MustPublicKeyFromBase58(ZetaID)
 	endpoint := rpc.MainNetBeta_RPC
 	client := rpc.New(endpoint)
 
 	out, err := client.GetProgramAccounts(
+		context.TODO(),
+		z,
+	)
+	if err != nil {
+		panic(err)
+	}
+	//spew.Dump(out[0])
+
+	/*pub := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
+
+	out, err = client.GetProgramAccounts(
 		context.TODO(),
 		pub,
 	)
 	if err != nil {
 		panic(err)
 	}
+	spew.Dump(out)*/
 	//spew.Dump(len(out[0:3]))
-	for _, i := range out[0:4] {
-		spew.Dump(i.Pubkey)
+	for _, i := range out {
+		//spew.Dump(i.Pubkey)
 		/*out, err := client.GetAccountInfo(
 			context.TODO(),
 			i.Pubkey,
@@ -39,16 +53,21 @@ func main() {
 		if err != nil {
 			panic(err)
 		}*/
-		opt := new(OptionMarket)
-		err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&opt)
+		zo := new(zeta.ZetaGroup)
+		err = bin.NewBinDecoder(i.Account.Data.GetBinary()).Decode(&zo)
+
+		//opt := new(OptionMarket)
+		//err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&opt)
 		if err != nil {
-			panic(err)
+			continue
 		}
-		//spew.Dump(opt)
-		a, b, c := deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.QuoteAssetMint), pub)
-		spew.Dump(a, b, c)
-		a, b, c = deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.UnderlyingAssetMint), pub)
-		spew.Dump(a, b, c)
+
+		spew.Dump(zo) //opt)
+		/*
+			a, b, c := deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.QuoteAssetMint), pub)
+			spew.Dump(a, b, c)
+			a, b, c = deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.UnderlyingAssetMint), pub)
+			spew.Dump(a, b, c)*/
 	}
 	//f()
 	//solana.MustPublicKeyFromBase58(test))

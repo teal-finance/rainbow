@@ -10,6 +10,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
 	"github.com/teal-finance/rainbow/pkg/provider/zerox"
+	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -17,6 +18,7 @@ import (
 func AllProviders() []rainbow.Provider {
 	return []rainbow.Provider{
 		psyoptions.Provider{},
+		zetamarkets.Provider{},
 		zerox.Provider{},
 		deribit.Provider{},
 	}
