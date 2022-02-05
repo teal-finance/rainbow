@@ -246,8 +246,7 @@ This project has been initiated by <a class="text-green-500 hover:text-primary" 
             </div>
             <div class="flex-grow">
               <h2 class="mb-3 text-lg font-medium">Rainbow</h2>
-              <p class="leading-relaxed">dashboard for DEX/CEX options trading highlighting market opportunities to
-            ease strategies decision.</p>
+              <p class="leading-relaxed">This is our flagship project started during hackathons. Rainbow enable traders to access in one place DeFi options data from various protocols. It provides a dashboard and an API to see live and historical options prices, currently from 3 different exchanges: Deribit, PsyOptions, and Opyn. </p>
               <a href="https://teal.finance/rainbow" class="inline-flex items-center mt-3 text-green-500">See More
                 <i-akar-icons-arrow-right />
               </a>
@@ -260,7 +259,7 @@ This project has been initiated by <a class="text-green-500 hover:text-primary" 
             </div>
             <div class="flex-grow">
               <h2 class="mb-3 text-lg font-medium">FTX-NFT</h2>
-              <p class="leading-relaxed">A NFT market data explorer for FTX &amp; FTX US marketplaces..</p>
+              <p class="leading-relaxed">A fun side project where we explore FTX NFT data, even before they properly documented that API. We can now see which NFTs are the most popular on FTX & FTX US.</p>
               <a href="https://teal.finance/nft" class="inline-flex items-center mt-3 text-green-500">Learn More
                 <i-akar-icons-arrow-right />
               </a>
@@ -273,8 +272,7 @@ This project has been initiated by <a class="text-green-500 hover:text-primary" 
             </div>
             <div class="flex-grow">
               <h2 class="mb-3 text-lg font-medium">Teal.Finance</h2>
-              <p class="leading-relaxed">We provide cryptocurrencies market data for trading. We also provide
-                blockchain data and the tools to explore blockchains..</p>
+              <p class="leading-relaxed">This is an old project, which laid the groundwork for rainbow. The idea was to collect crypto market data across various instruments and provide an API and a Jupiter environment for for traders. We are recycling those lessons learned in Rainbow.</p>
               <a href="https://teal.finance" class="inline-flex items-center mt-3 text-green-500">Learn More
                 <i-akar-icons-arrow-right />
               </a>
