@@ -1,7 +1,8 @@
-package psyoptions
+package zetamarkets
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/big"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
 
-	//"github.com/teal-finance/rainbow/pkg/provider/zetamarket/anchor"
+	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -18,11 +19,11 @@ const serummainnet = "https://solana-api.projectserum.com"
 type Provider struct{}
 
 func (Provider) Name() string {
-	return "Zetamarkets"
+	return "Zeta"
 }
 
 func (p Provider) Options() ([]rainbow.Option, error) {
-	/*rawOptions, err := anchor.Query()
+	rawOptions, err := anchor.Query()
 	if err != nil {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
@@ -31,7 +32,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	options := make([]rainbow.Option, 0, len(rawOptions))
 
 	for _, i := range rawOptions {
-		pubKey := solana.PublicKey(i.SerumMarketAddress())
+		pubKey := solana.PublicKey(i.SerumAddress())
 
 		ctx := context.TODO()
 
@@ -54,14 +55,14 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 
 		options = append(options, rainbow.Option{
 			Name:          i.Name(),
-			Type:          i.OptionType(),
+			Type:          i.Product.Kind.String(),
 			Asset:         i.Asset(),
 			Expiry:        i.Expiration(),
 			Strike:        i.Strike(),
 			ExchangeType:  "DEX",
 			Chain:         "Solana",
 			Layer:         "L1",
-			Provider:      "PsyOptions",
+			Provider:      p.Name(),
 			QuoteCurrency: i.Quote(),
 			Bid:           bids,
 			Ask:           asks,
@@ -71,8 +72,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	if len(options) == 0 {
 		return nil, errors.New("empty options lists")
 	}
-	return options, nil*/
-	return nil, nil
+	return options, nil
 }
 
 // I don't really need the totalsize but I am keeping it since it was in the original func:
@@ -111,8 +111,8 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 
 		offers = append(offers,
 			rainbow.Order{
-				Price: price / contractSize, //to get the price for 1 asset since psyoptions has <1 contract size
-				Size:  qty * contractSize,   // to convert the right quantity
+				Price: price,
+				Size:  qty / contractSize, // to convert the right quantity since there 3 decimals in the raw output
 			},
 		)
 	}

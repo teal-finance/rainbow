@@ -61,7 +61,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			ExchangeType:  "DEX",
 			Chain:         "Solana",
 			Layer:         "L1",
-			Provider:      "PsyOptions",
+			Provider:      p.Name(),
 			QuoteCurrency: i.Quote(),
 			Bid:           bids,
 			Ask:           asks,
