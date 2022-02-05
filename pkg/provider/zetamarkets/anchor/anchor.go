@@ -22,7 +22,9 @@ func Query() ([]Option, error) {
 	var result []Option
 	pubKey := solana.MustPublicKeyFromBase58(ZetaID)
 	endpoint := rpc.MainNetBeta_RPC
-	client := rpc.New(endpoint)
+	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
+
+	client := rpc.NewWithCustomRPCClient(jsonrpcclient)
 
 	out, err := client.GetProgramAccounts(
 		context.TODO(),

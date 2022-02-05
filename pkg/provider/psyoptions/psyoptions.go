@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"time"
 
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"
@@ -13,7 +14,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const serummainnet = "https://solana-api.projectserum.com"
+const serummainnet = "https://api.mainnet-beta.solana.com" //"https://solana-api.projectserum.com"
 
 type Provider struct{}
 
@@ -66,6 +67,8 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			Bid:           bids,
 			Ask:           asks,
 		})
+		//quit & dirty extra rate limit
+		time.Sleep(1000 * time.Microsecond)
 
 	}
 	if len(options) == 0 {
