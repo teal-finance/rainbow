@@ -83,7 +83,7 @@ func highlight(p string) string {
 		return green(p)
 	case "PsyOptions":
 		return magenta(p)
-	case "Zetamarkets":
+	case "Zeta":
 		return gray(p)
 	default:
 		return p
