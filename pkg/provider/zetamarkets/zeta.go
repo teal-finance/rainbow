@@ -56,7 +56,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 
 		options = append(options, rainbow.Option{
 			Name:          i.Name(),
-			Type:          i.Product.Kind.String(),
+			Type:          i.OptionType(),
 			Asset:         i.Asset(),
 			Expiry:        i.Expiration(),
 			Strike:        i.Strike(),

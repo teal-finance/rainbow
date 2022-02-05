@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"strings"
 	"time"
 
 	bin "github.com/gagliardetto/binary"
@@ -41,20 +42,28 @@ func Query() ([]Option, error) {
 			continue
 		}
 
-		result = append(result, extractOptions(z, z.Products[:])...)
-		result = append(result, extractOptions(z, z.ProductsPadding[:])...) //extra space that might be used in the future
+		result = append(result, extractOptions(z, z.Products[:], false)...)
+		result = append(result, extractOptions(z, z.ProductsPadding[:], true)...) //extra space that might be used in the future
 	}
 
 	return result, nil
 }
 
-func extractOptions(z *zeta.ZetaGroup, products []zeta.Product) []Option {
+func extractOptions(z *zeta.ZetaGroup, products []zeta.Product, padding bool) []Option {
 	var options []Option
+	counter := 0
 	for _, p := range products {
 		if p.Strike.IsSet && p.Kind.String() != "Future" {
-			options = append(options, Option{z, p})
+			if padding {
+				options = append(options, Option{z, p, z.ExpirySeriesPadding[counter/23].ExpiryTs})
 
+			} else {
+				options = append(options, Option{z, p, z.ExpirySeries[counter/23].ExpiryTs})
+
+			}
 		}
+		counter++
+
 	}
 	return options
 }
@@ -62,6 +71,11 @@ func extractOptions(z *zeta.ZetaGroup, products []zeta.Product) []Option {
 type Option struct {
 	ZG      *zeta.ZetaGroup
 	Product zeta.Product
+	expiry  uint64
+	// in ZetaGroup the Product & ProductPaddings are by packet of 23.
+	// To find the corresponding expiry(padding), we need its index in the array, and divide by 23
+	// the quotient is the index of the expiry of interest
+	// we also need to know if we are in the padding space or nah
 }
 
 func (o Option) SerumAddress() solana.PublicKey {
@@ -99,8 +113,12 @@ func (o Option) ContractSize() float64 {
 	}
 }
 func (o Option) Expiration() string {
-	seconds := int64(o.ZG.ExpirySeries[0].ExpiryTs)
+	seconds := int64(o.expiry)
 	expiryTime := time.Unix(seconds, 0).UTC()
 
 	return expiryTime.Format("2006-01-02 15:04:05")
+}
+
+func (o Option) OptionType() string {
+	return strings.ToUpper(o.Product.Kind.String())
 }
