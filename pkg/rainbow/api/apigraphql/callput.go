@@ -3,6 +3,7 @@ package apigraphql
 import (
 	"fmt"
 	"log"
+	"math"
 	"time"
 
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -60,7 +61,7 @@ func buildCallPut(options []rainbow.Option) CallPut {
 						Expiry:   expiry,
 						Provider: provider,
 						Call:     call,
-						Strike:   strike,
+						Strike:   math.Round(strike*100) / 100, //rounding to the nearest
 						Put:      put,
 					})
 				}
