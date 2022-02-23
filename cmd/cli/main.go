@@ -8,6 +8,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 
 	"github.com/gookit/color"
@@ -57,7 +58,7 @@ func printTable(options []rainbow.Option) {
 
 		t.AppendRows([]table.Row{{
 			highlight(option.Provider), option.Asset, option.Type,
-			bestBidQty, green(bestBidPx), option.Strike,
+			bestBidQty, green(bestBidPx), math.Round(option.Strike*100) / 100,
 			red(bestAskPx), bestAskQty, option.Name,
 		}})
 	}

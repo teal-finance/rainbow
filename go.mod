@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/Khan/genqlient v0.3.0
 	github.com/davecgh/go-spew v1.1.1
+	github.com/ethereum/go-ethereum v1.10.16
 	github.com/friendsofgo/graphiql v0.2.2
 	github.com/gagliardetto/binary v0.6.1
 	github.com/gagliardetto/gofuzz v1.2.2
@@ -26,6 +27,7 @@ require (
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	github.com/GeertJohan/go.rice v1.0.2 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
+	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/alexflint/go-arg v1.4.2 // indirect
 	github.com/alexflint/go-scalar v1.1.0 // indirect
@@ -34,19 +36,24 @@ require (
 	github.com/aybabtme/rgbterm v0.0.0-20170906152045-cc83f3b3ce59 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blendle/zapdriver v1.3.1 // indirect
+	github.com/btcsuite/btcd v0.20.1-beta // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/daaku/go.zipexe v1.0.1 // indirect
+	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/dfuse-io/logging v0.0.0-20210109005628-b97a57253f70 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
+	github.com/go-ole/go-ole v1.2.1 // indirect
+	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/golang-jwt/jwt/v4 v4.2.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/uuid v1.2.0 // indirect
 	github.com/gorilla/rpc v1.2.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
-	github.com/hashicorp/golang-lru v0.5.4 // indirect
+	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -73,13 +80,17 @@ require (
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/rjeczalik/notify v0.9.1 // indirect
 	github.com/rs/cors v1.8.2 // indirect
+	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
 	github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 // indirect
 	github.com/streamingfast/logging v0.0.0-20211221170249-09a6ecb200a0 // indirect
 	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 // indirect
 	github.com/tidwall/gjson v1.12.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
+	github.com/tklauser/go-sysconf v0.3.5 // indirect
+	github.com/tklauser/numcpus v0.2.2 // indirect
 	github.com/vektah/gqlparser/v2 v2.2.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
@@ -99,6 +110,7 @@ require (
 	golang.org/x/tools v0.1.8 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
+	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
