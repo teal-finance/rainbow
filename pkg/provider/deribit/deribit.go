@@ -32,9 +32,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		return nil, err
 	}
 
-	// log.Print(instruments[10])
-	// spew.Dump(instruments[10])
-
 	optionsBTC, err := normalize(instruments, 5)
 	if err != nil {
 		log.Print(err)
@@ -46,9 +43,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		log.Print(err)
 		return nil, err
 	}
-
-	// log.Print(instruments[10])
-	// spew.Dump(instruments[10])
 
 	optionsETH, err := normalize(instruments, 5)
 	if err != nil {
@@ -119,7 +113,6 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 //TODO change this quick and dirty way of filtering date from deribit.
 func isExpiryAvailable(expiry time.Time) bool {
 	dates := []string{
-		"2022-02-11T08:00:00Z",
 		"2022-02-25T08:00:00Z",
 		"2022-03-04T08:00:00Z",
 		"2022-03-25T08:00:00Z",
@@ -136,8 +129,8 @@ func isExpiryAvailable(expiry time.Time) bool {
 
 // TODO change this quick and dirty way of filtering strikes from deribit.
 func isStrikeAvailable(i instrument) bool {
-	ethStrike := []float64{1600, 1800, 2000, 2200, 2400, 2500, 2600, 2700, 2800, 3000}
-	btcStrike := []float64{20000, 25000, 30000, 35000, 36000, 38000, 39000, 40000, 50000}
+	ethStrike := []float64{1600, 1800, 2000, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3300, 3500, 3800}
+	btcStrike := []float64{20000, 25000, 30000, 33000, 35000, 36000, 38000, 39000, 40000, 41000, 43000, 45000, 47000, 50000}
 	strikes := ethStrike
 
 	if i.BaseCurrency == "BTC" {

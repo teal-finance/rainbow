@@ -1,0 +1,1223 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "strike",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "skew",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longPut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortPut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "boardId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IOptionMarket.OptionListing",
+        "name": "listing",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expiry",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "iv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "frozen",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "listingIds",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct IOptionMarket.OptionBoard",
+        "name": "board",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "isBuy",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vol",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expiry",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "freeCollatLiquidity",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "usedCollatLiquidity",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "freeDeltaLiquidity",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "usedDeltaLiquidity",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct ILiquidityPool.Liquidity",
+            "name": "liquidity",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IOptionMarket.Trade",
+        "name": "trade",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "optionPriceFeeCoefficient",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spotPriceFeeCoefficient",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vegaFeeCoefficient",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vegaNormFactor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "standardSize",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "skewAdjustmentFactor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "int256",
+            "name": "rateAndCarry",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "minDelta",
+            "type": "int256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "volatilityCutoff",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spotPrice",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ILyraGlobals.PricingGlobals",
+        "name": "pricingGlobals",
+        "type": "tuple"
+      },
+      {
+        "internalType": "bool",
+        "name": "isCall",
+        "type": "bool"
+      }
+    ],
+    "name": "_getPremiumForTrade",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premium",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "basePrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vegaUtilFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "optionPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spotPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "newIv",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.TradePremiumView",
+        "name": "premium",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "blackScholes",
+    "outputs": [
+      {
+        "internalType": "contract IBlackScholes",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "boardId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBoard",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expiry",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "iv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "frozen",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "listingIds",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct IOptionMarket.OptionBoard",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_boardId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum IOptionMarket.TradeType",
+        "name": "tradeType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getClosePremiumsForBoard",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premium",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "basePrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vegaUtilFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "optionPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spotPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "newIv",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.TradePremiumView[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "listingId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getListing",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "strike",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "skew",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longPut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortPut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "boardId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IOptionMarket.OptionListing",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "listingId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getListingView",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "boardId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "strike",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expiry",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "iv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "skew",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "callPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "putPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "int256",
+            "name": "callDelta",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "putDelta",
+            "type": "int256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longPut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortPut",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.ListingView",
+        "name": "listingView",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "listingId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getListingViewAndBalance",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "boardId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "strike",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expiry",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "iv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "skew",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "callPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "putPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "int256",
+            "name": "callDelta",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "putDelta",
+            "type": "int256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longPut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortPut",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.ListingView",
+        "name": "listingView",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "longCallAmt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "longPutAmt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "shortCallAmt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "shortPutAmt",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "boardId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getListingsForBoard",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "boardId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "strike",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expiry",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "iv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "skew",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "callPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "putPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "int256",
+            "name": "callDelta",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "putDelta",
+            "type": "int256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortCall",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "longPut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shortPut",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.ListingView[]",
+        "name": "boardListings",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getLiveBoards",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "boardId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expiry",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.BoardView[]",
+        "name": "boards",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_boardId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum IOptionMarket.TradeType",
+        "name": "tradeType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getOpenPremiumsForBoard",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premium",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "basePrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vegaUtilFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "optionPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spotPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "newIv",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.TradePremiumView[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_listingId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum IOptionMarket.TradeType",
+        "name": "tradeType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPremiumForClose",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premium",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "basePrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vegaUtilFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "optionPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spotPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "newIv",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.TradePremiumView",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_listingId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum IOptionMarket.TradeType",
+        "name": "tradeType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPremiumForOpen",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premium",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "basePrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vegaUtilFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "optionPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spotPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "newIv",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.TradePremiumView",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_listingId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum IOptionMarket.TradeType",
+        "name": "tradeType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "isBuy",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPremiumForTrade",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premium",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "basePrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vegaUtilFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "optionPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spotPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "newIv",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.TradePremiumView",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_boardId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum IOptionMarket.TradeType",
+        "name": "tradeType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "isBuy",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPremiumsForBoard",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premium",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "basePrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vegaUtilFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "optionPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spotPriceFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "newIv",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct OptionMarketViewer.TradePremiumView[]",
+        "name": "tradePremiums",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "globals",
+    "outputs": [
+      {
+        "internalType": "contract ILyraGlobals",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "greekCache",
+    "outputs": [
+      {
+        "internalType": "contract IOptionGreekCache",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ILyraGlobals",
+        "name": "_globals",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IOptionMarket",
+        "name": "_optionMarket",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IOptionMarketPricer",
+        "name": "_optionMarketPricer",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IOptionGreekCache",
+        "name": "_greekCache",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IOptionToken",
+        "name": "_optionToken",
+        "type": "address"
+      },
+      {
+        "internalType": "contract ILiquidityPool",
+        "name": "_liquidityPool",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IBlackScholes",
+        "name": "_blackScholes",
+        "type": "address"
+      }
+    ],
+    "name": "init",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "liquidityPool",
+    "outputs": [
+      {
+        "internalType": "contract ILiquidityPool",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "optionMarket",
+    "outputs": [
+      {
+        "internalType": "contract IOptionMarket",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "optionMarketPricer",
+    "outputs": [
+      {
+        "internalType": "contract IOptionMarketPricer",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "optionToken",
+    "outputs": [
+      {
+        "internalType": "contract IOptionToken",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

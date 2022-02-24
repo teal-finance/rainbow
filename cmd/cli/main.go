@@ -8,6 +8,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 
 	"github.com/gookit/color"
@@ -57,7 +58,7 @@ func printTable(options []rainbow.Option) {
 
 		t.AppendRows([]table.Row{{
 			highlight(option.Provider), option.Asset, option.Type,
-			bestBidQty, green(bestBidPx), option.Strike,
+			bestBidQty, green(bestBidPx), math.Round(option.Strike*100) / 100,
 			red(bestAskPx), bestAskQty, option.Name,
 		}})
 	}
@@ -72,19 +73,22 @@ func printTable(options []rainbow.Option) {
 
 func highlight(p string) string {
 	magenta := color.FgMagenta.Render
-	green := color.FgGreen.Render
+	lightGreen := color.FgLightGreen.Render
 	blue := color.FgCyan.Render
-	gray := color.FgDarkGray.Render
+	darkGray := color.FgDarkGray.Render
+	darkGreen := color.FgGreen.Render
 
 	switch p {
 	case "Opyn":
 		return blue(p)
 	case "Deribit":
-		return green(p)
+		return lightGreen(p)
 	case "PsyOptions":
 		return magenta(p)
 	case "Zeta":
-		return gray(p)
+		return darkGray(p)
+	case "Lyra":
+		return darkGreen(p)
 	default:
 		return p
 	}
