@@ -73,19 +73,22 @@ func printTable(options []rainbow.Option) {
 
 func highlight(p string) string {
 	magenta := color.FgMagenta.Render
-	green := color.FgGreen.Render
+	lightGreen := color.FgLightGreen.Render
 	blue := color.FgCyan.Render
-	gray := color.FgDarkGray.Render
+	darkGray := color.FgDarkGray.Render
+	darkGreen := color.FgGreen.Render
 
 	switch p {
 	case "Opyn":
 		return blue(p)
 	case "Deribit":
-		return green(p)
+		return lightGreen(p)
 	case "PsyOptions":
 		return magenta(p)
 	case "Zeta":
-		return gray(p)
+		return darkGray(p)
+	case "Lyra":
+		return darkGreen(p)
 	default:
 		return p
 	}

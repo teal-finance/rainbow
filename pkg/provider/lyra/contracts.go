@@ -9,17 +9,27 @@ const optionMarketViewerLINK = "0xE34AF32082aa2Be75f0a80dC179D597E852AF6a1"
 const optionMarketSOL = "0xA3562CAc1c39f4D4166CE31005Fc080AB41120aC"
 const optionMarketViewerSOL = "0xeAcB3f1a4f3137807f4e901167a999eF6f8312fb"
 
+//order as to be the same for all the arrays
+//TODO switch to maps or smth else
+var Assets []string = []string{
+	"sBTC",
+	"sETH",
+	"sLINK",
+	"sSOL",
+}
 var OptionMarkets []string = []string{
 	optionMarketBTC,
 	optionMarketETH,
 	optionMarketLINK,
-	optionMarketSOL}
+	optionMarketSOL,
+}
 
 var OptionMarketViewers []string = []string{
 	optionMarketViewerBTC,
 	optionMarketViewerETH,
 	optionMarketViewerLINK,
-	optionMarketViewerSOL}
+	optionMarketViewerSOL,
+}
 
 //https://github.com/lyra-finance/lyra-protocol/blob/master/deployments/mainnet-ovm/lyra.json#L31-L321
 /*"markets": {

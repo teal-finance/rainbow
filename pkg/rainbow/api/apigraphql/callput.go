@@ -148,9 +148,11 @@ func newLimit(o rainbow.Option) Limit {
 	return l
 }
 
-// sanitizeAsset removes "W" (or "w") in "WETH" and "WBTC".
+// sanitizeAsset removes
+//"W" (or "w") in "WETH" and "WBTC"
+// "s" for Lyra assets from Synthethix: sETH, sBTC, sLINK, sSOL
 func sanitizeAsset(asset string) string {
-	if len(asset) >= 4 && (asset[0] == 'W' || asset[0] == 'w') {
+	if len(asset) >= 4 && (asset[0] == 'W' || asset[0] == 'w' || asset[0] == 's') {
 		return asset[1:]
 	}
 

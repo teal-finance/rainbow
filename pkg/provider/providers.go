@@ -8,6 +8,7 @@ package provider
 
 import (
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
+	"github.com/teal-finance/rainbow/pkg/provider/lyra"
 	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
 	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
@@ -16,11 +17,13 @@ import (
 
 // AllProviders returns all active providers.
 func AllProviders() []rainbow.Provider {
+	//changing the order to not exhaust our solana/serum rpc quota
+	//used by zeta and psy
 	return []rainbow.Provider{
 		zetamarkets.Provider{},
 		zerox.Provider{},
 		deribit.Provider{},
-		//changing the order to not exhaust our solana/serum rpc quota
+		lyra.Provider{},
 		psyoptions.Provider{},
 	}
 }
