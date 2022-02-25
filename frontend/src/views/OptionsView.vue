@@ -15,6 +15,11 @@
           <hr class="my-3" />
           <values-filter :model="datatable" col="provider"></values-filter>
         </div>
+        <div class="mt-2">
+          <div class="text-xl">Expiry</div>
+          <hr class="my-3" />
+          <values-filter :model="datatable" col="expiry"></values-filter>
+        </div>
       </div>
     </div>
     <div v-else>
