@@ -160,7 +160,7 @@ func (o Option) QuotePerContract() float64 {
 }
 
 func (o Option) OptionType() string {
-	if o.UnderlyingPerContract() < o.QuotePerContract() {
+	if o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(USDCAddress) {
 		return "CALL"
 	}
 
@@ -172,6 +172,17 @@ func (o Option) IsCall() bool {
 }
 
 func (o Option) Strike() float64 {
+	var s float64
+	if o.Asset() == "SOL" {
+		if o.OptionType() == "PUT" {
+			s = o.UnderlyingPerContract() / o.QuotePerContract()
+		} else {
+
+			s = o.QuotePerContract() / o.UnderlyingPerContract()
+		}
+		return s * 1000
+
+	}
 	if o.OptionType() == "PUT" {
 		return o.UnderlyingPerContract() / o.QuotePerContract()
 	}
