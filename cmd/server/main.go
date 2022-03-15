@@ -44,10 +44,10 @@ func main() {
 	server := http.Server{
 		Addr:              listenAddr,
 		Handler:           g.Middlewares.Then(handler(&service, g)),
-		ReadTimeout:       1 * time.Second,
-		ReadHeaderTimeout: 1 * time.Second,
-		WriteTimeout:      1 * time.Second,
-		IdleTimeout:       1 * time.Second,
+		ReadTimeout:       time.Second,
+		ReadHeaderTimeout: time.Second,
+		WriteTimeout:      time.Minute, // Garcon.Limiter postpones response, attacker should wait long time.
+		IdleTimeout:       time.Second,
 		ConnState:         g.ConnState,
 		ErrorLog:          log.Default(),
 	}
