@@ -7,6 +7,7 @@
 package provider
 
 import (
+	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
 	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
@@ -24,6 +25,7 @@ func AllProviders() []rainbow.Provider {
 		zerox.Provider{},
 		deribit.Provider{},
 		lyra.Provider{},
+		deltaexchange.Provider{},
 		psyoptions.Provider{},
 	}
 }

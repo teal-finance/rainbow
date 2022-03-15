@@ -32,7 +32,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		return nil, err
 	}
 
-	optionsBTC, err := normalize(instruments, 5)
+	optionsBTC, err := fillOptions(instruments, 5)
 	if err != nil {
 		log.Print(err)
 		return nil, err
@@ -44,7 +44,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		return nil, err
 	}
 
-	optionsETH, err := normalize(instruments, 5)
+	optionsETH, err := fillOptions(instruments, 5)
 	if err != nil {
 		log.Print(err)
 		return nil, err
@@ -70,7 +70,7 @@ func query(coin string) ([]instrument, error) {
 	}{}
 
 	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return []instrument{}, fmt.Errorf("nft collections : %w", err)
+		return []instrument{}, fmt.Errorf("deribit options collect : %w", err)
 	}
 
 	return filterTooFar(result.Result), nil
@@ -147,9 +147,8 @@ func isStrikeAvailable(i instrument) bool {
 	return false
 }
 
-func normalize(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
+func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
-	// deribitOrderBook := []DeribitOrderBook{}
 	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
 
 	for _, i := range instruments {
@@ -244,6 +243,8 @@ type OrderBook struct {
 	AskIv                  float64 `json:"ask_iv"`
 }
 
+// Prices are not in $ but in crypto so we need the coin (index) price to multiply
+// and get the USD price
 func normalizeOrders(orders [][]float64, assetPrice float64) []rainbow.Order {
 	// if there is no offer, send price=0.0, quant=0.0
 	// hopefully we never an array of empty array
