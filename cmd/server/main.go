@@ -35,7 +35,7 @@ func main() {
 		garcon.WithDocURL("/doc"),
 		garcon.WithServerHeader("Rainbow-v0"),
 		garcon.WithLimiter(*reqBurst, *reqPerMinute),
-		garcon.WithProm(*expPort),
+		garcon.WithProm(*expPort, *mainAddr),
 		garcon.WithDev(*dev))
 	if err != nil {
 		log.Fatal(err)
