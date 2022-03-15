@@ -2,9 +2,7 @@ module github.com/teal-finance/rainbow
 
 go 1.17
 
-replace github.com/teal-finance/garcon => ../garcon
-
-// replace github.com/dfuse-io/logging => github.com/streamingfast/logging v0.0.0-20210811175431-f3b44b61606a
+// replace github.com/teal-finance/garcon => ../garcon
 
 replace github.com/dfuse-io/logging => github.com/streamingfast/logging v0.0.0-20220304214715-bc750a74b424
 
@@ -25,7 +23,7 @@ require (
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/streamingfast/solana-go v0.5.1
 	github.com/stretchr/testify v1.7.0
-	github.com/teal-finance/garcon v0.9.8
+	github.com/teal-finance/garcon v0.9.9
 )
 
 require (
