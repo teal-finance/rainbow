@@ -17,7 +17,7 @@ const deltaOrders = "https://api.delta.exchange/v2/l2orderbook/"
 type Provider struct{}
 
 func (Provider) Name() string {
-	return "Delta Exchange"
+	return "DeltaEx" //TODO real name but we use the short one to have a nice front for now "Delta Exchange"
 }
 
 func (pro Provider) Options() ([]rainbow.Option, error) {
@@ -48,6 +48,11 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		if err != nil {
 			return nil, fmt.Errorf(" strike conversion : %w", err)
 
+		}
+		//Ugly fix for front, the 100K strike is too long number so I will filter it out
+		//TODO, reduce the size of the front character to fit more things
+		if strike > 75000 {
+			continue
 		}
 
 		bids, asks, err := p.Orderbook()
@@ -122,12 +127,17 @@ func (p Product) Orderbook() ([]rainbow.Order, []rainbow.Order, error) {
 		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" fetch  order book json issue : %w", err)
 	}
 
-	bids, err := orderConversion(orders.Orders.Buy)
-	asks, err := orderConversion(orders.Orders.Sell)
+	contractSize, err := strconv.ParseFloat(p.ContractValue, 64)
+	if err != nil {
+		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" contract value conversion: %w", err)
+	}
+
+	bids, err := orderConversion(orders.Orders.Buy, contractSize)
+	asks, err := orderConversion(orders.Orders.Sell, contractSize)
 	return bids, asks, nil
 }
 
-func orderConversion(orders Orders) ([]rainbow.Order, error) {
+func orderConversion(orders Orders, contractSize float64) ([]rainbow.Order, error) {
 	rOrders := []rainbow.Order{}
 	for _, o := range orders {
 		price, err := strconv.ParseFloat(o.Price, 64)
@@ -136,7 +146,7 @@ func orderConversion(orders Orders) ([]rainbow.Order, error) {
 		}
 		rOrders = append(rOrders, rainbow.Order{
 			Price: price,
-			Size:  float64(o.Size),
+			Size:  float64(o.Size) * contractSize,
 		})
 	}
 	return rOrders, nil
