@@ -209,7 +209,7 @@
   dependencies:
     vue "^3.2.19"
 
-"@snowind/switch@^0.0.5":
+"@snowind/switch@^0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@snowind/switch/-/switch-0.0.4.tgz#0c7e3fe1df04f377825c7f3db0a9cbd80c05c1ea"
   integrity sha512-8kbssby/nHf07o0d5OLQykeuHSEOsOC5QpYNMnquZ3S7eljzJCKHWfmh/g1wgHbJZEl6hYTEkBjBMWKwMSWxEA==
