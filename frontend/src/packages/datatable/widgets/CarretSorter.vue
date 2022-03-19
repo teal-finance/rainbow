@@ -69,7 +69,7 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 .sort-neutral
-  @apply text-neutral dark:text-neutral-dark
+  @apply txt-light
 .sort-active
-  @apply bg-success
+  @apply block-success
 </style>

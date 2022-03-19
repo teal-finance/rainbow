@@ -82,13 +82,13 @@ export default defineComponent({
       @apply bg-secondary dark:bg-secondary-dark bg-opacity-20 dark:bg-opacity-80
 
   tbody
-    @apply xl:bg-background xl:dark:bg-background-dark
+    @apply xl:block-background
     td
       @apply px-3 py-1
       &.provider, &.asset, &expiry
-        @apply bg-background dark:bg-background-dark
+        @apply block-background
       &.strike
-        @apply bg-background dark:bg-background-dark text-right
+        @apply block-background text-right
 
       // Bid values with same background
       &.callBidSize, &.putBidSize, &.callBidPrice, &.putBidPrice
