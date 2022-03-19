@@ -197,27 +197,10 @@
     "@snowind/state" "^0.0.2"
     vue "^3.2.19"
 
-"@snowind/input@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@snowind/input/-/input-0.0.4.tgz#5a9d60d9f4b3904ede4b8575dd6465d65e67ceba"
-  integrity sha512-uNMcLO518YDzgdZ4ffyVV2YDJF6m7UkCg7nwDujs4Jn8TaNHC1wR8U59RnAMXyeLXxp1D6JZ1VptFiJXbMMfow==
-  dependencies:
-    vue "^3.2.19"
-
-"@snowind/plugin@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@snowind/plugin/-/plugin-0.0.6.tgz#dd13501e6fd5388d97bf7df225ce79018b1d8698"
-  integrity sha512-3MFKghuJqI2H4IJQFpQsWzBYZ41g/3Ok3W/Oojaw1tCUheQBoaekwEeq6HFvVkIJ81WXQ4ebOU56D+zCMZSq8A==
-  dependencies:
-    tailwindcss ">=3.0.0"
-
-"@snowind/sidebar@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@snowind/sidebar/-/sidebar-0.0.3.tgz#a85213ac9224243e66121a2fdc97a1640857026f"
-  integrity sha512-dz3gP3wINssI7+cL+flKNNQk5MKjDEuw+C4gf4VDoK5n6qTTW4Kl0ca45VXb38FmFIGWA7TGRp+3iPebc86OVQ==
-  dependencies:
-    "@vueuse/core" "^6.5.3"
-    vue "^3.2.19"
+"@snowind/plugin@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@snowind/plugin/-/plugin-0.2.1.tgz#572ffadcb94dc6a957b480986c3888ae5e8e0231"
+  integrity sha512-kjUiRJ8e+La13QEoB0kxO27mWwfPIqJW6j35wDddwk98bMJ2zP2boFLyvG3TKAD8TftYiaL0TAYkiaM0+teVSA==
 
 "@snowind/state@^0.0.2":
   version "0.0.2"
@@ -535,27 +518,12 @@
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.2.26.tgz#7acd1621783571b9a82eca1f041b4a0a983481d9"
   integrity sha512-vPV6Cq+NIWbH5pZu+V+2QHE9y1qfuTq49uNWw4f7FDEeZaDU2H2cx5jcUZOAKW7qTrUS4k6qZPbMy1x4N96nbA==
 
-"@vueuse/core@^6.5.3":
-  version "6.9.2"
-  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-6.9.2.tgz#76b16d01f33cf367dd1a2d7f2e31d106443ceb8a"
-  integrity sha512-FRwl4ccSFuHZBHLGgS9TMv/+Dd6XFaL4o9nph2qtgQIV+z29RBFokw08XjHfykiENRzB01MjYHJ7iRUnsIFQXg==
-  dependencies:
-    "@vueuse/shared" "6.9.2"
-    vue-demi "*"
-
 "@vueuse/core@^7.2.2":
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-7.3.0.tgz#fe24ff698069cb7dcc835a8fe2eeb29b22b2a702"
   integrity sha512-gPJyMMAquva9Qwqz63qGQT122m5hWI8Kuy8kfPV/JLQU7m01CXooyv8FIrX9TV8OxVcHBTPXPJHY0oyUiFoNgw==
   dependencies:
     "@vueuse/shared" "7.3.0"
-    vue-demi "*"
-
-"@vueuse/shared@6.9.2":
-  version "6.9.2"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-6.9.2.tgz#97e4369fa7262ebc96fe1d6e210268f30b037005"
-  integrity sha512-lAiMh6XROs0kSKVd0Yb/6GKoQMxC1fYrFDi6opvQWISPtcqRNluRrQxLUZ3WTI78ovtoKRLktjhkFAtydcfFDg==
-  dependencies:
     vue-demi "*"
 
 "@vueuse/shared@7.3.0":
@@ -2900,7 +2868,12 @@ table@^6.0.9:
     string-width "^4.2.3"
     strip-ansi "^6.0.1"
 
-tailwindcss@>=3.0.0, tailwindcss@^3.0.15:
+tailwindcss-semantic-colors@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/tailwindcss-semantic-colors/-/tailwindcss-semantic-colors-0.2.0.tgz#2caf620746679087cbd01ed9c7e4a9c43cdc1cdd"
+  integrity sha512-KQyq+3YFG1EZjukBILwRwP3efGgv+6TV9mQWF7zLFyyZuV6SC+LUSehRvjlmF9b4OUbQM355WTG653eHbfS1ZA==
+
+tailwindcss@^3.0.15:
   version "3.0.15"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.0.15.tgz#e4db219771eb7678a3bfd97b3f6c8fe20be0a410"
   integrity sha512-bT2iy7FtjwgsXik4ZoJnHXR+SRCiGR1W95fVqpLZebr64m4ahwUwRbIAc5w5+2fzr1YF4Ct2eI7dojMRRl8sVQ==

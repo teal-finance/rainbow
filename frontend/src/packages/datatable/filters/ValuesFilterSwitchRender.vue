@@ -1,6 +1,10 @@
 <template>
-  <div v-for="(v,i) in values" :key="i" class="flex flex-row items-center mb-3">
-    <sw-switch v-model:value="state[`${v}`]" @change="toggleActivate(v)" class="mr-2 primary"></sw-switch>
+  <div v-for="(v, i) in values" :key="i" class="flex flex-row items-center mb-3">
+    <sw-switch
+      v-model:value="state[`${v}`]"
+      class="mr-2 switch-secondary"
+      @change="toggleActivate(v)"
+    ></sw-switch>
     <div v-html="v"></div>
   </div>
 </template>

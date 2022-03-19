@@ -1,5 +1,11 @@
 <template>
-  <sw-switch :id="id" :checked="v" @change="onChange($event)" v-model:value="val"></sw-switch>
+  <sw-switch
+    :id="id"
+    class="switch-primary"
+    :checked="v"
+    @change="onChange($event)"
+    v-model:value="val"
+  ></sw-switch>
 </template>
 
 <script lang="ts">
