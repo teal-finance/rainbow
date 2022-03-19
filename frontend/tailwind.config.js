@@ -57,10 +57,23 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
     require('@snowind/plugin'),
+    require('tailwindcss-semantic-colors'),
   ],
 
   theme: {
     extend: {
+      semanticColors: {
+        background: {
+          light: {
+            bg: colors.white,
+            txt: colors.gray[600],
+          },
+          dark: {
+            bg: "#111827",
+            txt: colors.neutral[100]
+          }
+        },
+      },
       colors: {
         'rainbow': rainbowColors,
         'primary': {
@@ -78,14 +91,6 @@ module.exports = {
         'secondary-r': {
           DEFAULT: "#FFFFFF",
           dark: "#FFFFFF",
-        },
-        'foreground': {
-          DEFAULT: colors.gray[600],
-          dark: colors.white
-        },
-        'background': {
-          DEFAULT: colors.white,
-          dark: "#111827"
         },
         'header': {
           DEFAULT: colors.white,

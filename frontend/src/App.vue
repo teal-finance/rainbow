@@ -1,8 +1,6 @@
 <template>
   <div :class="{ 'dark': user.isDarkMode.value == true }">
-    <div
-      class="w-full bg-background dark:bg-background-dark text-foreground dark:text-foreground-dark"
-    >
+    <div class="w-full background">
       <the-header></the-header>
       <div class="p-5">
         <router-view></router-view>
