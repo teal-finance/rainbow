@@ -4,3 +4,4 @@
 *.log
 /dev
 /doc/ignore
+/.golangci.yml
