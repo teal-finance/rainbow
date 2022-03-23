@@ -60,7 +60,7 @@ func buildCallPut(options []rainbow.Option) CallPut {
 						Expiry:   expiry,
 						Provider: provider,
 						Call:     call,
-						Strike:   math.Round(strike*100) / 100, //rounding to the nearest
+						Strike:   math.Round(strike*100) / 100, // rounding to the nearest
 						Put:      put,
 					})
 				}
@@ -75,8 +75,7 @@ func groupByAsset(options []rainbow.Option) (assetToOptions map[string][]rainbow
 	assetToOptions = map[string][]rainbow.Option{}
 
 	for _, o := range options {
-		//sanitize to properly group assets
-
+		// Sanitize to properly group assets
 		asset := sanitizeAsset(o.Asset)
 		slice, ok := assetToOptions[asset]
 		if ok {
@@ -144,8 +143,8 @@ func newLimit(o rainbow.Option) Limit {
 }
 
 // sanitizeAsset removes
-//"W" (or "w") in "WETH" and "WBTC"
-// "s" for Lyra assets from Synthethix: sETH, sBTC, sLINK, sSOL
+// "W" (or "w") in "WETH" and "WBTC"
+// "s" for Lyra assets from Synthethix: sETH, sBTC, sLINK, sSOL.
 func sanitizeAsset(asset string) string {
 	if len(asset) >= 4 && (asset[0] == 'W' || asset[0] == 'w' || asset[0] == 's') {
 		return asset[1:]
