@@ -183,8 +183,8 @@ func expiration(e *big.Int) string {
 
 // because Ethereum use 10^18 to represent 1
 // what we do is that we cut 10^13 to keep 5 decimals
-//(because IV is a percentage an we want to be accurate)
-// then convert the remainder to float64 and divide by 1000
+// (because IV is a percentage an we want to be accurate)
+// then convert the remainder to float64 and divide by 1000.
 func ToFloat(n *big.Int) float64 {
 	q := common.Big0
 	q.Quo(n, big.NewInt(10000000000000)) // divided by 10^13

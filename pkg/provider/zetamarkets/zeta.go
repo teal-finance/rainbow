@@ -15,7 +15,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const serummainnet = "https://solana-api.projectserum.com" //"https://api.mainnet-beta.solana.com"
+const serummainnet = "https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
 
 type Provider struct{}
 
@@ -39,9 +39,9 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 
 		out, err := serum.FetchMarket(ctx, client, pubKey)
 		if err != nil {
-			//for now because error in serumaddress generated
+			// for now because error in serumaddress generated
 			continue
-			//return nil, fmt.Errorf("serum.FetchMarket: %w", err)
+			// return nil, fmt.Errorf("serum.FetchMarket: %w", err)
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
 		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.ContractSize())
@@ -81,7 +81,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 //     - BID down so desc=false
 func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, totalSize float64, err error) {
 	var o serum.Orderbook
-	//quit & dirty extra rate limit
+	// quit & dirty extra rate limit
 	time.Sleep(300 * time.Microsecond)
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
 		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)

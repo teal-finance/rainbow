@@ -78,7 +78,7 @@ func (o Option) SerumMarketAddress() solana.PublicKey {
 	return o.serumMarketAddress
 }
 
-//https://github.com/mithraiclabs/psyoptions-ts/blob/87afa7280c33f341198c60676d2302c55bbfab5f/packages/psy-american/src/serumUtils.ts#L161-L174
+// https://github.com/mithraiclabs/psyoptions-ts/blob/87afa7280c33f341198c60676d2302c55bbfab5f/packages/psy-american/src/serumUtils.ts#L161-L174
 func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, programid solana.PublicKey) (solana.PublicKey, uint8, error) {
 	seed := [][]byte{
 		optionMarketAddress[:],
@@ -88,14 +88,12 @@ func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, program
 	return solana.FindProgramAddress(seed, programid)
 }
 
-//Expired
-//the Options have a field "Expired"(bool) but it is not set to false even for expired hence the function
+// the Options have a field "Expired"(bool) but it is not set to false even for expired hence the function.
 func (o Option) IsExpired() bool {
 	seconds := o.opt.ExpirationUnixTimestamp
 	expiryTime := time.Unix(seconds, 0).UTC()
 
-	//copy from opyn.go. should make a proper function
-
+	// INFO: copy from opyn.go. should make a proper function
 	// we keep an option even 2 days after expiry
 	// mainly because not all protocol stop at expiry or right before
 	// TODO re-check later
@@ -145,8 +143,7 @@ func (o Option) ContractSize() float64 {
 		return 0.1
 	case o.Asset() == "BTC":
 		return 0.01
-	//SOL & mSOL is 1
-	default:
+	default: // SOL & mSOL is 1
 		return 1
 	}
 }

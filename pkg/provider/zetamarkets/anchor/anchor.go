@@ -43,7 +43,7 @@ func Query() ([]Option, error) {
 		}
 
 		result = append(result, extractOptions(z, z.Products[:], false)...)
-		result = append(result, extractOptions(z, z.ProductsPadding[:], true)...) //extra space that might be used in the future
+		result = append(result, extractOptions(z, z.ProductsPadding[:], true)...) // extra space that might be used in the future
 	}
 
 	return result, nil
@@ -82,13 +82,13 @@ func (o Option) SerumAddress() solana.PublicKey {
 	return o.Product.Market
 }
 
-//watch out if they ever use something else than USDC
+// watch out if they ever use something else than USDC.
 func (o Option) Strike() float64 {
 
 	return float64(o.Product.Strike.Value / uint64(math.Pow10(USDCDecimals)))
 }
 
-//same comment as previous
+// same comment as previous.
 func (o Option) Quote() string {
 	return "USDC"
 }
@@ -107,8 +107,7 @@ func (o Option) Name() string {
 }
 func (o Option) ContractSize() float64 {
 	switch {
-	//SOL is 1
-	default:
+	default: // SOL is 1
 		return 1000
 	}
 }

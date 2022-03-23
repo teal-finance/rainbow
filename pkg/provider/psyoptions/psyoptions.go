@@ -38,7 +38,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 
 		out, err := serum.FetchMarket(ctx, client, pubKey)
 		if err != nil {
-			//for now because error in serumaddress generated
+			// for now because error in serumaddress generated
 			continue
 			//return nil, fmt.Errorf("serum.FetchMarket: %w", err)
 		}
@@ -84,7 +84,7 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
 
-	//quit & dirty extra rate limit
+	// quit & dirty extra rate limit
 	time.Sleep(300 * time.Microsecond)
 
 	limit := 20
@@ -114,7 +114,7 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 
 		offers = append(offers,
 			rainbow.Order{
-				Price: price / contractSize, //to get the price for 1 asset since psyoptions has <1 contract size
+				Price: price / contractSize, // to get the price for 1 asset since psyoptions has <1 contract size
 				Size:  qty * contractSize,   // to convert the right quantity
 			},
 		)
