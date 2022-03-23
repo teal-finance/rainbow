@@ -44,14 +44,17 @@ func (s *Service) FetchOptionsFromProviders() {
 		o, err := p.Options()
 		if err != nil {
 			log.Print("WARN fetching data from ", p, " : ", err)
+
 			continue
 		}
 
 		err = s.store.InsertOptions(o)
 		if err != nil {
 			log.Print("WARN cannot store data in DB for ", p, " : ", err)
+
 			continue
 		}
+
 		log.Printf("Fetched %v=%v", p.Name(), len(o))
 	}
 }

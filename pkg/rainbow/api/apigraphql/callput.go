@@ -77,6 +77,7 @@ func groupByAsset(options []rainbow.Option) (assetToOptions map[string][]rainbow
 	for _, o := range options {
 		// Sanitize to properly group assets
 		asset := sanitizeAsset(o.Asset)
+
 		slice, ok := assetToOptions[asset]
 		if ok {
 			assetToOptions[asset] = append(slice, o)
@@ -160,5 +161,6 @@ func sanitizeDate(date string) string {
 		log.Printf("WARN prettyDate() cannot parse %q", date)
 		return date
 	}
+
 	return t.Format("Jan _2")
 }
