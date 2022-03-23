@@ -19,7 +19,7 @@ const serummainnet = "https://solana-api.projectserum.com"
 type Provider struct{}
 
 func (Provider) Name() string {
-	return "PsyOp" //TODO put full name when front is fixed
+	return "PsyOptions" //TODO put full name when front is fixed
 }
 
 func (p Provider) Options() ([]rainbow.Option, error) {

@@ -17,7 +17,7 @@ const deltaOrders = "https://api.delta.exchange/v2/l2orderbook/"
 type Provider struct{}
 
 func (Provider) Name() string {
-	return "DeltaEx" //TODO real name but we use the short one to have a nice front for now "Delta Exchange"
+	return "Delta Exchange" //TODO real name but we use the short one to have a nice front for now "Delta Exchange"
 }
 
 func (pro Provider) Options() ([]rainbow.Option, error) {
