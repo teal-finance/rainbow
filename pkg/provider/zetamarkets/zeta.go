@@ -70,9 +70,11 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 		})
 
 	}
+
 	if len(options) == 0 {
 		return nil, errors.New("empty options lists")
 	}
+
 	return options, nil
 }
 
@@ -81,8 +83,10 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 //     - BID down so desc=false
 func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, totalSize float64, err error) {
 	var o serum.Orderbook
+
 	// quit & dirty extra rate limit
 	time.Sleep(300 * time.Microsecond)
+
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
 		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
@@ -99,6 +103,7 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		} else if len(levels) != limit {
 			levels = append(levels, []*big.Int{price, quantity})
 		}
+
 		return nil
 	})
 	if err != nil {

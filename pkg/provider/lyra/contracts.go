@@ -19,6 +19,7 @@ var Assets []string = []string{
 	"sLINK",
 	"sSOL",
 }
+
 var OptionMarkets []string = []string{
 	optionMarketBTC,
 	optionMarketETH,

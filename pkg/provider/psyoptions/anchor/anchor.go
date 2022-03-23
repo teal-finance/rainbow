@@ -9,6 +9,7 @@ import (
 
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
+
 	psy "github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor/generated/psy_american"
 )
 
@@ -31,31 +32,34 @@ func Query() ([]Option, error) {
 	)
 	if err != nil {
 		return nil, fmt.Errorf("RPC GetProgramAccounts: %w", err)
-
 	}
+
 	for _, i := range out {
 		o := new(Option)
 		o.optionMarketAddress = i.Pubkey
+
 		err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&o.opt)
 		if err != nil {
 			return nil, fmt.Errorf("Parsing Options: %w", err)
-
 		}
+
 		if o.IsExpired() {
 			continue
 		}
+
 		if o.IsCall() {
 			o.serumMarketAddress, _, err = deriveSerumMarketAddress(o.optionMarketAddress, o.opt.QuoteAssetMint, psyoptionsPubkey)
 		} else {
 			o.serumMarketAddress, _, err = deriveSerumMarketAddress(o.optionMarketAddress, o.opt.UnderlyingAssetMint, psyoptionsPubkey)
 		}
+
 		if err != nil {
 			return nil, fmt.Errorf("Derivation Serum Address: %w", err)
-
 		}
 
 		result = append(result, *o)
 	}
+
 	return result, nil
 }
 
@@ -88,6 +92,7 @@ func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, program
 		priceCurrencyAddress[:],
 		[]byte("serumMarket"),
 	}
+
 	return solana.FindProgramAddress(seed, programid)
 }
 
@@ -100,9 +105,12 @@ func (o Option) IsExpired() bool {
 	// we keep an option even 2 days after expiry
 	// mainly because not all protocol stop at expiry or right before
 	// TODO re-check later
+
 	date := time.Now()
+
 	return !expiryTime.After(date.Add(-time.Hour * 48))
 }
+
 func (o Option) Asset() string {
 	switch {
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(ETHAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(ETHAddress):
@@ -117,6 +125,7 @@ func (o Option) Asset() string {
 		return "ZZZZ"
 	}
 }
+
 func (o Option) Quote() string {
 	switch {
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(USDCAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(USDCAddress):
@@ -172,17 +181,17 @@ func (o Option) IsCall() bool {
 }
 
 func (o Option) Strike() float64 {
-	var s float64
 	if o.Asset() == "SOL" {
+		var s float64
 		if o.OptionType() == "PUT" {
 			s = o.UnderlyingPerContract() / o.QuotePerContract()
 		} else {
-
 			s = o.QuotePerContract() / o.UnderlyingPerContract()
 		}
-		return s * 1000
 
+		return s * 1000
 	}
+
 	if o.OptionType() == "PUT" {
 		return o.UnderlyingPerContract() / o.QuotePerContract()
 	}

@@ -11,6 +11,7 @@ import (
 
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
+
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor/generated/zeta"
 )
 
@@ -37,8 +38,10 @@ func Query() ([]Option, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	for _, i := range out {
 		z := new(zeta.ZetaGroup)
+
 		err = bin.NewBinDecoder(i.Account.Data.GetBinary()).Decode(&z)
 		if err != nil {
 			continue
@@ -53,20 +56,19 @@ func Query() ([]Option, error) {
 
 func extractOptions(z *zeta.ZetaGroup, products []zeta.Product, padding bool) []Option {
 	var options []Option
+
 	counter := 0
 	for _, p := range products {
 		if p.Strike.IsSet && p.Kind.String() != "Future" {
 			if padding {
 				options = append(options, Option{z, p, z.ExpirySeriesPadding[counter/23].ExpiryTs})
-
 			} else {
 				options = append(options, Option{z, p, z.ExpirySeries[counter/23].ExpiryTs})
-
 			}
 		}
 		counter++
-
 	}
+
 	return options
 }
 
@@ -86,7 +88,6 @@ func (o Option) SerumAddress() solana.PublicKey {
 
 // watch out if they ever use something else than USDC.
 func (o Option) Strike() float64 {
-
 	return float64(o.Product.Strike.Value / uint64(math.Pow10(USDCDecimals)))
 }
 
@@ -103,16 +104,19 @@ func (o Option) Asset() string {
 		return "?"
 	}
 }
+
 func (o Option) Name() string {
 	return o.Asset() + "-" + o.Expiration() + "-" +
 		fmt.Sprintf("%.0f", o.Strike()) + "-" + o.Product.Kind.String()
 }
+
 func (o Option) ContractSize() float64 {
 	switch {
 	default: // SOL is 1
 		return 1000
 	}
 }
+
 func (o Option) Expiration() string {
 	seconds := int64(o.expiry)
 	expiryTime := time.Unix(seconds, 0).UTC()
