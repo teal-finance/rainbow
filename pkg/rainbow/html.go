@@ -25,9 +25,9 @@ const (
 	dashLeftAlign = "   —"
 )
 
-// these two variables avoid unnecessary allocation by alignFloatOnDecimalPoint().
+// these variables are used as const to avoid unnecessary allocations.
 var (
-	// noBkSp= []byte{byte('&'), byte('n'), byte('b'), byte('s'), byte('p'), byte(';')}
+	// "&nbsp;" --> []byte{byte('&'), byte('n'), byte('b'), byte('s'), byte('p'), byte(';')}.
 	narrowSp = []byte{byte('&'), byte('#'), byte('x'), byte('2'), byte('0'), byte('2'), byte('f'), byte(';')}
 	boldTag  = []byte{byte('<'), byte('b'), byte('>')}
 	boldEnd  = []byte{byte('<'), byte('/'), byte('b'), byte('>')}
@@ -78,6 +78,7 @@ func leftAlignFloatOnDecimalPointStr(f float64) string {
 
 func leftAlignFloatOnDecimalPointHTML(f float64) string {
 	s := string(leftAlignFloatOnDecimalPoint(f))
+
 	return strings.ReplaceAll(s, " ", "&numsp;")
 }
 
