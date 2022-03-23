@@ -14,16 +14,18 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor/generated/zeta"
 )
 
-const ZetaID = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
-const USDCAddress = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-const USDCDecimals = 6
-const SOLAddress = "So11111111111111111111111111111111111111112"
+const (
+	ZetaID       = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
+	USDCAddress  = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+	USDCDecimals = 6
+	SOLAddress   = "So11111111111111111111111111111111111111112"
+	endpoint     = "https://api.mainnet-beta.solana.com" // rpc.MainNetBeta_RPC
+)
 
 func Query() ([]Option, error) {
 	var result []Option
 	pubKey := solana.MustPublicKeyFromBase58(ZetaID)
 
-	endpoint := "https://api.mainnet-beta.solana.com" //rpc.MainNetBeta_RPC
 	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
 
 	client := rpc.NewWithCustomRPCClient(jsonrpcclient)

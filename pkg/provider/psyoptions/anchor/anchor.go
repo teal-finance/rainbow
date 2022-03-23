@@ -12,12 +12,15 @@ import (
 	psy "github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor/generated/psy_american"
 )
 
-const PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
+const (
+	PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
+	endpoint            = "https://api.mainnet-beta.solana.com" // rpc.MainNetBeta_RPC
+)
 
 func Query() ([]Option, error) {
 	var result []Option
 	psyoptionsPubkey := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
-	endpoint := "https://api.mainnet-beta.solana.com" //rpc.MainNetBeta_RPC
+
 	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
 
 	client := rpc.NewWithCustomRPCClient(jsonrpcclient)

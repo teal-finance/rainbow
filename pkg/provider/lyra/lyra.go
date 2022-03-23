@@ -12,8 +12,10 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const optimismrpc = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" //"https://mainnet.optimism.io"
-const name = "Lyra"
+const (
+	optimismrpc = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
+	name        = "Lyra"
+)
 
 type Provider struct{}
 
