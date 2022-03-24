@@ -110,7 +110,7 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 	return filtered
 }
 
-//TODO change this quick and dirty way of filtering date from deribit.
+// TODO change this quick and dirty way of filtering date from deribit.
 func isExpiryAvailable(expiry time.Time) bool {
 	dates := []string{
 		"2022-03-11T08:00:00Z",
