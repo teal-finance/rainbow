@@ -41,7 +41,7 @@ func Query() ([]Option, error) {
 
 		err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&o.opt)
 		if err != nil {
-			return nil, fmt.Errorf("Parsing Options: %w", err)
+			return nil, fmt.Errorf("parsing options: %w", err)
 		}
 
 		if o.IsExpired() {
@@ -55,7 +55,7 @@ func Query() ([]Option, error) {
 		}
 
 		if err != nil {
-			return nil, fmt.Errorf("Derivation Serum Address: %w", err)
+			return nil, fmt.Errorf("derivation Serum address: %w", err)
 		}
 
 		result = append(result, *o)
