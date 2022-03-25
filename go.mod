@@ -23,7 +23,7 @@ require (
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/streamingfast/solana-go v0.5.1
 	github.com/stretchr/testify v1.7.1
-	github.com/teal-finance/garcon v0.11.0
+	github.com/teal-finance/garcon v0.11.1
 )
 
 require (
