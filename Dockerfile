@@ -43,8 +43,7 @@ RUN set -x                          &&\
     yarn install --frozen-lockfile  &&\
     yarn cache clean
 
-COPY frontend/.eslintrc.json     \
-     frontend/index.html         \
+COPY frontend/index.html         \
      frontend/postcss.config.js  \
      frontend/tailwind.config.js \
      frontend/tsconfig.json      \
