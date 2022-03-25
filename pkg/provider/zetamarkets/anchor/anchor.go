@@ -24,20 +24,18 @@ const (
 )
 
 func Query() ([]Option, error) {
-	var result []Option
 	pubKey := solana.MustPublicKeyFromBase58(ZetaID)
 
 	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
 
 	client := rpc.NewWithCustomRPCClient(jsonrpcclient)
 
-	out, err := client.GetProgramAccounts(
-		context.TODO(),
-		pubKey,
-	)
+	out, err := client.GetProgramAccounts(context.TODO(), pubKey)
 	if err != nil {
 		return nil, err
 	}
+
+	result := make([]Option, 0, 4*len(out))
 
 	for _, i := range out {
 		z := new(zeta.ZetaGroup)
@@ -55,9 +53,10 @@ func Query() ([]Option, error) {
 }
 
 func extractOptions(z *zeta.ZetaGroup, products []zeta.Product, padding bool) []Option {
-	var options []Option
+	options := make([]Option, 0, len(products))
 
 	counter := 0
+
 	for _, p := range products {
 		if p.Strike.IsSet && p.Kind.String() != "Future" {
 			if padding {
@@ -66,6 +65,7 @@ func extractOptions(z *zeta.ZetaGroup, products []zeta.Product, padding bool) []
 				options = append(options, Option{z, p, z.ExpirySeries[counter/23].ExpiryTs})
 			}
 		}
+
 		counter++
 	}
 

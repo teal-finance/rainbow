@@ -28,6 +28,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
+
 	client := rpc.NewClient(serummainnet)
 
 	options := make([]rainbow.Option, 0, len(rawOptions))
@@ -41,8 +42,8 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 		if err != nil {
 			// for now because error in serumaddress generated
 			continue
-			// return nil, fmt.Errorf("serum.FetchMarket: %w", err)
 		}
+
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
 		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.ContractSize())
 		if err != nil {
@@ -68,7 +69,6 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			Bid:           bids,
 			Ask:           asks,
 		})
-
 	}
 
 	if len(options) == 0 {

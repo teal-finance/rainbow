@@ -13,21 +13,21 @@ const (
 
 // order as to be the same for all the arrays
 // TODO switch to maps or smth else.
-var Assets []string = []string{
+var Assets = []string{
 	"sBTC",
 	"sETH",
 	"sLINK",
 	"sSOL",
 }
 
-var OptionMarkets []string = []string{
+var OptionMarkets = []string{
 	optionMarketBTC,
 	optionMarketETH,
 	optionMarketLINK,
 	optionMarketSOL,
 }
 
-var OptionMarketViewers []string = []string{
+var OptionMarketViewers = []string{
 	optionMarketViewerBTC,
 	optionMarketViewerETH,
 	optionMarketViewerLINK,

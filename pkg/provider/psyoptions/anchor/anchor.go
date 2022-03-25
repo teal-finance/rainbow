@@ -19,7 +19,6 @@ const (
 )
 
 func Query() ([]Option, error) {
-	var result []Option
 	psyoptionsPubkey := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
 
 	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
@@ -34,13 +33,15 @@ func Query() ([]Option, error) {
 		return nil, fmt.Errorf("RPC GetProgramAccounts: %w", err)
 	}
 
+	result := make([]Option, 0, len(out))
+
 	for _, i := range out {
 		o := new(Option)
 		o.optionMarketAddress = i.Pubkey
 
 		err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&o.opt)
 		if err != nil {
-			return nil, fmt.Errorf("Parsing Options: %w", err)
+			return nil, fmt.Errorf("parsing options: %w", err)
 		}
 
 		if o.IsExpired() {
@@ -54,7 +55,7 @@ func Query() ([]Option, error) {
 		}
 
 		if err != nil {
-			return nil, fmt.Errorf("Derivation Serum Address: %w", err)
+			return nil, fmt.Errorf("derivation Serum address: %w", err)
 		}
 
 		result = append(result, *o)
@@ -138,11 +139,10 @@ func (o Option) Quote() string {
 }
 
 func (o Option) QuotePublicKey() solana.PublicKey {
-	q := o.Quote()
-	switch {
-	case q == "USDC":
+	switch o.Quote() {
+	case "USDC":
 		return solana.MustPublicKeyFromBase58(USDCAddress)
-	case q == "PAI":
+	case "PAI":
 		return solana.MustPublicKeyFromBase58(PAIAddress)
 	default: // should be USD
 		return solana.MustPublicKeyFromBase58(USDCAddress)

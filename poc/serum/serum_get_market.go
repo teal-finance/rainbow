@@ -35,6 +35,7 @@ func runE(ctx context.Context, args []string) error {
 	}
 
 	cli := getClient()
+
 	market, err := serum.FetchMarket(ctx, cli, marketAddr)
 	if err != nil {
 		return fmt.Errorf("fetch market: %w", err)
@@ -49,6 +50,7 @@ func runE(ctx context.Context, args []string) error {
 	if err != nil {
 		return fmt.Errorf("unable to retrieve bids: %w", err)
 	}
+
 	totalSize := new(big.Float).Add(askSize, bidSize)
 
 	output := []string{
@@ -75,6 +77,7 @@ func runE(ctx context.Context, args []string) error {
 	fmt.Println("quote lot size", market.Market.GetQuoteLotSize())
 
 	fmt.Println(columnize.Format(output, nil))
+
 	return nil
 }
 
@@ -103,32 +106,35 @@ func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 		} else {
 			levels = append(levels, []*big.Int{price, quantity})
 		}
+
 		return nil
 	})
 
 	totalSize = big.NewFloat(0)
+
 	for _, level := range levels {
-		price := market.PriceLotsToNumber(level[0])
 		qty := market.BaseSizeLotsToNumber(level[1])
+
+		out = append(out, &orderBookEntry{
+			price:    market.PriceLotsToNumber(level[0]),
+			quantity: qty,
+		})
+
 		totalSize = new(big.Float).Add(totalSize, qty)
-		out = append(out,
-			&orderBookEntry{
-				price:    price,
-				quantity: qty,
-			},
-		)
 	}
+
 	return out, totalSize, nil
 }
 
 func depth(value *big.Float) string {
 	v, _ := value.Int(nil)
+
 	return strings.Repeat("#", int(v.Int64()))
 }
 
 func outputOrderBook(entries []*orderBookEntry, totalSize *big.Float, reverse bool) (out []string) {
 	total := totalSize
-	if totalSize == nil {
+	if total == nil {
 		total = new(big.Float).SetInt64(1)
 	}
 
@@ -138,12 +144,14 @@ func outputOrderBook(entries []*orderBookEntry, totalSize *big.Float, reverse bo
 		depth    string
 	}
 
-	rows := []*orderBookRow{}
+	rows := make([]*orderBookRow, 0, len(entries))
 	cumulativeSize := big.NewFloat(0)
+
 	for i := 0; i < len(entries); i++ {
 		entry := entries[i]
 		cumulativeSize = new(big.Float).Add(cumulativeSize, entry.quantity)
 		sizePercent := new(big.Float).Mul(new(big.Float).Quo(cumulativeSize, total), new(big.Float).SetInt64(100))
+
 		rows = append(rows, &orderBookRow{
 			price:    entry.price.String(),
 			quantity: entry.quantity.String(),
@@ -152,21 +160,16 @@ func outputOrderBook(entries []*orderBookEntry, totalSize *big.Float, reverse bo
 	}
 
 	if reverse {
-		for i := len(entries) - 1; i >= 0; i-- {
+		for i := len(rows) - 1; i >= 0; i-- {
 			out = append(out, fmt.Sprintf("%s | %s | %s",
-				rows[i].quantity,
-				rows[i].price,
-				rows[i].depth,
-			))
+				rows[i].quantity, rows[i].price, rows[i].depth))
 		}
-		return
+	} else {
+		for i := 0; i < len(rows); i++ {
+			out = append(out, fmt.Sprintf("%s | %s | %s",
+				rows[i].quantity, rows[i].price, rows[i].depth))
+		}
 	}
-	for i := 0; i < len(rows); i++ {
-		out = append(out, fmt.Sprintf("%s | %s | %s",
-			rows[i].quantity,
-			rows[i].price,
-			rows[i].depth,
-		))
-	}
-	return
+
+	return out
 }
