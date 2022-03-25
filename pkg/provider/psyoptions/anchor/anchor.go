@@ -19,7 +19,6 @@ const (
 )
 
 func Query() ([]Option, error) {
-	var result []Option
 	psyoptionsPubkey := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
 
 	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
@@ -33,6 +32,8 @@ func Query() ([]Option, error) {
 	if err != nil {
 		return nil, fmt.Errorf("RPC GetProgramAccounts: %w", err)
 	}
+
+	result := make([]Option, 0, len(out))
 
 	for _, i := range out {
 		o := new(Option)
