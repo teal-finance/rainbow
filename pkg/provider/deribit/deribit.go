@@ -33,7 +33,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		return nil, err
 	}
 
-	optionsBTC, err := normalize(instruments, 5)
+	optionsBTC, err := fillOptions(instruments, 5)
 	if err != nil {
 		log.Print(err)
 
@@ -47,7 +47,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		return nil, err
 	}
 
-	optionsETH, err := normalize(instruments, 5)
+	optionsETH, err := fillOptions(instruments, 5)
 	if err != nil {
 		log.Print(err)
 
@@ -74,7 +74,7 @@ func query(coin string) ([]instrument, error) {
 	}{}
 
 	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return []instrument{}, fmt.Errorf("nft collections : %w", err)
+		return []instrument{}, fmt.Errorf("deribit options collect : %w", err)
 	}
 
 	return filterTooFar(result.Result), nil
@@ -117,9 +117,11 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 // TODO change this quick and dirty way of filtering date from deribit.
 func isExpiryAvailable(expiry time.Time) bool {
 	dates := []string{
-		"2022-03-11T08:00:00Z",
-		"2022-03-18T08:00:00Z",
 		"2022-03-25T08:00:00Z",
+		"2022-04-01T08:00:00Z",
+		"2022-04-08T08:00:00Z",
+		"2022-04-29T08:00:00Z",
+		"2022-06-24T08:00:00Z",
 	}
 	for _, d := range dates {
 		t, _ := time.Parse(time.RFC3339, d)
@@ -134,7 +136,7 @@ func isExpiryAvailable(expiry time.Time) bool {
 // TODO change this quick and dirty way of filtering strikes from deribit.
 func isStrikeAvailable(i instrument) bool {
 	ethStrike := []float64{1800, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3800}
-	btcStrike := []float64{20000, 25000, 30000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 50000}
+	btcStrike := []float64{20000, 25000, 29000, 30000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 50000}
 	strikes := ethStrike
 
 	if i.BaseCurrency == "BTC" {
@@ -151,9 +153,8 @@ func isStrikeAvailable(i instrument) bool {
 	return false
 }
 
-func normalize(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
+func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
-	// deribitOrderBook := []DeribitOrderBook{}
 	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
 
 	for _, i := range instruments {
@@ -248,6 +249,8 @@ type OrderBook struct {
 	AskIv                  float64 `json:"ask_iv"`
 }
 
+// Prices are not in $ but in crypto so we need the coin (index) price to multiply
+// and get the USD price
 func normalizeOrders(orders [][]float64, assetPrice float64) []rainbow.Order {
 	// if there is no offer, send price=0.0, quant=0.0
 	// hopefully we never an array of empty array
