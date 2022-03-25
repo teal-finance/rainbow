@@ -24,9 +24,19 @@ import (
 func main() {
 	parseFlags()
 
+	var providers []rainbow.Provider
+	switch len(*flagAlert) {
+	case 0:
+		providers = provider.AllProviders()
+	default:
+		providers = provider.AllProvidersWithAlert(
+			provider.NewOracle(*flagAlert),
+		)
+	}
+
 	// Start the service in background
 	service := rainbow.NewService(
-		provider.AllProviders(),
+		providers,
 		dbram.NewDB())
 	go service.Run()
 
