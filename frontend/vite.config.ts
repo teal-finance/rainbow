@@ -14,9 +14,9 @@ export default defineConfig({
       output: {
         // The [hash] permits the use of "Cache-Control: max-age=604800"
         // because [hash] will be different each time its content changes.
-        entryFileNames: `assets/js/[name]-[hash].js`,
-        chunkFileNames: `assets/js/[name]-[hash].js`,
-        assetFileNames: `assets/css/[name]-[hash].[ext]`,
+        entryFileNames: `js/[name]-[hash].js`,
+        chunkFileNames: `js/[name]-[hash].js`,
+        assetFileNames: `assets/[name]-[hash].[ext]`,
         // https://rollupjs.org/guide/en/#outputentryfilenames
         // https://rollupjs.org/guide/en/#outputchunkfilenames
         // https://rollupjs.org/guide/en/#outputassetfilenames

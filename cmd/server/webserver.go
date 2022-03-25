@@ -24,8 +24,8 @@ func WebHandler(g *garcon.Garcon, wwwDir string) http.Handler {
 	r.Get("/favicon.ico", web.ServeFile("favicon.ico", "image/x-icon"))
 	r.Get("/favicon.png", web.ServeFile("favicon.png", "image/png"))
 	r.Get("/preview.jpg", web.ServeFile("preview.jpg", "image/jpeg"))
-	r.Get("/assets/js/*", web.ServeDir("text/javascript; charset=utf-8"))
-	r.Get("/assets/css/*", web.ServeAssets())
+	r.Get("/js/*", web.ServeDir("text/javascript; charset=utf-8"))
+	r.Get("/assets/*", web.ServeAssets())
 
 	return r
 }
