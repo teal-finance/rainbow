@@ -30,10 +30,7 @@ func Query() ([]Option, error) {
 
 	client := rpc.NewWithCustomRPCClient(jsonrpcclient)
 
-	out, err := client.GetProgramAccounts(
-		context.TODO(),
-		pubKey,
-	)
+	out, err := client.GetProgramAccounts(context.TODO(), pubKey)
 	if err != nil {
 		return nil, err
 	}

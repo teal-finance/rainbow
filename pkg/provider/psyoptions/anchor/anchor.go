@@ -139,11 +139,10 @@ func (o Option) Quote() string {
 }
 
 func (o Option) QuotePublicKey() solana.PublicKey {
-	q := o.Quote()
-	switch {
-	case q == "USDC":
+	switch o.Quote() {
+	case "USDC":
 		return solana.MustPublicKeyFromBase58(USDCAddress)
-	case q == "PAI":
+	case "PAI":
 		return solana.MustPublicKeyFromBase58(PAIAddress)
 	default: // should be USD
 		return solana.MustPublicKeyFromBase58(USDCAddress)
