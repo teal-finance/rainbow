@@ -34,7 +34,7 @@ Supported Options exchanges:
 
 * [PsyOptions(Solana)](https://www.psyoptions.io/): DeFi options protocol build on Serum order books.
 
-* [Zeta(Solana)](https://zeta.markets/): DeFi options protocol build using also Serum order books. 
+* [Zeta(Solana)](https://zeta.markets/): DeFi options protocol build using also Serum order books.
 
 ## Requirements
 
@@ -77,29 +77,39 @@ See the `make help` [output](Makefile).
 
 ### Build
 
-* `make build` to build the backend
-* `make buildfront` to build the frontend
-* `make buildall` to build the backend and the frontend
+    make buildall     # Build both backend and frontend
+    make build        # Build the backend only
+    make buildfront   # Build the frontend only
 
 ### Run
 
-* `make run` to run the backend
-* `make runfront` to run the frontend in dev mode
+    make run          # Run the backend
+    make runfront     # Run the frontend in dev mode
 
 ### Container
 
-The container reproduces similar behaviors as in production.
+    make container-run  # Build and run backend + frontend
+    make container-rm   # Stop and remove all
 
-The magic command `make runcontainer` builds and runs Rainbow within a container, by trying `docker` then `podman` if present. Once running, that command continues by automatically opening a browser window on <http://localhost:1111/> and by indefinitely printing the container logs.
+Using the container reproduces similar behaviors as in production.
 
-The exposed port can be change with `make runcontainer expose=12345` :slightly_smiling_face:
+The command `make container-run` builds and runs Rainbow
+within a container, by trying the `docker` or the `podman` commands.
+Once running, it automatically opens a browser window on
+<http://localhost:1111/> and indefinitely prints the container logs.
 
-To stop the container, first stop the container logs with CTRL+C in your current terminal, and then `make stopcontainer`.
+The exposed port can be change with `make container-run expose=12345` :slightly_smiling_face:
 
-Other related commands:
+To stop the container, first quit `make container-run` using CTRL+C
+in your current terminal, then enter `make container-rm`.
+This last command stops/removes the container and also removes its image.
 
-* `make buildimage` to only build the container image
-* `make rmi` to remove the Rainbow container images
+The [Makefile](Makefile) supports both `docker` and `podman`.
+
+The two other container-related commands should not need to be manually invoked:
+
+    make container-build  # Build the container image
+    make container-stop   # Stop/remove the container
 
 ## Manual build/run of the server
 
