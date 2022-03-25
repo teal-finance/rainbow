@@ -14,7 +14,7 @@
     "@snowind/header": "^0.0.8",
     "@snowind/state": "^0.0.2",
     "@snowind/switch": "^0.0.4",
-    "@vueuse/core": "^7.2.2",
+    "@vueuse/core": "^8.1.2",
     "graphql": "^16.3.0",
     "graphql-request": "^4.2.0",
     "gzipper": "^7.0.0",
@@ -22,7 +22,7 @@
     "vue-router": "4.0.14"
   },
   "devDependencies": {
-    "@iconify/json": "^1.1.440",
+    "@iconify/json": "^2.1.19",
     "@snowind/plugin": "0.3.0",
     "@tailwindcss/forms": "^0.5.0",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
@@ -42,7 +42,7 @@
     "unplugin-vue-components": "^0.18.4",
     "vite": "^2.8.6",
     "vite-plugin-eslint": "^1.3.0",
-    "vue-loader": "^16.3.0",
+    "vue-loader": "^17.0.0",
     "vue-tsc": "^0.33.7"
   },
   "engines": {
