@@ -29,6 +29,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	options, err := normalize(instruments, "Opyn", 10.0)
 	if err != nil {
 		log.Print("ERROR: ", err)
+
 		return nil, err
 	}
 
@@ -47,6 +48,7 @@ func QueryTheGraph() []getOptionsOtokensOToken {
 
 	if resp == nil {
 		log.Print("ERROR: resp=nil")
+
 		return nil
 	}
 
@@ -59,6 +61,7 @@ func filterExpired(instruments []getOptionsOtokensOToken, date time.Time) (filte
 		seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
 		if err != nil {
 			log.Print("Oh Sh*t ", i.ExpiryTimestamp)
+
 			continue // TODO should do much better than failing silently
 		}
 

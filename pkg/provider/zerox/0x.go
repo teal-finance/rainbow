@@ -64,6 +64,7 @@ func getQuote(side, sellToken, buyToken string, amount float64, decimals int) (Q
 	} else {
 		url += "&sellAmount="
 	}
+
 	url += convertToSolidity(amount, decimals)
 
 	resp, err := http.Get(url)
@@ -143,6 +144,7 @@ func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount f
 
 		if err == nil {
 			sr.success(n)
+
 			break
 		}
 
@@ -232,6 +234,7 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 		b, err := sr.getQuote("BUY", i.Id, USDC, amount, decimals)
 		if err != nil {
 			log.Print("getQuote BUY ", err)
+
 			return nil, err
 		}
 
@@ -239,6 +242,7 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 			price, err := strconv.ParseFloat(b.Price, 64)
 			if err != nil {
 				log.Print("WARN price ", err)
+
 				continue
 			}
 
@@ -256,6 +260,7 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 		a, err := sr.getQuote("SELL", USDC, i.Id, amount, decimals)
 		if err != nil {
 			log.Print("getQuote SELL ", err)
+
 			return nil, err
 		}
 

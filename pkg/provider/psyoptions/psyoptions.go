@@ -28,6 +28,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
+
 	client := rpc.NewClient(serummainnet)
 
 	options := make([]rainbow.Option, 0, len(rawOptions))
@@ -67,11 +68,12 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			Bid:           bids,
 			Ask:           asks,
 		})
-
 	}
+
 	if len(options) == 0 {
 		return nil, errors.New("empty options lists")
 	}
+
 	return options, nil
 }
 

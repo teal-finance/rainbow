@@ -29,24 +29,28 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	instruments, err := query("BTC")
 	if err != nil {
 		log.Print(err)
+
 		return nil, err
 	}
 
 	optionsBTC, err := normalize(instruments, 5)
 	if err != nil {
 		log.Print(err)
+
 		return nil, err
 	}
 
 	instruments, err = query("ETH")
 	if err != nil {
 		log.Print(err)
+
 		return nil, err
 	}
 
 	optionsETH, err := normalize(instruments, 5)
 	if err != nil {
 		log.Print(err)
+
 		return nil, err
 	}
 
