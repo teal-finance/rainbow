@@ -1,55 +1,53 @@
+.PHONY: help
 help:
-	# Please use 'make <target>' where <target> is one of:
+	# Usage: 'make <target>' where <target> is one of:
 	#
-	#   build          -- build the backend
-	#   buildfront     -- build the frontend
-	#   buildall       -- build the backend and the frontend
-	#   buildimage     -- build the container image (docker or podman on buildash)
-	#   rmi            -- remove the container image "rainbow"
+	# buildall     Build the backend + frontend
+	# build        Build the backend only
+	# buildfront   Build the frontend only
+	# run          Run the backend
+	# runfront     Run the frontend in dev mode
 	#
-	#   run            -- run the backend
-	#   runfront       -- run the frontend in dev mode
-	#   runcontainer   -- run the container image (docker or podman)
-	#   stopcontainer  -- stop the container image
+	# container-build  Build the container image (docker or podman or buildash)
+	# container-run    Run the container (before: build it if needed)
+	# container-stop   Stop the container (automatically called by the other targets)
+	# container-rm     Remove the container image (before: stop it if still running)
 
+.PHONY: buildall
+buildall: build buildfront
+
+.PHONY: build
 build:
 	go build ./cmd/server
-.PHONY: build
 
+.PHONY: buildfront
 buildfront:
 	cd frontend && yarn && yarn build
-.PHONY: buildfront
 
-buildall: build buildfront
-.PHONY: buildall
+.PHONY: run
+run:
+	./server
+
+.PHONY: runfront
+runfront:
+	cd frontend && yarn dev
+
+##########  Container targets  ##########
 
 expose=1111
 addr=http://localhost:$(expose)
 port=2222
 base=/
 
-buildimage:
+.PHONY: container-build
+container-build: container-stop
 	# Build the container image
 	docker  build --build-arg addr=$(addr) --build-arg port=$(port) --build-arg base=$(base) -t rainbow . || \
 	podman  build --build-arg addr=$(addr) --build-arg port=$(port) --build-arg base=$(base) -t rainbow . || \
 	buildah build --build-arg addr=$(addr) --build-arg port=$(port) --build-arg base=$(base) -t rainbow .
-.PHONY: buildimage
 
-rmi: stopcontainer
-	# Remove the container image
-	docker  rmi rainbow || \
-	podman  rmi rainbow
-.PHONY: rmi
-
-run:
-	./server
-.PHONY: run
-
-runfront:
-	cd frontend && yarn dev
-.PHONY: run
-
-runcontainer: stopcontainer buildimage
+.PHONY: container-run
+container-run: container-build
 	# Start the container
 	docker run -d --rm -p 0.0.0.0:$(expose):$(port) -e EXP_PORT=9868 --name rainbow rainbow || \
 	podman run -d --rm -p 0.0.0.0:$(expose):$(port) -e EXP_PORT=9868 --name rainbow rainbow
@@ -60,10 +58,19 @@ runcontainer: stopcontainer buildimage
 	# Print backend logs
 	docker logs --follow rainbow || \
 	podman logs --follow rainbow
-.PHONY: runcontainer
 
-stopcontainer:
+.PHONY: container-stop
+container-stop:
+	# Check if the command "docker" or "podman" is present
+	command -v docker || \
+	command -v podman
+
 	# Stop the container (if currently running)
-	docker stop -i rainbow || \
+	-docker stop   rainbow || \
 	podman stop -i rainbow
-.PHONY: runcontainer
+
+.PHONY: container-rm
+container-rm: container-stop
+	# Remove the container image
+	docker  rmi rainbow || \
+	podman  rmi rainbow

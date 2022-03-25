@@ -9,15 +9,18 @@ import (
 
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
+
 	psy "github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor/generated/psy_american"
 )
 
-const PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
+const (
+	PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
+	endpoint            = "https://api.mainnet-beta.solana.com" // rpc.MainNetBeta_RPC
+)
 
 func Query() ([]Option, error) {
-	var result []Option
 	psyoptionsPubkey := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
-	endpoint := "https://api.mainnet-beta.solana.com" //rpc.MainNetBeta_RPC
+
 	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
 
 	client := rpc.NewWithCustomRPCClient(jsonrpcclient)
@@ -28,31 +31,36 @@ func Query() ([]Option, error) {
 	)
 	if err != nil {
 		return nil, fmt.Errorf("RPC GetProgramAccounts: %w", err)
-
 	}
+
+	result := make([]Option, 0, len(out))
+
 	for _, i := range out {
 		o := new(Option)
 		o.optionMarketAddress = i.Pubkey
+
 		err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&o.opt)
 		if err != nil {
-			return nil, fmt.Errorf("Parsing Options: %w", err)
-
+			return nil, fmt.Errorf("parsing options: %w", err)
 		}
+
 		if o.IsExpired() {
 			continue
 		}
+
 		if o.IsCall() {
 			o.serumMarketAddress, _, err = deriveSerumMarketAddress(o.optionMarketAddress, o.opt.QuoteAssetMint, psyoptionsPubkey)
 		} else {
 			o.serumMarketAddress, _, err = deriveSerumMarketAddress(o.optionMarketAddress, o.opt.UnderlyingAssetMint, psyoptionsPubkey)
 		}
-		if err != nil {
-			return nil, fmt.Errorf("Derivation Serum Address: %w", err)
 
+		if err != nil {
+			return nil, fmt.Errorf("derivation Serum address: %w", err)
 		}
 
 		result = append(result, *o)
 	}
+
 	return result, nil
 }
 
@@ -78,30 +86,32 @@ func (o Option) SerumMarketAddress() solana.PublicKey {
 	return o.serumMarketAddress
 }
 
-//https://github.com/mithraiclabs/psyoptions-ts/blob/87afa7280c33f341198c60676d2302c55bbfab5f/packages/psy-american/src/serumUtils.ts#L161-L174
+// https://github.com/mithraiclabs/psyoptions-ts/blob/87afa7280c33f341198c60676d2302c55bbfab5f/packages/psy-american/src/serumUtils.ts#L161-L174
 func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, programid solana.PublicKey) (solana.PublicKey, uint8, error) {
 	seed := [][]byte{
 		optionMarketAddress[:],
 		priceCurrencyAddress[:],
 		[]byte("serumMarket"),
 	}
+
 	return solana.FindProgramAddress(seed, programid)
 }
 
-//Expired
-//the Options have a field "Expired"(bool) but it is not set to false even for expired hence the function
+// the Options have a field "Expired"(bool) but it is not set to false even for expired hence the function.
 func (o Option) IsExpired() bool {
 	seconds := o.opt.ExpirationUnixTimestamp
 	expiryTime := time.Unix(seconds, 0).UTC()
 
-	//copy from opyn.go. should make a proper function
-
+	// INFO: copy from opyn.go. should make a proper function
 	// we keep an option even 2 days after expiry
 	// mainly because not all protocol stop at expiry or right before
 	// TODO re-check later
+
 	date := time.Now()
+
 	return !expiryTime.After(date.Add(-time.Hour * 48))
 }
+
 func (o Option) Asset() string {
 	switch {
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(ETHAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(ETHAddress):
@@ -116,6 +126,7 @@ func (o Option) Asset() string {
 		return "ZZZZ"
 	}
 }
+
 func (o Option) Quote() string {
 	switch {
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(USDCAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(USDCAddress):
@@ -128,11 +139,10 @@ func (o Option) Quote() string {
 }
 
 func (o Option) QuotePublicKey() solana.PublicKey {
-	q := o.Quote()
-	switch {
-	case q == "USDC":
+	switch o.Quote() {
+	case "USDC":
 		return solana.MustPublicKeyFromBase58(USDCAddress)
-	case q == "PAI":
+	case "PAI":
 		return solana.MustPublicKeyFromBase58(PAIAddress)
 	default: // should be USD
 		return solana.MustPublicKeyFromBase58(USDCAddress)
@@ -145,8 +155,7 @@ func (o Option) ContractSize() float64 {
 		return 0.1
 	case o.Asset() == "BTC":
 		return 0.01
-	//SOL & mSOL is 1
-	default:
+	default: // SOL & mSOL is 1
 		return 1
 	}
 }
@@ -172,17 +181,17 @@ func (o Option) IsCall() bool {
 }
 
 func (o Option) Strike() float64 {
-	var s float64
 	if o.Asset() == "SOL" {
+		var s float64
 		if o.OptionType() == "PUT" {
 			s = o.UnderlyingPerContract() / o.QuotePerContract()
 		} else {
-
 			s = o.QuotePerContract() / o.UnderlyingPerContract()
 		}
-		return s * 1000
 
+		return s * 1000
 	}
+
 	if o.OptionType() == "PUT" {
 		return o.UnderlyingPerContract() / o.QuotePerContract()
 	}

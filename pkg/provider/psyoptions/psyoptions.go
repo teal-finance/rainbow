@@ -10,6 +10,7 @@ import (
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
+
 	"github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
@@ -27,6 +28,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
+
 	client := rpc.NewClient(serummainnet)
 
 	options := make([]rainbow.Option, 0, len(rawOptions))
@@ -38,9 +40,8 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 
 		out, err := serum.FetchMarket(ctx, client, pubKey)
 		if err != nil {
-			//for now because error in serumaddress generated
+			// for now because error in serumaddress generated
 			continue
-			//return nil, fmt.Errorf("serum.FetchMarket: %w", err)
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
 		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.ContractSize())
@@ -67,11 +68,12 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			Bid:           bids,
 			Ask:           asks,
 		})
-
 	}
+
 	if len(options) == 0 {
 		return nil, errors.New("empty options lists")
 	}
+
 	return options, nil
 }
 
@@ -84,7 +86,7 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
 
-	//quit & dirty extra rate limit
+	// quit & dirty extra rate limit
 	time.Sleep(300 * time.Microsecond)
 
 	limit := 20
@@ -99,8 +101,10 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		} else if len(levels) != limit {
 			levels = append(levels, []*big.Int{price, quantity})
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
@@ -114,7 +118,7 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 
 		offers = append(offers,
 			rainbow.Order{
-				Price: price / contractSize, //to get the price for 1 asset since psyoptions has <1 contract size
+				Price: price / contractSize, // to get the price for 1 asset since psyoptions has <1 contract size
 				Size:  qty * contractSize,   // to convert the right quantity
 			},
 		)

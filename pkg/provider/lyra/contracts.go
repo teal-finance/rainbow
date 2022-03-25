@@ -1,30 +1,33 @@
 package lyra
 
-const optionMarketBTC = "0x47B5BB79F06F06db3D77C6cc4DB1ad6E84faF1f4"
-const optionMarketViewerBTC = "0x22c39cE1C3A49224Aea6D8c2AAa0019828E1b5E4"
-const optionMarketETH = "0x1f6D98638Eee9f689684767C3021230Dd68df419"
-const optionMarketViewerETH = "0x43592bffCF14f1e0A096091E125f023B2ccC2525"
-const optionMarketLINK = "0xBCB01210BD1c0790ca45Cc4C49d9a183be99824d"
-const optionMarketViewerLINK = "0xE34AF32082aa2Be75f0a80dC179D597E852AF6a1"
-const optionMarketSOL = "0xA3562CAc1c39f4D4166CE31005Fc080AB41120aC"
-const optionMarketViewerSOL = "0xeAcB3f1a4f3137807f4e901167a999eF6f8312fb"
+const (
+	optionMarketBTC        = "0x47B5BB79F06F06db3D77C6cc4DB1ad6E84faF1f4"
+	optionMarketViewerBTC  = "0x22c39cE1C3A49224Aea6D8c2AAa0019828E1b5E4"
+	optionMarketETH        = "0x1f6D98638Eee9f689684767C3021230Dd68df419"
+	optionMarketViewerETH  = "0x43592bffCF14f1e0A096091E125f023B2ccC2525"
+	optionMarketLINK       = "0xBCB01210BD1c0790ca45Cc4C49d9a183be99824d"
+	optionMarketViewerLINK = "0xE34AF32082aa2Be75f0a80dC179D597E852AF6a1"
+	optionMarketSOL        = "0xA3562CAc1c39f4D4166CE31005Fc080AB41120aC"
+	optionMarketViewerSOL  = "0xeAcB3f1a4f3137807f4e901167a999eF6f8312fb"
+)
 
-//order as to be the same for all the arrays
-//TODO switch to maps or smth else
-var Assets []string = []string{
+// order as to be the same for all the arrays
+// TODO switch to maps or smth else.
+var Assets = []string{
 	"sBTC",
 	"sETH",
 	"sLINK",
 	"sSOL",
 }
-var OptionMarkets []string = []string{
+
+var OptionMarkets = []string{
 	optionMarketBTC,
 	optionMarketETH,
 	optionMarketLINK,
 	optionMarketSOL,
 }
 
-var OptionMarketViewers []string = []string{
+var OptionMarketViewers = []string{
 	optionMarketViewerBTC,
 	optionMarketViewerETH,
 	optionMarketViewerLINK,

@@ -19,13 +19,13 @@ func WebHandler(g *garcon.Garcon, wwwDir string) http.Handler {
 	r := chi.NewRouter()
 
 	// Static website files
-	fs := webserver.WebServer{Dir: wwwDir, ResErr: g.ResErr}
-	r.NotFound(fs.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
-	r.Get("/favicon.ico", fs.ServeFile("favicon.ico", "image/x-icon"))
-	r.Get("/favicon.png", fs.ServeFile("favicon.png", "image/png"))
-	r.Get("/preview.jpg", fs.ServeFile("preview.jpg", "image/jpeg"))
-	r.Get("/assets/js/*", fs.ServeDir("text/javascript; charset=utf-8"))
-	r.Get("/assets/css/*", fs.ServeDir("text/css; charset=utf-8"))
+	web := webserver.WebServer{Dir: wwwDir, ResErr: g.ResErr}
+	r.NotFound(web.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
+	r.Get("/favicon.ico", web.ServeFile("favicon.ico", "image/x-icon"))
+	r.Get("/favicon.png", web.ServeFile("favicon.png", "image/png"))
+	r.Get("/preview.jpg", web.ServeFile("preview.jpg", "image/jpeg"))
+	r.Get("/js/*", web.ServeDir("text/javascript; charset=utf-8"))
+	r.Get("/assets/*", web.ServeAssets())
 
 	return r
 }

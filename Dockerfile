@@ -30,7 +30,7 @@ ARG port=8888
 # port = 8888
 
 # --------------------------------------------------------------------
-FROM docker.io/node:16-alpine3.14 AS web_builder
+FROM docker.io/node:17-alpine AS web_builder
 
 WORKDIR /code
 
@@ -43,8 +43,7 @@ RUN set -x                          &&\
     yarn install --frozen-lockfile  &&\
     yarn cache clean
 
-COPY frontend/.eslintrc.json     \
-     frontend/index.html         \
+COPY frontend/index.html         \
      frontend/postcss.config.js  \
      frontend/tailwind.config.js \
      frontend/tsconfig.json      \
@@ -65,7 +64,7 @@ RUN set -x                                             &&\
     yarn compress
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.17-alpine3.14 AS go_builder
+FROM docker.io/golang:1.18-alpine AS go_builder
 
 WORKDIR /code
 
@@ -99,7 +98,7 @@ RUN set -x                                                &&\
 
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.17-alpine3.14 AS integrator
+FROM docker.io/golang:1.18-alpine AS integrator
 
 WORKDIR /target
 

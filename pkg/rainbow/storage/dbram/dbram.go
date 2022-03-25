@@ -29,6 +29,7 @@ func (db *DB) InsertOptions(options []rainbow.Option) error {
 		if _, ok := db.optionsByProvider[o.Provider]; !ok {
 			db.optionsByProvider[o.Provider] = []rainbow.Option{}
 		}
+
 		db.optionsByProvider[o.Provider] = append(db.optionsByProvider[o.Provider], o)
 	}
 
@@ -40,12 +41,14 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 	for _, o := range db.optionsByProvider {
 		n += len(o)
 	}
+
 	options := make([]rainbow.Option, 0, n)
 	for _, o := range db.optionsByProvider {
 		options = append(options, o...)
 	}
 
 	filtered := make([]rainbow.Option, 0, n)
+
 	for _, o := range options {
 		if len(args.Asset) > 0 {
 			if !containsAsset(o.Asset, args.Asset) {
@@ -74,6 +77,7 @@ func containsAsset(elem string, arr []string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -83,5 +87,6 @@ func contains(elem string, arr []string) bool {
 			return true
 		}
 	}
+
 	return false
 }

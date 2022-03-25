@@ -1,7 +1,6 @@
 package apigraphql
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"time"
@@ -61,7 +60,7 @@ func buildCallPut(options []rainbow.Option) CallPut {
 						Expiry:   expiry,
 						Provider: provider,
 						Call:     call,
-						Strike:   math.Round(strike*100) / 100, //rounding to the nearest
+						Strike:   math.Round(strike*100) / 100, // rounding to the nearest
 						Put:      put,
 					})
 				}
@@ -76,9 +75,9 @@ func groupByAsset(options []rainbow.Option) (assetToOptions map[string][]rainbow
 	assetToOptions = map[string][]rainbow.Option{}
 
 	for _, o := range options {
-		//sanitize to properly group assets
-
+		// Sanitize to properly group assets
 		asset := sanitizeAsset(o.Asset)
+
 		slice, ok := assetToOptions[asset]
 		if ok {
 			assetToOptions[asset] = append(slice, o)
@@ -136,21 +135,17 @@ func groupByProvider(options []rainbow.Option) (providerToOptions map[string][]r
 }
 
 func newLimit(o rainbow.Option) Limit {
-	l := Limit{}
-	if len(o.Bid) > 0 && o.Bid[0].Size != 0 {
-		l.Bid.Price = fmt.Sprintf("%.2f", o.Bid[0].Price)
-		l.Bid.Size = fmt.Sprintf("%.2f", o.Bid[0].Size)
+	bPx, bSz, aPx, aSz := rainbow.BestLimitHTML(o)
+
+	return Limit{
+		Bid: StrOrder{Price: bPx, Size: bSz},
+		Ask: StrOrder{Price: aPx, Size: aSz},
 	}
-	if len(o.Ask) > 0 && o.Ask[0].Size != 0 {
-		l.Ask.Price = fmt.Sprintf("%.2f", o.Ask[0].Price)
-		l.Ask.Size = fmt.Sprintf("%.2f", o.Ask[0].Size)
-	}
-	return l
 }
 
 // sanitizeAsset removes
-//"W" (or "w") in "WETH" and "WBTC"
-// "s" for Lyra assets from Synthethix: sETH, sBTC, sLINK, sSOL
+// "W" (or "w") in "WETH" and "WBTC"
+// "s" for Lyra assets from Synthethix: sETH, sBTC, sLINK, sSOL.
 func sanitizeAsset(asset string) string {
 	if len(asset) >= 4 && (asset[0] == 'W' || asset[0] == 'w' || asset[0] == 's') {
 		return asset[1:]
@@ -164,7 +159,9 @@ func sanitizeDate(date string) string {
 	t, err := time.Parse("2006-01-02 15:04:05", date)
 	if err != nil {
 		log.Printf("WARN prettyDate() cannot parse %q", date)
+
 		return date
 	}
-	return t.Format("Jan 02")
+
+	return t.Format("Jan _2")
 }

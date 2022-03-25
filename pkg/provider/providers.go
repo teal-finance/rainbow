@@ -18,8 +18,8 @@ import (
 
 // AllProviders returns all active providers.
 func AllProviders() []rainbow.Provider {
-	//changing the order to not exhaust our solana/serum rpc quota
-	//used by zeta and psy
+	// changing the order to not exhaust our solana/serum rpc quota
+	// used by zeta and psy
 	return []rainbow.Provider{
 		zetamarkets.Provider{},
 		zerox.Provider{},
