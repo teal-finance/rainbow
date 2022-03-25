@@ -64,6 +64,6 @@ runcontainer: stopcontainer buildimage
 
 stopcontainer:
 	# Stop the container (if currently running)
-	docker stop -i rainbow || \
+	docker stop    rainbow || \
 	podman stop -i rainbow
 .PHONY: runcontainer
