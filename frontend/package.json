@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "compress": "gzipper compress --incremental --brotli --brotli-param-mode font --exclude avif,jpg --threshold 999 --remove-larger ./dist"
+    "compress": "gzipper c ./dist --verbose --incremental --exclude avif,jpg --threshold 999 --remove-larger --brotli --brotli-param-mode font"
   },
   "dependencies": {
     "@snowind/header": "^0.0.8",

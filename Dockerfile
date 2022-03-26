@@ -56,6 +56,11 @@ COPY frontend/src    src
 ARG addr
 ARG base
 
+# No cache folder "/.gzipper" enabled by "gzipper compress --incremental"
+ENV GZIPPER_INCREMENTAL     0
+ENV GZIPPER_VERBOSE         0
+ENV GZIPPER_SKIP_COMPRESSED 1
+
 RUN set -x                                             &&\
     ls -lA                                             &&\
     sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  &&\
