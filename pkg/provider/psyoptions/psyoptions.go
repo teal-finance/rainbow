@@ -20,7 +20,7 @@ const serummainnet = "https://solana-api.projectserum.com"
 type Provider struct{}
 
 func (Provider) Name() string {
-	return "PsyOptions" //TODO put full name when front is fixed
+	return "PsyOptions" // TODO put full name when front is fixed
 }
 
 func (p Provider) Options() ([]rainbow.Option, error) {
@@ -44,12 +44,12 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			continue
 		}
 		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
-		bids, _, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.ContractSize())
+		bids, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.ContractSize())
 		if err != nil {
 			return nil, err
 		}
 
-		asks, _, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false, i.ContractSize())
+		asks, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false, i.ContractSize())
 		if err != nil {
 			return nil, err
 		}
@@ -80,10 +80,10 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 // I don't really need the totalsize but I am keeping it since it was in the original func:
 //     - ASK on the top so desc=true
 //     - BID down so desc=false
-func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, totalSize float64, err error) {
+func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, err error) {
 	var o serum.Orderbook
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
-		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
+		return nil, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
 
 	// quit & dirty extra rate limit
@@ -106,7 +106,7 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 	})
 
 	if err != nil {
-		return nil, 0, fmt.Errorf("cli.GetAccountDataIn: %w", err)
+		return nil, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
 
 	for _, level := range levels {
@@ -114,7 +114,6 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		price, _ := p.Float64()
 		q := market.BaseSizeLotsToNumber(level[1])
 		qty, _ := q.Float64()
-		totalSize += qty
 
 		offers = append(offers,
 			rainbow.Order{
@@ -124,5 +123,5 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		)
 	}
 
-	return offers, totalSize, nil
+	return offers, nil
 }

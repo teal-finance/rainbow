@@ -8,7 +8,6 @@ import (
 	"time"
 
 	bin "github.com/gagliardetto/binary"
-
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
 
@@ -111,10 +110,7 @@ func (o Option) Name() string {
 }
 
 func (o Option) ContractSize() float64 {
-	switch {
-	default: // SOL is 1
-		return 1000
-	}
+	return 1000
 }
 
 func (o Option) Expiration() string {

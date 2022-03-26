@@ -17,7 +17,7 @@ const deltaOrders = "https://api.delta.exchange/v2/l2orderbook/"
 type Provider struct{}
 
 func (Provider) Name() string {
-	return "Delta Exchange" //TODO real name but we use the short one to have a nice front for now "Delta Exchange"
+	return "Delta Exchange" // TODO real name but we use the short one to have a nice front for now "Delta Exchange"
 }
 
 func (pro Provider) Options() ([]rainbow.Option, error) {
@@ -47,10 +47,9 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		strike, err := strconv.ParseFloat(p.StrikePrice, 64)
 		if err != nil {
 			return nil, fmt.Errorf(" strike conversion : %w", err)
-
 		}
-		//Ugly fix for front, the 100K strike is too long number so I will filter it out
-		//TODO, reduce the size of the front character to fit more things
+		// Ugly fix for front, the 100K strike is too long number so I will filter it out
+		// TODO, reduce the size of the front character to fit more things
 		if strike > 75000 {
 			continue
 		}
@@ -58,7 +57,6 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		bids, asks, err := p.Orderbook()
 		if err != nil {
 			return nil, fmt.Errorf(" Order Book issue : %w", err)
-
 		}
 
 		options = append(options, rainbow.Option{
@@ -78,7 +76,6 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 	}
 
 	return options, nil
-
 }
 
 func queryProducts() (ProductResult, error) {
@@ -92,7 +89,6 @@ func queryProducts() (ProductResult, error) {
 		if err != nil {
 			return nil, fmt.Errorf(" Fetch options issue : %w", err)
 		}
-
 		defer resp.Body.Close()
 
 		result := struct {
@@ -101,13 +97,10 @@ func queryProducts() (ProductResult, error) {
 
 		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
 			return nil, fmt.Errorf(" Query Options json issue : %w", err)
-
 		}
 		products = append(products, result.Result...)
-
 	}
 	return products, nil
-
 }
 
 func (p Product) Orderbook() ([]rainbow.Order, []rainbow.Order, error) {
@@ -115,9 +108,7 @@ func (p Product) Orderbook() ([]rainbow.Order, []rainbow.Order, error) {
 	if err != nil {
 		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" Fetch order book : %w", err)
 	}
-
 	defer resp.Body.Close()
-	//spew.Dump(resp.Body)
 
 	orders := struct {
 		Orders OrderbookResult `json:"result"`
@@ -133,7 +124,13 @@ func (p Product) Orderbook() ([]rainbow.Order, []rainbow.Order, error) {
 	}
 
 	bids, err := orderConversion(orders.Orders.Buy, contractSize)
+	if err != nil {
+		return []rainbow.Order{}, []rainbow.Order{}, err
+	}
 	asks, err := orderConversion(orders.Orders.Sell, contractSize)
+	if err != nil {
+		return []rainbow.Order{}, []rainbow.Order{}, err
+	}
 	return bids, asks, nil
 }
 

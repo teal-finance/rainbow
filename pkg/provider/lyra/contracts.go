@@ -11,6 +11,7 @@ const (
 	optionMarketViewerSOL  = "0xeAcB3f1a4f3137807f4e901167a999eF6f8312fb"
 )
 
+// Assets returns the list of assets supported by Lyra.
 // order as to be the same for all the arrays
 // TODO switch to maps or smth else.
 var Assets = []string{
