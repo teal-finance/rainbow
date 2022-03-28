@@ -30,11 +30,15 @@ Supported Options exchanges:
 
 * [Deribit](https://www.deribit.com): Centralized exchange. Main venue for crypto Options trading.
 
+* [Lyra](https://www.lyra.finance/): DeFi Options on Ethereum L2, Optimism, using a custom AMM.
+
 * [Opyn(Ethereum)](https://www.opyn.co/):  DeFi options protocol using TheGraph & 0x.
 
 * [PsyOptions(Solana)](https://www.psyoptions.io/): DeFi options protocol build on Serum order books.
 
 * [Zeta(Solana)](https://zeta.markets/): DeFi options protocol build using also Serum order books.
+
+* [Delta Exchange](https://www.delta.exchange/): Centralized exchange that has a lot more options underlying.
 
 ## Requirements
 
