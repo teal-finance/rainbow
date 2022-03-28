@@ -77,39 +77,42 @@ See the `make help` [output](Makefile).
 
 ### Build
 
-    make buildall     # Build both backend and frontend
-    make build        # Build the backend only
-    make buildfront   # Build the frontend only
+    make build         # Build backend + frontend
+    make server        # Build the backend only
+    make build-front   # Build the frontend only
+    make clean         # Clean all
 
 ### Run
 
-    make run          # Run the backend
-    make runfront     # Run the frontend in dev mode
+The *run* targets do not depend on the above *build* targets.
+You do not need to *make build* before *make run*.
+
+    make run           # Run the backend
+    make run-front     # Run the frontend in dev mode
 
 ### Container
+
+Use the container to reproduce some Prod. behaviors.
 
     make container-run  # Build and run backend + frontend
     make container-rm   # Stop and remove all
 
-Using the container reproduces similar behaviors as in production.
+The *container* targets try to use `docker`, then `podman`.
 
-The command `make container-run` builds and runs Rainbow
-within a container, by trying the `docker` or the `podman` commands.
-Once running, it automatically opens a browser window on
-<http://localhost:1111/> and indefinitely prints the container logs.
+The `container-run` also opens a browser window on <http://localhost:1111/>
+and prints the container logs indefinitely.
 
-The exposed port can be change with `make container-run expose=12345` :slightly_smiling_face:
+Use CTRL+C to stop the log printing. This does not stop, the container.
+To stop the container simply use `make container-rm`.
 
-To stop the container, first quit `make container-run` using CTRL+C
-in your current terminal, then enter `make container-rm`.
-This last command stops/removes the container and also removes its image.
-
-The [Makefile](Makefile) supports both `docker` and `podman`.
-
-The two other container-related commands should not need to be manually invoked:
+The two other *containers* targets are not needed to be invoked manually:
 
     make container-build  # Build the container image
     make container-stop   # Stop/remove the container
+
+The build parameters can be customized: :slightly_smiling_face:
+
+    make container-run expose=80 port=80 base=/rainbow/
 
 ## Manual build/run of the server
 
@@ -119,15 +122,21 @@ The front-end requires the server API.
 
     go build ./cmd/server && ./server
 
+    # or
+
+    go run ./cmd/server     # same as "make run"
+
 ### Front-end
 
-To run the Vue3 front-end in dev mode:
+To run the Vue3 front-end in dev mode.
+Similar to `make run-front`:
 
     cd frontend
     yarn
     yarn dev --open
 
-Else, in prod mode, the back-end serves the web static files from `frontend/dist`.
+In prod mode, the back-end serves the web static files from `frontend/dist`.
+Same as `make frontend/dist`:
 
     cd frontend
     yarn
@@ -154,6 +163,10 @@ The Dockerfile supports Docker-20 and Podman-3. The following build configures C
 
 Open <http://localhost:1111>.
 
+The above can be obtained with:
+
+    make container-run addr=http://localhost:1111 expose=1111 port=2222
+
 See also the comments within the [Dockerfile](Dockerfile) for more information.
 
 ## Server command line flags
@@ -168,21 +181,21 @@ $ go build ./cmd/server
 $ ./server -help
 Usage of ./server:
   -addr string
-        Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR (default "http://localhost")
+    	Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR (default "http://localhost")
+  -alert string
+    	Mattermost webhook endpoint to activate alerter
   -burst int
-        Max requests during a burst, has precedence over REQ_BURST (default 10)
+    	Max requests during a burst, has precedence over REQ_BURST (default 22)
   -dev
-        Run rainbow in dev. mode
+    	Enable the developer mode
   -exp int
-        Export port for Prometheus, has precedence over EXP_PORT
-  -opa string
-        Policy files (comma-separated filenames) for the Open Policy Agent using the Datalog/Rego format
+    	Export port for Prometheus, has precedence over EXP_PORT
   -port int
-        API port, has precedence over MAIN_PORT (default 8090)
+    	API port, has precedence over MAIN_PORT (default 8090)
   -rate int
-        Max requests per minute, has precedence over REQ_PER_MINUTE (default 30)
+    	Max requests per minute, has precedence over REQ_PER_MINUTE (default 88)
   -www string
-        Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
+    	Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
 
 ## API
