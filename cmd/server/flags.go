@@ -19,7 +19,7 @@ const (
 )
 
 var (
-	dev          = flag.Bool("dev", false, "Run rainbow in developer mode")
+	dev          = flag.Bool("dev", false, "Enable the developer mode")
 	mainAddr     = flag.String("addr", envStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
 	mainPort     = flag.Int("port", envInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
 	expPort      = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
