@@ -30,10 +30,27 @@ func (db *DB) InsertOptions(options []rainbow.Option) error {
 			db.optionsByProvider[o.Provider] = []rainbow.Option{}
 		}
 
-		db.optionsByProvider[o.Provider] = append(db.optionsByProvider[o.Provider], o)
+		db.insertOption(o)
 	}
 
 	return nil
+}
+
+func (db *DB) insertOption(o rainbow.Option) {
+	for i, oldOpt := range db.optionsByProvider[o.Provider] {
+		if oldOpt.Name == o.Name &&
+			oldOpt.Type == o.Type &&
+			oldOpt.Expiry == o.Expiry &&
+			oldOpt.Strike == o.Strike {
+			// Update the option attributes
+			db.optionsByProvider[o.Provider][i] = o
+
+			return
+		}
+	}
+
+	// Append the new option
+	db.optionsByProvider[o.Provider] = append(db.optionsByProvider[o.Provider], o)
 }
 
 func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
