@@ -4,19 +4,21 @@ import (
 	"context"
 	"fmt"
 
-	bin "github.com/gagliardetto/binary"
-
 	"github.com/davecgh/go-spew/spew"
+	bin "github.com/gagliardetto/binary"
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
 	sol "github.com/streamingfast/solana-go"
+
 	zeta "github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor/generated/zeta"
 )
 
-const PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
-const ZetaID = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
-const test = "BPFLoaderUpgradeab1e11111111111111111111111"
-const USDCSolana = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+const (
+	PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
+	ZetaID              = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
+	test                = "BPFLoaderUpgradeab1e11111111111111111111111"
+	USDCSolana          = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+)
 
 func main() {
 	z := solana.MustPublicKeyFromBase58(ZetaID)
@@ -30,7 +32,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	//spew.Dump(out[0])
+	// spew.Dump(out[0])
 
 	/*pub := solana.MustPublicKeyFromBase58(PsyOptionsProgramID)
 
@@ -56,13 +58,13 @@ func main() {
 		zo := new(zeta.ZetaGroup)
 		err = bin.NewBinDecoder(i.Account.Data.GetBinary()).Decode(&zo)
 
-		//opt := new(OptionMarket)
-		//err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&opt)
+		// opt := new(OptionMarket)
+		// err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&opt)
 		if err != nil {
 			continue
 		}
 
-		spew.Dump(zo) //opt)
+		spew.Dump(zo) // opt)
 		/*
 			a, b, c := deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.QuoteAssetMint), pub)
 			spew.Dump(a, b, c)
@@ -83,6 +85,7 @@ func main() {
 	//psy_american.SetProgramID(pub)
 	//fmt.Println(psy_american.ProgramName)
 }
+
 func deriveSerumMarketAddress(id, quote, programid solana.PublicKey) (solana.PublicKey, uint8, error) {
 	seed := [][]byte{
 		id[:],
@@ -158,7 +161,6 @@ func f() {
 		program_id,
 	)
 	fmt.Println(got)
-
 }
 
 /*var address solana.PublicKey
