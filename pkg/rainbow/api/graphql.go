@@ -63,6 +63,9 @@ func (h APIHandler) fieldsCallPut() *graphql.Field {
 			"assets": &graphql.ArgumentConfig{
 				Type: graphql.NewList(graphql.String),
 			},
+			"expiries": &graphql.ArgumentConfig{
+				Type: graphql.NewList(graphql.String),
+			},
 			"providers": &graphql.ArgumentConfig{
 				Type: graphql.NewList(graphql.String),
 			},
@@ -79,6 +82,14 @@ func (h APIHandler) fieldsCallPut() *graphql.Field {
 				}
 			}
 
+			if v, ok := params.Args["expiries"]; ok {
+				expiries := v.([]interface{})
+				args.Expiries = make([]string, len(expiries))
+				for i, e := range expiries {
+					args.Expiries[i] = e.(string)
+				}
+			}
+
 			if v, ok := params.Args["providers"]; ok {
 				providers := v.([]interface{})
 				args.Providers = make([]string, len(providers))
@@ -92,6 +103,7 @@ func (h APIHandler) fieldsCallPut() *graphql.Field {
 			if err != nil {
 				return nil, err
 			}
+
 			data := buildCallPut(options)
 
 			return data.Rows, nil
