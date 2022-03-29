@@ -104,9 +104,9 @@ func (h APIHandler) fieldsCallPut() *graphql.Field {
 				return nil, err
 			}
 
-			data := buildCallPut(options)
+			rows := buildCallPut(options)
 
-			return data.Rows, nil
+			return rows, nil
 		},
 	}
 }

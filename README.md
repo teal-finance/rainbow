@@ -321,36 +321,32 @@ The "Accept" HTTP header is also supported:
 
 ```js
 {
-  "name": "ETH-2021-10-29 23:59:59-3200-PUT",
-  "expiry": "2021-10-29 23:59:59",
-  "type": "PUT",
-  "asset": "ETH",             // ETH, BTC, SOL
-  "strike": 3200,
-  "exchange": "DEX",          // Type: CEX or DEX
-  "chain": "Solana",          // Ethereum, Solana...
-  "layer": "L1",
-  "provider": "PsyOptions",   // Opyn, Lyra, Thales, Deribit, Psyoptions
-  "currency": "USDC"          // Quote currency: USDC, BTC...
-  "bid": [
-    {
-      "px": 13.3,             // Abbreviation for "price"
-      "size": 5,              // Shorter variant of "quantity"
-    },
-    {
-      "px": 13.1,
-      "size": 10,
-    }
-  ],
-  "ask": [
-    {
-      "px": 15.12,
-      "size": 5,
-    },
-    {
-      "px": 15.25,
-      "size": 9,
-    }
-  ]
+  "name":     "ETH-2021-10-29 23:59:59-3200-PUT",
+  "expiry":   "2021-10-29 23:59:59",
+  "type":     "PUT",
+  "asset":    "ETH",        // ETH, BTC, SOL
+  "strike":   3200,
+  "exchange": "DEX",        // Type: CEX or DEX
+  "chain":    "Solana",     // Ethereum, Solana...
+  "layer":    "L1",
+  "provider": "PsyOptions", // Opyn, Lyra, Deribit...
+  "currency": "USDC"        // Quote currency: BTC...
+  "bid": [{
+            "px": 13.3,     // Abbreviation for "price"
+            "size": 5,      // Variant of "quantity"
+          },
+          {
+            "px": 13.1,
+            "size": 10,
+          }],
+  "ask": [{
+            "px": 15.12,
+            "size": 5,
+          },
+          {
+            "px": 15.25,
+            "size": 9,
+          }]
 }
 ```
 
@@ -375,36 +371,34 @@ This endpoint has been inspired by the [BFF pattern](https://blog.bitsrc.io/e4fa
 This endpoint should not used by API users because we may drop it in a further release.
 
 ```js
-{ "rows":[
-    { "asset": "ETH",
-      "expiry": "Dec 31",
-      "provider": "Deribit",
-      "call": { "bid": {"px": 1805, "size":  24},
-                "ask": {"px": 1830, "size": 459}},
-      "strike": 4400,
-      "put":  { "bid": {"px": 1305, "size":  26},
-                "ask": {"px": 1330, "size":  37}}
-    },
-    { "asset": "ETH",
-      "expiry": "Dec 31",
-      "provider": "Deribit",
-      "call": { "bid": {"px": 1140, "size": 258},
-                "ask": {"px": 1160, "size":  33}},
-      "strike": 5200,
-      "put":  { "bid": {"px": 1235, "size":  80},
-                "ask": {"px":    0, "size":   0}}
-    },
-    // ...
-    { "asset": "BTC",
-      "expiry": "Nov 26",
-      "provider": "Deribit",
-      "call": { "bid": {"px": 2045, "size":  7.5},
-                "ask": {"px": 2105, "size":  5.3},
-      "strike": 50000,
-      "put":  { "bid": {"px":  125, "size": 27.2},
-                "ask": {"px":  135, "size": 70.2}}
-    }
-]}
+[ { "asset": "ETH",
+    "expiry": "Dec 31",
+    "provider": "Deribit",
+    "call": { "bid": {"px": 1805, "size":  24},
+              "ask": {"px": 1830, "size": 459}},
+    "strike": 4400,
+    "put":  { "bid": {"px": 1305, "size":  26},
+              "ask": {"px": 1330, "size":  37}}
+  },
+  { "asset": "ETH",
+    "expiry": "Dec 31",
+    "provider": "Deribit",
+    "call": { "bid": {"px": 1140, "size": 258},
+              "ask": {"px": 1160, "size":  33}},
+    "strike": 5200,
+    "put":  { "bid": {"px": 1235, "size":  80},
+              "ask": {"px":    0, "size":   0}}
+  },
+  // ...
+  { "asset": "BTC",
+    "expiry": "Nov 26",
+    "provider": "Deribit",
+    "call": { "bid": {"px": 2045, "size":  7.5},
+              "ask": {"px": 2105, "size":  5.3},
+    "strike": 50000,
+    "put":  { "bid": {"px":  125, "size": 27.2},
+              "ask": {"px":  135, "size": 70.2}}
+} ]
 ```
 
 ### /v0/graphql

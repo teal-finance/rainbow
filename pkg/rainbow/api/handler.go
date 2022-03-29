@@ -12,10 +12,6 @@ type APIHandler struct {
 	Service *rainbow.Service
 }
 
-type CallPut struct {
-	Rows []Row `json:"rows"`
-}
-
 type Row struct {
 	Put      Limit   `json:"put"`
 	Call     Limit   `json:"call"`
@@ -39,7 +35,7 @@ type StrOrder struct {
 	Size string `json:"size"`
 }
 
-func buildCallPut(options []rainbow.Option) CallPut {
+func buildCallPut(options []rainbow.Option) []Row {
 	rows := make([]Row, 0, len(options)/2)
 
 	for asset, optionsSameAsset := range groupByAsset(options) {
@@ -75,7 +71,7 @@ func buildCallPut(options []rainbow.Option) CallPut {
 		}
 	}
 
-	return CallPut{Rows: rows}
+	return rows
 }
 
 func groupByAsset(options []rainbow.Option) (assetToOptions map[string][]rainbow.Option) {
