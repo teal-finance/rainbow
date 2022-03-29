@@ -76,9 +76,9 @@ func (h APIHandler) fieldsCallPut() *graphql.Field {
 
 			if v, ok := params.Args["assets"]; ok {
 				assets := v.([]interface{})
-				args.Asset = make([]string, len(assets))
+				args.Assets = make([]string, len(assets))
 				for i, a := range assets {
-					args.Asset[i] = a.(string)
+					args.Assets[i] = a.(string)
 				}
 			}
 

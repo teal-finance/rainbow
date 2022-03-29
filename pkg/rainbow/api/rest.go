@@ -205,7 +205,7 @@ func query(r *http.Request) (sa rainbow.StoreArgs, format string) {
 	specialValues(&format, &providers)
 
 	sa = rainbow.StoreArgs{
-		Asset:     assets,
+		Assets:    assets,
 		Expiries:  expiries,
 		Providers: providers,
 	}
@@ -268,10 +268,10 @@ func specialValues(format *string, values *[]string) {
 func setFilename(w http.ResponseWriter, sa rainbow.StoreArgs, extension string) {
 	name := "AllOptions"
 
-	if len(sa.Asset) > 0 || len(sa.Expiries) > 0 || len(sa.Providers) > 0 {
+	if len(sa.Assets) > 0 || len(sa.Expiries) > 0 || len(sa.Providers) > 0 {
 		name = "AllAssets"
-		if len(sa.Asset) > 0 {
-			name = strings.Join(sa.Asset, "+")
+		if len(sa.Assets) > 0 {
+			name = strings.Join(sa.Assets, "+")
 		}
 
 		if len(sa.Expiries) > 0 {
