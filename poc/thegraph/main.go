@@ -14,6 +14,6 @@ import (
 
 func main() {
 	options := zerox.QueryTheGraph()
-	//zerox.QueryTheGraph()
+	// zerox.QueryTheGraph()
 	spew.Dump(options)
 }

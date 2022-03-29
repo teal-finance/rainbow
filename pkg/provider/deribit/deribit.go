@@ -250,7 +250,7 @@ type OrderBook struct {
 }
 
 // Prices are not in $ but in crypto so we need the coin (index) price to multiply
-// and get the USD price
+// and get the USD price.
 func normalizeOrders(orders [][]float64, assetPrice float64) []rainbow.Order {
 	// if there is no offer, send price=0.0, quant=0.0
 	// hopefully we never an array of empty array
