@@ -1,4 +1,4 @@
-package apigraphql
+package api
 
 import (
 	"log"
@@ -7,6 +7,10 @@ import (
 
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+type APIHandler struct {
+	Service *rainbow.Service
+}
 
 type CallPut struct {
 	Rows []Row `json:"rows"`
@@ -28,8 +32,11 @@ type Limit struct {
 }
 
 type StrOrder struct {
+	// Price is often abbreviate "px" used by many Centralized Exchanges
+	// such as in the FIX protocol: https://fiximate.fixtrading.org/legacy/en/FIX.5.0SP2/abbreviations.html
 	Price string `json:"px"`
-	Size  string `json:"size"`
+	// Size is a shorter synonym for "Quantity".
+	Size string `json:"size"`
 }
 
 func buildCallPut(options []rainbow.Option) CallPut {

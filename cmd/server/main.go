@@ -11,13 +11,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/friendsofgo/graphiql"
 	"github.com/go-chi/chi/v5"
 	"github.com/teal-finance/garcon"
 
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
-	"github.com/teal-finance/rainbow/pkg/rainbow/api/apigraphql"
+	"github.com/teal-finance/rainbow/pkg/rainbow/api"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
@@ -69,14 +68,17 @@ func main() {
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
 
-	graphiqlHandler, err := graphiql.NewGraphiqlHandler("/graphql")
-	if err != nil {
-		panic(err)
-	}
-
 	r.With(g.JWT.Set).Mount("/", WebHandler(g, *wwwDir))
-	r.With(g.JWT.Chk).Mount("/graphql", apigraphql.Handler(s))
-	r.With(g.JWT.Chk).Mount("/graphiql", graphiqlHandler)
+
+	r.Route("/v0", func(r chi.Router) {
+		h := api.APIHandler{Service: s}
+
+		// GraphQL API (and interactive API in developer mode)
+		r.Mount("/graphql", h.GraphQLHandler())
+		if *dev {
+			r.Mount("/graphiql", api.InteractiveGQLHandler("/v0/graphql"))
+		}
+	})
 
 	return r
 }

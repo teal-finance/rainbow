@@ -1,23 +1,16 @@
-package apigraphql
+package api
 
 import (
 	"net/http"
 
+	"github.com/friendsofgo/graphiql"
 	graphql "github.com/graphql-go/graphql"
 	graphhandler "github.com/graphql-go/handler"
 
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-type handler struct {
-	service *rainbow.Service
-}
-
-func Handler(s *rainbow.Service) http.Handler {
-	h := handler{
-		service: s,
-	}
-
+func (h APIHandler) GraphQLHandler() http.Handler {
 	schema, err := graphql.NewSchema(
 		graphql.SchemaConfig{
 			Query: graphql.NewObject(graphql.ObjectConfig{
@@ -33,15 +26,24 @@ func Handler(s *rainbow.Service) http.Handler {
 	return graphhandler.New(&graphhandler.Config{Schema: &schema})
 }
 
+func InteractiveGQLHandler(endpoint string) http.Handler {
+	h, err := graphiql.NewGraphiqlHandler(endpoint)
+	if err != nil {
+		panic(err)
+	}
+
+	return h
+}
+
 // GetRootFields returns all the available queries.
-func (h handler) fieldsRoot() graphql.Fields {
+func (h APIHandler) fieldsRoot() graphql.Fields {
 	return graphql.Fields{
 		"rows": h.fieldsCallPut(),
 	}
 }
 
 // GetUserQuery returns the queries available against user type.
-func (h handler) fieldsCallPut() *graphql.Field {
+func (h APIHandler) fieldsCallPut() *graphql.Field {
 	return &graphql.Field{
 		Type: graphql.NewList(
 			graphql.NewObject(graphql.ObjectConfig{
@@ -85,8 +87,8 @@ func (h handler) fieldsCallPut() *graphql.Field {
 				}
 			}
 
-			// get options and build callput
-			options, err := h.service.Options(args)
+			// get options
+			options, err := h.Service.Options(args)
 			if err != nil {
 				return nil, err
 			}
