@@ -11,8 +11,10 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const detlaProducts = "https://api.delta.exchange/v2/products?states=live&contract_types="
-const deltaOrders = "https://api.delta.exchange/v2/l2orderbook/"
+const (
+	detlaProducts = "https://api.delta.exchange/v2/products?states=live&contract_types="
+	deltaOrders   = "https://api.delta.exchange/v2/l2orderbook/"
+)
 
 type Provider struct{}
 
@@ -156,161 +158,163 @@ func (p Product) OptionsType() string {
 	return "PUT"
 }
 
-type ProductResult []Product
-type Product struct {
-	UIConfig struct {
-		DefaultTradingViewCandle string    `json:"default_trading_view_candle"`
-		LeverageSliderValues     []int     `json:"leverage_slider_values"`
-		PriceClubbingValues      []float64 `json:"price_clubbing_values"`
-		ShowBracketOrders        bool      `json:"show_bracket_orders"`
-		SortPriority             int       `json:"sort_priority"`
-	} `json:"ui_config,omitempty"`
-	ContractValue                   string      `json:"contract_value"`
-	InitialMarginScalingFactor      string      `json:"initial_margin_scaling_factor"`
-	ImpactSize                      int         `json:"impact_size"`
-	ID                              int         `json:"id"`
-	BasisFactorMaxLimit             string      `json:"basis_factor_max_limit"`
-	InsuranceFundMarginContribution string      `json:"insurance_fund_margin_contribution"`
-	LiquidationPenaltyFactor        string      `json:"liquidation_penalty_factor"`
-	DisruptionReason                interface{} `json:"disruption_reason"`
-	AuctionFinishTime               interface{} `json:"auction_finish_time"`
-	SettlingAsset                   struct {
-		BaseWithdrawalFee   string      `json:"base_withdrawal_fee"`
-		DepositStatus       string      `json:"deposit_status"`
-		ID                  int         `json:"id"`
-		InterestCredit      bool        `json:"interest_credit"`
-		InterestSlabs       interface{} `json:"interest_slabs"`
-		KycDepositLimit     string      `json:"kyc_deposit_limit"`
-		KycWithdrawalLimit  string      `json:"kyc_withdrawal_limit"`
-		MinWithdrawalAmount string      `json:"min_withdrawal_amount"`
-		MinimumPrecision    int         `json:"minimum_precision"`
-		Name                string      `json:"name"`
-		Networks            []struct {
-			BaseWithdrawalFee     string `json:"base_withdrawal_fee"`
-			DepositStatus         string `json:"deposit_status"`
-			MemoRequired          bool   `json:"memo_required"`
-			Network               string `json:"network"`
+type (
+	ProductResult []Product
+	Product       struct {
+		UIConfig struct {
+			DefaultTradingViewCandle string    `json:"default_trading_view_candle"`
+			LeverageSliderValues     []int     `json:"leverage_slider_values"`
+			PriceClubbingValues      []float64 `json:"price_clubbing_values"`
+			ShowBracketOrders        bool      `json:"show_bracket_orders"`
+			SortPriority             int       `json:"sort_priority"`
+		} `json:"ui_config,omitempty"`
+		ContractValue                   string      `json:"contract_value"`
+		InitialMarginScalingFactor      string      `json:"initial_margin_scaling_factor"`
+		ImpactSize                      int         `json:"impact_size"`
+		ID                              int         `json:"id"`
+		BasisFactorMaxLimit             string      `json:"basis_factor_max_limit"`
+		InsuranceFundMarginContribution string      `json:"insurance_fund_margin_contribution"`
+		LiquidationPenaltyFactor        string      `json:"liquidation_penalty_factor"`
+		DisruptionReason                interface{} `json:"disruption_reason"`
+		AuctionFinishTime               interface{} `json:"auction_finish_time"`
+		SettlingAsset                   struct {
+			BaseWithdrawalFee   string      `json:"base_withdrawal_fee"`
+			DepositStatus       string      `json:"deposit_status"`
+			ID                  int         `json:"id"`
+			InterestCredit      bool        `json:"interest_credit"`
+			InterestSlabs       interface{} `json:"interest_slabs"`
+			KycDepositLimit     string      `json:"kyc_deposit_limit"`
+			KycWithdrawalLimit  string      `json:"kyc_withdrawal_limit"`
+			MinWithdrawalAmount string      `json:"min_withdrawal_amount"`
+			MinimumPrecision    int         `json:"minimum_precision"`
+			Name                string      `json:"name"`
+			Networks            []struct {
+				BaseWithdrawalFee     string `json:"base_withdrawal_fee"`
+				DepositStatus         string `json:"deposit_status"`
+				MemoRequired          bool   `json:"memo_required"`
+				Network               string `json:"network"`
+				VariableWithdrawalFee string `json:"variable_withdrawal_fee"`
+				WithdrawalStatus      string `json:"withdrawal_status"`
+			} `json:"networks"`
+			Precision             int    `json:"precision"`
+			SortPriority          int    `json:"sort_priority"`
+			Symbol                string `json:"symbol"`
 			VariableWithdrawalFee string `json:"variable_withdrawal_fee"`
 			WithdrawalStatus      string `json:"withdrawal_status"`
-		} `json:"networks"`
-		Precision             int    `json:"precision"`
-		SortPriority          int    `json:"sort_priority"`
-		Symbol                string `json:"symbol"`
-		VariableWithdrawalFee string `json:"variable_withdrawal_fee"`
-		WithdrawalStatus      string `json:"withdrawal_status"`
-	} `json:"settling_asset"`
-	MaxLeverageNotional  string      `json:"max_leverage_notional"`
-	IsQuanto             bool        `json:"is_quanto"`
-	ContractUnitCurrency string      `json:"contract_unit_currency"`
-	TickSize             string      `json:"tick_size"`
-	ContractType         string      `json:"contract_type"`
-	SettlementPrice      interface{} `json:"settlement_price"`
-	ShortDescription     string      `json:"short_description"`
-	MaintenanceMargin    string      `json:"maintenance_margin"`
-	MakerCommissionRate  string      `json:"maker_commission_rate"`
-	SpotIndex            struct {
-		Config struct {
-			QuotingAsset    string `json:"quoting_asset"`
-			ServiceID       int    `json:"service_id"`
-			UnderlyingAsset string `json:"underlying_asset"`
-		} `json:"config"`
-		ConstituentExchanges []struct {
-			Exchange       string `json:"exchange"`
-			HealthInterval int    `json:"health_interval"`
-			HealthPriority int    `json:"health_priority"`
-			Weight         int    `json:"weight"`
-		} `json:"constituent_exchanges"`
-		ConstituentIndices interface{} `json:"constituent_indices"`
-		Description        string      `json:"description"`
-		HealthInterval     int         `json:"health_interval"`
-		ID                 int         `json:"id"`
-		ImpactSize         string      `json:"impact_size"`
-		IndexType          string      `json:"index_type"`
-		IsComposite        bool        `json:"is_composite"`
-		PriceMethod        string      `json:"price_method"`
-		QuotingAssetID     int         `json:"quoting_asset_id"`
-		Symbol             string      `json:"symbol"`
-		TickSize           string      `json:"tick_size"`
-		UnderlyingAssetID  int         `json:"underlying_asset_id"`
-	} `json:"spot_index"`
-	MaintenanceMarginScalingFactor string `json:"maintenance_margin_scaling_factor"`
-	UnderlyingAsset                struct {
-		BaseWithdrawalFee   string      `json:"base_withdrawal_fee"`
-		DepositStatus       string      `json:"deposit_status"`
-		ID                  int         `json:"id"`
-		InterestCredit      bool        `json:"interest_credit"`
-		InterestSlabs       interface{} `json:"interest_slabs"`
-		KycDepositLimit     string      `json:"kyc_deposit_limit"`
-		KycWithdrawalLimit  string      `json:"kyc_withdrawal_limit"`
-		MinWithdrawalAmount string      `json:"min_withdrawal_amount"`
-		MinimumPrecision    int         `json:"minimum_precision"`
-		Name                string      `json:"name"`
-		Networks            []struct {
-			BaseWithdrawalFee     string `json:"base_withdrawal_fee"`
-			DepositStatus         string `json:"deposit_status"`
-			MemoRequired          bool   `json:"memo_required"`
-			Network               string `json:"network"`
+		} `json:"settling_asset"`
+		MaxLeverageNotional  string      `json:"max_leverage_notional"`
+		IsQuanto             bool        `json:"is_quanto"`
+		ContractUnitCurrency string      `json:"contract_unit_currency"`
+		TickSize             string      `json:"tick_size"`
+		ContractType         string      `json:"contract_type"`
+		SettlementPrice      interface{} `json:"settlement_price"`
+		ShortDescription     string      `json:"short_description"`
+		MaintenanceMargin    string      `json:"maintenance_margin"`
+		MakerCommissionRate  string      `json:"maker_commission_rate"`
+		SpotIndex            struct {
+			Config struct {
+				QuotingAsset    string `json:"quoting_asset"`
+				ServiceID       int    `json:"service_id"`
+				UnderlyingAsset string `json:"underlying_asset"`
+			} `json:"config"`
+			ConstituentExchanges []struct {
+				Exchange       string `json:"exchange"`
+				HealthInterval int    `json:"health_interval"`
+				HealthPriority int    `json:"health_priority"`
+				Weight         int    `json:"weight"`
+			} `json:"constituent_exchanges"`
+			ConstituentIndices interface{} `json:"constituent_indices"`
+			Description        string      `json:"description"`
+			HealthInterval     int         `json:"health_interval"`
+			ID                 int         `json:"id"`
+			ImpactSize         string      `json:"impact_size"`
+			IndexType          string      `json:"index_type"`
+			IsComposite        bool        `json:"is_composite"`
+			PriceMethod        string      `json:"price_method"`
+			QuotingAssetID     int         `json:"quoting_asset_id"`
+			Symbol             string      `json:"symbol"`
+			TickSize           string      `json:"tick_size"`
+			UnderlyingAssetID  int         `json:"underlying_asset_id"`
+		} `json:"spot_index"`
+		MaintenanceMarginScalingFactor string `json:"maintenance_margin_scaling_factor"`
+		UnderlyingAsset                struct {
+			BaseWithdrawalFee   string      `json:"base_withdrawal_fee"`
+			DepositStatus       string      `json:"deposit_status"`
+			ID                  int         `json:"id"`
+			InterestCredit      bool        `json:"interest_credit"`
+			InterestSlabs       interface{} `json:"interest_slabs"`
+			KycDepositLimit     string      `json:"kyc_deposit_limit"`
+			KycWithdrawalLimit  string      `json:"kyc_withdrawal_limit"`
+			MinWithdrawalAmount string      `json:"min_withdrawal_amount"`
+			MinimumPrecision    int         `json:"minimum_precision"`
+			Name                string      `json:"name"`
+			Networks            []struct {
+				BaseWithdrawalFee     string `json:"base_withdrawal_fee"`
+				DepositStatus         string `json:"deposit_status"`
+				MemoRequired          bool   `json:"memo_required"`
+				Network               string `json:"network"`
+				VariableWithdrawalFee string `json:"variable_withdrawal_fee"`
+				WithdrawalStatus      string `json:"withdrawal_status"`
+			} `json:"networks"`
+			Precision             int    `json:"precision"`
+			SortPriority          int    `json:"sort_priority"`
+			Symbol                string `json:"symbol"`
 			VariableWithdrawalFee string `json:"variable_withdrawal_fee"`
 			WithdrawalStatus      string `json:"withdrawal_status"`
-		} `json:"networks"`
-		Precision             int    `json:"precision"`
-		SortPriority          int    `json:"sort_priority"`
-		Symbol                string `json:"symbol"`
-		VariableWithdrawalFee string `json:"variable_withdrawal_fee"`
-		WithdrawalStatus      string `json:"withdrawal_status"`
-	} `json:"underlying_asset"`
-	TakerCommissionRate string    `json:"taker_commission_rate"`
-	LaunchTime          time.Time `json:"launch_time"`
-	PositionSizeLimit   int       `json:"position_size_limit"`
-	SettlementTime      time.Time `json:"settlement_time"`
-	InitialMargin       string    `json:"initial_margin"`
-	QuotingAsset        struct {
-		BaseWithdrawalFee   string      `json:"base_withdrawal_fee"`
-		DepositStatus       string      `json:"deposit_status"`
-		ID                  int         `json:"id"`
-		InterestCredit      bool        `json:"interest_credit"`
-		InterestSlabs       interface{} `json:"interest_slabs"`
-		KycDepositLimit     string      `json:"kyc_deposit_limit"`
-		KycWithdrawalLimit  string      `json:"kyc_withdrawal_limit"`
-		MinWithdrawalAmount string      `json:"min_withdrawal_amount"`
-		MinimumPrecision    int         `json:"minimum_precision"`
-		Name                string      `json:"name"`
-		Networks            []struct {
-			BaseWithdrawalFee     string `json:"base_withdrawal_fee"`
-			DepositStatus         string `json:"deposit_status"`
-			MemoRequired          bool   `json:"memo_required"`
-			Network               string `json:"network"`
+		} `json:"underlying_asset"`
+		TakerCommissionRate string    `json:"taker_commission_rate"`
+		LaunchTime          time.Time `json:"launch_time"`
+		PositionSizeLimit   int       `json:"position_size_limit"`
+		SettlementTime      time.Time `json:"settlement_time"`
+		InitialMargin       string    `json:"initial_margin"`
+		QuotingAsset        struct {
+			BaseWithdrawalFee   string      `json:"base_withdrawal_fee"`
+			DepositStatus       string      `json:"deposit_status"`
+			ID                  int         `json:"id"`
+			InterestCredit      bool        `json:"interest_credit"`
+			InterestSlabs       interface{} `json:"interest_slabs"`
+			KycDepositLimit     string      `json:"kyc_deposit_limit"`
+			KycWithdrawalLimit  string      `json:"kyc_withdrawal_limit"`
+			MinWithdrawalAmount string      `json:"min_withdrawal_amount"`
+			MinimumPrecision    int         `json:"minimum_precision"`
+			Name                string      `json:"name"`
+			Networks            []struct {
+				BaseWithdrawalFee     string `json:"base_withdrawal_fee"`
+				DepositStatus         string `json:"deposit_status"`
+				MemoRequired          bool   `json:"memo_required"`
+				Network               string `json:"network"`
+				VariableWithdrawalFee string `json:"variable_withdrawal_fee"`
+				WithdrawalStatus      string `json:"withdrawal_status"`
+			} `json:"networks"`
+			Precision             int    `json:"precision"`
+			SortPriority          int    `json:"sort_priority"`
+			Symbol                string `json:"symbol"`
 			VariableWithdrawalFee string `json:"variable_withdrawal_fee"`
 			WithdrawalStatus      string `json:"withdrawal_status"`
-		} `json:"networks"`
-		Precision             int    `json:"precision"`
-		SortPriority          int    `json:"sort_priority"`
-		Symbol                string `json:"symbol"`
-		VariableWithdrawalFee string `json:"variable_withdrawal_fee"`
-		WithdrawalStatus      string `json:"withdrawal_status"`
-	} `json:"quoting_asset"`
-	NotionalType     string      `json:"notional_type"`
-	Description      string      `json:"description"`
-	AuctionStartTime interface{} `json:"auction_start_time"`
-	Symbol           string      `json:"symbol"`
-	State            string      `json:"state"`
-	ProductSpecs     struct {
-		BackupVolExpiryTime         int     `json:"backup_vol_expiry_time"`
-		MaxDeviationFromExternalVol float64 `json:"max_deviation_from_external_vol"`
-		MaxVolatility               int     `json:"max_volatility"`
-		MinVolatility               float64 `json:"min_volatility"`
-		PremiumCommissionRate       float64 `json:"premium_commission_rate"`
-		VolCalculationMethod        string  `json:"vol_calculation_method"`
-		VolExpiryTime               int     `json:"vol_expiry_time"`
-	} `json:"product_specs,omitempty"`
-	FundingMethod     string      `json:"funding_method"`
-	StrikePrice       string      `json:"strike_price"`
-	PriceBand         string      `json:"price_band"`
-	DefaultLeverage   string      `json:"default_leverage"`
-	TradingStatus     string      `json:"trading_status"`
-	BarrierPrice      interface{} `json:"barrier_price"`
-	AnnualizedFunding string      `json:"annualized_funding"`
-}
+		} `json:"quoting_asset"`
+		NotionalType     string      `json:"notional_type"`
+		Description      string      `json:"description"`
+		AuctionStartTime interface{} `json:"auction_start_time"`
+		Symbol           string      `json:"symbol"`
+		State            string      `json:"state"`
+		ProductSpecs     struct {
+			BackupVolExpiryTime         int     `json:"backup_vol_expiry_time"`
+			MaxDeviationFromExternalVol float64 `json:"max_deviation_from_external_vol"`
+			MaxVolatility               int     `json:"max_volatility"`
+			MinVolatility               float64 `json:"min_volatility"`
+			PremiumCommissionRate       float64 `json:"premium_commission_rate"`
+			VolCalculationMethod        string  `json:"vol_calculation_method"`
+			VolExpiryTime               int     `json:"vol_expiry_time"`
+		} `json:"product_specs,omitempty"`
+		FundingMethod     string      `json:"funding_method"`
+		StrikePrice       string      `json:"strike_price"`
+		PriceBand         string      `json:"price_band"`
+		DefaultLeverage   string      `json:"default_leverage"`
+		TradingStatus     string      `json:"trading_status"`
+		BarrierPrice      interface{} `json:"barrier_price"`
+		AnnualizedFunding string      `json:"annualized_funding"`
+	}
+)
 
 type OrderbookResult struct {
 	Buy           Orders `json:"buy"`
