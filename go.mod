@@ -70,6 +70,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mostynb/zstdpool-freelist v0.0.0-20201229113212-927304c0c3b1 // indirect
+	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de
 	github.com/mr-tron/base58 v1.2.0 // indirect
 	github.com/open-policy-agent/opa v0.38.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

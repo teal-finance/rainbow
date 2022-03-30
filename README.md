@@ -1,50 +1,70 @@
 # ![Rainbow](doc/rainbow-chancery.png)
 
-![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With Rainbow, users can scan CEX/DEX markets to fetch available options data. <br><br> This project has been initiated by [Teal.Finance](https://teal.finance/)  during the [Ethereum's EthGlobal Hackathon](https://showcase.ethglobal.com/ethonline2021/rainbow), [Solana's Ignition Hackathon](https://devpost.com/software/rainbow-ai5p7m) and [Encode Club's Hack DeFi](https://www.encode.club/hack-defi).
+![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With the Rainbow screener, users can scan CEX/DEX markets to fetch available options data. Empowered by the [Teal.Finance](https://teal.finance/) [team](https://teal.finance/#team).
 ---|---
 
-## Live Demo
+Rainbow is live at [**teal.finance/rainbow**](https://teal.finance/rainbow/)
 
-Rainbow is live at <https://teal.finance/rainbow/>
-Please gives some feedback via  GitHub issue or contact us at Teal.Finance[at]protonmail.com or using Twitter [@TealFinance](https://twitter.com/TealFinance).
+Please give any feedback:
+
+* GitHub [issue](https://github.com/teal-finance/rainbow/issues) or
+* Contact us at Teal.Finance[at]protonmail.com or
+* Twitter [@TealFinance](https://twitter.com/TealFinance).
 
 ## Motivations
 
-**Rainbow** was inspired by the following trends:
+**Rainbow** is inspired by the following trends:
 
 * Crypto-assets and DeFi becoming mainstream,
 
 * Advent of the Internet of Blockchains’ world  with more cross-chain applications and communications,
 
-* Crypto options trading growing (hopefully) bigger  than the spot market, like in traditional Finance.
+* Crypto options trading growing bigger than the spot market, like in traditional Finance.
 
 The crypto derivatives markets are expected to grow a lot more in the upcoming years.
 Specifically, the options markets will see the biggest growth because in Finance, Option market is much bigger
 than the underlying spot market. This is lagging in Crypto, when we look at Deribit's volume, the main (centralized) venue for Crypto Options, compared to Perpetuals future.
 
-More info on our motivations: <https://cryptonuage.com/posts/internet-of-decentralized-options/>
+We participated to hackathons and have won prices: [Ethereum's EthGlobal Hackathon](https://showcase.ethglobal.com/ethonline2021/rainbow), [Solana's Ignition Hackathon](https://devpost.com/software/rainbow-ai5p7m) and [Encode Club's Hack DeFi](https://www.encode.club/hack-defi).
 
-## Current status
+More info on our motivations: [cryptonuage.com/posts/internet-of-decentralized-options](https://cryptonuage.com/posts/internet-of-decentralized-options/)
 
-Supported Options exchanges:
+## Currently supported options exchanges
 
-* [Deribit](https://www.deribit.com): Centralized exchange. Main venue for crypto Options trading.
+* [Deribit](https://www.deribit.com):
+  Centralized exchange.
+  Main venue for crypto Options trading.
 
-* [Lyra](https://www.lyra.finance/): DeFi Options on Ethereum L2, Optimism, using a custom AMM.
+* [Delta Exchange](https://www.delta.exchange/):
+  Centralized exchange for futures, options and interest
+  rate swaps on 50 underlying cryptocurrencies.
 
-* [Opyn(Ethereum)](https://www.opyn.co/):  DeFi options protocol using TheGraph & 0x.
+* [Lyra](https://www.lyra.finance/) (Ethereum):
+  DeFi protocol for trading options based on Layer 2,
+  Optimism, using a custom AMM.
 
-* [PsyOptions(Solana)](https://www.psyoptions.io/): DeFi options protocol build on Serum order books.
+* [PsyOptions](https://www.psyoptions.io/) (Solana):
+  DeFi options protocol build on Serum order books.
 
-* [Zeta(Solana)](https://zeta.markets/): DeFi options protocol build using also Serum order books.
+* [Opyn](https://www.opyn.co/) (Ethereum):
+  DeFi options protocol using TheGraph & 0x.
 
-* [Delta Exchange](https://www.delta.exchange/): Centralized exchange that has a lot more options underlying.
+* [Zeta](https://zeta.markets/) (Solana):
+  DeFi options protocol built using Serum order books.
 
-## Requirements
+## Run it from source code
 
-* Go v1.17 or later
-* Node v14 or later
-* Yarn
+Rainbow can be used as a [CLI](#run-the-cli) or with a [front-end](#makefile-for-server--web).
+
+### Requirements
+
+* Go v1.17+
+* Node v14+ (optional)
+* Yarn v1.20+ (optional)
+* Docker v20 (optional)
+* Podman v3 (optional)
+
+Rainbow can be used in the [CLI](#run-the-cli), not requiring Node and Yarn.
 
 [Snap](https://en.wikipedia.org/wiki/Snap_(package_manager)) provides a simple way to install these requirements on many Linux distributions:
 
@@ -55,38 +75,40 @@ Supported Options exchanges:
     go   version
     yarn versions
 
-On Debian/Ubuntu, the command `sudo apt install golang` may be for an older version.
-You can check that with `apt list --all-versions golang`.
-If this is your case, you may install Go v1.17 using a different package name:
+On Debian/Ubuntu, the command `sudo apt install golang` may install an older version.
+Check it with `apt list --all-versions golang`.
+To install a more recent Go version, you may try:
 
-    sudo apt remove  golang
+    sudo apt purge   golang
     sudo apt install golang-1.17
 
-## Clone
+The [Dockerfile](#container) can be used equally with Docker or Podman.
+
+### Clone the Rainbow Git repo
 
     git clone https://github.com/teal-finance/rainbow
     cd rainbow
 
-## CLI
+### Run the CLI
 
 The Rainbow project provides a Command Line Interface (CLI) to let users play from their terminal. The command `./cli` retrieves (few minutes) and prints a pretty nice table of all options.
 
-    go build ./cmd/cli && ./cli
+    go run ./cmd/cli
 
 ![CLI screenshot](doc/cli.jpg)
 
-## Makefile
+### Makefile for server & web
 
 See the `make help` [output](Makefile).
 
-### Build
+#### Build
 
     make build         # Build backend + frontend
     make server        # Build the backend only
     make build-front   # Build the frontend only
     make clean         # Clean all
 
-### Run
+#### Run
 
 The *run* targets do not depend on the above *build* targets.
 You do not need to *make build* before *make run*.
@@ -94,9 +116,7 @@ You do not need to *make build* before *make run*.
     make run           # Run the backend
     make run-front     # Run the frontend in dev mode
 
-### Container
-
-Use the container to reproduce some Prod. behaviors.
+#### Container
 
     make container-run  # Build and run backend + frontend
     make container-rm   # Stop and remove all
@@ -114,13 +134,13 @@ The two other *containers* targets are not needed to be invoked manually:
     make container-build  # Build the container image
     make container-stop   # Stop/remove the container
 
-The build parameters can be customized: :slightly_smiling_face:
+The *container* parameters can be customized: :slightly_smiling_face:
 
     make container-run expose=80 port=80 base=/rainbow/
 
-## Manual build/run of the server
+### Manual build & run
 
-### Back-end
+#### Back-end
 
 The front-end requires the server API.
 
@@ -130,7 +150,7 @@ The front-end requires the server API.
 
     go run ./cmd/server     # same as "make run"
 
-### Front-end
+#### Front-end
 
 To run the Vue3 front-end in dev mode.
 Similar to `make run-front`:
@@ -148,17 +168,16 @@ Same as `make frontend/dist`:
 
 Finally open <http://localhost:8090>
 
-## Manual build/run of the container
+### Manual build/run of the container
 
 This Git repo provides a [Dockerfile](Dockerfile) for a secured and light all-in-one container image: 30 MB.
 
-The image contains the hardened sever executable (with dynamic library)
-and the front-end static files.
+The image contains the hardened sever executable and the front-end static files.
 
 The container enables by default the CORS, the export ports and a rate limiter.
 Some of these features can be customized using environments variables.
 
-The Dockerfile supports Docker-20 and Podman-3. The following build configures CORS with `http://localhost:1111` and backend listening on port 2222:
+The following commands configures the server listening on port 2222 (published to port 1111) and front-end using CORS with `http://localhost:1111`.
 
     podman build --build-arg addr=http://localhost:1111 --build-arg port=2222 -t rainbow .
     podman stop rainbow # if already running in background
@@ -173,9 +192,9 @@ The above can be obtained with:
 
 See also the comments within the [Dockerfile](Dockerfile) for more information.
 
-## Server command line flags
+### Server command line flags
 
-Rainbow provides a complete HTTP server,
+Rainbow embeds a complete HTTP server,
 including a rate limiter, an export port (Prometheus monitoring),
 and more. For more details see the underlying project
 [Teal.Finance/Garcon](https://github.com/teal-finance/garcon/).
@@ -202,59 +221,163 @@ Usage of ./server:
     	Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
 
+### Join the team
+
+Interested on what we build. Please contact us:
+
+* GitHub [issue](https://github.com/teal-finance/rainbow/issues)
+* Teal.Finance[at]protonmail.com
+* Twitter [@TealFinance](https://twitter.com/TealFinance)
+
 ## API
+
+To test the API endpoints, run the back-end:
+
+    make run
+
+or using the container alternative:
+
+    make container-run expose=8090
 
 ### /v0/options
 
-List all the options and their order books: <http://localhost:8090/v0/options>
+The [/v0/options](http://localhost:8090/v0/options) endpoint accepts optional parameters.
+
+#### Filtering
+
+Progressive filtering:
+
+* [/v0/options/BTC](http://localhost:8090/v0/options/BTC) (only the BTC-based options)
+* [/v0/options/BTC/2022-04-29](http://localhost:8090/v0/options/BTC/2022-04-29) (only the BTC-based options expiring on 2022-04-29)
+* [/v0/options/BTC/2022-04-29/Deribit](http://localhost:8090/v0/options/BTC/2022-04-29/Deribit) (only the BTC-based options expiring on 2022-04-29 from Deribit)
+* [/v0/options/BTC/2022-04-29/Deribit/csv](http://localhost:8090/v0/options/BTC/2022-04-29/Deribit/csv) (the same but in a [CSV](https://wikiless.org/wiki/Comma-separated_values "Comma-Separated Values") file, see the [supported formats](#supported-formats))
+
+The general URL pattern:
+
+    /v0/options/{asset}/{expiry}/{provider}/{format}
+
+The API may be tested with [cURL](https://wikiless.org/wiki/cURL):
+
+    curl localhost:8090/v0/options
+
+    curl localhost:8090/v0/options/BTC
+
+    curl localhost:8090/v0/options/BTC/2022-04-29
+
+    curl localhost:8090/v0/options/BTC/2022-04-29/Deribit
+
+    curl localhost:8090/v0/options/BTC/2022-04-29/Deribit/csv
+
+#### Query string
+
+Moreover, the parameters can also be passed using the query string:
+
+* [/v0/options?asset=BTC&asset=ETH](http://localhost:8090/v0/options?asset=BTC&asset=ETH) (multiple underlying assets)
+* [/v0/options?asset=BTC&expiry=2022&provider=Deribit&format=csv](http://localhost:8090/v0/options?asset=BTC&expiry=2022&provider=Deribit&format=csv)
+
+#### Web form
+
+The API also supports the POST [form](https://wikiless.org/wiki/Application/x-www-form-urlencoded#The_application/x-www-form-urlencoded_type "application/x-www-form-urlencoded"):
+
+    curl localhost:8090/v0/options -d asset=BTC -d asset=ETH
+
+    curl localhost:8090/v0/options -d asset=BTC -d expiry=2022 -d provider=Deribit -d format=csv
+
+The POST [form](https://wikiless.org/wiki/Application/x-www-form-urlencoded#The_application/x-www-form-urlencoded_type "application/x-www-form-urlencoded") hides your query within the encrypted request body when using HTTPS.
+
+#### Awesome expiry filtering
+
+The expiry filtering matches for the beginning of the dates:
+
+* [/v0/options/ALL](http://localhost:8090/v0/options/ALL) for `ALL` options and any expiry date
+* [/v0/options/ALL/2022](http://localhost:8090/v0/options/ALL/2022) for expiry dates in 2022
+* [/v0/options/ALL/2022-04](http://localhost:8090/v0/options/ALL/2022-04) for expiry dates in April 2022
+* [/v0/options/ALL/2022-04-01](http://localhost:8090/v0/options/ALL/2022-04-01) for April 1st 2022
+
+#### Supported formats
+
+The `{format}` parameter is the last one at any position.
+
+* [/v0/options](http://localhost:8090/v0/options) (default is JSON in the browser)
+* [/v0/options/json](http://localhost:8090/v0/options/json) (download a file in JSON format)
+* [/v0/options/csv](http://localhost:8090/v0/options/csv) (CSV file)
+* [/v0/options/tsv](http://localhost:8090/v0/options/tsv) (TSV = [Tab-Separated Values](https://wikiless.org/wiki/Tab-separated_values))
+* [/v0/options/BTC/csv](http://localhost:8090/v0/options/BTC/csv) (only the BTC-based options in CSV)
+* [/v0/options/ALL/2022-06/csv](http://localhost:8090/v0/options/ALL/2022-06/csv) (all options expiring in June 2022 in CSV)
+
+The current supported formats are JSON, [CSV](https://wikiless.org/wiki/Comma-separated_values "Comma-Separated Values") and [TSV](https://wikiless.org/wiki/Tab-separated_values "Tab-Separated Values"). Depending on user requests, more formats may be supported such as [JSON-LD](https://github.com/piprate/json-gold), [Avro](https://github.com/linkedin/goavro), [Parquet](https://github.com/xitongsys/parquet-go), [DataFrame](https://github.com/rocketlaunchr/dataframe-go), [Excel](https://github.com/qax-os/excelize), [Google Sheets Docs](https://github.com/Iwark/spreadsheet)...
+
+#### HTTP header
+
+The "Accept" HTTP header is also supported:
+
+    curl localhost:8090/v0/options -H "Accept: application/json"
+
+    curl localhost:8090/v0/options -H "Accept: text/csv"
+
+    curl localhost:8090/v0/options -H "Accept: text/tsv"
+
+#### Example response in JSON format
 
 ```js
 {
-  "Name": "ETH-2021-10-29 23:59:59-3200-PUT",
-  "Expiry": "2021-10-29 23:59:59",
-  "Type": "PUT",
-  "Asset": "ETH",             // ETH, BTC, SOL
-  "Strike": 3200,
-  "ExchangeType": "DEX",      // CEX or DEX
-  "Chain": "Solana",          // Ethereum, Solana...
-  "Layer": "L1",
-  "Provider": "PsyOptions",   // Opyn, Lyra, Thales, Deribit, Psyoptions
-  "QuoteCurrency": "USDC" // ETH, BTC...
-  "Bid": [
+  "name": "ETH-2021-10-29 23:59:59-3200-PUT",
+  "expiry": "2021-10-29 23:59:59",
+  "type": "PUT",
+  "asset": "ETH",             // ETH, BTC, SOL
+  "strike": 3200,
+  "exchange": "DEX",          // Type: CEX or DEX
+  "chain": "Solana",          // Ethereum, Solana...
+  "layer": "L1",
+  "provider": "PsyOptions",   // Opyn, Lyra, Thales, Deribit, Psyoptions
+  "currency": "USDC"          // Quote currency: USDC, BTC...
+  "bid": [
     {
-      "Price": 13.3,
-      "Quantity": 5,
+      "px": 13.3,             // Abbreviation for "price"
+      "size": 5,              // Shorter variant of "quantity"
     },
     {
-      "Price": 13.1,
-      "Quantity": 10,
+      "px": 13.1,
+      "size": 10,
     }
   ],
-  "Ask": [
+  "ask": [
     {
-      "Price": 15.12,
-      "Quantity": 5,
+      "px": 15.12,
+      "size": 5,
     },
     {
-      "Price": 15.25,
-      "Quantity": 9,
+      "px": 15.25,
+      "size": 9,
     }
   ]
 }
 ```
 
-### /v0/options/cp
+#### Example response in CSV format
 
-List the options in Call/Put format: <http://localhost:8090/v0/options/cp>
+The CSV and TSV formats are limited to the two best order-books: Bid #1, Bid #2, Ask #1, Ask #2.
 
-Rainbow API is currently only used by its web front-end and has been influenced by
-the [BFF pattern](https://blog.bitsrc.io/e4fa965128bf) (Backend for Frontend pattern).
-This endpoints aims simplifying the front-end processing.
+```csv
+$ curl -s localhost:8090/v0/options/csv
+Name,Expiry,Asset,Currency,Strike,Type,Provider,Layer,Chain,Bid Price #1,Bid Size #1,Bid Price #2,Bid Size #2,Ask Price #1,Ask Size #1,Ask Price #2,Ask Size #2
+SOL-2022-04-01 08:00:00-120-Call,2022-04-01 08:00:00,SOL,USDC,120,CALL,Zeta,L1,Solana,0.9238,285.24,0.73,300,1.0463,285.24,1.1,300
+SOL-2022-04-01 08:00:00-130-Call,2022-04-01 08:00:00,SOL,USDC,130,CALL,Zeta,L1,Solana,0.2187,285.24,0.09,300,0.3486,285.24,0.37,300
+BTC-29APR22-40000-P,2022-04-29 08:00:00,BTC,BTC,40000,PUT,Deribit,–,–,736.51598,62.2,712.7574000000001,28.7,807.7917200000002,118.2,831.5503000000001,30.3
+BTC-8APR22-44000-P,2022-04-08 08:00:00,BTC,BTC,44000,PUT,Deribit,–,–,617.72308,0.1,593.9645,49.8,641.48166,32.5,665.2402400000001,31.1
+BTC-1APR22-42000-P,2022-04-01 08:00:00,BTC,BTC,42000,PUT,Deribit,–,–,71.27574000000001,0.1,47.517160000000004,75.4,95.03432000000001,82.7,118.79290000000002,50.9
+```
+
+### /v0/bff/cp
+
+This endpoint has been inspired by the [BFF pattern](https://blog.bitsrc.io/e4fa965128bf)
+(Backend for Frontend pattern) to simplify the front-end processing.
+This endpoint should not used by API users because we may drop it in a further release.
 
 ```js
 { "rows":[
     { "asset": "ETH",
-      "expiry": "Dec 31 08:00",
+      "expiry": "Dec 31",
       "provider": "Deribit",
       "call": { "bid": {"px": 1805, "size":  24},
                 "ask": {"px": 1830, "size": 459}},
@@ -262,9 +385,8 @@ This endpoints aims simplifying the front-end processing.
       "put":  { "bid": {"px": 1305, "size":  26},
                 "ask": {"px": 1330, "size":  37}}
     },
-
     { "asset": "ETH",
-      "expiry": "Dec 31 08:00",
+      "expiry": "Dec 31",
       "provider": "Deribit",
       "call": { "bid": {"px": 1140, "size": 258},
                 "ask": {"px": 1160, "size":  33}},
@@ -272,17 +394,33 @@ This endpoints aims simplifying the front-end processing.
       "put":  { "bid": {"px": 1235, "size":  80},
                 "ask": {"px":    0, "size":   0}}
     },
-
     // ...
-
     { "asset": "BTC",
-      "expiry": "Nov 26 08:00",
+      "expiry": "Nov 26",
       "provider": "Deribit",
       "call": { "bid": {"px": 2045, "size":  7.5},
-                "ask": {"px": 2105, "size":  5.3}},
-      "strike":50000,
+                "ask": {"px": 2105, "size":  5.3},
+      "strike": 50000,
       "put":  { "bid": {"px":  125, "size": 27.2},
                 "ask": {"px":  135, "size": 70.2}}
     }
 ]}
 ```
+
+### /v0/graphql
+
+This endpoint is currently designed to meet the requirements of the frontend.
+This endpoint should not yet used by API users because we may drop it in a further release.
+
+### /v0/graphiql
+
+This interactive GraphQL endpoint is currently used in developer mode to test the front-end queries.
+This endpoint should not yet used by API users because we may drop it in a further release.
+
+### Need something else about the API?
+
+Please contact us and join our efforts to build an even awesomer CeDeFi options API:
+
+* GitHub [issue](https://github.com/teal-finance/rainbow/issues)
+* Teal.Finance[at]protonmail.com
+* Twitter [@TealFinance](https://twitter.com/TealFinance)

@@ -73,6 +73,14 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r.Route("/v0", func(r chi.Router) {
 		h := api.APIHandler{Service: s}
 
+		// HTTP API similar to REST
+		r.HandleFunc("/options", h.Options)
+		r.HandleFunc("/options/{asset}", h.Options)
+		r.HandleFunc("/options/{asset}/{expiry}", h.Options)
+		r.HandleFunc("/options/{asset}/{expiry}/{provider}", h.Options)
+		r.HandleFunc("/options/{asset}/{expiry}/{provider}/{format}", h.Options)
+		r.Get("/bff/cp", h.CallPut)
+
 		// GraphQL API (and interactive API in developer mode)
 		r.Mount("/graphql", h.GraphQLHandler())
 		if *dev {
