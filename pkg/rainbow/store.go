@@ -7,5 +7,6 @@ type Store interface {
 
 type StoreArgs struct {
 	Asset     []string
+	Expiries  []string
 	Providers []string
 }
