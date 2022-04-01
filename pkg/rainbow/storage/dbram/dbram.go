@@ -57,7 +57,7 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 	n := 0
 	for provider, o := range db.optionsByProvider {
 		if len(args.Providers) > 0 {
-			if !is(provider, args.Providers) {
+			if !in(provider, args.Providers) {
 				continue
 			}
 		}
@@ -68,7 +68,7 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 	options := make([]rainbow.Option, 0, n)
 	for provider, o := range db.optionsByProvider {
 		if len(args.Providers) > 0 {
-			if !is(provider, args.Providers) {
+			if !in(provider, args.Providers) {
 				continue
 			}
 		}
@@ -104,7 +104,7 @@ func contains(asset string, subStrings []string) bool {
 	return false
 }
 
-func is(provider string, wanted []string) bool {
+func in(provider string, wanted []string) bool {
 	for _, w := range wanted {
 		if w == provider {
 			return true
