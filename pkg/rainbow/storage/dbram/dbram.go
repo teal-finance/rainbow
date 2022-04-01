@@ -55,42 +55,48 @@ func (db *DB) insertOption(o rainbow.Option) {
 
 func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 	n := 0
-	for _, o := range db.optionsByProvider {
+	for provider, o := range db.optionsByProvider {
+		if len(args.Providers) > 0 {
+			if !in(provider, args.Providers) {
+				continue
+			}
+		}
+
 		n += len(o)
 	}
 
 	options := make([]rainbow.Option, 0, n)
-	for _, o := range db.optionsByProvider {
+	for provider, o := range db.optionsByProvider {
+		if len(args.Providers) > 0 {
+			if !in(provider, args.Providers) {
+				continue
+			}
+		}
+
 		options = append(options, o...)
 	}
 
-	filtered := make([]rainbow.Option, 0, n)
-
+	i := 0
 	for _, o := range options {
 		if len(args.Asset) > 0 {
-			if !containsAsset(o.Asset, args.Asset) {
+			if !contains(o.Asset, args.Asset) {
 				continue
 			}
 		}
 
-		if len(args.Providers) > 0 {
-			if !contains(o.Provider, args.Providers) {
-				continue
-			}
-		}
-
-		filtered = append(filtered, o)
+		options[i] = o
+		i++
 	}
 
-	return filtered, nil
+	return options[:i], nil
 }
 
 // TODO go1.18: use generics with constraint comparable.
-func containsAsset(elem string, arr []string) bool {
-	for _, x := range arr {
+func contains(asset string, subStrings []string) bool {
+	for _, substr := range subStrings {
 		// use of strings.Contains because we allow some cases like WETH as ETH
 		// TODO: sanitize data before put it in db
-		if strings.Contains(elem, x) {
+		if strings.Contains(asset, substr) {
 			return true
 		}
 	}
@@ -98,9 +104,9 @@ func containsAsset(elem string, arr []string) bool {
 	return false
 }
 
-func contains(elem string, arr []string) bool {
-	for _, x := range arr {
-		if x == elem {
+func in(provider string, wanted []string) bool {
+	for _, w := range wanted {
+		if w == provider {
 			return true
 		}
 	}
