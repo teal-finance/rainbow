@@ -84,6 +84,12 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 			}
 		}
 
+		if len(args.Expiries) > 0 {
+			if !startsWith(o.Expiry, args.Expiries) {
+				continue
+			}
+		}
+
 		options[i] = o
 		i++
 	}
@@ -107,6 +113,16 @@ func contains(asset string, subStrings []string) bool {
 func in(provider string, wanted []string) bool {
 	for _, w := range wanted {
 		if w == provider {
+			return true
+		}
+	}
+
+	return false
+}
+
+func startsWith(expiry string, prefixes []string) bool {
+	for _, prefix := range prefixes {
+		if strings.HasPrefix(expiry, prefix) {
 			return true
 		}
 	}
