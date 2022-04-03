@@ -48,6 +48,7 @@ func AllProvidersWithAlert(o Oracle) []rainbow.Provider {
 		withAlert{zerox.Provider{}, o},
 		withAlert{deribit.Provider{}, o},
 		withAlert{lyra.Provider{}, o},
+		withAlert{deltaexchange.Provider{}, o},
 		withAlert{psyoptions.Provider{}, o},
 	}
 }
