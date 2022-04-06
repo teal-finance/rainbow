@@ -73,16 +73,19 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r.Route("/v0", func(r chi.Router) {
 		h := api.APIHandler{Service: s}
 
-		// HTTP API similar to REST
-		r.HandleFunc("/options", h.Options)
-		r.HandleFunc("/options/{asset}", h.Options)
-		r.HandleFunc("/options/{asset}/{expiry}", h.Options)
-		r.HandleFunc("/options/{asset}/{expiry}/{provider}", h.Options)
-		r.HandleFunc("/options/{asset}/{expiry}/{provider}/{format}", h.Options)
-		r.Get("/bff/cp", h.CallPut)
+		// HTTP API
+		r.With(g.JWT.Vet).Route("/options", func(r chi.Router) {
+			r.HandleFunc("/", h.Options)
+			r.HandleFunc("/{asset}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}/{provider}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}", h.Options)
+		})
+
+		r.With(g.JWT.Chk).Get("/bff/cp", h.CallPut)
 
 		// GraphQL API (and interactive API in developer mode)
-		r.Mount("/graphql", h.GraphQLHandler())
+		r.With(g.JWT.Chk).Mount("/graphql", h.GraphQLHandler())
 		if *dev {
 			r.Mount("/graphiql", api.InteractiveGQLHandler("/v0/graphql"))
 		}
