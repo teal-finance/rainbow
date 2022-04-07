@@ -1,15 +1,34 @@
 package api
 
 import (
+	"encoding/json"
 	"log"
 	"math"
+	"net/http"
 	"time"
 
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-type APIHandler struct {
-	Service *rainbow.Service
+func (h APIHandler) CallPut(w http.ResponseWriter, r *http.Request) {
+	options, err := h.Service.Options(rainbow.StoreArgs{})
+	if err != nil {
+		log.Print("ERROR Options ", err)
+		http.Error(w, "No Content", http.StatusNoContent)
+
+		return
+	}
+
+	cp := buildCallPut(options)
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(cp); err != nil {
+		log.Print("ERROR CallPut ", err)
+		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
+
+		return
+	}
 }
 
 type Row struct {

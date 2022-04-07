@@ -14,14 +14,23 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/mpvl/unique"
-
+	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
+type APIHandler struct {
+	Service *rainbow.Service
+}
+
 func (h APIHandler) Options(w http.ResponseWriter, r *http.Request) {
-	sa, format := query(r)
+	sa, format, err := query(r)
+	if err != nil {
+		log.Print("WRN Options ", err)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+
+		return
+	}
 
 	options, _ := h.Service.Options(sa)
 	if len(options) == 0 {
@@ -30,9 +39,74 @@ func (h APIHandler) Options(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := h.writeOptions(w, options, sa, format)
+	err = h.writeOptions(w, options, sa, format)
 	if err != nil {
-		log.Printf("WRN writeOptions options=%v sa=%v format=%v err=%v", len(options), sa, format, err)
+		log.Printf("WRN Options options=%v sa=%v format=%v err=%v", len(options), sa, format, err)
+	}
+}
+
+func query(r *http.Request) (sa rainbow.StoreArgs, format string, err error) {
+	if err = r.ParseForm(); err != nil {
+		return sa, "", err
+	}
+
+	assets, err := garcon.Values(r, "asset")
+	if err != nil {
+		return sa, "", err
+	}
+
+	expiries, err := garcon.Values(r, "expiry")
+	if err != nil {
+		return sa, "", err
+	}
+
+	providers, err := garcon.Values(r, "provider")
+	if err != nil {
+		return sa, "", err
+	}
+
+	format, err = garcon.Value(r, "format", "Accept")
+	if err != nil {
+		return sa, "", err
+	}
+
+	unique.Sort(unique.StringSlice{P: &assets})
+	unique.Sort(unique.StringSlice{P: &expiries})
+	unique.Sort(unique.StringSlice{P: &providers})
+
+	specialValues(&format, &assets)
+	specialValues(&format, &expiries)
+	specialValues(&format, &providers)
+
+	sa = rainbow.StoreArgs{
+		Assets:    assets,
+		Expiries:  expiries,
+		Providers: providers,
+	}
+
+	return sa, format, nil
+}
+
+func specialValues(format *string, values *[]string) {
+	i := 0
+	for _, v := range *values {
+		switch v {
+		case "", "ALL":
+			continue
+
+		case "csv", "tsv", "json":
+			*format = v
+			continue
+		}
+
+		(*values)[i] = v
+		i++
+	}
+
+	if i == 0 {
+		*values = nil
+	} else {
+		*values = (*values)[:i]
 	}
 }
 
@@ -164,104 +238,6 @@ func (h APIHandler) replyCSV(w http.ResponseWriter, options []rainbow.Option, co
 	}
 
 	return nil
-}
-
-func (h APIHandler) CallPut(w http.ResponseWriter, r *http.Request) {
-	options, err := h.Service.Options(rainbow.StoreArgs{})
-	if err != nil {
-		log.Print("ERROR Options ", err)
-		http.Error(w, "No Content", http.StatusNoContent)
-
-		return
-	}
-
-	cp := buildCallPut(options)
-
-	w.Header().Set("Content-Type", "application/json")
-
-	if err := json.NewEncoder(w).Encode(cp); err != nil {
-		log.Print("ERROR CallPut ", err)
-		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
-
-		return
-	}
-}
-
-func query(r *http.Request) (sa rainbow.StoreArgs, format string) {
-	r.ParseForm()
-
-	assets := values(r, "asset")
-	expiries := values(r, "expiry")
-	providers := values(r, "provider")
-
-	format = value(r, "format", "Accept")
-
-	unique.Sort(unique.StringSlice{P: &assets})
-	unique.Sort(unique.StringSlice{P: &expiries})
-	unique.Sort(unique.StringSlice{P: &providers})
-
-	specialValues(&format, &assets)
-	specialValues(&format, &expiries)
-	specialValues(&format, &providers)
-
-	sa = rainbow.StoreArgs{
-		Assets:    assets,
-		Expiries:  expiries,
-		Providers: providers,
-	}
-
-	return sa, format
-}
-
-// value returns the /endpoint/{key} (URL path)
-// else the "key" form (HTTP body)
-// else the "key" query string (URL)
-// else the HTTP header.
-func value(r *http.Request, key, header string) string {
-	v := chi.URLParam(r, key)
-
-	if v == "" {
-		v = r.FormValue(key)
-	}
-
-	if v == "" {
-		v = r.Header.Get(header)
-	}
-
-	return v
-}
-
-func values(r *http.Request, key string) []string {
-	form := r.Form[key]
-
-	if v := chi.URLParam(r, key); v != "" {
-		return append(form, v)
-	}
-
-	return form
-}
-
-func specialValues(format *string, values *[]string) {
-	i := 0
-	for _, v := range *values {
-		switch v {
-		case "", "ALL":
-			continue
-
-		case "csv", "tsv", "json":
-			*format = v
-			continue
-		}
-
-		(*values)[i] = v
-		i++
-	}
-
-	if i == 0 {
-		*values = nil
-	} else {
-		*values = (*values)[:i]
-	}
 }
 
 // setFilename builds the CSV filename.
