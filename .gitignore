@@ -1,7 +1,8 @@
 .DS_Store
 .vscode
-/server
 *.log
+/.golangci.yml
 /dev
 /doc/ignore
-/.golangci.yml
+/go.work
+/server

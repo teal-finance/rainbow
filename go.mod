@@ -2,8 +2,6 @@ module github.com/teal-finance/rainbow
 
 go 1.18
 
-// replace github.com/teal-finance/garcon => ../garcon
-
 replace github.com/dfuse-io/logging => github.com/streamingfast/logging v0.0.0-20220304214715-bc750a74b424
 
 require (
