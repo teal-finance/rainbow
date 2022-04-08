@@ -103,10 +103,10 @@ See the `make help` [output](Makefile).
 
 #### Build
 
-    make build         # Build backend + frontend
-    make server        # Build the backend only
-    make build-front   # Build the frontend only
-    make clean         # Clean all
+    make all     # Build both backend and frontend
+    make server  # Build the backend only
+    make front   # Build the frontend only
+    make clean   # Clean all
 
 #### Run
 
@@ -115,6 +115,10 @@ You do not need to *make build* before *make run*.
 
     make run           # Run the backend
     make run-front     # Run the frontend in dev mode
+
+To let Rainbow backend serving the static website, as in production:
+
+    make clean -j && make all -j && make run
 
 #### Container
 
