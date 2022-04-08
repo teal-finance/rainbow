@@ -795,6 +795,7 @@ github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7 h1:epCh84lMvA70
 github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7/go.mod h1:q4W45IWZaF22tdD+VEXcAWRA037jwmWEB5VWYORlTpc=
 github.com/teal-finance/garcon v0.12.5 h1:0LKTNIl7AGzcUNQUk8XAqTwAzQxKpwcDYKmj2e9XQ6I=
 github.com/teal-finance/garcon v0.12.5/go.mod h1:iLZHdaQI5Q/5uaS9LDswTN+zymj1Mc7+0GctHwOFP8E=
+github.com/teal-finance/garcon v0.12.6/go.mod h1:iLZHdaQI5Q/5uaS9LDswTN+zymj1Mc7+0GctHwOFP8E=
 github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf/go.mod h1:M8agBzgqHIhgj7wEn9/0hJUZcrvt9VY+Ln+S1I5Mha0=
 github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 h1:3SNcvBmEPE1YlB1JpVZouslJpI3GBNoiqW7+wb0Rz7w=
 github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125/go.mod h1:M8agBzgqHIhgj7wEn9/0hJUZcrvt9VY+Ln+S1I5Mha0=
