@@ -13,6 +13,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/webserver"
 
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -68,7 +69,14 @@ func main() {
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
 
-	r.With(g.JWT.Set).Mount("/", WebHandler(g, *wwwDir))
+	// Static website: set the cookie only when visiting index.html
+	web := webserver.WebServer{Dir: *wwwDir, ResErr: g.ResErr}
+	r.With(g.JWT.Set).NotFound(web.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
+	r.Get("/favicon.ico", web.ServeFile("favicon.ico", "image/x-icon"))
+	r.Get("/favicon.png", web.ServeFile("favicon.png", "image/png"))
+	r.Get("/preview.jpg", web.ServeFile("preview.jpg", "image/jpeg"))
+	r.With(g.JWT.Chk).Get("/js/*", web.ServeDir("text/javascript; charset=utf-8"))
+	r.With(g.JWT.Chk).Get("/assets/*", web.ServeAssets())
 
 	r.Route("/v0", func(r chi.Router) {
 		h := api.APIHandler{Service: s}
