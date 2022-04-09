@@ -2,9 +2,9 @@
 help:
 	# Usage: 'make <target>' where <target> is one of:
 	#
-	#   server         Build the backend
-	#   build-front    Build the frontend, shortcut for "make frontend/dist"
-	#   build          Build all
+	#   all            Build both backend and frontend
+	#   server         Build the backend only
+	#   front          Build the frontend only
 	#   clean          Clean all
 	#
 	#   run            Run the backend
@@ -21,16 +21,16 @@ help:
 clean:
 	rm -fr server frontend/dist
 
-.PHONY: build
-build: server frontend/dist
+.PHONY: all
+all: server frontend/dist
 
 server:
 	go build ./cmd/server
 
-.PHONY: build-front
-build-front: frontend/dist
+.PHONY: front
+front: frontend/dist
 
-frontend/dist:
+frontend/dist: frontend/src/*
 	cd frontend && yarn && yarn build && yarn compress
 
 .PHONY: run

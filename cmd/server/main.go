@@ -11,13 +11,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/friendsofgo/graphiql"
 	"github.com/go-chi/chi/v5"
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/webserver"
 
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
-	"github.com/teal-finance/rainbow/pkg/rainbow/api/apigraphql"
+	"github.com/teal-finance/rainbow/pkg/rainbow/api"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
@@ -69,14 +69,35 @@ func main() {
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
 
-	graphiqlHandler, err := graphiql.NewGraphiqlHandler("/graphql")
-	if err != nil {
-		panic(err)
-	}
+	// Static website: set the cookie only when visiting index.html
+	web := webserver.WebServer{Dir: *wwwDir, ResErr: g.ResErr}
+	r.With(g.JWT.Set).NotFound(web.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
+	r.Get("/favicon.ico", web.ServeFile("favicon.ico", "image/x-icon"))
+	r.Get("/favicon.png", web.ServeFile("favicon.png", "image/png"))
+	r.Get("/preview.jpg", web.ServeFile("preview.jpg", "image/jpeg"))
+	r.With(g.JWT.Chk).Get("/js/*", web.ServeDir("text/javascript; charset=utf-8"))
+	r.With(g.JWT.Chk).Get("/assets/*", web.ServeAssets())
 
-	r.With(g.JWT.Set).Mount("/", WebHandler(g, *wwwDir))
-	r.With(g.JWT.Chk).Mount("/graphql", apigraphql.Handler(s))
-	r.With(g.JWT.Chk).Mount("/graphiql", graphiqlHandler)
+	r.Route("/v0", func(r chi.Router) {
+		h := api.APIHandler{Service: s}
+
+		// HTTP API
+		r.With(g.JWT.Vet).Route("/options", func(r chi.Router) {
+			r.HandleFunc("/", h.Options)
+			r.HandleFunc("/{asset}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}/{provider}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}", h.Options)
+		})
+
+		r.With(g.JWT.Chk).Get("/bff/cp", h.CallPut)
+
+		// GraphQL API (and interactive API in developer mode)
+		r.With(g.JWT.Chk).Mount("/graphql", h.GraphQLHandler())
+		if *dev {
+			r.Mount("/graphiql", api.InteractiveGQLHandler("/v0/graphql"))
+		}
+	})
 
 	return r
 }

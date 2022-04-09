@@ -78,8 +78,8 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 
 	i := 0
 	for _, o := range options {
-		if len(args.Asset) > 0 {
-			if !contains(o.Asset, args.Asset) {
+		if len(args.Assets) > 0 {
+			if !contains(o.Asset, args.Assets) {
 				continue
 			}
 		}

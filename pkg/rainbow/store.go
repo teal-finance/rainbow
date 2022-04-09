@@ -6,7 +6,7 @@ type Store interface {
 }
 
 type StoreArgs struct {
-	Asset     []string
+	Assets    []string
 	Expiries  []string
 	Providers []string
 }

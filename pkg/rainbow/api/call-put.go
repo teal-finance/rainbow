@@ -1,15 +1,34 @@
-package apigraphql
+package api
 
 import (
+	"encoding/json"
 	"log"
 	"math"
+	"net/http"
 	"time"
 
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-type CallPut struct {
-	Rows []Row `json:"rows"`
+func (h APIHandler) CallPut(w http.ResponseWriter, r *http.Request) {
+	options, err := h.Service.Options(rainbow.StoreArgs{})
+	if err != nil {
+		log.Print("ERROR Options ", err)
+		http.Error(w, "No Content", http.StatusNoContent)
+
+		return
+	}
+
+	cp := buildCallPut(options)
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(cp); err != nil {
+		log.Print("ERROR CallPut ", err)
+		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
+
+		return
+	}
 }
 
 type Row struct {
@@ -28,11 +47,14 @@ type Limit struct {
 }
 
 type StrOrder struct {
+	// Price is often abbreviate "px" used by many Centralized Exchanges
+	// such as in the FIX protocol: https://fiximate.fixtrading.org/legacy/en/FIX.5.0SP2/abbreviations.html
 	Price string `json:"px"`
-	Size  string `json:"size"`
+	// Size is a shorter synonym for "Quantity".
+	Size string `json:"size"`
 }
 
-func buildCallPut(options []rainbow.Option) CallPut {
+func buildCallPut(options []rainbow.Option) []Row {
 	rows := make([]Row, 0, len(options)/2)
 
 	for asset, optionsSameAsset := range groupByAsset(options) {
@@ -68,7 +90,7 @@ func buildCallPut(options []rainbow.Option) CallPut {
 		}
 	}
 
-	return CallPut{Rows: rows}
+	return rows
 }
 
 func groupByAsset(options []rainbow.Option) (assetToOptions map[string][]rainbow.Option) {
