@@ -85,8 +85,11 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 		r.With(g.JWT.Vet).Route("/options", func(r chi.Router) {
 			r.HandleFunc("/", h.Options)
 			r.HandleFunc("/{asset}", h.Options)
+			r.HandleFunc("/{asset}/", h.Options)
 			r.HandleFunc("/{asset}/{expiry}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}/", h.Options)
 			r.HandleFunc("/{asset}/{expiry}/{provider}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}/{provider}/", h.Options)
 			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}", h.Options)
 		})
 
