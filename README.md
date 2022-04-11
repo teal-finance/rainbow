@@ -8,7 +8,7 @@ Rainbow is live at [**teal.finance/rainbow**](https://teal.finance/rainbow/)
 Please give any feedback:
 
 * GitHub [issue](https://github.com/teal-finance/rainbow/issues) or
-* Contact us at Teal.Finance[at]protonmail.com or
+* Contact us at Teal.Finance[at]pm.me or
 * Twitter [@TealFinance](https://twitter.com/TealFinance).
 
 ## Motivations
@@ -230,7 +230,7 @@ Usage of ./server:
 Interested on what we build. Please contact us:
 
 * GitHub [issue](https://github.com/teal-finance/rainbow/issues)
-* Teal.Finance[at]protonmail.com
+* Teal.Finance[at]pm.me
 * Twitter [@TealFinance](https://twitter.com/TealFinance)
 
 ## API
@@ -433,5 +433,5 @@ This endpoint should not yet used by API users because we may drop it in a furth
 Please contact us and join our efforts to build awesome tools:
 
 * GitHub [issue](https://github.com/teal-finance/rainbow/issues)
-* Teal.Finance[at]protonmail.com
+* Teal.Finance[at]pm.me
 * Twitter [@TealFinance](https://twitter.com/TealFinance)
