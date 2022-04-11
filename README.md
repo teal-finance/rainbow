@@ -428,9 +428,9 @@ This endpoint should not yet used by API users because we may drop it in a furth
 This interactive GraphQL endpoint is currently used in developer mode to test the front-end queries.
 This endpoint should not yet used by API users because we may drop it in a further release.
 
-### Need something else about the API?
+### Need something else?
 
-Please contact us and join our efforts to build an even awesomer CeDeFi options API:
+Please contact us and join our efforts to build awesome tools:
 
 * GitHub [issue](https://github.com/teal-finance/rainbow/issues)
 * Teal.Finance[at]protonmail.com
