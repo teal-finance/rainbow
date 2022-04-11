@@ -309,7 +309,20 @@ The `{format}` parameter is the last one at any position.
 * [/v0/options/BTC/csv](http://localhost:8090/v0/options/BTC/csv) (only the BTC-based options in CSV)
 * [/v0/options/ALL/2022-06/csv](http://localhost:8090/v0/options/ALL/2022-06/csv) (all options expiring in June 2022 in CSV)
 
-The current supported formats are JSON, [CSV](https://wikiless.org/wiki/Comma-separated_values "Comma-Separated Values") and [TSV](https://wikiless.org/wiki/Tab-separated_values "Tab-Separated Values"). Depending on user requests, more formats may be supported such as [JSON-LD](https://github.com/piprate/json-gold), [Avro](https://github.com/linkedin/goavro), [Parquet](https://github.com/xitongsys/parquet-go), [DataFrame](https://github.com/rocketlaunchr/dataframe-go), [Excel](https://github.com/qax-os/excelize), [Google Sheets Docs](https://github.com/Iwark/spreadsheet)...
+The current supported formats are JSON,
+[CSV](https://wikiless.org/wiki/Comma-separated_values "Comma-Separated Values") and
+[TSV](https://wikiless.org/wiki/Tab-separated_values "Tab-Separated Values").
+Depending on user requests, more formats may be supported such as
+[JSON-LD](https://github.com/piprate/json-gold "JSON for Linked Data"),
+[JSON Lines](https://jsonlines.org/examples/ "JSONL") (or
+[NDJSON](https://github.com/ndjson/ndjson.github.io/issues/1#issuecomment-109935996 "Newline-Delimited JSON"), see
+[JSON streaming](https://wikiless.org/wiki/JSON%20streaming#Line-delimited_JSON)),
+[Avro](https://github.com/linkedin/goavro),
+[Parquet](https://github.com/xitongsys/parquet-go),
+[DataFrame](https://github.com/rocketlaunchr/dataframe-go),
+[Excel](https://github.com/qax-os/excelize),
+[Google Sheets Docs](https://github.com/Iwark/spreadsheet)
+…
 
 #### HTTP header
 
