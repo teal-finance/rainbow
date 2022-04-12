@@ -2,6 +2,9 @@ package main
 
 type Arb struct {
 	Type         string `json:"type"` // CALL / PUT
+	Strike       float64
+	Expiry       string `json:"expiry"`
+	Asset        string `json:"asset"`
 	BuyQ         float64
 	BuyPx        float64
 	BuyProvider  string
@@ -28,6 +31,9 @@ func buylowsellhigh(blocks Blocks) Arbs {
 				if len(opt.Ask) != 0 && len(o.Bid) != 0 && opt.Ask[0].Price < o.Bid[0].Price {
 					arbs = append(arbs, Arb{
 						Type:         o.Type,
+						Strike:       block.Strike,
+						Expiry:       block.Expiry,
+						Asset:        block.Asset,
 						BuyPx:        opt.Ask[0].Price,
 						BuyQ:         opt.Ask[0].Size,
 						BuyProvider:  opt.Provider,
@@ -38,11 +44,13 @@ func buylowsellhigh(blocks Blocks) Arbs {
 					})
 				} else if len(opt.Bid) != 0 && len(o.Ask) != 0 && opt.Bid[0].Price > o.Ask[0].Price {
 					arbs = append(arbs, Arb{
-						Type:        o.Type,
-						BuyPx:       o.Ask[0].Price,
-						BuyQ:        o.Ask[0].Size,
-						BuyProvider: o.Provider,
-
+						Type:         o.Type,
+						Strike:       block.Strike,
+						Expiry:       block.Expiry,
+						Asset:        block.Asset,
+						BuyPx:        o.Ask[0].Price,
+						BuyQ:         o.Ask[0].Size,
+						BuyProvider:  o.Provider,
 						SellPx:       opt.Bid[0].Price,
 						SellQ:        opt.Bid[0].Size,
 						SellProvider: opt.Provider,

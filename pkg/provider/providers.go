@@ -26,10 +26,10 @@ func AllProviders() []rainbow.Provider {
 	// used by zeta and psy
 	return []rainbow.Provider{
 		zetamarkets.Provider{},
-		/*zerox.Provider{},*/
-		//deribit.Provider{},
+		zerox.Provider{},
+		deribit.Provider{},
 		lyra.Provider{},
-		//deltaexchange.Provider{},
+		deltaexchange.Provider{},
 		psyoptions.Provider{},
 	}
 }
