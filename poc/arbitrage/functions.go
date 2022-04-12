@@ -16,18 +16,6 @@ type Block struct {
 	Options []rainbow.Option
 }
 
-type Arb struct {
-	Type         string `json:"type"` // CALL / PUT
-	BuyQ         float64
-	BuyPx        float64
-	BuyProvider  string
-	SellQ        float64
-	SellPx       float64
-	SellProvider string
-	SellM        float64
-	ROI          float64 //percentage of benef
-}
-
 func buildCallPut(options []rainbow.Option) Blocks {
 	blocks := Blocks{}
 	for asset, optionsSameAsset := range groupByAsset(options) {

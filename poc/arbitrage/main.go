@@ -17,6 +17,7 @@ func main() {
 		panic(err)
 	}
 	b := buildCallPut(options)
-	spew.Dump(b)
+	arbs := buylowsellhigh(b)
+	spew.Dump(arbs)
 
 }
