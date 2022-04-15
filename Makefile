@@ -24,8 +24,14 @@ clean:
 .PHONY: all
 all: server frontend/dist
 
-server:
-	go build ./cmd/server
+server: go.sum
+	go build -o $@ ./cmd/server
+
+go.mod:
+	go mod tidy
+	go mod verify
+
+go.sum: go.mod
 
 .PHONY: front
 front: frontend/dist
@@ -34,7 +40,7 @@ frontend/dist: frontend/src/*
 	cd frontend && yarn && yarn build && yarn compress
 
 .PHONY: run
-run:
+run: go.sum
 	go run ./cmd/server
 
 .PHONY: run-front
