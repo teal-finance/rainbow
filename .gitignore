@@ -5,4 +5,5 @@
 /dev
 /doc/ignore
 /go.work
+/go.work.sum
 /server
