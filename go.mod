@@ -2,11 +2,10 @@ module github.com/teal-finance/rainbow
 
 go 1.18
 
-replace github.com/dfuse-io/logging => github.com/streamingfast/logging v0.0.0-20220304214715-bc750a74b424
+replace github.com/dfuse-io/logging => github.com/streamingfast/logging v0.0.0-20220405224725-2755dab2ce75
 
 require (
 	github.com/Khan/genqlient v0.4.0
-	github.com/davecgh/go-spew v1.1.1
 	github.com/ethereum/go-ethereum v1.10.17
 	github.com/friendsofgo/graphiql v0.2.2
 	github.com/gagliardetto/binary v0.6.1
@@ -17,19 +16,21 @@ require (
 	github.com/gookit/color v1.5.0
 	github.com/graphql-go/graphql v0.8.0
 	github.com/graphql-go/handler v0.2.3
-	github.com/jedib0t/go-pretty/v6 v6.3.0
+	github.com/jedib0t/go-pretty/v6 v6.3.1
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de
 	github.com/ryanuber/columnize v2.1.2+incompatible
+	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1
 	github.com/stretchr/testify v1.7.1
-	github.com/teal-finance/garcon v0.12.6
+	github.com/teal-finance/garcon v0.12.7
 )
 
 require (
-	contrib.go.opencensus.io/exporter/stackdriver v0.13.10 // indirect
+	contrib.go.opencensus.io/exporter/stackdriver v0.13.11 // indirect
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	github.com/GeertJohan/go.rice v1.0.2 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
+	github.com/acmacalister/skittles v0.0.0-20160609003031-7423546701e1 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/alexflint/go-arg v1.4.3 // indirect
 	github.com/alexflint/go-scalar v1.1.0 // indirect
@@ -40,6 +41,7 @@ require (
 	github.com/btcsuite/btcd/btcec/v2 v2.1.3 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/daaku/go.zipexe v1.0.1 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
 	github.com/dfuse-io/logging v0.0.0-20220405224725-2755dab2ce75 // indirect
@@ -48,6 +50,7 @@ require (
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -86,6 +89,7 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 // indirect
 	github.com/streamingfast/logging v0.0.0-20210908162127-bdc5856d5341 // indirect
+	github.com/teal-finance/quid v0.0.0-20220414232549-a3004107fdec // indirect
 	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 // indirect
 	github.com/tidwall/gjson v1.14.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
@@ -104,13 +108,13 @@ require (
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
-	golang.org/x/crypto v0.0.0-20220408190544-5352b0902921 // indirect
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
-	golang.org/x/sys v0.0.0-20220408201424-a24fb2fb8a0f // indirect
-	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
-	golang.org/x/time v0.0.0-20220224211638-0e9765cccd65 // indirect
+	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
+	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
+	golang.org/x/time v0.0.0-20220411224347-583f2d630306 // indirect
 	golang.org/x/tools v0.1.10 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
+	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
