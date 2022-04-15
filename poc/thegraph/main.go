@@ -7,7 +7,7 @@
 package main
 
 import (
-	"github.com/davecgh/go-spew/spew"
+	"github.com/spewerspew/spew"
 
 	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 )
