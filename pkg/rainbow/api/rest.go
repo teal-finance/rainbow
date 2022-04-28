@@ -19,11 +19,11 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-type APIHandler struct {
+type Handler struct {
 	Service *rainbow.Service
 }
 
-func (h APIHandler) Options(w http.ResponseWriter, r *http.Request) {
+func (h Handler) Options(w http.ResponseWriter, r *http.Request) {
 	sa, format, err := query(r)
 	if err != nil {
 		log.Print("WRN Options ", err)
@@ -107,7 +107,7 @@ func specialValues(format *string, values *[]string) {
 	}
 }
 
-func (h APIHandler) writeOptions(w http.ResponseWriter, options []rainbow.Option, sa rainbow.StoreArgs, format string) error {
+func (h Handler) writeOptions(w http.ResponseWriter, options []rainbow.Option, sa rainbow.StoreArgs, format string) error {
 	switch {
 	case format == "": // The most frequent first
 		return h.replyJSON(w, options)
@@ -132,7 +132,7 @@ func (h APIHandler) writeOptions(w http.ResponseWriter, options []rainbow.Option
 	}
 }
 
-func (h APIHandler) replyJSON(w http.ResponseWriter, options []rainbow.Option) error {
+func (h Handler) replyJSON(w http.ResponseWriter, options []rainbow.Option) error {
 	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewEncoder(w).Encode(options); err != nil {
@@ -143,7 +143,7 @@ func (h APIHandler) replyJSON(w http.ResponseWriter, options []rainbow.Option) e
 	return nil
 }
 
-func (h APIHandler) replyCSV(w http.ResponseWriter, options []rainbow.Option, comma rune) error {
+func (h Handler) replyCSV(w http.ResponseWriter, options []rainbow.Option, comma rune) error {
 	// Write in CSV format.
 	csvWriter := csv.NewWriter(w)
 	csvWriter.Comma = comma

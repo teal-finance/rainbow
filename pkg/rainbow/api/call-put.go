@@ -10,7 +10,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-func (h APIHandler) CallPut(w http.ResponseWriter, r *http.Request) {
+func (h Handler) CallPut(w http.ResponseWriter, r *http.Request) {
 	options, err := h.Service.Options(rainbow.StoreArgs{})
 	if err != nil {
 		log.Print("ERROR Options ", err)
