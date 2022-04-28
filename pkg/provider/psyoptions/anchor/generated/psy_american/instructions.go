@@ -5,11 +5,11 @@ package psy_american
 import (
 	"bytes"
 	"fmt"
-	ag_spew "github.com/spewerspew/spew"
 	ag_binary "github.com/gagliardetto/binary"
 	ag_solanago "github.com/gagliardetto/solana-go"
 	ag_text "github.com/gagliardetto/solana-go/text"
 	ag_treeout "github.com/gagliardetto/treeout"
+	ag_spew "github.com/spewerspew/spew"
 )
 
 var ProgramID ag_solanago.PublicKey = ag_solanago.MustPublicKeyFromBase58("R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs")
