@@ -37,7 +37,6 @@ func parseFlags() {
 
 	if !*dev && *mainAddr == defaultAddr && *mainPort == defaultPort {
 		*dev = true
-
 		log.Print("Enable -dev mode because -addr and -port are not used")
 	}
 

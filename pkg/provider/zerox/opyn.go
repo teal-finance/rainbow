@@ -59,7 +59,6 @@ func filterExpired(instruments []getOptionsOtokensOToken, date time.Time) (filte
 		seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
 		if err != nil {
 			log.Print("Oh Sh*t ", i.ExpiryTimestamp)
-
 			continue // TODO should do much better than failing silently
 		}
 

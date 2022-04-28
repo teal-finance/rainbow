@@ -144,7 +144,6 @@ func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount f
 
 		if err == nil {
 			sr.success(n)
-
 			break
 		}
 
@@ -241,7 +240,6 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 			price, err := strconv.ParseFloat(b.Price, 64)
 			if err != nil {
 				log.Print("WARN price ", err)
-
 				continue
 			}
 
