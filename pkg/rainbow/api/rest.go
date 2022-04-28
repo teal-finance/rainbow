@@ -84,6 +84,10 @@ func query(r *http.Request) (sa rainbow.StoreArgs, format string, err error) {
 	return sa, format, nil
 }
 
+// specialValues removes the special values from the values slide.
+// Special values are the empty string, "ALL"
+// and the supported formats ("csv", "tsv", "json").
+// specialValues also sets the format.
 func specialValues(format *string, values *[]string) {
 	i := 0
 	for _, v := range *values {
