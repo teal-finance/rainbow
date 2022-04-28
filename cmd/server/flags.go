@@ -51,11 +51,11 @@ func parseFlags() {
 }
 
 func envStr(varName, defaultValue string) string {
-	if value, ok := os.LookupEnv(varName); ok {
-		return value
+	value, ok := os.LookupEnv(varName)
+	if !ok {
+		value = defaultValue
 	}
-
-	return defaultValue
+	return value
 }
 
 func envInt(varName string, defaultValue int) int {
