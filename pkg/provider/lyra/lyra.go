@@ -77,7 +77,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		}
 	}
 
-	fmt.Println("total markets ", sum)
+	log.Print("total markets ", sum)
 	return options, nil
 }
 
