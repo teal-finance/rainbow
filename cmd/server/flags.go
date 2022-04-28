@@ -64,7 +64,6 @@ func envInt(varName string, defaultValue int) int {
 		if err == nil {
 			return value
 		}
-
 		log.Fatalf("ERROR: Want integer but got %v=%v err: %v", varName, str, err)
 	}
 	return defaultValue

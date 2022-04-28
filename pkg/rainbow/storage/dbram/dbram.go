@@ -59,7 +59,6 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 				continue
 			}
 		}
-
 		n += len(o)
 	}
 
@@ -70,7 +69,6 @@ func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
 				continue
 			}
 		}
-
 		options = append(options, o...)
 	}
 

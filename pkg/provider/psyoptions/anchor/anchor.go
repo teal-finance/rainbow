@@ -99,7 +99,7 @@ func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, program
 // INFO: copy from opyn.go. should make a proper function
 // we keep an option even 2 days after expiry
 // mainly because not all protocol stop at expiry or right before
-// TODO re-check later
+// TODO re-check later.
 func (o Option) IsExpired() bool {
 	seconds := o.opt.ExpirationUnixTimestamp
 	expiryTime := time.Unix(seconds, 0).UTC()
