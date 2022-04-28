@@ -77,7 +77,6 @@ func (o Option) OptionMarketAddress() solana.PublicKey {
 func (o Option) Expiration() string {
 	seconds := o.opt.ExpirationUnixTimestamp
 	expiryTime := time.Unix(seconds, 0).UTC()
-
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
 
@@ -167,7 +166,6 @@ func (o Option) OptionType() string {
 	if o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(USDCAddress) {
 		return "CALL"
 	}
-
 	return "PUT"
 }
 
@@ -183,7 +181,6 @@ func (o Option) Strike() float64 {
 		} else {
 			s = o.QuotePerContract() / o.UnderlyingPerContract()
 		}
-
 		return s * 1000
 	}
 

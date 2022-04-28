@@ -78,7 +78,6 @@ func leftAlignFloatOnDecimalPointStr(f float64) string {
 
 func leftAlignFloatOnDecimalPointHTML(f float64) string {
 	s := string(leftAlignFloatOnDecimalPoint(f))
-
 	return strings.ReplaceAll(s, " ", "&numsp;")
 }
 

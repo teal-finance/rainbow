@@ -15,7 +15,6 @@ func (h APIHandler) CallPut(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print("ERROR Options ", err)
 		http.Error(w, "No Content", http.StatusNoContent)
-
 		return
 	}
 
@@ -26,7 +25,6 @@ func (h APIHandler) CallPut(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(cp); err != nil {
 		log.Print("ERROR CallPut ", err)
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
-
 		return
 	}
 }
@@ -128,7 +126,6 @@ func groupByExpiry(options []rainbow.Option) (expiryToOptions map[string][]rainb
 
 func groupByStrike(options []rainbow.Option) (strikeToOptions map[float64][]rainbow.Option) {
 	strikeToOptions = map[float64][]rainbow.Option{}
-
 	for _, o := range options {
 		slice, ok := strikeToOptions[o.Strike]
 		if ok {
@@ -137,13 +134,11 @@ func groupByStrike(options []rainbow.Option) (strikeToOptions map[float64][]rain
 			strikeToOptions[o.Strike] = []rainbow.Option{o}
 		}
 	}
-
 	return strikeToOptions
 }
 
 func groupByProvider(options []rainbow.Option) (providerToOptions map[string][]rainbow.Option) {
 	providerToOptions = map[string][]rainbow.Option{}
-
 	for _, o := range options {
 		slice, ok := providerToOptions[o.Provider]
 		if ok {
@@ -152,13 +147,11 @@ func groupByProvider(options []rainbow.Option) (providerToOptions map[string][]r
 			providerToOptions[o.Provider] = []rainbow.Option{o}
 		}
 	}
-
 	return providerToOptions
 }
 
 func newLimit(o rainbow.Option) Limit {
 	bPx, bSz, aPx, aSz := rainbow.BestLimitHTML(o)
-
 	return Limit{
 		Bid: StrOrder{Price: bPx, Size: bSz},
 		Ask: StrOrder{Price: aPx, Size: aSz},
@@ -172,7 +165,6 @@ func sanitizeAsset(asset string) string {
 	if len(asset) >= 4 && (asset[0] == 'W' || asset[0] == 'w' || asset[0] == 's') {
 		return asset[1:]
 	}
-
 	return asset
 }
 
@@ -181,9 +173,7 @@ func sanitizeDate(date string) string {
 	t, err := time.Parse("2006-01-02 15:04:05", date)
 	if err != nil {
 		log.Printf("WARN prettyDate() cannot parse %q", date)
-
 		return date
 	}
-
 	return t.Format("Jan _2")
 }

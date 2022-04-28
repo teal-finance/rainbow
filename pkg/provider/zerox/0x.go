@@ -234,7 +234,6 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 		b, err := sr.getQuote("BUY", i.Id, USDC, amount, decimals)
 		if err != nil {
 			log.Print("getQuote BUY ", err)
-
 			return nil, err
 		}
 
@@ -260,7 +259,6 @@ func normalize(instruments []getOptionsOtokensOToken, provider string, amount fl
 		a, err := sr.getQuote("SELL", USDC, i.Id, amount, decimals)
 		if err != nil {
 			log.Print("getQuote SELL ", err)
-
 			return nil, err
 		}
 
@@ -300,7 +298,6 @@ func convertFromSolidity(s string, decimals int) (float64, error) {
 	}
 
 	value *= math.Pow10(-decimals)
-
 	return value, nil
 }
 

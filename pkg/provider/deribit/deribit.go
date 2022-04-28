@@ -29,28 +29,24 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	instruments, err := query("BTC")
 	if err != nil {
 		log.Print(err)
-
 		return nil, err
 	}
 
 	optionsBTC, err := fillOptions(instruments, 5)
 	if err != nil {
 		log.Print(err)
-
 		return nil, err
 	}
 
 	instruments, err = query("ETH")
 	if err != nil {
 		log.Print(err)
-
 		return nil, err
 	}
 
 	optionsETH, err := fillOptions(instruments, 5)
 	if err != nil {
 		log.Print(err)
-
 		return nil, err
 	}
 
@@ -110,7 +106,6 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 			filtered = append(filtered, i)
 		}
 	}
-
 	return filtered
 }
 

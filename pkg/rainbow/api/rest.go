@@ -28,14 +28,12 @@ func (h APIHandler) Options(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print("WRN Options ", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
-
 		return
 	}
 
 	options, _ := h.Service.Options(sa)
 	if len(options) == 0 {
 		http.Error(w, "No Content", http.StatusNoContent)
-
 		return
 	}
 
@@ -83,7 +81,6 @@ func query(r *http.Request) (sa rainbow.StoreArgs, format string, err error) {
 		Expiries:  expiries,
 		Providers: providers,
 	}
-
 	return sa, format, nil
 }
 
@@ -140,7 +137,6 @@ func (h APIHandler) replyJSON(w http.ResponseWriter, options []rainbow.Option) e
 
 	if err := json.NewEncoder(w).Encode(options); err != nil {
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
-
 		return err
 	}
 

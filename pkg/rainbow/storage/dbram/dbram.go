@@ -32,7 +32,6 @@ func (db *DB) InsertOptions(options []rainbow.Option) error {
 
 		db.insertOption(o)
 	}
-
 	return nil
 }
 
@@ -44,7 +43,6 @@ func (db *DB) insertOption(o rainbow.Option) {
 			oldOpt.Strike == o.Strike {
 			// Update the option attributes
 			db.optionsByProvider[o.Provider][i] = o
-
 			return
 		}
 	}
@@ -106,7 +104,6 @@ func contains(asset string, subStrings []string) bool {
 			return true
 		}
 	}
-
 	return false
 }
 
@@ -116,7 +113,6 @@ func in(provider string, wanted []string) bool {
 			return true
 		}
 	}
-
 	return false
 }
 
@@ -126,6 +122,5 @@ func startsWith(expiry string, prefixes []string) bool {
 			return true
 		}
 	}
-
 	return false
 }

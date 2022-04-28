@@ -116,7 +116,6 @@ func (o Option) ContractSize() float64 {
 func (o Option) Expiration() string {
 	seconds := int64(o.expiry)
 	expiryTime := time.Unix(seconds, 0).UTC()
-
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
 

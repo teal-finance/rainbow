@@ -22,7 +22,6 @@ func (h APIHandler) GraphQLHandler() http.Handler {
 	if err != nil {
 		panic(err)
 	}
-
 	return graphhandler.New(&graphhandler.Config{Schema: &schema})
 }
 
@@ -31,7 +30,6 @@ func InteractiveGQLHandler(endpoint string) http.Handler {
 	if err != nil {
 		panic(err)
 	}
-
 	return h
 }
 
@@ -105,7 +103,6 @@ func (h APIHandler) fieldsCallPut() *graphql.Field {
 			}
 
 			rows := buildCallPut(options)
-
 			return rows, nil
 		},
 	}

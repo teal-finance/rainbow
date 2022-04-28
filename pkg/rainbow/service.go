@@ -22,12 +22,10 @@ type Service struct {
 }
 
 func NewService(p []Provider, s Store) Service {
-	service := Service{
+	return Service{
 		providers: p,
 		store:     s,
 	}
-
-	return service
 }
 
 // Run periodically fetch data from providers API and stores it in DB.
