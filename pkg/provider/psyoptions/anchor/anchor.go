@@ -97,18 +97,14 @@ func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, program
 }
 
 // the Options have a field "Expired"(bool) but it is not set to false even for expired hence the function.
+// INFO: copy from opyn.go. should make a proper function
+// we keep an option even 2 days after expiry
+// mainly because not all protocol stop at expiry or right before
+// TODO re-check later
 func (o Option) IsExpired() bool {
 	seconds := o.opt.ExpirationUnixTimestamp
 	expiryTime := time.Unix(seconds, 0).UTC()
-
-	// INFO: copy from opyn.go. should make a proper function
-	// we keep an option even 2 days after expiry
-	// mainly because not all protocol stop at expiry or right before
-	// TODO re-check later
-
-	date := time.Now()
-
-	return !expiryTime.After(date.Add(-time.Hour * 48))
+	return expiryTime.Before(time.Now().Add(-time.Hour * 48))
 }
 
 func (o Option) Asset() string {
