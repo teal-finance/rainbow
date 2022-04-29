@@ -49,21 +49,27 @@ func parseFlags() {
 	log.Print("WWW_DIR        -www   = ", *wwwDir)
 }
 
-func envStr(varName, defaultValue string) string {
-	value, ok := os.LookupEnv(varName)
-	if !ok {
-		value = defaultValue
+// envStr looks up the given key from the environment,
+// returning its value if it exists, and otherwise
+// returning the given fallback value.
+func envStr(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
 	}
-	return value
+	return fallback
 }
 
-func envInt(varName string, defaultValue int) int {
-	if str, ok := os.LookupEnv(varName); ok {
-		value, err := strconv.Atoi(str)
-		if err == nil {
-			return value
+// envInt looks up the given key from the environment and expects an integer,
+// returning the integer value if it exists, and otherwise returning the fallback value.
+// If the environment variable has a value but it can't be parsed as an integer,
+// envInt terminates the program.
+func envInt(key string, fallback int) int {
+	if s, ok := os.LookupEnv(key); ok {
+		v, err := strconv.Atoi(s)
+		if err != nil {
+			log.Fatalf("ERR: want integer but got %v=%q err: %v", key, s, err)
 		}
-		log.Fatalf("ERROR: Want integer but got %v=%v err: %v", varName, str, err)
+		return v
 	}
-	return defaultValue
+	return fallback
 }
