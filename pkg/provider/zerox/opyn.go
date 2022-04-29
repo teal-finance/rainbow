@@ -28,7 +28,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 
 	options, err := normalize(instruments, "Opyn", 10.0)
 	if err != nil {
-		log.Print("ERROR: ", err)
+		log.Print("ERR: ", err)
 		return nil, err
 	}
 
@@ -42,11 +42,11 @@ func QueryTheGraph() []getOptionsOtokensOToken {
 
 	resp, err := getOptions(context.TODO(), graphqlClient)
 	if err != nil {
-		log.Print("ERROR: ", err)
+		log.Print("ERR: ", err)
 	}
 
 	if resp == nil {
-		log.Print("ERROR: resp=nil")
+		log.Print("ERR: resp=nil")
 		return nil
 	}
 
