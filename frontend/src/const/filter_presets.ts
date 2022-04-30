@@ -17,7 +17,7 @@ const filterPresets: Record<string, any> = {
     assets: { 'defaultValue': true },
     providers: { 'defaultValue': true },
   },
-  'BTC and ETH and SOL on all providers': {
+  'BTC, ETH, SOL all providers': {
     assets: assetsPresets['BTC and ETH and SOL'],
     providers: { 'defaultValue': true }
   },
@@ -31,7 +31,7 @@ const filterPresets: Record<string, any> = {
   },
   'DEXes': {
     assets: { 'defaultValue': true },
-    providers: { 'defaultValue': false, 'Lyra': true, 'Opyn': true,'Zeta':true,'PsyOptions':true }
+    providers: { 'defaultValue': false, 'Lyra': true, 'Opyn': true, 'Zeta': true, 'PsyOptions': true }
   },
   'BTC': {
     assets: { 'defaultValue': false, 'BTC': true },

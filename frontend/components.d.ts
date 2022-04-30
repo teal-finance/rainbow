@@ -4,6 +4,8 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    CryptoIcons: typeof import('./src/components/widgets/CryptoIcons.vue')['default']
+    DropdownBox: typeof import('./src/components/widgets/DropdownBox.vue')['default']
     ExtraHeader: typeof import('./src/components/widgets/ExtraHeader.vue')['default']
     IAkarIconsArrowRight: typeof import('~icons/akar-icons/arrow-right')['default']
     IAkarIconsGithubFill: typeof import('~icons/akar-icons/github-fill')['default']
@@ -19,6 +21,7 @@ declare module 'vue' {
     LoadingIndicator: typeof import('./src/components/widgets/LoadingIndicator.vue')['default']
     MobileRenderer: typeof import('./src/components/widgets/MobileRenderer.vue')['default']
     OptionsDatatable: typeof import('./src/components/OptionsDatatable.vue')['default']
+    PresetsSelect: typeof import('./src/components/PresetsSelect.vue')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']
   }
 }
