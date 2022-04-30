@@ -1,66 +1,37 @@
 <template>
-  <div
-    v-for="[k, v] in Object.entries(state)"
-    :key="k.toString()"
-    class="flex flex-row items-center mb-3"
-  >
-    {{ k }} / {{ v }}
-    <sw-switch :checked="state[`${v}`]" class="mr-2 switch-secondary" @change="toggleActivate(v)">
-      <div class="ml-2" v-html="state[`${k}`]"></div>
+  <div v-for="(k, i) in Object.keys(values)" :key="i" class="flex flex-row items-center mb-3">
+    <sw-switch
+      v-model:value="values[k]"
+      class="mr-2 switch-secondary"
+      @update:value="toggleActivate(values[k], $event)"
+    >
+      <div class="ml-2" v-html="k"></div>
     </sw-switch>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRefs, watchEffect } from "vue";
+<script setup lang="ts">
 import SwSwitch from "@snowind/switch";
 
-export default defineComponent({
-  components: {
-    SwSwitch
+defineProps({
+  col: {
+    type: String,
+    required: true,
   },
-  props: {
-    col: {
-      type: String,
-      required: true,
-    },
-    values: {
-      type: Object as () => Record<any, boolean>,
-      required: true,
-    },
-  },
-  emits: ["include", "exclude"],
-  setup(props, { emit }) {
-    const { values } = toRefs(props);
-    let state = reactive<Record<any, boolean>>({});
-
-    function toggleActivate(v: any) {
-      if (state[v]) {
-        // deactivate
-        state[v] = false;
-        emit("exclude", v)
-        return
-      } else {
-        // activate
-        state[`${v}`] = true
-      }
-      emit("include", v);
-    }
-
-    function _setState() {
-      for (const [k, v] of Object.entries(values.value)) {
-        state[`${k}`] = v
-      }
-    }
-
-    watchEffect(() => {
-      _setState()
-    });
-
-    return {
-      state,
-      toggleActivate
-    };
+  values: {
+    type: Object as () => Record<any, boolean>,
+    required: true,
   },
 });
+
+const emit = defineEmits(["include", "exclude"])
+
+function toggleActivate(k: any, v: boolean) {
+  console.log("Toggle", k, v)
+  if (v) {
+    emit("include", k)
+  } else {
+    emit("exclude", k)
+  }
+}
 </script>

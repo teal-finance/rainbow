@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref, onMounted, reactive } from 'vue'
+import { defineComponent, toRefs, ref, onMounted, reactive, watchEffect, watch } from 'vue'
 import SwDatatableModel from '../models/datatable'
 import ValuesFilterSwitchRender from './ValuesFilterSwitchRender.vue';
 
@@ -32,43 +32,56 @@ export default defineComponent({
     },
     filtersState: {
       type: Object as () => Record<any, boolean>,
-      default: {}
-    },
+      default: { 'defaultValue': true }
+    }
   },
   setup(props) {
     const { model, col, filtersState } = toRefs(props);
     const entries = reactive<Record<any, boolean>>({});
+    const vals = new Set();
 
     function distinctValues() {
-      const vals = new Set();
       model.value.state.rows.forEach((row) => {
         vals.add(row[col.value]);
       });
+      //console.log("entries", JSON.stringify(entries, null, "  "))
+    }
+
+    function setFilters() {
       vals.forEach((v) => {
         if (`${v}` in filtersState.value) {
           entries[`${v}`] = filtersState.value[`${v}`]
         } else {
-          entries[`${v}`] = true
+          entries[`${v}`] = filtersState.value.defaultValue
+        }
+        if (entries[`${v}`] == false) {
+          exclude(`${v}`)
+        } else {
+          try {
+            include(`${v}`)
+          } catch (e) { }
         }
       });
-      console.log("entries", JSON.stringify(entries, null, "  "))
     }
 
     function exclude(evt: any) {
+      //console.log("exclude filter", col.value, evt)
       model.value.addExcludeFilter(col.value, evt)
     }
 
     function include(evt: any) {
-      try {
-        model.value.removeExcludeFilter(col.value, evt)
-      } catch (e) {
-        console.log("Error removing filter", e)
-      }
+      //console.log("include filter", col.value, evt)
+      model.value.removeExcludeFilter(col.value, evt)
     }
 
     onMounted(() => {
       distinctValues();
+      setFilters()
     })
+
+    watch(() => props.filtersState, (newval: Record<any, boolean>, oldval: Record<any, boolean>) => {
+      setFilters()
+    });
 
     return {
       entries,
