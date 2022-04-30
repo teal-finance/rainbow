@@ -3,7 +3,7 @@
     <sw-switch
       v-model:value="values[k]"
       class="mr-2 switch-secondary"
-      @update:value="toggleActivate(values[k], $event)"
+      @update:value="toggleActivate(k, $event)"
     >
       <div class="ml-2" v-html="k"></div>
     </sw-switch>
