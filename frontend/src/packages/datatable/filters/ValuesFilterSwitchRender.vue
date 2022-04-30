@@ -1,6 +1,7 @@
 <template>
   <div v-for="(k, i) in Object.keys(values)" :key="i" class="flex flex-row items-center mb-3">
     <sw-switch
+      :id="k"
       v-model:value="values[k]"
       class="mr-2 switch-secondary"
       @update:value="toggleActivate(k, $event)"

@@ -1,7 +1,7 @@
 <template>
   <div class="relative z-10 w-full min-h-[2rem] text-sm">
     <div class="absolute background top-0 right-0 flex flex-col justify-start w-full">
-      <div class="flex flex-row w-full lighter" @click="collapse = !collapse">
+      <div id="presets-select" class="flex flex-row w-full lighter" @click="collapse = !collapse">
         <div class="flex-grow">
           <button class="btn w-full text-left">{{ user.currentPreset.value }}</button>
         </div>
@@ -20,6 +20,7 @@
           class="w-full background hover:secondary"
         >
           <button
+            :id="'preset-' + preset"
             class="btn w-full text-left"
             v-if="preset != user.currentPreset.value"
             @click="onChangePreset(preset, $event)"

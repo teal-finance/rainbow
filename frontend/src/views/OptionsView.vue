@@ -7,21 +7,6 @@
       <div class="pl-5 pr-3 w-1/5">
         <presets-select v-if="isReady" @changepreset="mutatePreset($event)"></presets-select>
         <div>
-          <!-- select
-            id="presets-selector"
-            class="form-select"
-            v-model="user.currentPreset.value"
-            @change="onChangePreset($event)"
-          >
-            <option
-              v-for="(preset, i) in Object.keys(filterPresets)"
-              :key="i"
-              v-html="preset"
-              class="appearance-none background focus:secondary"
-            ></option>
-          </select-->
-        </div>
-        <div>
           <div class="text-xl mt-3">Asset</div>
           <hr class="my-3" />
           <values-filter :model="datatable" col="asset" :filters-state="filterConf.assets"></values-filter>

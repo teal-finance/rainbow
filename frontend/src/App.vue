@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'dark': user.isDarkMode.value == true }">
+  <div id="toplevel" :class="{ 'dark': user.isDarkMode.value == true }">
     <div class="w-full background">
       <the-header></the-header>
       <div class="p-5">

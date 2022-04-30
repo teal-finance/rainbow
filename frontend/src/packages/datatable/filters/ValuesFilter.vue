@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref, onMounted, reactive, watchEffect, watch } from 'vue'
+import { defineComponent, toRefs, ref, onMounted, reactive, watch } from 'vue'
 import SwDatatableModel from '../models/datatable'
 import ValuesFilterSwitchRender from './ValuesFilterSwitchRender.vue';
 
