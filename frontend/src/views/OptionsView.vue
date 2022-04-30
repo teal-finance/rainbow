@@ -7,9 +7,10 @@
       <div class="pl-5 pr-3">
         <div>
           <select
-            class="form-select px-4 py-3"
-            v-model="selectedFilterset"
-            @change="onChangePreset()"
+            id="presets-selector"
+            class="form-select"
+            v-model="user.currentPreset.value"
+            @change="onChangePreset($event)"
           >
             <option v-for="(preset, i) in Object.keys(filterPresets)" :key="i" v-html="preset"></option>
           </select>
@@ -49,7 +50,7 @@ import ValuesFilter from '@/packages/datatable/filters/ValuesFilter.vue'
 import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
 import OptionsDatatable from '@/components/OptionsDatatable.vue';
 import LoadingIndicator from '@/components/widgets/LoadingIndicator.vue';
-import { isMobile } from '@/state';
+import { isMobile, user } from '@/state';
 import { query } from '@/api/graphql';
 //import ValuesFilterBadgeRender from '@/packages/datatable/filters/ValuesFilterBadgeRender.vue';
 import filterPresets from "@/const/filter_presets";
@@ -60,49 +61,65 @@ const filterConf = reactive<Record<string, Record<string, boolean>>>({
   assets: { 'defaultValue': true },
   providers: { 'defaultValue': true },
 });
-const selectedFilterset = ref("All");
 
-function onChangePreset() {
-  mutatePreset(selectedFilterset.value)
-}
-
-function loadData(dataset: OptionsJsonDataset) {
-  // console.log("DATA", dataset)
-  const options = new Set<OptionsTable>();
-  for (const line of dataset.rows) {
-    const opt = new Option(line).toRow();
-    options.add(opt)
+function onChangePreset(event?: any) {
+  mutatePreset(user.currentPreset.value);
+  if (event) {
+    event.target.blur()
   }
-  console.log("OPTIONS", options);
-  const columns = {
-    "provider": "Provider",
-    "asset": "Asset",
-    "expiry": "Expiry",
-    "callBidSize": "Size",
-    "callBidPrice": "  BID",
-    "callAskPrice": " ASK",
-    "callAskSize": "Size",
-    "strike": "Strike",
-    "putBidSize": "Size",
-    "putBidPrice": "  BID",
-    "putAskPrice": " ASK",
-    "putAskSize": "Size",
+
+  const selectedFilterset = ref("All");
+
+  function onChangePreset() {
+    mutatePreset(selectedFilterset.value)
   }
-  datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
-}
 
-function mutatePreset(presetname: string) {
-  const preset = filterPresets[presetname];
-  filterConf.assets = preset.assets;
-  filterConf.providers = preset.providers;
-  //console.log("Filterconf mutation", JSON.stringify(filterConf, null, "  "))
-}
+  function loadData(dataset: OptionsJsonDataset) {
+    // console.log("DATA", dataset)
+    const options = new Set<OptionsTable>();
+    for (const line of dataset.rows) {
+      const opt = new Option(line).toRow();
+      options.add(opt)
+    }
+    console.log("OPTIONS", options);
+    const columns = {
+      "provider": "Provider",
+      "asset": "Asset",
+      "expiry": "Expiry",
+      "callBidSize": "Size",
+      "callBidPrice": "  BID",
+      "callAskPrice": " ASK",
+      "callAskSize": "Size",
+      "strike": "Strike",
+      "putBidSize": "Size",
+      "putBidPrice": "  BID",
+      "putAskPrice": " ASK",
+      "putAskSize": "Size",
+    }
+    datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
+  }
 
-onMounted(() => {
-  console.log("FConf", JSON.stringify(filterConf.assets))
-  query().then((d) => {
-    loadData(d);
-    isReady.value = true;
-  });
-})
+  function mutatePreset(presetname: string) {
+    const preset = filterPresets[presetname];
+    filterConf.assets = preset.assets;
+    filterConf.providers = preset.providers;
+    //console.log("Filterconf mutation", JSON.stringify(filterConf, null, "  "))
+  }
+
+  onMounted(() => {
+    //console.log("FConf", JSON.stringify(filterConf.assets))
+    query().then((d) => {
+      loadData(d);
+      isReady.value = true;
+      onChangePreset()
+    });
+  })
+}
 </script>
+
+<style scoped lang="sass">
+#presets-selector
+  @apply block appearance-none w-full background border bord-lighter focus:outline-primary px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none
+  & option
+    background-color: lime
+</style>

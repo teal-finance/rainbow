@@ -27,10 +27,8 @@ export default defineComponent({
 })
 </script>
 
-<style lang="css">
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+<style lang="sass">
+
+html
+  overflow-y: scroll
 </style>
