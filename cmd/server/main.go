@@ -25,12 +25,12 @@ func main() {
 	parseFlags()
 
 	var providers []rainbow.Provider
-	switch len(*flagAlert) {
+	switch len(*alert) {
 	case 0:
 		providers = provider.AllProviders()
 	default:
 		providers = provider.AllProvidersWithAlert(
-			provider.NewOracle(*flagAlert),
+			provider.NewOracle(*alert),
 		)
 	}
 

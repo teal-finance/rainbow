@@ -19,14 +19,14 @@ const (
 )
 
 var (
-	dev          = flag.Bool("dev", false, "Enable the developer mode")
+	dev          = flag.Bool("dev", false, "Enable the developer mode (enabled by default if -addr and -port are not used)")
 	mainAddr     = flag.String("addr", envStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
 	mainPort     = flag.Int("port", envInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
 	expPort      = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
 	reqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 88), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	reqBurst     = flag.Int("burst", envInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
 	wwwDir       = flag.String("www", envStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
-	flagAlert    = flag.String("alert", "", "Mattermost webhook endpoint to activate alerter")
+	alert        = flag.String("alert", envStr("ALERT_URL", ""), "Webhook endpoint to notify anomalies, has precedence over ALERT_URL")
 	listenAddr   string
 )
 
@@ -37,7 +37,7 @@ func parseFlags() {
 
 	if !*dev && *mainAddr == defaultAddr && *mainPort == defaultPort {
 		*dev = true
-		log.Print("Enable -dev mode because -addr and -port are not used")
+		log.Print("Enable -dev mode because -addr and -port flags are not used")
 	}
 
 	log.Print("Dev. mode      -dev   = ", *dev)
@@ -47,6 +47,7 @@ func parseFlags() {
 	log.Print("REQ_PER_MINUTE -rate  = ", *reqPerMinute)
 	log.Print("REQ_BURST      -burst = ", *reqBurst)
 	log.Print("WWW_DIR        -www   = ", *wwwDir)
+	log.Print("ALERT_URL      -alert = ", *alert)
 }
 
 // envStr looks up the given key from the environment,
