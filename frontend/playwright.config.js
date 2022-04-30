@@ -9,7 +9,7 @@ const config = {
     launchOptions: {
       slowMo: 1500,
     },
-    video: "on",
+    video: "off",
   },
   webServer: {
     command: 'yarn dev',
@@ -22,12 +22,12 @@ const config = {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    /*{
+    {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
     // Test against mobile viewports.
-    {
+    /*{
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
     },*/
