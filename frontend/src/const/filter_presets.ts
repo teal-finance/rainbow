@@ -25,11 +25,11 @@ const filterPresets: Record<string, any> = {
     assets: assetsPresets['BTC and ETH'],
     providers: { 'defaultValue': false, 'Deribit': true }
   },
-  'CEX': {
+  'CEXes': {
     assets: { 'defaultValue': true },
-    providers: { 'defaultValue': false, 'Deribit': true }
+    providers: { 'defaultValue': false, 'Deribit': true, 'Delta Exchange': true }
   },
-  'DEX': {
+  'DEXes': {
     assets: { 'defaultValue': true },
     providers: { 'defaultValue': false, 'Lyra': true, 'Opyn': true,'Zeta':true,'PsyOptions':true }
   },
