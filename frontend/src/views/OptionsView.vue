@@ -6,12 +6,12 @@
       </div>
       <div class="pl-5 pr-3">
         <div>
-          <select class="form-select px-4 py-3">
-            <option
-              v-for="preset in Object.keys(filterPresets)"
-              v-html="preset"
-              @click="mutatePreset(preset)"
-            ></option>
+          <select
+            class="form-select px-4 py-3"
+            v-model="selectedFilterset"
+            @change="onChangePreset()"
+          >
+            <option v-for="(preset, i) in Object.keys(filterPresets)" :key="i" v-html="preset"></option>
           </select>
         </div>
         <div>
@@ -51,7 +51,7 @@ import OptionsDatatable from '@/components/OptionsDatatable.vue';
 import LoadingIndicator from '@/components/widgets/LoadingIndicator.vue';
 import { isMobile } from '@/state';
 import { query } from '@/api/graphql';
-import ValuesFilterBadgeRender from '@/packages/datatable/filters/ValuesFilterBadgeRender.vue';
+//import ValuesFilterBadgeRender from '@/packages/datatable/filters/ValuesFilterBadgeRender.vue';
 import filterPresets from "@/const/filter_presets";
 
 const datatable = ref(new SwDataTableModel<OptionsTable>());
@@ -60,6 +60,11 @@ const filterConf = reactive<Record<string, Record<string, boolean>>>({
   assets: { 'defaultValue': true },
   providers: { 'defaultValue': true },
 });
+const selectedFilterset = ref("All");
+
+function onChangePreset() {
+  mutatePreset(selectedFilterset.value)
+}
 
 function loadData(dataset: OptionsJsonDataset) {
   // console.log("DATA", dataset)
@@ -90,6 +95,7 @@ function mutatePreset(presetname: string) {
   const preset = filterPresets[presetname];
   filterConf.assets = preset.assets;
   filterConf.providers = preset.providers;
+  //console.log("Filterconf mutation", JSON.stringify(filterConf, null, "  "))
 }
 
 onMounted(() => {
