@@ -1,11 +1,13 @@
 <template>
-  <div v-for="(v, i) in values" :key="i" class="flex flex-row items-center mb-3">
-    <sw-switch
-      v-model:value="state[`${v}`]"
-      class="mr-2 switch-secondary"
-      @change="toggleActivate(v)"
-    ></sw-switch>
-    <div v-html="v"></div>
+  <div
+    v-for="[k, v] in Object.entries(state)"
+    :key="k.toString()"
+    class="flex flex-row items-center mb-3"
+  >
+    {{ k }} / {{ v }}
+    <sw-switch :checked="state[`${v}`]" class="mr-2 switch-secondary" @change="toggleActivate(v)">
+      <div class="ml-2" v-html="state[`${k}`]"></div>
+    </sw-switch>
   </div>
 </template>
 
@@ -23,7 +25,7 @@ export default defineComponent({
       required: true,
     },
     values: {
-      type: Set,
+      type: Object as () => Record<any, boolean>,
       required: true,
     },
   },
@@ -46,8 +48,8 @@ export default defineComponent({
     }
 
     function _setState() {
-      for (const v of values.value) {
-        state[`${v}`] = true
+      for (const [k, v] of Object.entries(values.value)) {
+        state[`${k}`] = v
       }
     }
 

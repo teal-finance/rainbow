@@ -2,14 +2,14 @@
   <component
     :is="renderer"
     :col="col"
-    :values="vals"
+    :values="entries"
     @include="include($event)"
     @exclude="exclude($event)"
   ></component>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref, onMounted } from 'vue'
+import { defineComponent, toRefs, ref, onMounted, reactive } from 'vue'
 import SwDatatableModel from '../models/datatable'
 import ValuesFilterSwitchRender from './ValuesFilterSwitchRender.vue';
 
@@ -30,15 +30,28 @@ export default defineComponent({
       type: Object,
       default: () => ValuesFilterSwitchRender
     },
+    filtersState: {
+      type: Object as () => Record<any, boolean>,
+      default: {}
+    },
   },
   setup(props) {
-    const { model, col } = toRefs(props);
-    const vals = ref(new Set());
+    const { model, col, filtersState } = toRefs(props);
+    const entries = reactive<Record<any, boolean>>({});
 
     function distinctValues() {
+      const vals = new Set();
       model.value.state.rows.forEach((row) => {
-        vals.value.add(row[col.value]);
+        vals.add(row[col.value]);
       });
+      vals.forEach((v) => {
+        if (`${v}` in filtersState.value) {
+          entries[`${v}`] = filtersState.value[`${v}`]
+        } else {
+          entries[`${v}`] = true
+        }
+      });
+      console.log("entries", JSON.stringify(entries, null, "  "))
     }
 
     function exclude(evt: any) {
@@ -46,7 +59,11 @@ export default defineComponent({
     }
 
     function include(evt: any) {
-      model.value.removeExcludeFilter(col.value, evt)
+      try {
+        model.value.removeExcludeFilter(col.value, evt)
+      } catch (e) {
+        console.log("Error removing filter", e)
+      }
     }
 
     onMounted(() => {
@@ -54,7 +71,7 @@ export default defineComponent({
     })
 
     return {
-      vals,
+      entries,
       include,
       exclude,
     }
