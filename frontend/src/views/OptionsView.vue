@@ -67,54 +67,48 @@ function onChangePreset(event?: any) {
   if (event) {
     event.target.blur()
   }
-
-  const selectedFilterset = ref("All");
-
-  function onChangePreset() {
-    mutatePreset(selectedFilterset.value)
-  }
-
-  function loadData(dataset: OptionsJsonDataset) {
-    // console.log("DATA", dataset)
-    const options = new Set<OptionsTable>();
-    for (const line of dataset.rows) {
-      const opt = new Option(line).toRow();
-      options.add(opt)
-    }
-    console.log("OPTIONS", options);
-    const columns = {
-      "provider": "Provider",
-      "asset": "Asset",
-      "expiry": "Expiry",
-      "callBidSize": "Size",
-      "callBidPrice": "  BID",
-      "callAskPrice": " ASK",
-      "callAskSize": "Size",
-      "strike": "Strike",
-      "putBidSize": "Size",
-      "putBidPrice": "  BID",
-      "putAskPrice": " ASK",
-      "putAskSize": "Size",
-    }
-    datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
-  }
-
-  function mutatePreset(presetname: string) {
-    const preset = filterPresets[presetname];
-    filterConf.assets = preset.assets;
-    filterConf.providers = preset.providers;
-    //console.log("Filterconf mutation", JSON.stringify(filterConf, null, "  "))
-  }
-
-  onMounted(() => {
-    //console.log("FConf", JSON.stringify(filterConf.assets))
-    query().then((d) => {
-      loadData(d);
-      isReady.value = true;
-      onChangePreset()
-    });
-  })
 }
+
+function loadData(dataset: OptionsJsonDataset) {
+  // console.log("DATA", dataset)
+  const options = new Set<OptionsTable>();
+  for (const line of dataset.rows) {
+    const opt = new Option(line).toRow();
+    options.add(opt)
+  }
+  console.log("OPTIONS", options);
+  const columns = {
+    "provider": "Provider",
+    "asset": "Asset",
+    "expiry": "Expiry",
+    "callBidSize": "Size",
+    "callBidPrice": "  BID",
+    "callAskPrice": " ASK",
+    "callAskSize": "Size",
+    "strike": "Strike",
+    "putBidSize": "Size",
+    "putBidPrice": "  BID",
+    "putAskPrice": " ASK",
+    "putAskSize": "Size",
+  }
+  datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
+}
+
+function mutatePreset(presetname: string) {
+  const preset = filterPresets[presetname];
+  filterConf.assets = preset.assets;
+  filterConf.providers = preset.providers;
+  //console.log("Filterconf mutation", JSON.stringify(filterConf, null, "  "))
+}
+
+onMounted(() => {
+  //console.log("FConf", JSON.stringify(filterConf.assets))
+  query().then((d) => {
+    loadData(d);
+    isReady.value = true;
+    onChangePreset()
+  });
+})
 </script>
 
 <style scoped lang="sass">
