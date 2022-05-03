@@ -22,7 +22,7 @@ func buildCallPut(options []rainbow.Option) Blocks {
 		asset = sanitizeAsset(asset)
 
 		for date, optionsSameExpiry := range groupByExpiry(optionsSameAsset) {
-			expiry := sanitizeDate(date)
+			expiry := date //sanitizeDate(date)
 
 			for strike, optionsSameStrike := range groupByStrike(optionsSameExpiry) {
 				for t, optionsSameType := range groupByType(optionsSameStrike) {
@@ -64,11 +64,12 @@ func groupByExpiry(options []rainbow.Option) (expiryToOptions map[string][]rainb
 	expiryToOptions = map[string][]rainbow.Option{}
 
 	for _, o := range options {
-		slice, ok := expiryToOptions[o.Expiry]
+		expiry := sanitizeDate(o.Expiry)
+		slice, ok := expiryToOptions[expiry]
 		if ok {
-			expiryToOptions[o.Expiry] = append(slice, o)
+			expiryToOptions[expiry] = append(slice, o)
 		} else {
-			expiryToOptions[o.Expiry] = []rainbow.Option{o}
+			expiryToOptions[expiry] = []rainbow.Option{o}
 		}
 	}
 
@@ -122,7 +123,7 @@ func sanitizeDate(date string) string {
 	if err != nil {
 		log.Printf("WARN prettyDate() cannot parse %q", date)
 
-		return date
+		return date //maybe we should properly fail, ¯\_(ツ)_/¯
 	}
 
 	return t.Format("Jan _2")

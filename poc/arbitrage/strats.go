@@ -1,5 +1,7 @@
 package main
 
+import "github.com/teal-finance/rainbow/pkg/rainbow"
+
 type Arb struct {
 	Type         string `json:"type"` // CALL / PUT
 	Strike       float64
@@ -17,10 +19,10 @@ type Arb struct {
 
 type Arbs []Arb
 
-func buylowsellhigh(blocks Blocks) Arbs {
+func buylowsellhigh(blocks Blocks, limit float64) Arbs {
 	arbs := Arbs{}
 	for _, block := range blocks {
-		if len(block.Options) == 1 {
+		if len(block.Options) == 1 { //normally shouldn't be empty but weird error I can't fix
 			continue
 		}
 
@@ -28,34 +30,17 @@ func buylowsellhigh(blocks Blocks) Arbs {
 			opt := block.Options[i]
 			//this also test local arbs, if in one place the bid > ask
 			for _, o := range block.Options[i:] {
-				if len(opt.Ask) != 0 && len(o.Bid) != 0 && opt.Ask[0].Price < o.Bid[0].Price {
-					arbs = append(arbs, Arb{
-						Type:         o.Type,
-						Strike:       block.Strike,
-						Expiry:       block.Expiry,
-						Asset:        block.Asset,
-						BuyPx:        opt.Ask[0].Price,
-						BuyQ:         opt.Ask[0].Size,
-						BuyProvider:  opt.Provider,
-						SellPx:       o.Bid[0].Price,
-						SellQ:        o.Bid[0].Size,
-						SellProvider: o.Provider,
-						ROI:          100 * (o.Bid[0].Price - opt.Ask[0].Price) / block.Strike,
-					})
-				} else if len(opt.Bid) != 0 && len(o.Ask) != 0 && opt.Bid[0].Price > o.Ask[0].Price {
-					arbs = append(arbs, Arb{
-						Type:         o.Type,
-						Strike:       block.Strike,
-						Expiry:       block.Expiry,
-						Asset:        block.Asset,
-						BuyPx:        o.Ask[0].Price,
-						BuyQ:         o.Ask[0].Size,
-						BuyProvider:  o.Provider,
-						SellPx:       opt.Bid[0].Price,
-						SellQ:        opt.Bid[0].Size,
-						SellProvider: opt.Provider,
-						ROI:          100 * (opt.Bid[0].Price - o.Ask[0].Price) / block.Strike,
-					})
+				if conditions(o.Bid, opt.Ask) {
+					r := roi(block.Strike, o.Bid, opt.Ask)
+					if r >= limit {
+						arbs = saveArbitrage(arbs, block, r, o, opt)
+
+					}
+				} else if conditions(opt.Bid, o.Ask) {
+					r := roi(block.Strike, opt.Bid, o.Ask)
+					if r >= limit {
+						arbs = saveArbitrage(arbs, block, r, opt, o)
+					}
 				}
 
 			}
@@ -64,4 +49,32 @@ func buylowsellhigh(blocks Blocks) Arbs {
 
 	return arbs
 
+}
+
+func conditions(bid, ask []rainbow.Order) bool {
+	return len(bid) != 0 && len(ask) != 0 &&
+		ask[0].Price*ask[0].Size != 0 && bid[0].Price*bid[0].Size != 0 &&
+		ask[0].Price < bid[0].Price
+
+}
+
+//roi in percentage
+func roi(strike float64, bid, ask []rainbow.Order) float64 {
+	return 100 * (bid[0].Price - ask[0].Price) / strike
+}
+
+func saveArbitrage(arbs Arbs, block Block, r float64, bidOptions, askOption rainbow.Option) Arbs {
+	return append(arbs, Arb{
+		Type:         block.Type,
+		Strike:       block.Strike,
+		Expiry:       block.Expiry,
+		Asset:        block.Asset,
+		BuyPx:        askOption.Ask[0].Price,
+		BuyQ:         askOption.Ask[0].Size,
+		BuyProvider:  askOption.Provider,
+		SellPx:       bidOptions.Bid[0].Price,
+		SellQ:        bidOptions.Bid[0].Size,
+		SellProvider: bidOptions.Provider,
+		ROI:          r,
+	})
 }
