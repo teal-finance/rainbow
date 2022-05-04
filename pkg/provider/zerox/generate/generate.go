@@ -1,5 +1,6 @@
 // inspired from https://github.com/StevenACoffman/teamboard/main/pkg/tools
 
+//go:build generate
 // +build generate
 
 package generate
