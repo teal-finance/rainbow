@@ -14,12 +14,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
-	"github.com/teal-finance/rainbow/pkg/provider/lyra"
-	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
-	"github.com/teal-finance/rainbow/pkg/provider/zerox"
-	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -28,12 +23,12 @@ func AllProviders() []rainbow.Provider {
 	// changing the order to not exhaust our solana/serum rpc quota
 	// used by zeta and psy
 	return []rainbow.Provider{
-		zetamarkets.Provider{},
-		zerox.Provider{},
+		//zetamarkets.Provider{},
+		//zerox.Provider{},
 		deribit.Provider{},
-		lyra.Provider{},
+		/*lyra.Provider{},
 		deltaexchange.Provider{},
-		psyoptions.Provider{},
+		psyoptions.Provider{},*/
 	}
 }
 
