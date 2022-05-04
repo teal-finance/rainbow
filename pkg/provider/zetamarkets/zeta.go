@@ -83,7 +83,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, err error) {
 	var o serum.Orderbook
 
-	// quit & dirty extra rate limit
+	// quick & dirty extra rate limit
 	time.Sleep(300 * time.Microsecond)
 
 	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {

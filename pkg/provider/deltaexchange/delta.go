@@ -55,6 +55,10 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		if strike > 75000 {
 			continue
 		}
+		if p.ContractUnitCurrency == "BNB" || p.ContractUnitCurrency == "XRP" ||
+			p.ContractUnitCurrency == "MATIC" || p.ContractUnitCurrency == "AVAX" {
+			continue
+		}
 
 		bids, asks, err := p.Orderbook()
 		if err != nil {

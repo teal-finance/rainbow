@@ -85,7 +85,7 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		return nil, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
 
-	// quit & dirty extra rate limit
+	// quick & dirty extra rate limit
 	time.Sleep(300 * time.Microsecond)
 
 	limit := 20
