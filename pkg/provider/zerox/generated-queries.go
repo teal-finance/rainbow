@@ -126,7 +126,7 @@ func getOptions(
 		"getOptions",
 		`
 query getOptions {
-	otokens {
+	otokens (where: {expiryTimestamp_gt:"1651300000"}){
 		id
 		symbol
 		name
