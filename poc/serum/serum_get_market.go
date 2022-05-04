@@ -106,7 +106,6 @@ func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 		} else {
 			levels = append(levels, []*big.Int{price, quantity})
 		}
-
 		return nil
 	})
 
@@ -128,7 +127,6 @@ func getOrderBook(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client
 
 func depth(value *big.Float) string {
 	v, _ := value.Int(nil)
-
 	return strings.Repeat("#", int(v.Int64()))
 }
 

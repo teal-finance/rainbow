@@ -19,14 +19,14 @@ const (
 )
 
 var (
-	dev          = flag.Bool("dev", false, "Enable the developer mode")
+	dev          = flag.Bool("dev", false, "Enable the developer mode (enabled by default if -addr and -port are not used)")
 	mainAddr     = flag.String("addr", envStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
 	mainPort     = flag.Int("port", envInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
 	expPort      = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
 	reqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 88), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	reqBurst     = flag.Int("burst", envInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
 	wwwDir       = flag.String("www", envStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
-	flagAlert    = flag.String("alert", "", "Mattermost webhook endpoint to activate alerter")
+	alert        = flag.String("alert", envStr("ALERT_URL", ""), "Webhook endpoint to notify anomalies, has precedence over ALERT_URL")
 	listenAddr   string
 )
 
@@ -37,8 +37,7 @@ func parseFlags() {
 
 	if !*dev && *mainAddr == defaultAddr && *mainPort == defaultPort {
 		*dev = true
-
-		log.Print("Enable -dev mode because -addr and -port are not used")
+		log.Print("Enable -dev mode because -addr and -port flags are not used")
 	}
 
 	log.Print("Dev. mode      -dev   = ", *dev)
@@ -48,25 +47,30 @@ func parseFlags() {
 	log.Print("REQ_PER_MINUTE -rate  = ", *reqPerMinute)
 	log.Print("REQ_BURST      -burst = ", *reqBurst)
 	log.Print("WWW_DIR        -www   = ", *wwwDir)
+	log.Print("ALERT_URL      -alert = ", *alert)
 }
 
-func envStr(varName, defaultValue string) string {
-	if value, ok := os.LookupEnv(varName); ok {
+// envStr looks up the given key from the environment,
+// returning its value if it exists, and otherwise
+// returning the given fallback value.
+func envStr(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
 		return value
 	}
-
-	return defaultValue
+	return fallback
 }
 
-func envInt(varName string, defaultValue int) int {
-	if str, ok := os.LookupEnv(varName); ok {
-		value, err := strconv.Atoi(str)
-		if err == nil {
-			return value
+// envInt looks up the given key from the environment and expects an integer,
+// returning the integer value if it exists, and otherwise returning the fallback value.
+// If the environment variable has a value but it can't be parsed as an integer,
+// envInt terminates the program.
+func envInt(key string, fallback int) int {
+	if s, ok := os.LookupEnv(key); ok {
+		v, err := strconv.Atoi(s)
+		if err != nil {
+			log.Fatalf("ERR: want integer but got %v=%q err: %v", key, s, err)
 		}
-
-		log.Fatalf("ERROR: Want integer but got %v=%v err: %v", varName, str, err)
+		return v
 	}
-
-	return defaultValue
+	return fallback
 }

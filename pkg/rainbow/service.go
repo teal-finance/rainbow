@@ -22,12 +22,10 @@ type Service struct {
 }
 
 func NewService(p []Provider, s Store) Service {
-	service := Service{
+	return Service{
 		providers: p,
 		store:     s,
 	}
-
-	return service
 }
 
 // Run periodically fetch data from providers API and stores it in DB.
@@ -44,14 +42,12 @@ func (s *Service) FetchOptionsFromProviders() {
 		o, err := p.Options()
 		if err != nil {
 			log.Print("WARN fetching data from ", p, " : ", err)
-
 			continue
 		}
 
 		err = s.store.InsertOptions(o)
 		if err != nil {
 			log.Print("WARN cannot store data in DB for ", p, " : ", err)
-
 			continue
 		}
 

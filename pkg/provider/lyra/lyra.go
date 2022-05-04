@@ -77,8 +77,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		}
 	}
 
-	fmt.Println("total markets ", sum)
-
+	log.Print("total markets ", sum)
 	return options, nil
 }
 
@@ -119,7 +118,6 @@ func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketVi
 	}
 
 	ammOrder = append(ammOrder, trade)
-
 	return ammOrder, err
 }
 
@@ -178,7 +176,6 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 	})
 
 	options = append(options, call, put)
-
 	return options
 }
 
@@ -190,7 +187,6 @@ func optionName(o rainbow.Option) string {
 func expiration(e *big.Int) string {
 	seconds := e.Int64()
 	expiryTime := time.Unix(seconds, 0).UTC()
-
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
 
@@ -201,6 +197,5 @@ func expiration(e *big.Int) string {
 func ToFloat(n *big.Int) float64 {
 	q := common.Big0
 	q.Quo(n, big.NewInt(10000000000000)) // divided by 10^13
-
 	return float64(q.Int64()) / 100000.0
 }

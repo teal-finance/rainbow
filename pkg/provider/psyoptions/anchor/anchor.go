@@ -77,7 +77,6 @@ func (o Option) OptionMarketAddress() solana.PublicKey {
 func (o Option) Expiration() string {
 	seconds := o.opt.ExpirationUnixTimestamp
 	expiryTime := time.Unix(seconds, 0).UTC()
-
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
 
@@ -97,18 +96,14 @@ func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, program
 }
 
 // the Options have a field "Expired"(bool) but it is not set to false even for expired hence the function.
+// INFO: copy from opyn.go. should make a proper function
+// we keep an option even 2 days after expiry
+// mainly because not all protocol stop at expiry or right before
+// TODO re-check later.
 func (o Option) IsExpired() bool {
 	seconds := o.opt.ExpirationUnixTimestamp
 	expiryTime := time.Unix(seconds, 0).UTC()
-
-	// INFO: copy from opyn.go. should make a proper function
-	// we keep an option even 2 days after expiry
-	// mainly because not all protocol stop at expiry or right before
-	// TODO re-check later
-
-	date := time.Now()
-
-	return !expiryTime.After(date.Add(-time.Hour * 48))
+	return expiryTime.Before(time.Now().Add(-time.Hour * 48))
 }
 
 func (o Option) Asset() string {
@@ -171,7 +166,6 @@ func (o Option) OptionType() string {
 	if o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(USDCAddress) {
 		return "CALL"
 	}
-
 	return "PUT"
 }
 
@@ -187,7 +181,6 @@ func (o Option) Strike() float64 {
 		} else {
 			s = o.QuotePerContract() / o.UnderlyingPerContract()
 		}
-
 		return s * 1000
 	}
 

@@ -10,7 +10,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-func (h APIHandler) GraphQLHandler() http.Handler {
+func (h Handler) GraphQLHandler() http.Handler {
 	schema, err := graphql.NewSchema(
 		graphql.SchemaConfig{
 			Query: graphql.NewObject(graphql.ObjectConfig{
@@ -22,7 +22,6 @@ func (h APIHandler) GraphQLHandler() http.Handler {
 	if err != nil {
 		panic(err)
 	}
-
 	return graphhandler.New(&graphhandler.Config{Schema: &schema})
 }
 
@@ -31,19 +30,18 @@ func InteractiveGQLHandler(endpoint string) http.Handler {
 	if err != nil {
 		panic(err)
 	}
-
 	return h
 }
 
 // GetRootFields returns all the available queries.
-func (h APIHandler) fieldsRoot() graphql.Fields {
+func (h Handler) fieldsRoot() graphql.Fields {
 	return graphql.Fields{
 		"rows": h.fieldsCallPut(),
 	}
 }
 
 // GetUserQuery returns the queries available against user type.
-func (h APIHandler) fieldsCallPut() *graphql.Field {
+func (h Handler) fieldsCallPut() *graphql.Field {
 	return &graphql.Field{
 		Type: graphql.NewList(
 			graphql.NewObject(graphql.ObjectConfig{
@@ -105,7 +103,6 @@ func (h APIHandler) fieldsCallPut() *graphql.Field {
 			}
 
 			rows := buildCallPut(options)
-
 			return rows, nil
 		},
 	}

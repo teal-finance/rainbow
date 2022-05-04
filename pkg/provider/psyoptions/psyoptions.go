@@ -73,7 +73,6 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	if len(options) == 0 {
 		return nil, errors.New("empty options lists")
 	}
-
 	return options, nil
 }
 
@@ -101,7 +100,6 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		} else if len(levels) != limit {
 			levels = append(levels, []*big.Int{price, quantity})
 		}
-
 		return nil
 	})
 

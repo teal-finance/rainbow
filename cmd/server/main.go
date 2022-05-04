@@ -25,12 +25,12 @@ func main() {
 	parseFlags()
 
 	var providers []rainbow.Provider
-	switch len(*flagAlert) {
+	switch len(*alert) {
 	case 0:
 		providers = provider.AllProviders()
 	default:
 		providers = provider.AllProvidersWithAlert(
-			provider.NewOracle(*flagAlert),
+			provider.NewOracle(*alert),
 		)
 	}
 
@@ -79,7 +79,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r.With(g.JWT.Chk).Get("/assets/*", web.ServeAssets())
 
 	r.Route("/v0", func(r chi.Router) {
-		h := api.APIHandler{Service: s}
+		h := api.Handler{Service: s}
 
 		// HTTP API
 		r.With(g.JWT.Vet).Route("/options", func(r chi.Router) {

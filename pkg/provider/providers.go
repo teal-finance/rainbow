@@ -9,72 +9,71 @@ package provider
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"net/http"
+	"net/url"
+	"os"
 
-	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
-	"github.com/teal-finance/rainbow/pkg/provider/lyra"
-	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
-	"github.com/teal-finance/rainbow/pkg/provider/zerox"
-	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-// AllProviders returns all active providers.
+// AllProviders returns all active providers (without alerter).
 func AllProviders() []rainbow.Provider {
 	// changing the order to not exhaust our solana/serum rpc quota
 	// used by zeta and psy
 	return []rainbow.Provider{
-		zetamarkets.Provider{},
-		zerox.Provider{},
+		//zetamarkets.Provider{},
+		//zerox.Provider{},
 		deribit.Provider{},
-		lyra.Provider{},
+		/*lyra.Provider{},
 		deltaexchange.Provider{},
-		psyoptions.Provider{},
+		psyoptions.Provider{},*/
 	}
 }
 
-// AllProvidersWithAlert returns all active providers with an alerter on anormalities.
+// AllProvidersWithAlert returns all active providers with an alerter on anomalies.
+// Do not panic if alerter endpoint is not reachable.
 func AllProvidersWithAlert(o Oracle) []rainbow.Provider {
-	err := o.Query("Hello, I am the new updated Oracle !")
-	if err != nil {
-		panic(err)
+	hello := ":wave: Hi, RainbowOracle has just started"
+
+	host, err := os.Hostname()
+	if err == nil {
+		hello += " on " + host
 	}
 
-	// changing the order to not exhaust our solana/serum rpc quota
-	// used by zeta and psy
-	return []rainbow.Provider{
-		withAlert{zetamarkets.Provider{}, o},
-		withAlert{zerox.Provider{}, o},
-		withAlert{deribit.Provider{}, o},
-		withAlert{lyra.Provider{}, o},
-		withAlert{deltaexchange.Provider{}, o},
-		withAlert{psyoptions.Provider{}, o},
+	o.Query(hello)
+
+	providers := AllProviders()
+	for i, p := range providers {
+		providers[i] = alerter{p, o}
 	}
+
+	return providers
 }
 
-type withAlert struct {
-	prov   rainbow.Provider
-	oracle Oracle
+type alerter struct {
+	provider rainbow.Provider
+	oracle   Oracle
 }
 
-func (p withAlert) Name() string {
-	return p.prov.Name()
+func (a alerter) Name() string {
+	return a.provider.Name()
 }
 
-func (p withAlert) Options() ([]rainbow.Option, error) {
-	options, err := p.prov.Options()
+func (a alerter) Options() ([]rainbow.Option, error) {
+	options, err := a.provider.Options()
 
 	go func() {
 		if err != nil {
-			p.oracle.Query(fmt.Sprintf(":alert: **%s**: api error: %s\n", p.Name(), err))
+			a.oracle.Query(fmt.Sprintf(":alert: **%s**: API error: %s\n", a.Name(), err))
 			return
 		}
 		if len(options) == 0 {
-			p.oracle.Query(fmt.Sprintf(":question: **%s**: no options\n", p.Name()))
+			a.oracle.Query(fmt.Sprintf(":question: **%s**: no options\n", a.Name()))
+			return
 		}
-
-		// TO DO other anomality checks
+		// TODO check other anomalies
 	}()
 
 	return options, err
@@ -88,19 +87,29 @@ func NewOracle(endpoint string) Oracle {
 	return Oracle{endpoint}
 }
 
-func (o Oracle) Query(query string) error {
+func (o Oracle) Query(query string) {
 	resp, err := http.Post(
 		o.endpoint,
 		"application/json",
 		bytes.NewBuffer([]byte(`{"username":"Oracle","text":"`+query+`"}`)),
 	)
 	if err != nil {
-		return err
+		log.Print("ERR Alerter POST: ", err)
+		return
 	}
-	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("framateam.org returned status code %d", resp.StatusCode)
+		host := ""
+		if url, er := url.Parse(o.endpoint); er == nil {
+			host = url.Hostname()
+		} else {
+			log.Printf("ERR Alerter: URL=%q %s", o.endpoint, er)
+		}
+		log.Printf("ERR Alerter: %s returned status code %d", host, resp.StatusCode)
 	}
-	return nil
+
+	err = resp.Body.Close()
+	if err != nil {
+		log.Print("ERR Alerter: ", err)
+	}
 }

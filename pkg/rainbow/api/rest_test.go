@@ -34,10 +34,10 @@ func Test_specialValues(t *testing.T) {
 			wantValues: []string{"BTC", "ETH"},
 		},
 		{
-			name:       "Keep nothing",
+			name:       "Keep the last format",
 			format:     "",
-			values:     []string{"", "ALL", "csv", ".json", "", "tsv", ".csv", "json", ".tsv", "ALL"},
-			wantFormat: ".tsv",
+			values:     []string{"", "ALL", "csv", "json", "", "tsv", "csv", "json", "tsv", "ALL"},
+			wantFormat: "tsv",
 			wantValues: nil,
 		},
 		{
@@ -48,18 +48,18 @@ func Test_specialValues(t *testing.T) {
 			wantValues: nil,
 		},
 	}
+
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
 			specialValues(&c.format, &c.values)
 
-			if c.format == c.wantFormat && reflect.DeepEqual(c.values, c.wantValues) {
-				return
+			if c.format != c.wantFormat {
+				t.Errorf("format: got=%v want=%v", c.format, c.wantFormat)
 			}
 
-			t.Errorf("format: got=%v want=%v values: got=%v want=%v",
-				c.format, c.wantFormat,
-				c.values, c.wantValues)
-
+			if !reflect.DeepEqual(c.values, c.wantValues) {
+				t.Errorf("values: got=%v want=%v", c.values, c.wantValues)
+			}
 		})
 	}
 }

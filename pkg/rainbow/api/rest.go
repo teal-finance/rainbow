@@ -19,23 +19,21 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-type APIHandler struct {
+type Handler struct {
 	Service *rainbow.Service
 }
 
-func (h APIHandler) Options(w http.ResponseWriter, r *http.Request) {
+func (h Handler) Options(w http.ResponseWriter, r *http.Request) {
 	sa, format, err := query(r)
 	if err != nil {
 		log.Print("WRN Options ", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
-
 		return
 	}
 
 	options, _ := h.Service.Options(sa)
 	if len(options) == 0 {
 		http.Error(w, "No Content", http.StatusNoContent)
-
 		return
 	}
 
@@ -83,10 +81,13 @@ func query(r *http.Request) (sa rainbow.StoreArgs, format string, err error) {
 		Expiries:  expiries,
 		Providers: providers,
 	}
-
 	return sa, format, nil
 }
 
+// specialValues removes the special values from the values slide.
+// Special values are the empty string, "ALL"
+// and the supported formats ("csv", "tsv", "json").
+// specialValues also sets the format.
 func specialValues(format *string, values *[]string) {
 	i := 0
 	for _, v := range *values {
@@ -110,7 +111,7 @@ func specialValues(format *string, values *[]string) {
 	}
 }
 
-func (h APIHandler) writeOptions(w http.ResponseWriter, options []rainbow.Option, sa rainbow.StoreArgs, format string) error {
+func (h Handler) writeOptions(w http.ResponseWriter, options []rainbow.Option, sa rainbow.StoreArgs, format string) error {
 	switch {
 	case format == "": // The most frequent first
 		return h.replyJSON(w, options)
@@ -135,19 +136,18 @@ func (h APIHandler) writeOptions(w http.ResponseWriter, options []rainbow.Option
 	}
 }
 
-func (h APIHandler) replyJSON(w http.ResponseWriter, options []rainbow.Option) error {
+func (h Handler) replyJSON(w http.ResponseWriter, options []rainbow.Option) error {
 	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewEncoder(w).Encode(options); err != nil {
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
-
 		return err
 	}
 
 	return nil
 }
 
-func (h APIHandler) replyCSV(w http.ResponseWriter, options []rainbow.Option, comma rune) error {
+func (h Handler) replyCSV(w http.ResponseWriter, options []rainbow.Option, comma rune) error {
 	// Write in CSV format.
 	csvWriter := csv.NewWriter(w)
 	csvWriter.Comma = comma

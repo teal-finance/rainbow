@@ -28,12 +28,7 @@ function guidGenerator(): string {
 
 const Validators = {
   minStringLength: (len: number): StringValidator => {
-    return (v: string): boolean => {
-      if (v.length >= len) {
-        return true;
-      }
-      return false;
-    }
+    return (v: string): boolean => (v.length >= len);
   }
 };
 
