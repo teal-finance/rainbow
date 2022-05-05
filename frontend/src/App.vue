@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'dark': user.isDarkMode.value == true }">
+  <div id="toplevel" :class="{ 'dark': user.isDarkMode.value == true }">
     <div class="w-full background">
       <the-header></the-header>
       <div class="p-5">
@@ -27,10 +27,8 @@ export default defineComponent({
 })
 </script>
 
-<style lang="css">
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+<style lang="sass">
+
+html
+  overflow-y: scroll
 </style>

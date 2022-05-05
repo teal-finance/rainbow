@@ -40,7 +40,11 @@
             Source code
             <i-ant-design-github-filled></i-ant-design-github-filled>
           </button>
-          <div class="px-5 text-lg cursor-pointer" @click="user.toggleDarkMode()">
+          <div
+            class="px-5 text-lg cursor-pointer"
+            @click="user.toggleDarkMode()"
+            id="dark-mode-switch"
+          >
             <i-fa-solid-moon v-if="user.isDarkMode.value == false"></i-fa-solid-moon>
             <i-fa-solid-sun v-else></i-fa-solid-sun>
           </div>

@@ -1,64 +1,38 @@
 <template>
-  <div v-for="(v, i) in values" :key="i" class="flex flex-row items-center mb-3">
+  <div v-for="(k, i) in Object.keys(values)" :key="i" class="flex flex-row items-center mb-3">
     <sw-switch
-      v-model:value="state[`${v}`]"
+      :id="k"
+      v-model:value="values[k]"
       class="mr-2 switch-secondary"
-      @change="toggleActivate(v)"
-    ></sw-switch>
-    <div v-html="v"></div>
+      @update:value="toggleActivate(k, $event)"
+    >
+      <div class="ml-2" v-html="k"></div>
+    </sw-switch>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRefs, watchEffect } from "vue";
+<script setup lang="ts">
 import SwSwitch from "@snowind/switch";
 
-export default defineComponent({
-  components: {
-    SwSwitch
+defineProps({
+  col: {
+    type: String,
+    required: true,
   },
-  props: {
-    col: {
-      type: String,
-      required: true,
-    },
-    values: {
-      type: Set,
-      required: true,
-    },
-  },
-  emits: ["include", "exclude"],
-  setup(props, { emit }) {
-    const { values } = toRefs(props);
-    let state = reactive<Record<any, boolean>>({});
-
-    function toggleActivate(v: any) {
-      if (state[v]) {
-        // deactivate
-        state[v] = false;
-        emit("exclude", v)
-        return
-      } else {
-        // activate
-        state[`${v}`] = true
-      }
-      emit("include", v);
-    }
-
-    function _setState() {
-      for (const v of values.value) {
-        state[`${v}`] = true
-      }
-    }
-
-    watchEffect(() => {
-      _setState()
-    });
-
-    return {
-      state,
-      toggleActivate
-    };
+  values: {
+    type: Object as () => Record<any, boolean>,
+    required: true,
   },
 });
+
+const emit = defineEmits(["include", "exclude"])
+
+function toggleActivate(k: any, v: boolean) {
+  console.log("Toggle", k, v)
+  if (v) {
+    emit("include", k)
+  } else {
+    emit("exclude", k)
+  }
+}
 </script>
