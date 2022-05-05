@@ -158,7 +158,7 @@ func isStrikeAvailable(i instrument) bool {
 
 	for _, s := range strikes {
 		// if strike on deribit around strike anywhere else, keep it
-		if i.Strike >= s*0.99 && i.Strike <= s*1.01 {
+		if i.Strike >= s*0.98 && i.Strike <= s*1.02 {
 			return true
 		}
 	}
