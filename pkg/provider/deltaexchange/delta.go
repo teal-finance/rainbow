@@ -22,12 +22,21 @@ func (Provider) Name() string {
 	return "Delta Exchange" // TODO real name but we use the short one to have a nice front for now "Delta Exchange"
 }
 
+// return the hour (UTC) at which the options expires
+// 12:00 UTC
+// should that be a "func (Provider)"?
+func Hour() int {
+	return 12
+}
+
 func (pro Provider) Options() ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 	products, err := queryProducts()
 	if err != nil {
 		return nil, fmt.Errorf("delta options collect : %w", err)
 	}
+
+	expiries := rainbow.Expiries(Hour())
 	for _, p := range products {
 		resp, err := http.Get(deltaOrders + p.Symbol)
 		if err != nil {
@@ -42,6 +51,10 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 
 		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
 			return nil, fmt.Errorf(" order book : %w", err)
+		}
+
+		if !rainbow.IsExpiryAvailable(expiries, p.SettlementTime) {
+			continue
 		}
 
 		expiryStr := p.SettlementTime.Format("2006-01-02 15:04:05")

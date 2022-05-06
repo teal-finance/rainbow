@@ -25,6 +25,13 @@ func (Provider) Name() string {
 	return "Deribit"
 }
 
+// return the hour (UTC) at which the options expires
+// 8:00 UTC
+// should that be a "func (Provider)"?
+func Hour() int {
+	return 8
+}
+
 func (Provider) Options() ([]rainbow.Option, error) {
 	instruments, err := query("BTC")
 	if err != nil {
@@ -110,37 +117,18 @@ type instrument struct {
 }
 
 func filterTooFar(instruments []instrument) (filtered []instrument) {
+	expiries := rainbow.Expiries(Hour())
 	for _, i := range instruments {
 		seconds := i.ExpirationTimestamp / 1000
 		ns := (i.ExpirationTimestamp % 1000) * 1000_000
 		expiryTime := time.Unix(seconds, ns).UTC()
 		// we should filter by taking what is available elsewhere and then
 		// only fetch those
-		if isExpiryAvailable(expiryTime) && isStrikeAvailable(i) {
+		if rainbow.IsExpiryAvailable(expiries, expiryTime) && isStrikeAvailable(i) {
 			filtered = append(filtered, i)
 		}
 	}
 	return filtered
-}
-
-// TODO change this quick and dirty way of filtering date from deribit.
-func isExpiryAvailable(expiry time.Time) bool {
-	dates := []string{
-		"2022-05-06T08:00:00Z",
-		"2022-05-07T08:00:00Z",
-		"2022-05-13T08:00:00Z",
-		"2022-05-20T08:00:00Z",
-		"2022-05-27T08:00:00Z",
-		"2022-06-24T08:00:00Z",
-	}
-	for _, d := range dates {
-		t, _ := time.Parse(time.RFC3339, d)
-		if expiry.Equal(t) {
-			return true
-		}
-	}
-
-	return false
 }
 
 // TODO change this quick and dirty way of filtering strikes from deribit.
