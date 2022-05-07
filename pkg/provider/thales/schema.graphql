@@ -1,0 +1,218 @@
+type Market @entity {
+  id: ID!
+  timestamp: BigInt!
+  creator: Bytes!
+  currencyKey: Bytes!
+  strikePrice: BigInt!
+  maturityDate: BigInt!
+  expiryDate: BigInt!
+  isOpen: Boolean!
+  poolSize: BigInt!
+  longAddress: Bytes!
+  shortAddress: Bytes!
+  result: Int
+  customMarket: Boolean!
+  customOracle: Bytes!
+  finalPrice: BigInt
+}
+
+type RangedMarket @entity {
+  id: ID!
+  timestamp: BigInt!
+  currencyKey: Bytes!
+  maturityDate: BigInt!
+  leftPrice: BigInt!
+  rightPrice: BigInt!
+  inAddress: Bytes!
+  outAddress: Bytes!
+  rightMarket: Market!
+  leftMarket: Market!
+  isOpen: Boolean!
+  result: Int
+  finalPrice: BigInt
+}
+
+enum OptionTransactionType {
+  mint
+  exercise
+}
+
+type OptionTransaction @entity {
+  id: ID!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  type: OptionTransactionType!
+  account: Bytes!
+  market: Bytes!
+  amount: BigInt!
+  currencyKey: Bytes
+  side: Int
+  fee: BigInt
+}
+
+enum OptionSide {
+  long
+  short
+  in
+  out
+}
+
+enum OrderSide {
+  buy
+  sell
+}
+
+type Trade @entity {
+  # tx hash - order hash - log index
+  id: ID!
+  transactionHash: Bytes!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  orderHash: Bytes!
+  maker: Bytes!
+  taker: Bytes!
+  makerToken: Bytes!
+  takerToken: Bytes!
+  makerAmount: BigInt!
+  takerAmount: BigInt!
+  market: Bytes
+  optionSide: OptionSide
+  orderSide: OrderSide
+}
+
+enum TokenTransactionType {
+  claimRetroAirdrop
+  claimRetroUnlocked
+  claimStakingRewards
+  stake
+  startUnstake
+  cancelUnstake
+  unstake
+  addToEscrow
+  vest
+  claimMigratedRewards
+  lpStake
+  lpUnstake
+  lpClaimStakingRewards
+  claimMigratedRetroRewards
+}
+
+type TokenTransaction @entity {
+  # tx hash - log index
+  id: ID!
+  transactionHash: Bytes!
+  timestamp: BigInt!
+  account: Bytes!
+  amount: BigInt
+  type: TokenTransactionType!
+  blockNumber: BigInt!
+}
+
+type OngoingAirdropNewRoot @entity {
+  # tx hash - log index
+  id: ID!
+  transactionHash: Bytes!
+  root: Bytes!
+  timestamp: BigInt!
+  period: BigInt!
+}
+
+type BinaryOption @entity {
+  id: ID!
+  timestamp: BigInt!
+  market: Bytes!
+  side: OptionSide
+}
+
+type Staker @entity {
+  id: ID!
+  account: Bytes!
+  timestamp: BigInt!
+  stakedAmount: BigInt!
+  escrowedAmount: BigInt!
+  totalStakedAmount: BigInt!
+  unstakingAmount: BigInt!
+}
+
+type ThalesRoyaleGame @entity {
+  id: ID!
+  timestamp: BigInt!
+  address: Bytes!
+  season: BigInt!
+}
+
+type ThalesRoyaleSeason @entity {
+  id: ID!
+  timestamp: BigInt!
+  season: BigInt!
+}
+
+type ThalesRoyaleRound @entity {
+  id: ID!
+  timestamp: BigInt!
+  round: BigInt!
+  season: BigInt!
+  totalPlayersPerRoundPerSeason: BigInt!
+  eliminatedPerRoundPerSeason: BigInt!
+  result: BigInt
+  strikePrice: BigInt
+  finalPrice: BigInt
+}
+
+type ThalesRoyalePlayer @entity {
+  id: ID!
+  number: BigInt!
+  address: Bytes!
+  timestamp: BigInt!
+  season: BigInt!
+  isAlive: Boolean!
+  deathRound: BigInt
+  defaultPosition: BigInt
+}
+
+type ThalesRoyalePosition @entity {
+  id: ID!
+  timestamp: BigInt!
+  player: Bytes!
+  round: BigInt!
+  season: BigInt!
+  position: BigInt!
+}
+
+type ThalesRoyalePass @entity {
+  id: ID!
+  address: Bytes!
+}
+
+type ThalesRoyalePassportPlayer @entity {
+  id: ID!
+  owner: Bytes!
+  number: BigInt
+  timestamp: BigInt
+  season: BigInt
+  isAlive: Boolean
+  deathRound: BigInt
+  defaultPositions: [BigInt!]
+}
+
+type ThalesRoyalePassportPosition @entity {
+  id: ID!
+  timestamp: BigInt!
+  tokenPlayer: BigInt!
+  round: BigInt!
+  season: BigInt!
+  position: BigInt!
+}
+
+type Position @entity {
+  id: ID!
+  market: Market!
+  side: OptionSide!
+}
+
+type PositionBalance @entity {
+  id: ID!
+  account: Bytes!
+  amount: BigInt!
+  position: Position!
+}
