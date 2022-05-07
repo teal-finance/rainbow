@@ -27,6 +27,8 @@ var (
 	reqBurst     = flag.Int("burst", envInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
 	wwwDir       = flag.String("www", envStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
 	alert        = flag.String("alert", envStr("ALERT_URL", ""), "Webhook endpoint to notify anomalies, has precedence over ALERT_URL")
+	aes          = flag.String("aes", envStr("AES_128", ""), " 128-bit AES key (32 hex chars) for the session cookies, has precedence over AES_128")
+	hmac         = flag.String("hmac", envStr("HMAC_SHA256", ""), "HMAC-SHA256 key (64 hex chars) for the JWT tokens, has precedence over HMAC_SHA256")
 	listenAddr   string
 )
 
@@ -47,7 +49,9 @@ func parseFlags() {
 	log.Print("REQ_PER_MINUTE -rate  = ", *reqPerMinute)
 	log.Print("REQ_BURST      -burst = ", *reqBurst)
 	log.Print("WWW_DIR        -www   = ", *wwwDir)
-	log.Print("ALERT_URL      -alert = ", *alert)
+	log.Print("ALERT_URL      -alert len=", len(*alert))
+	log.Print("AES_128        -aes   len=", len(*aes), " (need 32 hexadecimal characters)")
+	log.Print("HMAC_SHA256    -hmac  len=", len(*hmac), " (need 16 hexadecimal characters)")
 }
 
 // envStr looks up the given key from the environment,
