@@ -1,7 +1,6 @@
 package rainbow
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -38,43 +37,30 @@ func TestIsExpiryAvailable(t *testing.T) {
 
 func TestExpiries(t *testing.T) {
 	tests := map[string]struct {
+		day  time.Time
 		hour int
 		want []time.Time
 	}{
-		// Problem here because we are testing with the current time.
-
-		// Or you change your code, with the current date as an argument (will use time.Now() for call in our code
-		//and wathever we want to test).
-	}
-	for name, tt := range tests {
-		t.Run(name, func(t *testing.T) {
-			got := Expiries(tt.hour)
-			for _, expiry := range got {
-				fmt.Println(expiry)
-			}
-			assert.ElementsMatch(t, tt.want, got)
-		})
-	}
-}
-
-func TestTodayTomorrow(t *testing.T) {
-	now := time.Now()
-	tests := map[string]struct {
-		hour         int
-		wantToday    time.Time
-		wantTomorrow time.Time
-	}{
-		"hour-8": {
-			hour:         8,
-			wantToday:    time.Date(now.Year(), now.Month(), now.Day(), 8, 0, 0, 0, time.UTC),
-			wantTomorrow: time.Date(now.Year(), now.Month(), now.Day()+1, 8, 0, 0, 0, time.UTC),
+		"ok": {
+			day:  time.Date(2020, time.January, 1, 0, 0, 0, 0, time.UTC),
+			hour: 8,
+			want: []time.Time{
+				time.Date(2020, time.January, 1, 8, 0, 0, 0, time.UTC),
+				time.Date(2020, time.January, 2, 8, 0, 0, 0, time.UTC),
+				time.Date(2020, time.January, 10, 8, 0, 0, 0, time.UTC),
+				time.Date(2020, time.January, 17, 8, 0, 0, 0, time.UTC),
+				time.Date(2020, time.January, 24, 8, 0, 0, 0, time.UTC),
+				time.Date(2020, time.March, 27, 8, 0, 0, 0, time.UTC),
+				time.Date(2020, time.June, 26, 8, 0, 0, 0, time.UTC),
+				time.Date(2020, time.September, 25, 8, 0, 0, 0, time.UTC),
+				time.Date(2020, time.December, 25, 8, 0, 0, 0, time.UTC),
+			},
 		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			today, tomorrow := TodayTomorrow(tt.hour)
-			assert.Equal(t, tt.wantToday, today)
-			assert.Equal(t, tt.wantTomorrow, tomorrow)
+			got := Expiries(tt.day, tt.hour)
+			assert.ElementsMatch(t, tt.want, got)
 		})
 	}
 }
