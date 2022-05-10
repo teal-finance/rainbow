@@ -23,11 +23,10 @@ require (
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1
 	github.com/stretchr/testify v1.7.1
-	github.com/teal-finance/garcon v0.13.0
+	github.com/teal-finance/garcon v0.13.1
 )
 
 require (
-	contrib.go.opencensus.io/exporter/stackdriver v0.13.12 // indirect
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	github.com/GeertJohan/go.rice v1.0.2 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
@@ -39,12 +38,12 @@ require (
 	github.com/aybabtme/rgbterm v0.0.0-20170906152045-cc83f3b3ce59 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blendle/zapdriver v1.3.1 // indirect
-	github.com/btcsuite/btcd/btcec/v2 v2.1.3 // indirect
+	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/daaku/go.zipexe v1.0.1 // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
-	github.com/dfuse-io/logging v0.0.0-20220405224725-2755dab2ce75 // indirect
+	github.com/dfuse-io/logging v0.0.0-20220510190517-a6ee472bec8e // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
@@ -52,7 +51,6 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
-	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/rpc v1.2.0 // indirect
@@ -89,9 +87,9 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 // indirect
 	github.com/streamingfast/logging v0.0.0-20210908162127-bdc5856d5341 // indirect
+	github.com/teal-finance/BaseXX v0.0.0-20220510204717-0aaa9bfeea76 // indirect
 	github.com/teal-finance/emo v0.0.0-20220422152121-4c5a065f1100 // indirect
 	github.com/teal-finance/quid v0.0.0-20220504094056-4f2ecce730cb // indirect
-	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 // indirect
 	github.com/tidwall/gjson v1.14.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
@@ -104,12 +102,11 @@ require (
 	github.com/yashtewari/glob-intersection v0.1.0 // indirect
 	github.com/ybbus/jsonrpc v2.1.2+incompatible // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
-	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
-	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f // indirect
+	golang.org/x/crypto v0.0.0-20220507011949-2cf3adece122 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
 	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect

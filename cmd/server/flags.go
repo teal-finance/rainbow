@@ -50,8 +50,22 @@ func parseFlags() {
 	log.Print("REQ_BURST      -burst = ", *reqBurst)
 	log.Print("WWW_DIR        -www   = ", *wwwDir)
 	log.Print("ALERT_URL      -alert len=", len(*alert))
-	log.Print("AES_128        -aes   len=", len(*aes), " (need 32 hexadecimal characters)")
-	log.Print("HMAC_SHA256    -hmac  len=", len(*hmac), " (need 16 hexadecimal characters)")
+	log.Print("AES_128        -aes   len=", len(*aes), " (need 32 hexadecimal numbers)")
+	log.Print("HMAC_SHA256    -hmac  len=", len(*hmac), " (need 16 hexadecimal numbers)")
+
+	// mandatory: -aes or -hmac
+	if len(*aes) == 0 && len(*hmac) == 0 {
+		if *dev {
+			*hmac = "9d2e0a02121179a3c3de1b035ae1355b1548781c8ce8538a1dc0853a12dfb13d"
+		} else {
+			log.Fatal("Missing secret key for the tokens (cookies). " +
+				"Please provide it using the -aes or -hmac flag " +
+				"(or the AES_128 or HMAC_SHA256 env. var.)")
+		}
+	}
+	if len(*aes) > 0 && len(*hmac) > 0 {
+		log.Print("WAR: Should use -aes or -hmac, not both in the same time")
+	}
 }
 
 // envStr looks up the given key from the environment,

@@ -38,21 +38,13 @@ func main() {
 	service := rainbow.NewService(providers, dbram.NewDB())
 	go service.Run()
 
-	var tokenChecker garcon.Option
+	var tokenOption garcon.Option
 	if len(*aes) > 0 {
-		tokenChecker = garcon.WithSession(*aes, time.Minute, true)
+		tokenOption = garcon.WithSession(*aes, 0, true)
 	} else {
-		if len(*hmac) == 0 {
-			if *dev {
-				*hmac = "9d2e0a02121179a3c3de1b035ae1355b1548781c8ce8538a1dc0853a12dfb13d"
-			} else {
-				log.Panic("Missing secret ket for the tokens (cookies). " +
-					"Please use -aes or -hmac (or AES_128 or HMAC_SHA256 env. vars).")
-			}
-		}
-		tokenChecker = garcon.WithJWT(*hmac, "FreePlan", 10, "PremiumPlan", 100)
+		tokenOption = garcon.WithJWT(*hmac, "FreePlan", 10, "PremiumPlan", 100)
 	}
-	// erase the secrets, no longer required
+	// secrets no longer required => erase them
 	aes = nil
 	hmac = nil
 
@@ -60,7 +52,7 @@ func main() {
 		garcon.WithURLs(*mainAddr),
 		garcon.WithDocURL("/doc"),
 		garcon.WithServerHeader("Rainbow-v0"),
-		tokenChecker,
+		tokenOption,
 		garcon.WithLimiter(*reqBurst, *reqPerMinute),
 		garcon.WithProm(*expPort, *mainAddr),
 		garcon.WithDev(*dev))
