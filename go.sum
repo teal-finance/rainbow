@@ -55,6 +55,7 @@ cloud.google.com/go/trace v1.0.0/go.mod h1:4iErSByzxkyHWzzlAj63/Gmjz0NH1ASqhJguH
 collectd.org v0.3.0/go.mod h1:A/8DzQBkF6abtvrT2j/AU/4tiBgJWYyh0y/oB/4MlWE=
 contrib.go.opencensus.io/exporter/stackdriver v0.12.6/go.mod h1:8x999/OcIPy5ivx/wDiV7Gx4D+VUPODf0mWRGRc5kSk=
 contrib.go.opencensus.io/exporter/stackdriver v0.13.4/go.mod h1:aXENhDJ1Y4lIg4EUaVTwzvYETVNZk10Pu26tevFKLUc=
+contrib.go.opencensus.io/exporter/stackdriver v0.13.10 h1:a9+GZPUe+ONKUwULjlEOucMMG0qfSCCenlji0Nhqbys=
 contrib.go.opencensus.io/exporter/stackdriver v0.13.10/go.mod h1:I5htMbyta491eUxufwwZPQdcKvvgzMB4O9ni41YnIM8=
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
 filippo.io/edwards25519 v1.0.0-rc.1 h1:m0VOOB23frXZvAOK44usCgLWvtsxIoMCTBGJZlpmGfU=
@@ -1209,11 +1210,10 @@ github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 h1:xCVaIP9q+n
 github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5/go.mod h1:LEQhe6qUvAQSYBJu7MZvDU1kx4JrZzxru3Ga1rRCCuo=
 github.com/streamingfast/dstore v0.1.1-0.20211028233549-6fa17808533b/go.mod h1:Jcr8TZ2XOAAFB7/7UeN6Zr8LM+Qv3cg36CsXpVDoAuU=
 github.com/streamingfast/logging v0.0.0-20210811175431-f3b44b61606a/go.mod h1:4GdqELhZOXj4xwc4IaBmzofzdErGynnaSzuzxy0ZIBo=
+github.com/streamingfast/logging v0.0.0-20210908162127-bdc5856d5341 h1:+9UISis7a5u0ZDRS5dUWTF23eoKg9qcV4hXUImSEaDc=
 github.com/streamingfast/logging v0.0.0-20210908162127-bdc5856d5341/go.mod h1:4GdqELhZOXj4xwc4IaBmzofzdErGynnaSzuzxy0ZIBo=
 github.com/streamingfast/logging v0.0.0-20220405224725-2755dab2ce75 h1:ZqpS7rAhhKD7S7DnrpEdrnW1/gZcv82ytpMviovkli4=
 github.com/streamingfast/logging v0.0.0-20220405224725-2755dab2ce75/go.mod h1:VlduQ80JcGJSargkRU4Sg9Xo63wZD/l8A5NC/Uo1/uU=
-github.com/streamingfast/logging v0.0.0-20220511154537-ce373d264338 h1:Mn7i0pN8FASFpCDvtnRhV7L1bdlj1MteLkRWsxFVIhE=
-github.com/streamingfast/logging v0.0.0-20220511154537-ce373d264338/go.mod h1:VlduQ80JcGJSargkRU4Sg9Xo63wZD/l8A5NC/Uo1/uU=
 github.com/streamingfast/solana-go v0.5.1 h1:EQU3UPHjCPhrWzGhZ8KM8RE4HEhxh4kgMM2yz7tpm+0=
 github.com/streamingfast/solana-go v0.5.1/go.mod h1:UI2EygssF2zXpbLNRbwndBX4WlMRFhB7C5Z0wUj4D/c=
 github.com/stretchr/objx v0.0.0-20180129172003-8a3f7159479f/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
@@ -1247,6 +1247,7 @@ github.com/teal-finance/incorruptible v0.0.0-20220517205712-1bc49d9f6aab/go.mod 
 github.com/teal-finance/quid v0.0.0-20220504094056-4f2ecce730cb h1:GohVMeckXl74nkpaABda3i+1l+oSnNXOSgS9dn6G7FE=
 github.com/teal-finance/quid v0.0.0-20220504094056-4f2ecce730cb/go.mod h1:hzMny/4CbGpMgcgSPGtL1NsN2pWyYqTiXVxn6e8TKMs=
 github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf/go.mod h1:M8agBzgqHIhgj7wEn9/0hJUZcrvt9VY+Ln+S1I5Mha0=
+github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 h1:3SNcvBmEPE1YlB1JpVZouslJpI3GBNoiqW7+wb0Rz7w=
 github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125/go.mod h1:M8agBzgqHIhgj7wEn9/0hJUZcrvt9VY+Ln+S1I5Mha0=
 github.com/test-go/testify v1.1.4 h1:Tf9lntrKUMHiXQ07qBScBTSA0dhYQlu83hswqelv1iE=
 github.com/test-go/testify v1.1.4/go.mod h1:rH7cfJo/47vWGdi4GPj16x3/t1xGOj2YxzmNQzk2ghU=

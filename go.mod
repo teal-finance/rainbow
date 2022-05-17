@@ -27,6 +27,7 @@ require (
 )
 
 require (
+	contrib.go.opencensus.io/exporter/stackdriver v0.13.10 // indirect
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	github.com/GeertJohan/go.rice v1.0.2 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
@@ -51,6 +52,7 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
+	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/rpc v1.2.0 // indirect
@@ -91,6 +93,7 @@ require (
 	github.com/teal-finance/emo v0.0.0-20220422152121-4c5a065f1100 // indirect
 	github.com/teal-finance/incorruptible v0.0.0-20220517205712-1bc49d9f6aab // indirect
 	github.com/teal-finance/quid v0.0.0-20220504094056-4f2ecce730cb // indirect
+	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 // indirect
 	github.com/tidwall/gjson v1.14.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
@@ -103,6 +106,7 @@ require (
 	github.com/yashtewari/glob-intersection v0.1.0 // indirect
 	github.com/ybbus/jsonrpc v2.1.2+incompatible // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
+	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect
