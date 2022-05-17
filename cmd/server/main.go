@@ -40,7 +40,7 @@ func main() {
 
 	var tokenOption garcon.Option
 	if len(*aes) > 0 {
-		tokenOption = garcon.WithSession(*aes, 0, true)
+		tokenOption = garcon.WithIncorruptible(*aes, 0, true)
 	} else {
 		tokenOption = garcon.WithJWT(*hmac, "FreePlan", 10, "PremiumPlan", 100)
 	}

@@ -1,54 +1,164 @@
-# This file contains all available configuration options
-# with their default values.
-
-# options for analysis running
+# Run the last version:
+# go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
+# https://golangci-lint.run/usage/configuration/#run-configuration
 run:
-  # timeout for analysis, e.g. 30s, 5m, default is 1m
-  deadline: 5m
-
-  # exit code when at least one issue was found, default is 1
-  issues-exit-code: 1
-
-  # which dirs to skip: they won't be analyzed;
-  # can use regexp here: generated.*, regexp is applied on full path;
-  # default value is empty list, but next dirs are always skipped independently
-  # from this option's value:
-  #     vendor$, third_party$, testdata$, examples$, Godeps$, builtin$
-  skip-dirs: 
+  skip-dirs:
     - vendor
-    - "poc"
+    - poc
+  go: '1.17'
+  # timeout for analysis, e.g. 30s, 5m, default is 1m
+  deadline: 10m
 
-# output configuration options
-output:
-  # colored-line-number|line-number|json|tab|checkstyle, default is "colored-line-number"
-  format: colored-line-number
-
-  # print lines of code with issue, default is true
-  print-issued-lines: true
-
-  # print linter name in the end of issue text, default is true
-  print-linter-name: true
-
+# List the available linters:
+# go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest linters --no-config
 linters:
+
   enable:
-    # Sorted alphabetically.
-    - deadcode
-    - errcheck
-    - goconst
-    - godot
-    - gofmt
-    - goimports
-    - gosimple
-    - govet
-    - ineffassign
-    - misspell
-    - staticcheck
-    - structcheck
-    - typecheck
-    - unused
-    - varcheck
-    - exportloopref
+    - asciicheck       # Simple linter to check that your code does not contain non-ASCII identifiers
+    - bidichk          # Checks for dangerous unicode character sequences
+    - bodyclose        # checks whether HTTP response body is closed successfully
+    - containedctx     # containedctx is a linter that detects struct contained context.Context field
+    - contextcheck     # check the function whether use a non-inherited context
+    - cyclop           # checks function and package cyclomatic complexity
+    - deadcode         # Finds unused code
+    - decorder         # check declaration order and count of types, constants, variables and functions
+    - depguard         # Go linter that checks if package imports are in a list of acceptable packages
+    - dogsled          # Checks assignments with too many blank identifiers (e.g. x, _, _, _, := f())
+    - dupl             # Tool for code clone detection
+    - durationcheck    # check for two durations multiplied together
+    - errcheck         # Errcheck is a program for checking for unchecked errors in go programs. These unchecked errors can be critical bugs in some cases
+    - errchkjson       # Checks types passed to the json encoding functions. Reports unsupported types and optionally reports occations, where the check for the returned error can be omitted.
+    - errname          # Checks that sentinel errors are prefixed with the `Err` and error types are suffixed with the `Error`.
+    - errorlint        # errorlint is a linter for that can be used to find code that will cause problems with the error wrapping scheme introduced in Go 1.13.
+    - exhaustive       # check exhaustiveness of enum switch statements
+    - exhaustivestruct # Checks if all struct's fields are initialized
+    - exportloopref    # checks for pointers to enclosing loop variables
+    - forbidigo        # Forbids identifiers - we use log.Print
+    - forcetypeassert  # finds forced type assertions
+    - funlen           # Tool for detection of long functions
+    - gci              # Gci controls golang package import order and makes it always deterministic.
+    - gochecknoinits   # Checks that no init functions are present in Go code
+    - gocognit         # Computes and checks the cognitive complexity of functions
+    - goconst          # Finds repeated strings that could be replaced by a constant
+    - gocritic         # Provides diagnostics that check for bugs, performance and style issues.
+    - gocyclo          # Computes and checks the cyclomatic complexity of functions
+    - godot            # Check if comments end in a period
+    - godox            # Tool for detection of FIXME, TODO and other comment keywords
+    - goerr113         # Golang linter to check the errors handling expressions
+    - gofmt            # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification
+    - gofumpt          # Gofumpt checks whether code was gofumpt-ed.
+    - goheader         # Checks is file header matches to pattern
+    - goimports        # In addition to fixing imports, goimports also formats your code in the same style as gofmt.
+    - gomoddirectives  # Manage the use of 'replace', 'retract', and 'excludes' directives in go.mod.
+    - gomodguard       # Allow and block list linter for direct Go module dependencies. This is different from depguard where there are different block types for example version constraints and module recommendations.
+    - goprintffuncname # Checks that printf-like functions are named with `f` at the end
+    - gosec            # Inspects source code for security problems
+    - gosimple         # Linter for Go source code that specializes in simplifying a code
+    - govet            #(vet, vetshadow): Vet examines Go source code and reports suspicious constructs, such as Printf calls whose arguments do not align with the format string
+    - grouper          # An analyzer to analyze expression groups.
+    - ifshort          # Checks that your code uses short syntax for if-statements whenever possible
+    - importas         # Enforces consistent import aliases
+    - ineffassign      # Detects when assignments to existing variables are not used
+    - ireturn          # Accept Interfaces, Return Concrete Types
+    - maintidx         # maintidx measures the maintainability index of each function.
+    - makezero         # Finds slice declarations with non-zero initial length
+    - misspell         # Finds commonly misspelled English words in comments
+    - nakedret         # Finds naked returns in functions greater than a specified function length
+    - nestif           # Reports deeply nested if statements
+    - nilerr           # Finds the code that returns nil even if it checks that the error is not nil.
+    - nilnil           # Checks that there is no simultaneous return of `nil` error and an invalid value.
+    - noctx            # noctx finds sending http request without context.Context
+    - nolintlint       # Reports ill-formed or insufficient nolint directives
+    - prealloc         # Finds slice declarations that could potentially be preallocated
+    - predeclared      # find code that shadows one of Go's predeclared identifiers
+    - promlinter       # Check Prometheus metrics naming via promlint
+    - revive           # Fast, configurable, extensible, flexible, and beautiful linter for Go. Drop-in replacement of golint.
+    - rowserrcheck     # checks whether Err of rows is checked successfully
+    - sqlclosecheck    # Checks that sql.Rows and sql.Stmt are closed.
+    - staticcheck      # Staticcheck is a go vet on steroids, applying a ton of static analysis checks
+    - structcheck      # Finds unused struct fields
+    - stylecheck       # Stylecheck is a replacement for golint
+    - tagliatelle      # Checks the struct tags.
+    - tenv             # tenv is analyzer that detects using os.Setenv instead of t.Setenv since Go1.17
+    - thelper          # thelper detects golang test helpers without t.Helper() call and checks the consistency of test helpers
+    - tparallel        # tparallel detects inappropriate usage of t.Parallel() method in your Go test codes
+    - typecheck        # Like the front-end of a Go compiler, parses and type-checks Go code
+    - unconvert        # Remove unnecessary type conversions
+    - unparam          # Reports unused function parameters
+    - unused           # Checks Go code for unused constants, variables, functions and types
+    - varcheck         # Finds unused global variables and constants
+    - wastedassign     # wastedassign finds wasted assignment statements.
+    - whitespace       # Tool for detection of leading and trailing whitespace
+
+  disable:
+
+    # DEPRECATED
+    - golint           # v1.41 replaced by revive formater
+    - interfacer       # v1.38 has been archived by the owner (suggests narrower interface types)
+    - maligned         # v1.38 has been replaced by govet 'fieldalignment' (detect Go structs that would take less memory if their fields were sorted)
+    - scopelint        # v1.39 has been replaced by exportloopref (checks for unpinned variables in go programs)
+
+    # ANNOYING
+    - gochecknoglobals # no global variables exist
+    - gomnd            # detect magic numbers
+    - lll              # reports long lines
+    - nlreturn         # new line before return and branch statements to increase code clarity
+    - paralleltest     # detect missing usage of t.Parallel() method in your Go test
+    - testpackage      # use a separate _test package
+    - varnamelen       # checks that the length of a variable's name matches its scope
+    - wrapcheck        # checks that errors returned from external packages are wrapped
+    - wsl              # forces you to use empty lines
 
 linters-settings:
+
   goconst:
     min-occurrences: 5
+    
+  goimports:
+    local-prefixes: github.com/teal-finance/rainbow
+
+  # https://github.com/mvdan/gofumpt
+  gofumpt:
+    lang-version: '1.18'
+    extra-rules: true
+
+  gosimple:
+    go: "1.18"
+    # https://staticcheck.io/docs/options#checks
+    checks: ["all"]
+
+  staticcheck:
+    go: "1.18"
+    # https://staticcheck.io/docs/options#checks
+    checks: ["all"]
+
+  stylecheck:
+    go: "1.18"
+    # https://staticcheck.io/docs/options#checks
+    checks: ["all", "-ST1000", "-ST1003", "-ST1016", "-ST1020", "-ST1021", "-ST1022"]
+    # https://staticcheck.io/docs/options#dot_import_whitelist
+    dot-import-whitelist:
+      - fmt
+    # https://staticcheck.io/docs/options#initialisms
+    initialisms: ["ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "QPS", "RAM", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP", "TLS", "TTL", "UDP", "UI", "GID", "UID", "UUID", "URI", "URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS"]
+    # https://staticcheck.io/docs/options#http_status_code_whitelist
+    http-status-code-whitelist: ["200", "400", "404", "500"]
+
+  tagliatelle:
+    case:
+      rules:
+        json: snake # should also be "goCamel"
+
+  # https://github.com/butuzov/ireturn
+  # https://golangci-lint.run/usage/linters/#ireturn
+  ireturn:
+    allow:
+      - anon    # anonymous interfaces such as: interface{Stop()}
+      - error   # error interface
+      - stdlib  # standard library interfaces
+      - github.com/prometheus\/client_golang\/prometheus.Gauge
+      - github.com/prometheus\/client_golang\/prometheus.Counter
+
+output:
+  format: tab
+  sort-results: true  # sorts results by: filepath, line and column
