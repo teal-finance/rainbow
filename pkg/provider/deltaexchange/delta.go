@@ -36,7 +36,7 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		return nil, fmt.Errorf("delta options collect : %w", err)
 	}
 
-	expiries := rainbow.Expiries(Hour())
+	expiries := rainbow.Expiries(time.Now(), Hour())
 	for _, p := range products {
 		resp, err := http.Get(deltaOrders + p.Symbol)
 		if err != nil {

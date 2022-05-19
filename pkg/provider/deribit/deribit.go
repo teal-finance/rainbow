@@ -117,7 +117,7 @@ type instrument struct {
 }
 
 func filterTooFar(instruments []instrument) (filtered []instrument) {
-	expiries := rainbow.Expiries(Hour())
+	expiries := rainbow.Expiries(time.Now(), Hour())
 	for _, i := range instruments {
 		seconds := i.ExpirationTimestamp / 1000
 		ns := (i.ExpirationTimestamp % 1000) * 1000_000
