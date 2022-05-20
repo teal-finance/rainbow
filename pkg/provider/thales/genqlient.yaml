@@ -1,0 +1,16 @@
+# Default genqlient config; for full documentation see:
+# https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml
+schema: schema.graphql
+operations:
+- query.graphql
+generated: generated.go
+
+# We bind github's DateTime scalar type to Go's time.Time (which conveniently
+# already defines MarshalJSON and UnmarshalJSON).  This means genqlient will
+# use time.Time when a query requests a DateTime, and is required for custom
+# scalars.
+bindings:
+  BigInt:
+    type: int
+  Bytes:
+    type: "[]byte"
