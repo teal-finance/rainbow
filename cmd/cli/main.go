@@ -41,16 +41,17 @@ func printTable(options []rainbow.Option) {
 	t.SetTitle(fmt.Sprint(" Available options: ", len(options)))
 
 	t.AppendHeader(table.Row{
-		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", red(" Ask"), "Size", "Instrument",
+		"Provider", "Asset", "Type", "Bid IV", "Size", green(" Bid"), "Strike", red(" Ask"), "Size", "Ask IV", "Instrument", "Greeks",
 	})
 
 	for _, option := range options {
-		bestBidPx, bestBidQty, bestAskPx, bestAskQty := rainbow.BestLimitStr(option)
+		bidIv, bestBidPx, bestBidQty, askIv, bestAskPx, bestAskQty := rainbow.BestLimitStr(option)
 
 		t.AppendRows([]table.Row{{
 			highlight(option.Provider), option.Asset, option.Type,
-			bestBidQty, green(bestBidPx), math.Round(option.Strike*100) / 100,
-			red(bestAskPx), bestAskQty, option.Name,
+			bidIv, bestBidQty, green(bestBidPx), math.Round(option.Strike*1000) / 1000,
+			red(bestAskPx), bestAskQty, askIv, option.Name,
+			option.Greeks,
 		}})
 	}
 

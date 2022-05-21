@@ -80,7 +80,7 @@ func buildCallPut(options []rainbow.Option) []Row {
 						Expiry:   expiry,
 						Provider: provider,
 						Call:     call,
-						Strike:   math.Round(strike*100) / 100, // rounding to the nearest
+						Strike:   math.Round(strike*1000) / 1000, // rounding to the nearest
 						Put:      put,
 					})
 				}

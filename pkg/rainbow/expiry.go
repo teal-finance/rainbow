@@ -23,9 +23,9 @@ func Expiries(t time.Time, hour int) []time.Time {
 	expiries := make([]time.Time, 0, 5)
 
 	today := time.Date(t.Year(), t.Month(), t.Day(), hour, 0, 0, 0, time.UTC)
-	tomorrow := today.Add(24 * time.Hour)
+	//tomorrow := today.Add(24 * time.Hour)
 
-	expiries = append(expiries, today, tomorrow)
+	//expiries = append(expiries, today, tomorrow)
 
 	// next Fridays on the day after tomorrow
 	expiries = append(expiries, NextNFridays(today, 3)...)
@@ -58,6 +58,7 @@ func LastFridayOfEachQuarter(t time.Time, hour int) []time.Time {
 			d = d.Add(-time.Duration((d.Weekday()+7-time.Friday)%7) * 24 * time.Hour)
 			expiries = append(expiries, d)
 		}
+		i = i + 10
 		i++
 	}
 	return expiries

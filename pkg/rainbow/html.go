@@ -54,22 +54,24 @@ func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
 	return bidPx, bidSz, askPx, askSz
 }
 
-func BestLimitStr(option Option) (bidPx, bidSz, askPx, askSz string) {
+func BestLimitStr(option Option) (bidIv, bidPx, bidSz, askIv, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
+		bidIv = leftAlignFloatOnDecimalPointStr(option.BidIV)
 		bidPx = leftAlignFloatOnDecimalPointStr(option.Bid[0].Price)
 		bidSz = leftAlignFloatOnDecimalPointStr(option.Bid[0].Size)
 	} else {
-		bidPx, bidSz = dashLeftAlign, dashLeftAlign
+		bidIv, bidPx, bidSz = dashLeftAlign, dashLeftAlign, dashLeftAlign
 	}
 
 	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
+		askIv = leftAlignFloatOnDecimalPointStr(option.AskIV)
 		askPx = leftAlignFloatOnDecimalPointStr(option.Ask[0].Price)
 		askSz = leftAlignFloatOnDecimalPointStr(option.Ask[0].Size)
 	} else {
-		askPx, askSz = dashLeftAlign, dashLeftAlign
+		askIv, askPx, askSz = dashLeftAlign, dashLeftAlign, dashLeftAlign
 	}
 
-	return bidPx, bidSz, askPx, askSz
+	return bidIv, bidPx, bidSz, askIv, askPx, askSz
 }
 
 func leftAlignFloatOnDecimalPointStr(f float64) string {
