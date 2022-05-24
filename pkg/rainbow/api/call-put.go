@@ -51,7 +51,7 @@ type StrOrder struct {
 	// Size is a shorter synonym for "Quantity".
 	Size string `json:"size"`
 	// IV is the Implied Volatility
-	IV string `json:"iv"`
+	IV float64 `json:"iv"`
 }
 
 func buildCallPut(options []rainbow.Option) []Row {
@@ -153,10 +153,10 @@ func groupByProvider(options []rainbow.Option) (providerToOptions map[string][]r
 }
 
 func newLimit(o rainbow.Option) Limit {
-	bIv, bPx, bSz, aIv, aPx, aSz := rainbow.BestLimitHTML(o)
+	bPx, bSz, aPx, aSz := rainbow.BestLimitHTML(o)
 	return Limit{
-		Bid: StrOrder{Price: bPx, Size: bSz, IV: bIv},
-		Ask: StrOrder{Price: aPx, Size: aSz, IV: aIv},
+		Bid: StrOrder{Price: bPx, Size: bSz, IV: o.BidIV},
+		Ask: StrOrder{Price: aPx, Size: aSz, IV: o.AskIV},
 	}
 }
 

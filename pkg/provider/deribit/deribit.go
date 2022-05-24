@@ -34,7 +34,7 @@ func Hour() int {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	/*instruments, err := query("BTC")
+	instruments, err := query("BTC")
 	if err != nil {
 		log.Print(err)
 		return nil, err
@@ -56,9 +56,9 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		log.Print(err)
 		return nil, err
-	}*/
+	}
 
-	instruments, err := query("SOL")
+	instruments, err = query("SOL")
 	if err != nil {
 		log.Print(err)
 		return nil, err
@@ -71,9 +71,9 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	}
 	//spew.Dump(optionsSOL)
 
-	//options := append(optionsBTC, optionsETH...)
-	//options = append(options, optionsSOL...)
-	return optionsSOL, nil //return options, nil
+	options := append(optionsBTC, optionsETH...)
+	options = append(options, optionsSOL...)
+	return options, nil
 
 }
 
@@ -101,7 +101,7 @@ func query(coin string) ([]instrument, error) {
 		return []instrument{}, fmt.Errorf("deribit options collect : %w", err)
 	}
 
-	return filterTooFar(result.Result, price), nil
+	return filter(result.Result, price), nil
 }
 
 type instrument struct {
@@ -123,7 +123,7 @@ type instrument struct {
 	IsActive             bool    `json:"is_active"`
 }
 
-func filterTooFar(instruments []instrument, price float64) (filtered []instrument) {
+func filter(instruments []instrument, price float64) (filtered []instrument) {
 	expiries := rainbow.Expiries(time.Now(), Hour())
 
 	for _, i := range instruments {

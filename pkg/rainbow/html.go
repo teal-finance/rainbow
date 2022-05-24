@@ -36,24 +36,23 @@ var (
 	htmlBuf  = boldTag
 )
 
-func BestLimitHTML(option Option) (bidIv, bidPx, bidSz, askIv, askPx, askSz string) {
+//TODO change iv to number
+func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
-		bidIv = leftAlignFloatOnDecimalPointHTML(option.BidIV)
 		bidPx = rightAlignFloatOnDecimalPointHTML(option.Bid[0].Price)
 		bidSz = leftAlignFloatOnDecimalPointHTML(option.Bid[0].Size)
 	} else {
-		bidIv, bidPx, bidSz = dashLeftAlign, dashLeftAlign, dashLeftAlign
+		bidPx, bidSz = dashLeftAlign, dashLeftAlign
 	}
 
 	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
-		askIv = leftAlignFloatOnDecimalPointHTML(option.AskIV)
 		askPx = rightAlignFloatOnDecimalPointHTML(option.Ask[0].Price)
 		askSz = leftAlignFloatOnDecimalPointHTML(option.Ask[0].Size)
 	} else {
-		askIv, askPx, askSz = dashLeftAlign, dashLeftAlign, dashLeftAlign
+		askPx, askSz = dashLeftAlign, dashLeftAlign
 	}
 
-	return bidIv, bidPx, bidSz, askIv, askPx, askSz
+	return bidPx, bidSz, askPx, askSz
 }
 
 func BestLimitStr(option Option) (bidIv, bidPx, bidSz, askIv, askPx, askSz string) {

@@ -121,6 +121,6 @@ var orderType = graphql.NewObject(graphql.ObjectConfig{
 	Fields: graphql.Fields{
 		"px":   &graphql.Field{Type: graphql.String},
 		"size": &graphql.Field{Type: graphql.String},
-		"iv":   &graphql.Field{Type: graphql.String},
+		"iv":   &graphql.Field{Type: graphql.Float},
 	},
 })

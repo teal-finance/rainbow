@@ -9,20 +9,24 @@ const allQuery = `{
       bid {
         px
         size
+        iv
       }
       ask {
         px
         size
+        iv
       }
     }
     put {
       bid {
         px
         size
+        iv
       }
       ask {
         px
         size
+        iv
       }
     }
   }

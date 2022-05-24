@@ -4,8 +4,6 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    CryptoIcons: typeof import('./src/components/widgets/CryptoIcons.vue')['default']
-    DropdownBox: typeof import('./src/components/widgets/DropdownBox.vue')['default']
     ExtraHeader: typeof import('./src/components/widgets/ExtraHeader.vue')['default']
     IAkarIconsArrowRight: typeof import('~icons/akar-icons/arrow-right')['default']
     IAkarIconsGithubFill: typeof import('~icons/akar-icons/github-fill')['default']

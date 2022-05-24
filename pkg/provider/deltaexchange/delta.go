@@ -176,7 +176,6 @@ func (p Product) OptionsType() string {
 
 // Greeks retrieve the iv(in %) and greeks of the options
 func (p Product) Greeks() (float64, float64, float64, rainbow.TheGreeks, error) {
-	log.Print(deltaTickers + p.Symbol)
 	resp, err := http.Get(deltaTickers + p.Symbol)
 	if err != nil {
 		return 0, 0, 0, rainbow.TheGreeks{}, fmt.Errorf("delta options greeks request: %w", err)

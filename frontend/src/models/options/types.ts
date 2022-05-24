@@ -5,6 +5,7 @@ type ProviderType = "PsyOptions" | "Deribit" | "Opyn";
 interface OrderContract {
   px: string;
   size: string;
+  iv: number;
 }
 
 interface LimitContract {
@@ -27,18 +28,23 @@ interface CallPutContract {
 type OrderType = {
   px: string;
   size: string;
+  iv: number;
 }
 
 type CallType = {
+  callBidIv: number;
   callBidPrice: string;
   callBidSize: string;
+  callAskIv: number;
   callAskPrice: string;
   callAskSize: string;
 }
 
 type PutType = {
+  putBidIv: number;
   putBidPrice: string;
   putBidSize: string;
+  putAskIv:number;
   putAskPrice: string;
   putAskSize: string;
 }
