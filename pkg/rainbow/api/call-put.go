@@ -155,8 +155,8 @@ func groupByProvider(options []rainbow.Option) (providerToOptions map[string][]r
 func newLimit(o rainbow.Option) Limit {
 	bPx, bSz, aPx, aSz := rainbow.BestLimitHTML(o)
 	return Limit{
-		Bid: StrOrder{Price: bPx, Size: bSz, IV: math.Round(o.BidIV*100) / 100},
-		Ask: StrOrder{Price: aPx, Size: aSz, IV: math.Round(o.AskIV*100) / 100},
+		Bid: StrOrder{Price: bPx, Size: bSz, IV: math.Round(o.BidIV*10) / 10},
+		Ask: StrOrder{Price: aPx, Size: aSz, IV: math.Round(o.AskIV*10) / 10},
 	}
 }
 

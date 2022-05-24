@@ -1,7 +1,7 @@
 <template>
   <sw-datatable
     :model="model"
-    :sortable-cols="['expiry', 'strike']"
+    :sortable-cols="['expiry','callBidIv','callAskIv', 'strike','putBidIv','putAskIv']"
     :extra-header="ExtraHeader"
     :mobile-renderer="MobileRenderer"
     :tablet-renderer="MobileRenderer"
