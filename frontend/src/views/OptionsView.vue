@@ -66,15 +66,19 @@ function loadData(dataset: OptionsJsonDataset) {
     "provider": "Provider",
     "asset": "Asset",
     "expiry": "Expiry",
+    "callBidIv": "IV",
     "callBidSize": "Size",
     "callBidPrice": "  BID",
     "callAskPrice": " ASK",
     "callAskSize": "Size",
+    "callAskIv":"IV",
     "strike": "Strike",
+    "putBidIv": "IV",
     "putBidSize": "Size",
     "putBidPrice": "  BID",
     "putAskPrice": " ASK",
     "putAskSize": "Size",
+    "putAskIv": "IV",
   }
   datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
 }
