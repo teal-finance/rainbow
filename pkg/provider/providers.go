@@ -28,9 +28,9 @@ func AllProviders() []rainbow.Provider {
 		//zetamarkets.Provider{},
 		//zerox.Provider{},
 		deribit.Provider{},
-		/*lyra.Provider{},
+		//lyra.Provider{},
 		deltaexchange.Provider{},
-		psyoptions.Provider{},*/
+		//psyoptions.Provider{},
 	}
 }
 

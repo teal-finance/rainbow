@@ -7,7 +7,7 @@
 package rainbow
 
 type Option struct {
-	Name          string    `json:"name"`     // ASSET-DATE-Strike-OptionsType
+	Name          string    `json:"name"`     // TODO (Make format) ASSET-DATE-Strike-OptionsType
 	Type          string    `json:"type"`     // CALL / PUT
 	Asset         string    `json:"asset"`    // ETH, BTC, SOL, ...
 	Expiry        string    `json:"expiry"`   // Expiry date in format 2021-12-31
@@ -20,6 +20,7 @@ type Option struct {
 	BidIV         float64   `json:"bidIV"`    // Implied Volatility computed from the bid
 	Ask           []Order   `json:"ask"`      // Ask = selling offers
 	AskIV         float64   `json:"askIV"`    // Implied Volatility computed from the ask
+	MarketIV      float64   `json:"markIV"`   // When it is present on the provider, we store their Market IV
 	Greeks        TheGreeks `json:"greeks"`   // Greeks measure the sensitivity of an option’s premium to changes in the underlying variables.
 	Strike        float64   `json:"strike"`   //
 }

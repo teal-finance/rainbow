@@ -14,6 +14,7 @@ import (
 const (
 	detlaProducts = "https://api.delta.exchange/v2/products?states=live&contract_types="
 	deltaOrders   = "https://api.delta.exchange/v2/l2orderbook/"
+	deltaTickers  = "https://api.delta.exchange/v2/tickers/"
 )
 
 type Provider struct{}
@@ -65,6 +66,7 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		}
 		// Ugly fix for front, the 100K strike is too long number so I will filter it out
 		// TODO, reduce the size of the front character to fit more things
+		// Anyway BTC is well below that so it's fine for now lol
 		if strike > 75000 {
 			continue
 		}
@@ -73,9 +75,15 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 			continue // We'll add them when those assets are on other providers
 		}
 
-		bids, asks, err := p.Orderbook()
+		bids, asks, err := p.Orderbook(result.Result)
 		if err != nil {
 			return nil, fmt.Errorf(" Order Book issue : %w", err)
+		}
+
+		askIV, bidIV, markIV, greeks, err := p.Greeks()
+		if err != nil {
+			return nil, fmt.Errorf(" Greeks issue : %w", err)
+
 		}
 
 		options = append(options, rainbow.Option{
@@ -90,7 +98,11 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 			Provider:      pro.Name(),
 			QuoteCurrency: p.QuotingAsset.Symbol,
 			Bid:           bids,
+			BidIV:         bidIV,
 			Ask:           asks,
+			AskIV:         askIV,
+			MarketIV:      markIV,
+			Greeks:        greeks,
 		})
 	}
 
@@ -122,31 +134,18 @@ func queryProducts() (ProductResult, error) {
 	return products, nil
 }
 
-func (p Product) Orderbook() ([]rainbow.Order, []rainbow.Order, error) {
-	resp, err := http.Get(deltaOrders + p.Symbol)
-	if err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" Fetch order book : %w", err)
-	}
-	defer resp.Body.Close()
-
-	orders := struct {
-		Orders OrderbookResult `json:"result"`
-	}{}
-
-	if err = json.NewDecoder(resp.Body).Decode(&orders); err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" fetch  order book json issue : %w", err)
-	}
+func (p Product) Orderbook(orders OrderbookResult) ([]rainbow.Order, []rainbow.Order, error) {
 
 	contractSize, err := strconv.ParseFloat(p.ContractValue, 64)
 	if err != nil {
 		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" contract value conversion: %w", err)
 	}
 
-	bids, err := orderConversion(orders.Orders.Buy, contractSize)
+	bids, err := orderConversion(orders.Buy, contractSize)
 	if err != nil {
 		return []rainbow.Order{}, []rainbow.Order{}, err
 	}
-	asks, err := orderConversion(orders.Orders.Sell, contractSize)
+	asks, err := orderConversion(orders.Sell, contractSize)
 	if err != nil {
 		return []rainbow.Order{}, []rainbow.Order{}, err
 	}
@@ -173,6 +172,90 @@ func (p Product) OptionsType() string {
 		return "CALL"
 	}
 	return "PUT"
+}
+
+// Greeks retrieve the iv(in %) and greeks of the options
+func (p Product) Greeks() (float64, float64, float64, rainbow.TheGreeks, error) {
+	log.Print(deltaTickers + p.Symbol)
+	resp, err := http.Get(deltaTickers + p.Symbol)
+	if err != nil {
+		return 0, 0, 0, rainbow.TheGreeks{}, fmt.Errorf("delta options greeks request: %w", err)
+	}
+
+	defer resp.Body.Close()
+
+	result := struct {
+		Result TickerResult `json:"result"`
+	}{}
+
+	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return 0, 0, 0, rainbow.TheGreeks{}, fmt.Errorf("delta options greeks decode: %w", err)
+	}
+
+	greeks, err := convertGreeks(result.Result.Greeks)
+	if err != nil {
+		return 0, 0, 0, rainbow.TheGreeks{}, fmt.Errorf("delta options greeks conversion: %w", err)
+	}
+
+	askIV, bidIV, markIV, err := convertIV(result.Result.Quotes)
+	if err != nil {
+		return 0, 0, 0, rainbow.TheGreeks{}, fmt.Errorf("delta options iv conversion: %w", err)
+	}
+
+	//*100 to have the IV as %
+	return 100 * askIV, 100 * bidIV, 100 * markIV, greeks, nil
+}
+
+func convertGreeks(d deltaGreeks) (rainbow.TheGreeks, error) {
+	g := rainbow.TheGreeks{}
+	greek, err := strconv.ParseFloat(d.Delta, 64)
+	if err != nil {
+		return rainbow.TheGreeks{}, fmt.Errorf(" delta : %w", err)
+	}
+	g.Delta = greek
+
+	greek, err = strconv.ParseFloat(d.Gamma, 64)
+	if err != nil {
+		return rainbow.TheGreeks{}, fmt.Errorf(" gamma : %w", err)
+	}
+	g.Gamma = greek
+
+	greek, err = strconv.ParseFloat(d.Theta, 64)
+	if err != nil {
+		return rainbow.TheGreeks{}, fmt.Errorf(" theta : %w", err)
+	}
+	g.Theta = greek
+
+	greek, err = strconv.ParseFloat(d.Vega, 64)
+	if err != nil {
+		return rainbow.TheGreeks{}, fmt.Errorf(" vega : %w", err)
+	}
+	g.Vega = greek
+
+	greek, err = strconv.ParseFloat(d.Rho, 64)
+	if err != nil {
+		return rainbow.TheGreeks{}, fmt.Errorf(" rho : %w", err)
+	}
+	g.Rho = greek
+
+	return g, nil
+}
+
+func convertIV(q deltaQuotes) (float64, float64, float64, error) {
+	askIV, err := strconv.ParseFloat(q.AskIv, 64)
+	if err != nil {
+		return 0, 0, 0, fmt.Errorf(" ask iv : %w", err)
+	}
+	bidIV, err := strconv.ParseFloat(q.BidIv, 64)
+	if err != nil {
+		return 0, 0, 0, fmt.Errorf(" bid iv : %w", err)
+	}
+	markIV, err := strconv.ParseFloat(q.MarkIv, 64)
+	if err != nil {
+		return 0, 0, 0, fmt.Errorf(" mark iv : %w", err)
+	}
+	return askIV, bidIV, markIV, nil
+
 }
 
 type (
@@ -344,4 +427,52 @@ type Orders []struct {
 	Depth string `json:"depth"`
 	Price string `json:"price"`
 	Size  int    `json:"size"`
+}
+
+type TickerResult struct {
+	Close         float64     `json:"close"`
+	ContractType  string      `json:"contract_type"`
+	Greeks        deltaGreeks `json:"greeks"`
+	High          float64     `json:"high"`
+	Low           float64     `json:"low"`
+	MarkPrice     string      `json:"mark_price"`
+	MarkVol       string      `json:"mark_vol"`
+	Oi            string      `json:"oi"`
+	OiValue       string      `json:"oi_value"`
+	OiValueSymbol string      `json:"oi_value_symbol"`
+	OiValueUsd    string      `json:"oi_value_usd"`
+	Open          float64     `json:"open"`
+	PriceBand     struct {
+		LowerLimit string `json:"lower_limit"`
+		UpperLimit string `json:"upper_limit"`
+	} `json:"price_band"`
+	ProductID      int         `json:"product_id"`
+	Quotes         deltaQuotes `json:"quotes"`
+	Size           int         `json:"size"`
+	SpotPrice      string      `json:"spot_price"`
+	StrikePrice    string      `json:"strike_price"`
+	Symbol         string      `json:"symbol"`
+	Timestamp      int64       `json:"timestamp"`
+	Turnover       float64     `json:"turnover"`
+	TurnoverSymbol string      `json:"turnover_symbol"`
+	TurnoverUsd    float64     `json:"turnover_usd"`
+	Volume         float64     `json:"volume"`
+}
+
+type deltaGreeks struct {
+	Delta string `json:"delta"`
+	Gamma string `json:"gamma"`
+	Rho   string `json:"rho"`
+	Theta string `json:"theta"`
+	Vega  string `json:"vega"`
+}
+
+type deltaQuotes struct {
+	AskIv   string `json:"ask_iv"`
+	AskSize string `json:"ask_size"`
+	BestAsk string `json:"best_ask"`
+	BestBid string `json:"best_bid"`
+	BidIv   string `json:"bid_iv"`
+	BidSize string `json:"bid_size"`
+	MarkIv  string `json:"mark_iv"`
 }

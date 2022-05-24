@@ -17,6 +17,7 @@ require (
 	github.com/gookit/color v1.5.0
 	github.com/graphql-go/graphql v0.8.0
 	github.com/graphql-go/handler v0.2.3
+	github.com/jasonmerecki/gopriceoptions v0.0.0-20201025232819-6db8d0e2e493
 	github.com/jedib0t/go-pretty/v6 v6.3.1
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de
 	github.com/ryanuber/columnize v2.1.2+incompatible

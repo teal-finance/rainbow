@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spewerspew/spew"
+	//"github.com/spewerspew/spew"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -69,7 +69,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		log.Print(err)
 		return nil, err
 	}
-	spew.Dump(optionsSOL)
+	//spew.Dump(optionsSOL)
 
 	//options := append(optionsBTC, optionsETH...)
 	//options = append(options, optionsSOL...)
@@ -96,12 +96,10 @@ func query(coin string) ([]instrument, error) {
 	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return []instrument{}, fmt.Errorf("deribit options collect : %w", err)
 	}
-	log.Print("onto filter")
-	price, err := getIndexPrice(coin)
+	price, err := GetIndexPrice(coin)
 	if err != nil {
 		return []instrument{}, fmt.Errorf("deribit options collect : %w", err)
 	}
-	log.Print(price)
 
 	return filterTooFar(result.Result, price), nil
 }
@@ -127,8 +125,6 @@ type instrument struct {
 
 func filterTooFar(instruments []instrument, price float64) (filtered []instrument) {
 	expiries := rainbow.Expiries(time.Now(), Hour())
-	log.Print("onto instru")
-	//spew.Dump(instruments)
 
 	for _, i := range instruments {
 
@@ -146,25 +142,8 @@ func filterTooFar(instruments []instrument, price float64) (filtered []instrumen
 
 // isStrikeAvailable looks if the price is in [price/coef;price*coef]
 func isStrikeAvailable(strike, price float64) bool {
-	/*ethStrike := []float64{1000, 1500, 1800, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3800}
-	btcStrike := []float64{10000, 15000, 20000, 25000, 29000, 30000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 50000}
-	solStrike := []float64{20, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120}
-	strikes := ethStrike
 
-	if i.BaseCurrency == "BTC" {
-		strikes = btcStrike
-	} else if i.BaseCurrency == "SOL" {
-		strikes = solStrike
-	}
-
-	for _, s := range strikes {
-		// if strike on deribit around strike anywhere else, keep it
-		if i.Strike >= s*0.98 && i.Strike <= s*1.02 {
-			return true
-		}
-	}*/
-
-	coef := 2.0
+	coef := 3.0
 
 	return strike >= price/coef && strike <= coef*price
 }
@@ -222,6 +201,7 @@ func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, erro
 			Ask:           asks,
 			AskIV:         result.Result.AskIv,
 			Greeks:        result.Result.Greeks,
+			MarketIV:      result.Result.MarkIv,
 		})
 	}
 
@@ -285,7 +265,8 @@ func normalizeOrders(orders [][]float64, assetPrice float64) []rainbow.Order {
 	return offers
 }
 
-func getIndexPrice(coin string) (float64, error) {
+// GetIndexPrice returns Deribit index price for the selected coin
+func GetIndexPrice(coin string) (float64, error) {
 	baseURL := "https://www.deribit.com/api/v2/public/get_index_price?index_name="
 	log.Print("Price index: " + baseURL + strings.ToLower(coin) + "_usd")
 

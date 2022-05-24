@@ -14,7 +14,7 @@ func IV(optionType string, premium float64, underlyingPrice float64, strike floa
 	//Call true Put false
 	callType := optionType == "CALL"
 
-	t, err := time.Parse("2006-01-02 15:04:05", o.Expiry)
+	t, err := time.Parse("2006-01-02 15:04:05", expiry)
 	if err != nil {
 		log.Fatalf("time parse ", err)
 	}
