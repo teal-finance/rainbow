@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/friendsofgo/graphiql"
-	graphql "github.com/graphql-go/graphql"
+	"github.com/graphql-go/graphql"
 	graphhandler "github.com/graphql-go/handler"
 
 	"github.com/teal-finance/rainbow/pkg/rainbow"
