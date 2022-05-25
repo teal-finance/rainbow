@@ -39,19 +39,9 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 
 	expiries := rainbow.Expiries(time.Now(), Hour())
 	for _, p := range products {
-		resp, err := http.Get(deltaOrders + p.Symbol)
-		if err != nil {
-			return nil, fmt.Errorf("delta options orders : %w", err)
-		}
-
-		defer resp.Body.Close()
-
-		result := struct {
-			Result OrderbookResult `json:"result"`
-		}{}
-
-		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			return nil, fmt.Errorf(" order book : %w", err)
+		if p.ContractUnitCurrency == "BNB" || p.ContractUnitCurrency == "XRP" ||
+			p.ContractUnitCurrency == "MATIC" || p.ContractUnitCurrency == "AVAX" {
+			continue //We'll add them when those assets are on other providers
 		}
 
 		if !rainbow.IsExpiryAvailable(expiries, p.SettlementTime) {
@@ -70,9 +60,20 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		if strike > 75000 {
 			continue
 		}
-		if p.ContractUnitCurrency == "BNB" || p.ContractUnitCurrency == "XRP" ||
-			p.ContractUnitCurrency == "MATIC" || p.ContractUnitCurrency == "AVAX" {
-			continue // We'll add them when those assets are on other providers
+
+		resp, err := http.Get(deltaOrders + p.Symbol)
+		if err != nil {
+			return nil, fmt.Errorf("delta options orders : %w", err)
+		}
+
+		defer resp.Body.Close()
+
+		result := struct {
+			Result OrderbookResult `json:"result"`
+		}{}
+
+		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			return nil, fmt.Errorf(" order book : %w", err)
 		}
 
 		bids, asks, err := p.Orderbook(result.Result)
