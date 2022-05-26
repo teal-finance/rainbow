@@ -1,10 +1,10 @@
-# Generator directory
+# Directory about External Tools
 
-## Intentionally mostly-empty Go file
+## Intentionally mostly-empty Go files
 
-This directory contains a mostly-empty `generate.go` file to:
+This directory contains two mostly-empty Go file to:
 
-1. keep the generator tool as a dependency:
+1. keep the external tools as dependencies:
 
     ```go
     import _ "github.com/Khan/genqlient"
@@ -16,25 +16,11 @@ No other source code should be found in this directory.
 
 ## Targets
 
-* use a go-based generator tool (e.g. `genqlient`)
-* everyone use the same version of that tool
-* track the tool's version in `go.mod` file
+* use go-based tools (e.g. `genqlient`)
+* everyone use the same version of that tools
+* track the tools versions in `go.mod` file
 
-## The `import` statement
-
-The import statement allows the `go` command to
-precisely record the tool version in `go.mod`.
-
-```go
-import _ "github.com/Khan/genqlient"
-```
-
-## The `//go:build generator` build tag
-
-The `//go:build generator` build tag ensures the dependency
-on the generator tool is not compiled into the binary.
-
-## A place for the `go:generate` directives
+## The `go:generate` directives
 
 The `go generate ./...` runs commands described by directives
 within existing files. Those commands can run any process,
@@ -54,8 +40,25 @@ which are lines of the form:
 Note: no space within "`//go:generate`".
 
 The `command` is the generator tool to be run,
-corresponding to an executable file that can be run locally.
-The `command` can be `go run github.com/Khan/genqlient`.
+corresponding to an executable file that can be run locally,
+such as `go run github.com/Khan/genqlient`.
+
+## The `import` statement
+
+The import statement allows the `go` command to
+precisely record the tool version in `go.mod`.
+
+```go
+import _ "github.com/Khan/genqlient"
+```
+
+## The `//go:build tools` build tag
+
+The `//go:build tools` build tag ensures the dependencies
+on the external tools are not compiled into the binary.
+
+But the `//go:build tools` build tag cannot be
+in the Go file containing the `//go:generate`.
 
 ## See also
 

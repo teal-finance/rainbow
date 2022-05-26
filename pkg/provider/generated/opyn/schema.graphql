@@ -1,5 +1,10 @@
 # fixed copy from https://github.com/opynfinance/Gamma-Subgraph/blob/master/schema.graphql
 
+type Query {
+  otoken(id: ID!): OToken
+  otokens: [OToken]
+}
+
 scalar Bytes
 scalar BigInt
 
@@ -480,9 +485,4 @@ type FillOrderV4 {
 
   "maker asset address"
   makerAsset: String!
-}
-
-type Query {
-  otoken(id: ID!): OToken
-  otokens: [OToken]
 }

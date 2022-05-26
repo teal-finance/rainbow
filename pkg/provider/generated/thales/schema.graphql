@@ -1,5 +1,10 @@
 # fixed copy from https://github.com/thales-markets/thales-subgraph/blob/master/subgraphs/thales-binary-options.graphql
 
+type Query {
+  markets(first: Int): [Market]
+  rangedMarkets(first: Int): [RangedMarket]
+}
+
 scalar Bytes
 scalar BigInt
 
@@ -220,9 +225,4 @@ type PositionBalance {
   account: Bytes!
   amount: BigInt!
   position: Position!
-}
-
-type Query {
-  markets(first: Int): [Market]
-  rangedMarkets(first: Int): [RangedMarket]
 }
