@@ -1,9 +1,9 @@
 <template>
   <tr>
     <th colspan="3" class="border-none"></th>
-    <th colspan="4" class="text-center">CALL</th>
+    <th colspan="6" class="text-center">CALL</th>
     <th class="border-none"></th>
-    <th colspan="4" class="text-center">PUT</th>
+    <th colspan="6" class="text-center">PUT</th>
   </tr>
 </template>
 

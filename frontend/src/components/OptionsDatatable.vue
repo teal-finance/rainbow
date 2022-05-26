@@ -1,15 +1,8 @@
 <template>
-  <sw-datatable
-    :model="model"
-    :sortable-cols="['expiry','callBidIv','callAskIv', 'strike','putBidIv','putAskIv']"
-    :extra-header="ExtraHeader"
-    :mobile-renderer="MobileRenderer"
-    :tablet-renderer="MobileRenderer"
-    :default-renderer="HtmlCellRenderer"
-    tablet-breakpoint="xl"
-    class="w-full border border-collapse table-auto dark:border-neutral border-light"
-    id="rtable"
-  ></sw-datatable>
+  <sw-datatable :model="model" :sortable-cols="['expiry', 'callBidIv', 'callAskIv', 'strike', 'putBidIv', 'putAskIv']"
+    :extra-header="ExtraHeader" :mobile-renderer="MobileRenderer" :tablet-renderer="MobileRenderer"
+    :default-renderer="HtmlCellRenderer" tablet-breakpoint="xl"
+    class="w-full border border-collapse table-auto dark:border-neutral border-light" id="rtable"></sw-datatable>
 </template>
 
 <script lang="ts">
@@ -63,19 +56,19 @@ export default defineComponent({
       @apply rounded-tl-lg
 
     // Bid headers for CALL and PUT
-    th:nth-child(4), th:nth-child(5), th:nth-child(9), th:nth-child(10)
+    th:nth-child(4), th:nth-child(5), th:nth-child(6), th:nth-child(11), th:nth-child(12), th:nth-child(13)
       @apply bg-bid dark:bg-bid-dark bg-opacity-10 dark:bg-opacity-40
 
     // Ask headers for CALL and PUT
-    th:nth-child(6), th:nth-child(7), th:nth-child(11), th:nth-child(12)
+    th:nth-child(7), th:nth-child(8), th:nth-child(9),th:nth-child(14), th:nth-child(15), th:nth-child(16)
       @apply bg-ask dark:bg-ask-dark bg-opacity-10 dark:bg-opacity-40
 
     // Price Bid headers
-    th:nth-child(5), th:nth-child(10)
+    th:nth-child(6), th:nth-child(13)
       @apply text-bid-dark dark:text-bid
 
     // Price Ask headers
-    th:nth-child(6), th:nth-child(11)
+    th:nth-child(7), th:nth-child(14)
       @apply text-ask-dark dark:text-ask
 
     th
@@ -91,11 +84,11 @@ export default defineComponent({
         @apply block-background text-right
 
       // Bid values with same background
-      &.callBidSize, &.putBidSize, &.callBidPrice, &.putBidPrice
+      &.callBidSize, &.putBidSize, &.callBidPrice, &.putBidPrice, &.callBidIv, &.putBidIv
         @apply bg-bid bg-opacity-5 dark:bg-opacity-10
 
       // Ask values with another background
-      &.callAskSize, &.putAskSize, &.callAskPrice, &.putAskPrice
+      &.callAskSize, &.putAskSize, &.callAskPrice, &.putAskPrice, &.callAskIv, &.putAskIv
         @apply bg-ask bg-opacity-5 dark:bg-opacity-10
 
       // Bid prices with same foreground color
