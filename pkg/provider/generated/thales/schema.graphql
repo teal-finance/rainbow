@@ -3,7 +3,7 @@
 scalar Bytes
 scalar BigInt
 
-type Market  {
+type Market {
   id: ID!
   timestamp: BigInt!
   creator: Bytes!
@@ -21,7 +21,7 @@ type Market  {
   finalPrice: BigInt
 }
 
-type RangedMarket  {
+type RangedMarket {
   id: ID!
   timestamp: BigInt!
   currencyKey: Bytes!
@@ -42,7 +42,7 @@ enum OptionTransactionType {
   exercise
 }
 
-type OptionTransaction  {
+type OptionTransaction {
   id: ID!
   timestamp: BigInt!
   blockNumber: BigInt!
@@ -67,7 +67,7 @@ enum OrderSide {
   sell
 }
 
-type Trade  {
+type Trade {
   # tx hash - order hash - log index
   id: ID!
   transactionHash: Bytes!
@@ -102,7 +102,7 @@ enum TokenTransactionType {
   claimMigratedRetroRewards
 }
 
-type TokenTransaction  {
+type TokenTransaction {
   # tx hash - log index
   id: ID!
   transactionHash: Bytes!
@@ -113,7 +113,7 @@ type TokenTransaction  {
   blockNumber: BigInt!
 }
 
-type OngoingAirdropNewRoot  {
+type OngoingAirdropNewRoot {
   # tx hash - log index
   id: ID!
   transactionHash: Bytes!
@@ -121,16 +121,15 @@ type OngoingAirdropNewRoot  {
   timestamp: BigInt!
   period: BigInt!
 }
-"""
-type BinaryOption  {
+
+type BinaryOption {
   id: ID!
   timestamp: BigInt!
   market: Bytes!
   side: OptionSide
 }
-"""
 
-type Staker  {
+type Staker {
   id: ID!
   account: Bytes!
   timestamp: BigInt!
@@ -140,20 +139,20 @@ type Staker  {
   unstakingAmount: BigInt!
 }
 
-type ThalesRoyaleGame  {
+type ThalesRoyaleGame {
   id: ID!
   timestamp: BigInt!
   address: Bytes!
   season: BigInt!
 }
 
-type ThalesRoyaleSeason  {
+type ThalesRoyaleSeason {
   id: ID!
   timestamp: BigInt!
   season: BigInt!
 }
 
-type ThalesRoyaleRound  {
+type ThalesRoyaleRound {
   id: ID!
   timestamp: BigInt!
   round: BigInt!
@@ -165,7 +164,7 @@ type ThalesRoyaleRound  {
   finalPrice: BigInt
 }
 
-type ThalesRoyalePlayer  {
+type ThalesRoyalePlayer {
   id: ID!
   number: BigInt!
   address: Bytes!
@@ -176,7 +175,7 @@ type ThalesRoyalePlayer  {
   defaultPosition: BigInt
 }
 
-type ThalesRoyalePosition  {
+type ThalesRoyalePosition {
   id: ID!
   timestamp: BigInt!
   player: Bytes!
@@ -185,12 +184,12 @@ type ThalesRoyalePosition  {
   position: BigInt!
 }
 
-type ThalesRoyalePass  {
+type ThalesRoyalePass {
   id: ID!
   address: Bytes!
 }
 
-type ThalesRoyalePassportPlayer  {
+type ThalesRoyalePassportPlayer {
   id: ID!
   owner: Bytes!
   number: BigInt
@@ -201,7 +200,7 @@ type ThalesRoyalePassportPlayer  {
   defaultPositions: [BigInt!]
 }
 
-type ThalesRoyalePassportPosition  {
+type ThalesRoyalePassportPosition {
   id: ID!
   timestamp: BigInt!
   tokenPlayer: BigInt!
@@ -210,15 +209,20 @@ type ThalesRoyalePassportPosition  {
   position: BigInt!
 }
 
-type Position  {
+type Position {
   id: ID!
   market: Market!
   side: OptionSide!
 }
 
-type PositionBalance  {
+type PositionBalance {
   id: ID!
   account: Bytes!
   amount: BigInt!
   position: Position!
+}
+
+type Query {
+  markets(first: Int): [Market]
+  rangedMarkets(first: Int): [RangedMarket]
 }

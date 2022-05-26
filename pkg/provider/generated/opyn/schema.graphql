@@ -3,7 +3,7 @@
 scalar Bytes
 scalar BigInt
 
-type ERC20 { 
+type ERC20 {
   id: ID!
   symbol: String!
   name: String!
@@ -24,8 +24,8 @@ type OToken {
   collateralAsset: ERC20! # address
   creator: Bytes! # address
   
-  strikePrice: String!
-  expiryTimestamp: String!
+  strikePrice: BigInt!
+  expiryTimestamp: BigInt!
   isPut: Boolean!
 
   createdAt: BigInt!
@@ -41,7 +41,7 @@ type Account {
   vaultCount: BigInt!
 
   "Array of all vaults"
-  vaults: [Vault!]! # # @derivedFrom(field: "owner")
+  vaults: [Vault!]! # @derivedFrom(field: "owner")
 
   "Amount of operators"
   operatorCount: BigInt!

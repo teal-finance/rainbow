@@ -3,12 +3,8 @@
 
 # See https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml
 
-schema:
-- "schema.graphql"
-
-operations:
-- "queries.graphql"
-
+schema: schema.graphql
+operations: queries.graphql
 generated: generated.go
 
 bindings:
