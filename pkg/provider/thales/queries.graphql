@@ -1,0 +1,18 @@
+query getOptions {  
+  tokens() {
+    markets(where: {result: null}) {
+      id
+      timestamp
+      creator
+      currencyKey
+      strikePrice
+      maturityDate
+      expiryDate
+      isOpen
+      result
+      longAddress
+      shortAddress
+      finalPrice
+    }
+  }
+}

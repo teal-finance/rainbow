@@ -1,0 +1,20 @@
+# Config file for genqlient
+# to generate GraphQL queries in a Go file.
+
+# See https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml
+
+schema:
+- schema.graphql
+
+operations:
+- queries.graphql
+
+generated: generated-queries.go
+
+bindings:
+  DateTime:
+    type: time.Time
+  BigInt:
+    type: int
+  Bytes:
+    type: "[]byte"

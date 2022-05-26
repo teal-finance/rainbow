@@ -4,7 +4,6 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-//go:generate go run github.com/Khan/genqlient generate-config.yaml
 package zerox
 
 import (

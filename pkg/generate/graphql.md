@@ -1,4 +1,4 @@
-# GraphQL with genqlient
+# genqlient
 
 [genqlient](https://github.com/Khan/genqlient)
 generates Go code to query a GraphQL API:
@@ -9,12 +9,12 @@ generates Go code to query a GraphQL API:
 
 ## Step 1: Download the GraphQL schema
 
-Put it in `schema.graphql`.
+Put it in `provider/xxxxx/schema.graphql`.
 Format = [Schema Definition Language (SDL)](https://graphql.org/learn/schema/#type-language).
 
 ## Step 2: Write your GraphQL query
 
-Put it in `genqlient.graphql`.
+Put it in `provider/xxxxx/genqlient.graphql`.
 Format = standard [GraphQL syntax](https://graphql.org/learn/queries/)
 (supports queries **and mutations**).
 
@@ -30,13 +30,23 @@ Tip: use an interactive explorer like [GraphiQL](https://github.com/graphql/grap
 
 ## Step 3: Configuration file
 
-Run `go run github.com/Khan/genqlient --init`.
+This is already done, go to **Step 1**.
+
+    cd pkg/generate
+    go run github.com/Khan/genqlient --init
+
 This creates a configuration file.
 
-## Step 4: Generate the Go code
+## Step 3: Update the configuration
 
 Run `go run github.com/Khan/genqlient` or `go generate ./...`
 to produce a file `generated.go` with your queries.
+
+## Step 4: Generate the Go code
+
+Produce the files `pkg/provider/*/generated.go` with your queries:
+
+[`go generate ./...`](https://go.dev/blog/generate)
 
 ## Step 5: Use your queries
 
@@ -49,11 +59,11 @@ func getUser(ctx context.Context, client graphql.Client, login string) (*getUser
 As for the arguments:
 
 - for `ctx`, pass your local context (see [`go doc context`](https://pkg.go.dev/context)) or `context.Background()` if you don't need one
-- for `client`, call [`graphql.NewClient`](https://pkg.go.dev/github.com/Khan/genqlient/graphql), e.g. `graphql.NewClient("https://your.api.example/path", http.DefaultClient)`
-- for `login`, pass your GitHub username (or whatever the arguments to your query are)
+- for `client`, call [`graphql.NewClient`](https://pkg.go.dev/github.com/Khan/genqlient/graphql), e.g. `graphql.NewClient("https://api.provider.com/xx", http.DefaultClient)`
+- for `login`, pass username (or whatever the arguments to your query are)
 
-The response object is a `struct` with fields corresponding to each GraphQL field;
-for the exact details check its GoDoc.  For example, you might do:
+The response object is a `struct` with fields corresponding to each GraphQL field.
+Example:
 
 ```go
 ctx := context.Background()
@@ -62,13 +72,11 @@ resp, err := getUser(ctx, client, "benjaminjkraft")
 fmt.Println(resp.User.Name, err)
 ```
 
-Now run your code!
-
 ## Step 6: Repeat
 
 Over time, as you add or change queries, you'll just need to run
 [`go generate ./...`](https://go.dev/blog/generate)
-to re-generate `generated.go`.   .)
+to re-generate `generated.go`.
 
 If you're using an editor or IDE plugin backed by
 [gopls](https://github.com/golang/tools/blob/master/gopls/README.md)
@@ -76,26 +84,27 @@ If you're using an editor or IDE plugin backed by
 and reload it after each run, so your plugin knows about the automated changes.
 
 If you prefer, you can specify your queries as string-constants in your Go source,
-prefixed with `# @genqlient` -- at Khan we put them right next to the calling code, e.g.
+prefixed with `# @genqlient`. Example:
 
 ```go
-_ = `# @genqlient
+const _ = `# @genqlient
   query getUser($login: String!) {
     user(login: $login) {
       name
     }
-  }
-`
+  }`
 
 resp, err := getUser(...)
 ```
 
-(You don't need to do anything with the constant,
+You don't need to do anything with the constant,
 just keep it somewhere in the source as documentation
-and for the next time you run genqlient.)
+and for the next time you run genqlient.
 In this case you'll need to update `genqlient.yaml`
 to tell it to look at your Go code.
 
-All the filenames above, and many other aspects of `genqlient`, are configurable;  You can also configure how `genqlient` converts specific parts of your query with the `@genqlient` directive.
+Filenames and other aspects of `genqlient` are configurable.
+You can also configure how `genqlient` converts specific parts
+of your query with the `@genqlient` directive.
 See [genqlient.yaml](https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml)
 for the full range of options.
