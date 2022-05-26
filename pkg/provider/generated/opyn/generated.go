@@ -8,124 +8,124 @@ import (
 	"github.com/Khan/genqlient/graphql"
 )
 
-// getOptionsOtokensOToken includes the requested fields of the GraphQL type OToken.
-type getOptionsOtokensOToken struct {
-	Id              string                                      `json:"id"`
-	Symbol          string                                      `json:"symbol"`
-	Name            string                                      `json:"name"`
-	Decimals        int                                         `json:"decimals"`
-	StrikeAsset     getOptionsOtokensOTokenStrikeAssetERC20     `json:"strikeAsset"`
-	UnderlyingAsset getOptionsOtokensOTokenUnderlyingAssetERC20 `json:"underlyingAsset"`
-	CollateralAsset getOptionsOtokensOTokenCollateralAssetERC20 `json:"collateralAsset"`
-	StrikePrice     string                                      `json:"strikePrice"`
-	IsPut           bool                                        `json:"isPut"`
-	ExpiryTimestamp string                                      `json:"expiryTimestamp"`
+// OptionsOtokensOToken includes the requested fields of the GraphQL type OToken.
+type OptionsOtokensOToken struct {
+	Id              string                                   `json:"id"`
+	Symbol          string                                   `json:"symbol"`
+	Name            string                                   `json:"name"`
+	Decimals        int                                      `json:"decimals"`
+	StrikeAsset     OptionsOtokensOTokenStrikeAssetERC20     `json:"strikeAsset"`
+	UnderlyingAsset OptionsOtokensOTokenUnderlyingAssetERC20 `json:"underlyingAsset"`
+	CollateralAsset OptionsOtokensOTokenCollateralAssetERC20 `json:"collateralAsset"`
+	StrikePrice     int                                      `json:"strikePrice"`
+	IsPut           bool                                     `json:"isPut"`
+	ExpiryTimestamp int                                      `json:"expiryTimestamp"`
 }
 
-// GetId returns getOptionsOtokensOToken.Id, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetId() string { return v.Id }
+// GetId returns OptionsOtokensOToken.Id, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetId() string { return v.Id }
 
-// GetSymbol returns getOptionsOtokensOToken.Symbol, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetSymbol() string { return v.Symbol }
+// GetSymbol returns OptionsOtokensOToken.Symbol, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetSymbol() string { return v.Symbol }
 
-// GetName returns getOptionsOtokensOToken.Name, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetName() string { return v.Name }
+// GetName returns OptionsOtokensOToken.Name, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetName() string { return v.Name }
 
-// GetDecimals returns getOptionsOtokensOToken.Decimals, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetDecimals() int { return v.Decimals }
+// GetDecimals returns OptionsOtokensOToken.Decimals, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetDecimals() int { return v.Decimals }
 
-// GetStrikeAsset returns getOptionsOtokensOToken.StrikeAsset, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetStrikeAsset() getOptionsOtokensOTokenStrikeAssetERC20 {
+// GetStrikeAsset returns OptionsOtokensOToken.StrikeAsset, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetStrikeAsset() OptionsOtokensOTokenStrikeAssetERC20 {
 	return v.StrikeAsset
 }
 
-// GetUnderlyingAsset returns getOptionsOtokensOToken.UnderlyingAsset, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetUnderlyingAsset() getOptionsOtokensOTokenUnderlyingAssetERC20 {
+// GetUnderlyingAsset returns OptionsOtokensOToken.UnderlyingAsset, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetUnderlyingAsset() OptionsOtokensOTokenUnderlyingAssetERC20 {
 	return v.UnderlyingAsset
 }
 
-// GetCollateralAsset returns getOptionsOtokensOToken.CollateralAsset, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetCollateralAsset() getOptionsOtokensOTokenCollateralAssetERC20 {
+// GetCollateralAsset returns OptionsOtokensOToken.CollateralAsset, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetCollateralAsset() OptionsOtokensOTokenCollateralAssetERC20 {
 	return v.CollateralAsset
 }
 
-// GetStrikePrice returns getOptionsOtokensOToken.StrikePrice, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetStrikePrice() string { return v.StrikePrice }
+// GetStrikePrice returns OptionsOtokensOToken.StrikePrice, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetStrikePrice() int { return v.StrikePrice }
 
-// GetIsPut returns getOptionsOtokensOToken.IsPut, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetIsPut() bool { return v.IsPut }
+// GetIsPut returns OptionsOtokensOToken.IsPut, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetIsPut() bool { return v.IsPut }
 
-// GetExpiryTimestamp returns getOptionsOtokensOToken.ExpiryTimestamp, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOToken) GetExpiryTimestamp() string { return v.ExpiryTimestamp }
+// GetExpiryTimestamp returns OptionsOtokensOToken.ExpiryTimestamp, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOToken) GetExpiryTimestamp() int { return v.ExpiryTimestamp }
 
-// getOptionsOtokensOTokenCollateralAssetERC20 includes the requested fields of the GraphQL type ERC20.
-type getOptionsOtokensOTokenCollateralAssetERC20 struct {
+// OptionsOtokensOTokenCollateralAssetERC20 includes the requested fields of the GraphQL type ERC20.
+type OptionsOtokensOTokenCollateralAssetERC20 struct {
 	Id       string `json:"id"`
 	Symbol   string `json:"symbol"`
 	Decimals int    `json:"decimals"`
 }
 
-// GetId returns getOptionsOtokensOTokenCollateralAssetERC20.Id, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOTokenCollateralAssetERC20) GetId() string { return v.Id }
+// GetId returns OptionsOtokensOTokenCollateralAssetERC20.Id, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOTokenCollateralAssetERC20) GetId() string { return v.Id }
 
-// GetSymbol returns getOptionsOtokensOTokenCollateralAssetERC20.Symbol, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOTokenCollateralAssetERC20) GetSymbol() string { return v.Symbol }
+// GetSymbol returns OptionsOtokensOTokenCollateralAssetERC20.Symbol, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOTokenCollateralAssetERC20) GetSymbol() string { return v.Symbol }
 
-// GetDecimals returns getOptionsOtokensOTokenCollateralAssetERC20.Decimals, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOTokenCollateralAssetERC20) GetDecimals() int { return v.Decimals }
+// GetDecimals returns OptionsOtokensOTokenCollateralAssetERC20.Decimals, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOTokenCollateralAssetERC20) GetDecimals() int { return v.Decimals }
 
-// getOptionsOtokensOTokenStrikeAssetERC20 includes the requested fields of the GraphQL type ERC20.
-type getOptionsOtokensOTokenStrikeAssetERC20 struct {
+// OptionsOtokensOTokenStrikeAssetERC20 includes the requested fields of the GraphQL type ERC20.
+type OptionsOtokensOTokenStrikeAssetERC20 struct {
 	Id       string `json:"id"`
 	Symbol   string `json:"symbol"`
 	Decimals int    `json:"decimals"`
 }
 
-// GetId returns getOptionsOtokensOTokenStrikeAssetERC20.Id, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOTokenStrikeAssetERC20) GetId() string { return v.Id }
+// GetId returns OptionsOtokensOTokenStrikeAssetERC20.Id, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOTokenStrikeAssetERC20) GetId() string { return v.Id }
 
-// GetSymbol returns getOptionsOtokensOTokenStrikeAssetERC20.Symbol, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOTokenStrikeAssetERC20) GetSymbol() string { return v.Symbol }
+// GetSymbol returns OptionsOtokensOTokenStrikeAssetERC20.Symbol, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOTokenStrikeAssetERC20) GetSymbol() string { return v.Symbol }
 
-// GetDecimals returns getOptionsOtokensOTokenStrikeAssetERC20.Decimals, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOTokenStrikeAssetERC20) GetDecimals() int { return v.Decimals }
+// GetDecimals returns OptionsOtokensOTokenStrikeAssetERC20.Decimals, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOTokenStrikeAssetERC20) GetDecimals() int { return v.Decimals }
 
-// getOptionsOtokensOTokenUnderlyingAssetERC20 includes the requested fields of the GraphQL type ERC20.
-type getOptionsOtokensOTokenUnderlyingAssetERC20 struct {
+// OptionsOtokensOTokenUnderlyingAssetERC20 includes the requested fields of the GraphQL type ERC20.
+type OptionsOtokensOTokenUnderlyingAssetERC20 struct {
 	Id       string `json:"id"`
 	Symbol   string `json:"symbol"`
 	Decimals int    `json:"decimals"`
 }
 
-// GetId returns getOptionsOtokensOTokenUnderlyingAssetERC20.Id, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOTokenUnderlyingAssetERC20) GetId() string { return v.Id }
+// GetId returns OptionsOtokensOTokenUnderlyingAssetERC20.Id, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOTokenUnderlyingAssetERC20) GetId() string { return v.Id }
 
-// GetSymbol returns getOptionsOtokensOTokenUnderlyingAssetERC20.Symbol, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOTokenUnderlyingAssetERC20) GetSymbol() string { return v.Symbol }
+// GetSymbol returns OptionsOtokensOTokenUnderlyingAssetERC20.Symbol, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOTokenUnderlyingAssetERC20) GetSymbol() string { return v.Symbol }
 
-// GetDecimals returns getOptionsOtokensOTokenUnderlyingAssetERC20.Decimals, and is useful for accessing the field via an interface.
-func (v *getOptionsOtokensOTokenUnderlyingAssetERC20) GetDecimals() int { return v.Decimals }
+// GetDecimals returns OptionsOtokensOTokenUnderlyingAssetERC20.Decimals, and is useful for accessing the field via an interface.
+func (v *OptionsOtokensOTokenUnderlyingAssetERC20) GetDecimals() int { return v.Decimals }
 
-// getOptionsResponse is returned by getOptions on success.
-type getOptionsResponse struct {
-	Otokens []getOptionsOtokensOToken `json:"otokens"`
+// OptionsResponse is returned by Options on success.
+type OptionsResponse struct {
+	Otokens []OptionsOtokensOToken `json:"otokens"`
 }
 
-// GetOtokens returns getOptionsResponse.Otokens, and is useful for accessing the field via an interface.
-func (v *getOptionsResponse) GetOtokens() []getOptionsOtokensOToken { return v.Otokens }
+// GetOtokens returns OptionsResponse.Otokens, and is useful for accessing the field via an interface.
+func (v *OptionsResponse) GetOtokens() []OptionsOtokensOToken { return v.Otokens }
 
-func getOptions(
+func Options(
 	ctx context.Context,
 	client graphql.Client,
-) (*getOptionsResponse, error) {
+) (*OptionsResponse, error) {
 	var err error
 
-	var retval getOptionsResponse
+	var retval OptionsResponse
 	err = client.MakeRequest(
 		ctx,
-		"getOptions",
+		"Options",
 		`
-query getOptions {
+query Options {
 	otokens {
 		id
 		symbol

@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/teal-finance/rainbow/pkg/provider/generated/opyn"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -30,25 +31,17 @@ const (
 	WBTCDEcimals    = 8
 )
 
-func extract(i getOptionsOtokensOToken) (optionType, expiry string, strike float64) {
+func extract(i opyn.OptionsOtokensOToken) (optionType, expiry string, strike float64) {
 	optionType = "CALL"
 	if i.IsPut {
 		optionType = "PUT"
 	}
 
-	seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
-	if err == nil {
-		expiryTime := time.Unix(seconds, 0).UTC()
-		expiry = expiryTime.Format("2006-01-02 15:04:05")
-	} else {
-		log.Printf("WARN Expiry: %v from %+v", err, i)
-	}
+	seconds := int64(i.ExpiryTimestamp)
+	expiryTime := time.Unix(seconds, 0).UTC()
+	expiry = expiryTime.Format("2006-01-02 15:04:05")
 
-	// thought the USDCdecimals were correct but apparently not (whatever)
-	strike, err = convertFromSolidity(i.StrikePrice, OTokensDecimals)
-	if err != nil {
-		log.Printf("WARN Strike: %v from %+v", err, i) // TODO fail better
-	}
+	strike = float64(i.StrikePrice)
 
 	return optionType, expiry, strike
 }
@@ -200,7 +193,7 @@ type Record struct {
 	} `json:"order"`
 }
 
-func normalize(instruments []getOptionsOtokensOToken, provider string, amount float64) ([]rainbow.Option, error) {
+func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount float64) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 
 	sr := defaultStubbornRequester
