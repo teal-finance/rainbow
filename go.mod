@@ -212,8 +212,8 @@ require (
 	github.com/sylvia7788/contextcheck v1.0.5 // indirect
 	github.com/tdakkota/asciicheck v0.1.1 // indirect
 	github.com/teal-finance/emo v0.0.0-20220422152121-4c5a065f1100 // indirect
-	github.com/teal-finance/incorruptible v0.0.0-20220518111006-3dcde809d85b // indirect
-	github.com/teal-finance/quid v0.0.0-20220519105132-2c075a121a72 // indirect
+	github.com/teal-finance/incorruptible v0.0.0-20220525144608-1c4e49fcda8e // indirect
+	github.com/teal-finance/quid v0.0.0-20220525144746-4961906f8053 // indirect
 	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 // indirect
 	github.com/tetafro/godot v1.4.11 // indirect
 	github.com/tidwall/gjson v1.14.1 // indirect
@@ -237,6 +237,7 @@ require (
 	github.com/ybbus/jsonrpc v2.1.2+incompatible // indirect
 	github.com/yeya24/promlinter v0.2.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
+	github.com/zhangyunhao116/fastrand v0.3.0 // indirect
 	gitlab.com/bosi/decorder v0.2.1 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect

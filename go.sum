@@ -1616,10 +1616,10 @@ github.com/teal-finance/emo v0.0.0-20220422152121-4c5a065f1100 h1:CAkErpAFARMjF6
 github.com/teal-finance/emo v0.0.0-20220422152121-4c5a065f1100/go.mod h1:1PNyO4kPCk3rmmQr5bDpsuvLIrIZ3YDvYqecRdU4Nzo=
 github.com/teal-finance/garcon v0.13.4 h1:PoSuYkI9HPd6BTBO930iZI3yTKZRZp/MdMSeG/LLqyo=
 github.com/teal-finance/garcon v0.13.4/go.mod h1:PSc5sSpxOmF/xjJeyVEYceKFAsaueY0hM4qx/MFpesA=
-github.com/teal-finance/incorruptible v0.0.0-20220518111006-3dcde809d85b h1:qUwv6MiTVnBP6762PQPHS2kTcXW+V4/nWrzaO5HZ6VE=
-github.com/teal-finance/incorruptible v0.0.0-20220518111006-3dcde809d85b/go.mod h1:GiezMKPIAukakvjZTaG1CLDQN2opSlj2UPn9PWVYsPU=
-github.com/teal-finance/quid v0.0.0-20220519105132-2c075a121a72 h1:/kz8KbDKuxqxIC+CYJP91RZhUyXu48Xia+qSgkxQpbM=
-github.com/teal-finance/quid v0.0.0-20220519105132-2c075a121a72/go.mod h1:OQ0MiCZZW4BdhOER3omN4SmAZNvoMRVvkqmmVclv0bw=
+github.com/teal-finance/incorruptible v0.0.0-20220525144608-1c4e49fcda8e h1:caV5MAZSkGZ6hL95GOT29I/NsIMhiko0O0JOQrjB3sQ=
+github.com/teal-finance/incorruptible v0.0.0-20220525144608-1c4e49fcda8e/go.mod h1:uMI1eyWBiTyOh1evyhBEC52a5JsFU0KcLbbN0Rgb8zs=
+github.com/teal-finance/quid v0.0.0-20220525144746-4961906f8053 h1:TtsB1uOWZahyWFYP/j01lhF3Sok8IkbeCjw5dYbo78I=
+github.com/teal-finance/quid v0.0.0-20220525144746-4961906f8053/go.mod h1:OQ0MiCZZW4BdhOER3omN4SmAZNvoMRVvkqmmVclv0bw=
 github.com/tenntenn/modver v1.0.1 h1:2klLppGhDgzJrScMpkj9Ujy3rXPUspSjAcev9tSEBgA=
 github.com/tenntenn/modver v1.0.1/go.mod h1:bePIyQPb7UeioSRkw3Q0XeMhYZSMx9B8ePqg6SAMGH0=
 github.com/tenntenn/text/transform v0.0.0-20200319021203-7eef512accb3 h1:f+jULpRQGxTSkNYKJ51yaw6ChIqO+Je8UqsTKN/cDag=
@@ -1735,6 +1735,8 @@ github.com/yusufpapurcu/wmi v1.2.2/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQ
 github.com/yvasiyarov/go-metrics v0.0.0-20140926110328-57bccd1ccd43/go.mod h1:aX5oPXxHm3bOH+xeAttToC8pqch2ScQN/JoXYupl6xs=
 github.com/yvasiyarov/gorelic v0.0.0-20141212073537-a9bba5b9ab50/go.mod h1:NUSPSUX/bi6SeDMUh6brw0nXpxHnc96TguQh0+r/ssA=
 github.com/yvasiyarov/newrelic_platform_go v0.0.0-20140908184405-b21fdbd4370f/go.mod h1:GlGEuHIJweS1mbCqG+7vt2nvWLzLLnRHbXz5JKd/Qbg=
+github.com/zhangyunhao116/fastrand v0.3.0 h1:7bwe124xcckPulX6fxtr2lFdO2KQqaefdtbk+mqO/Ig=
+github.com/zhangyunhao116/fastrand v0.3.0/go.mod h1:0v5KgHho0VE6HU192HnY15de/oDS8UrbBChIFjIhBtc=
 gitlab.com/bosi/decorder v0.2.1 h1:ehqZe8hI4w7O4b1vgsDZw1YU1PE7iJXrQWFMsocbQ1w=
 gitlab.com/bosi/decorder v0.2.1/go.mod h1:6C/nhLSbF6qZbYD8bRmISBwc6vcWdNsiIBkRvjJFrH0=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
