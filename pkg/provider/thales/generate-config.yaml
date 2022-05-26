@@ -1,9 +1,12 @@
-# Default genqlient config; for full documentation see:
-# https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml
+# Config file for genqlient to generate GraphQL queries (in a Go file).
+# See `go doc github.com/Khan/genqlient/generate.Config`.
+
 schema: schema.graphql
+
 operations:
-- query.graphql
-generated: generated.go
+- queries.graphql
+
+generated: generated-queries.go
 
 # We bind github's DateTime scalar type to Go's time.Time (which conveniently
 # already defines MarshalJSON and UnmarshalJSON).  This means genqlient will

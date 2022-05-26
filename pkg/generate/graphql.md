@@ -1,0 +1,101 @@
+# GraphQL with genqlient
+
+[genqlient](https://github.com/Khan/genqlient)
+generates Go code to query a GraphQL API:
+
+- Compile-time validation of GraphQL queries: no invalid GraphQL query again!
+- Type-safe response objects: genqlient generates the right type for each query,
+  so you know the response will unmarshal correctly and never need to use `interface{}`.
+
+## Step 1: Download the GraphQL schema
+
+Put it in `schema.graphql`.
+Format = [Schema Definition Language (SDL)](https://graphql.org/learn/schema/#type-language).
+
+## Step 2: Write your GraphQL query
+
+Put it in `genqlient.graphql`.
+Format = standard [GraphQL syntax](https://graphql.org/learn/queries/)
+(supports queries **and mutations**).
+
+```graphql
+query getUser($login: String!) {
+  user(login: $login) {
+    name
+  }
+}
+```
+
+Tip: use an interactive explorer like [GraphiQL](https://github.com/graphql/graphiql/tree/main/packages/graphiql#readme).
+
+## Step 3: Configuration file
+
+Run `go run github.com/Khan/genqlient --init`.
+This creates a configuration file.
+
+## Step 4: Generate the Go code
+
+Run `go run github.com/Khan/genqlient` or `go generate ./...`
+to produce a file `generated.go` with your queries.
+
+## Step 5: Use your queries
+
+The generated code will expose a function with the same name as your query.
+
+```go
+func getUser(ctx context.Context, client graphql.Client, login string) (*getUserResponse, error)
+```
+
+As for the arguments:
+
+- for `ctx`, pass your local context (see [`go doc context`](https://pkg.go.dev/context)) or `context.Background()` if you don't need one
+- for `client`, call [`graphql.NewClient`](https://pkg.go.dev/github.com/Khan/genqlient/graphql), e.g. `graphql.NewClient("https://your.api.example/path", http.DefaultClient)`
+- for `login`, pass your GitHub username (or whatever the arguments to your query are)
+
+The response object is a `struct` with fields corresponding to each GraphQL field;
+for the exact details check its GoDoc.  For example, you might do:
+
+```go
+ctx := context.Background()
+client := graphql.NewClient("https://api.github.com/graphql", http.DefaultClient)
+resp, err := getUser(ctx, client, "benjaminjkraft")
+fmt.Println(resp.User.Name, err)
+```
+
+Now run your code!
+
+## Step 6: Repeat
+
+Over time, as you add or change queries, you'll just need to run
+[`go generate ./...`](https://go.dev/blog/generate)
+to re-generate `generated.go`.   .)
+
+If you're using an editor or IDE plugin backed by
+[gopls](https://github.com/golang/tools/blob/master/gopls/README.md)
+(which is most of them), keep `generated.go` open in the background,
+and reload it after each run, so your plugin knows about the automated changes.
+
+If you prefer, you can specify your queries as string-constants in your Go source,
+prefixed with `# @genqlient` -- at Khan we put them right next to the calling code, e.g.
+
+```go
+_ = `# @genqlient
+  query getUser($login: String!) {
+    user(login: $login) {
+      name
+    }
+  }
+`
+
+resp, err := getUser(...)
+```
+
+(You don't need to do anything with the constant,
+just keep it somewhere in the source as documentation
+and for the next time you run genqlient.)
+In this case you'll need to update `genqlient.yaml`
+to tell it to look at your Go code.
+
+All the filenames above, and many other aspects of `genqlient`, are configurable;  You can also configure how `genqlient` converts specific parts of your query with the `@genqlient` directive.
+See [genqlient.yaml](https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml)
+for the full range of options.
