@@ -1,7 +1,7 @@
-# genqlient
+# GraphQL with genqlient
 
 [genqlient](https://github.com/Khan/genqlient)
-generates Go code to query a GraphQL API:
+generates Go code to query GraphQL API:
 
 - Compile-time validation of GraphQL queries: no invalid GraphQL query again!
 - Type-safe response objects: genqlient generates the right type for each query,
@@ -9,12 +9,12 @@ generates Go code to query a GraphQL API:
 
 ## Step 1: Download the GraphQL schema
 
-Put it in `provider/xxxxx/schema.graphql`.
+Put it in `pkg/graphql/<provider-name>/schema.graphql`.
 Format = [Schema Definition Language (SDL)](https://graphql.org/learn/schema/#type-language).
 
 ## Step 2: Write your GraphQL query
 
-Put it in `provider/xxxxx/genqlient.graphql`.
+Put it in `pkg/graphql/<provider-name>/queries.graphql`.
 Format = standard [GraphQL syntax](https://graphql.org/learn/queries/)
 (supports queries **and mutations**).
 
@@ -26,31 +26,29 @@ query getUser($login: String!) {
 }
 ```
 
-Tip: use an interactive explorer like [GraphiQL](https://github.com/graphql/graphiql/tree/main/packages/graphiql#readme).
+💡 Use an interactive explorer like [GraphiQL](https://github.com/graphql/graphiql/tree/main/packages/graphiql#readme).
 
 ## Step 3: Configuration file
 
-This is already done, go to **Step 1**.
+To crete a default configuration file in
+`pkg/graphql/<provider-name>/confiq.yaml`:
 
-    cd pkg/generate
-    go run github.com/Khan/genqlient --init
+    cd pkg/graphql/<provider-name>
+    go run github.com/Khan/genqlient --init confiq.yaml
 
-This creates a configuration file.
-
-## Step 3: Update the configuration
-
-Run `go run github.com/Khan/genqlient` or `go generate ./...`
-to produce a file `generated.go` with your queries.
+Documentation:
+<https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml>
 
 ## Step 4: Generate the Go code
 
-Produce the files `pkg/provider/*/generated.go` with your queries:
+Produce the files `pkg/graphql/<provider-name>/generated.go`
+from your queries:
 
 [`go generate ./...`](https://go.dev/blog/generate)
 
 ## Step 5: Use your queries
 
-The generated code will expose a function with the same name as your query.
+The generated code will expose a function with the same name as your query name. Example:
 
 ```go
 func getUser(ctx context.Context, client graphql.Client, login string) (*getUserResponse, error)
