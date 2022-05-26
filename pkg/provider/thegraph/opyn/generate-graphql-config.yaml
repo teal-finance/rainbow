@@ -4,10 +4,10 @@
 # See https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml
 
 schema:
-- schema.graphql
+- "schema.graphql"
 
 operations:
-- queries.graphql
+- "queries.graphql"
 
 generated: generated-queries.go
 

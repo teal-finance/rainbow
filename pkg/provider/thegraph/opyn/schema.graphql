@@ -486,4 +486,3 @@ type Query {
   otoken(id: ID!): OToken
   otokens: [OToken]
 }
-
