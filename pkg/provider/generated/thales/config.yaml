@@ -1,5 +1,5 @@
-# Config file for genqlient
-# to generate GraphQL queries in a Go file.
+# Config file for genqlient.
+# genqlient generates GraphQL queries in Go files.
 
 # See https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml
 
@@ -9,7 +9,7 @@ schema:
 operations:
 - "queries.graphql"
 
-generated: generated-queries.go
+generated: generated.go
 
 bindings:
   DateTime:
