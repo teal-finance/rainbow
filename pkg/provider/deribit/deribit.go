@@ -51,6 +51,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		log.Print(err)
 		return nil, err
 	}
+	time.Sleep(5000 * time.Millisecond)
 
 	optionsETH, err := fillOptions(instruments, 5)
 	if err != nil {
@@ -63,6 +64,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		log.Print(err)
 		return nil, err
 	}
+	time.Sleep(5000 * time.Millisecond)
 
 	optionsSOL, err := fillOptions(instruments, 5)
 	if err != nil {
