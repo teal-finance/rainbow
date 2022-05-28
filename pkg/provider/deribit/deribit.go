@@ -200,8 +200,14 @@ func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, erro
 			BidIV:         result.Result.BidIv,
 			Ask:           asks,
 			AskIV:         result.Result.AskIv,
-			Greeks:        result.Result.Greeks,
-			MarketIV:      result.Result.MarkIv,
+			Greeks: rainbow.TheGreeks{
+				Delta: result.Result.Greeks.Delta,
+				Gamma: result.Result.Greeks.Gamma,
+				Vega:  result.Result.Greeks.Vega,
+				Theta: result.Result.Greeks.Theta,
+				Rho:   result.Result.Greeks.Rho,
+			},
+			MarketIV: result.Result.MarkIv,
 		})
 	}
 
