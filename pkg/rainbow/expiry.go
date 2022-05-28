@@ -20,15 +20,18 @@ func IsExpiryAvailable(expiries []time.Time, expiry time.Time) bool {
 // There is going to be duplicate but it doesn't matter in the end, if the expiry of an option is present,
 // it will be fetched anyway and won't circle back to that expiry (won't fetch twice the same option).
 func Expiries(t time.Time, hour int) []time.Time {
-	expiries := make([]time.Time, 0, 5)
+	expiries := make([]time.Time, 0, 10)
 
 	today := time.Date(t.Year(), t.Month(), t.Day(), hour, 0, 0, 0, time.UTC)
-	//tomorrow := today.Add(24 * time.Hour)
+	tomorrow := today.Add(24 * time.Hour)
+	// TODO remove that
+	// quick dirty addition of july expiry
+	july := time.Date(t.Year(), time.July, 29, hour, 0, 0, 0, time.UTC)
 
-	//expiries = append(expiries, today, tomorrow)
+	expiries = append(expiries, today, tomorrow, july)
 
 	// next Fridays on the day after tomorrow
-	expiries = append(expiries, NextNFridays(today, 3)...)
+	expiries = append(expiries, NextNFridays(today, 5)...)
 	expiries = append(expiries, LastFridayOfEachQuarter(today, hour)...)
 
 	return expiries

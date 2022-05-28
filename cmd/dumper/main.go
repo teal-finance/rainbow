@@ -25,7 +25,7 @@ func main() {
 	}
 
 	wg.Wait()
-	fmt.Println(time.Now().Sub(now))
+	log.Print(time.Now().Sub(now))
 
 }
 
