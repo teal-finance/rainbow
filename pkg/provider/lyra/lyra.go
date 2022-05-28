@@ -32,8 +32,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		log.Fatal(err)
 	}
 
-	sum := 0
-
 	for i := 0; i < len(OptionMarkets); i++ {
 		market, err := NewLyra(common.HexToAddress(OptionMarkets[i]), client)
 		if err != nil {
@@ -56,8 +54,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 				return nil, err
 			}
 
-			sum += len(boardListings)
-
 			for _, k := range boardListings {
 				vlist, err := viewer.GetListingView(&bind.CallOpts{}, k)
 				if err != nil {
@@ -77,7 +73,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		}
 	}
 
-	log.Print("total markets ", sum)
 	return options, nil
 }
 
