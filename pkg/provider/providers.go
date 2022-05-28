@@ -70,9 +70,6 @@ func (p withAlert) Options() ([]rainbow.Option, error) {
 			p.oracle.Query(fmt.Sprintf(":alert: **%s**: api error: %s\n", p.Name(), err))
 			return
 		}
-		if len(options) == 0 {
-			p.oracle.Query(fmt.Sprintf(":question: **%s**: no options\n", p.Name()))
-		}
 
 		// TO DO other anomality checks
 	}()
