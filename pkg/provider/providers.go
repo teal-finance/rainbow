@@ -70,13 +70,8 @@ func (p withAlert) Options() ([]rainbow.Option, error) {
 			p.oracle.Query(fmt.Sprintf(":alert: **%s**: api error: %s\n", p.Name(), err))
 			return
 		}
-		// Notify empty order book except for Opyn
-		if len(options) == 0 && p.Name() != "Opyn" {
+		if len(options) == 0 {
 			p.oracle.Query(fmt.Sprintf(":question: **%s**: no options\n", p.Name()))
-		}
-		// Opyn orderbook is always empty so we want a notification when an order is there
-		if p.Name() == "Opyn" && len(options) > 0 {
-			p.oracle.Query(fmt.Sprintf(":100: **%s**: finally an option\n", p.Name()))
 		}
 
 		// TO DO other anomality checks
