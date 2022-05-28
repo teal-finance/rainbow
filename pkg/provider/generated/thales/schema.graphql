@@ -10,20 +10,20 @@ scalar BigInt
 
 type Market {
   id: ID!
-  timestamp: BigInt!
-  creator: Bytes!
-  currencyKey: Bytes!
-  strikePrice: BigInt!
-  maturityDate: BigInt!
-  expiryDate: BigInt!
+  timestamp: String!
+  creator: String!
+  currencyKey: String!
+  strikePrice: String!
+  maturityDate: String!
+  expiryDate: String!
   isOpen: Boolean!
-  poolSize: BigInt!
-  longAddress: Bytes!
-  shortAddress: Bytes!
+  poolSize: String!
+  longAddress: String!
+  shortAddress: String!
   result: Int
   customMarket: Boolean!
-  customOracle: Bytes!
-  finalPrice: BigInt
+  customOracle: String!
+  finalPrice: String
 }
 
 type RangedMarket {

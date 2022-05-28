@@ -11,39 +11,39 @@ import (
 // MarketsMarketsMarket includes the requested fields of the GraphQL type Market.
 type MarketsMarketsMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int    `json:"timestamp"`
-	Creator      []byte `json:"creator"`
-	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int    `json:"strikePrice"`
-	MaturityDate int    `json:"maturityDate"`
-	ExpiryDate   int    `json:"expiryDate"`
+	Timestamp    string `json:"timestamp"`
+	Creator      string `json:"creator"`
+	CurrencyKey  string `json:"currencyKey"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
 	Result       int    `json:"result"`
-	LongAddress  []byte `json:"longAddress"`
-	ShortAddress []byte `json:"shortAddress"`
-	FinalPrice   int    `json:"finalPrice"`
+	LongAddress  string `json:"longAddress"`
+	ShortAddress string `json:"shortAddress"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns MarketsMarketsMarket.Id, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns MarketsMarketsMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetTimestamp() int { return v.Timestamp }
+func (v *MarketsMarketsMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCreator returns MarketsMarketsMarket.Creator, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetCreator() []byte { return v.Creator }
+func (v *MarketsMarketsMarket) GetCreator() string { return v.Creator }
 
 // GetCurrencyKey returns MarketsMarketsMarket.CurrencyKey, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
+func (v *MarketsMarketsMarket) GetCurrencyKey() string { return v.CurrencyKey }
 
 // GetStrikePrice returns MarketsMarketsMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetStrikePrice() int { return v.StrikePrice }
+func (v *MarketsMarketsMarket) GetStrikePrice() string { return v.StrikePrice }
 
 // GetMaturityDate returns MarketsMarketsMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetMaturityDate() int { return v.MaturityDate }
+func (v *MarketsMarketsMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetExpiryDate returns MarketsMarketsMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetExpiryDate() int { return v.ExpiryDate }
+func (v *MarketsMarketsMarket) GetExpiryDate() string { return v.ExpiryDate }
 
 // GetIsOpen returns MarketsMarketsMarket.IsOpen, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetIsOpen() bool { return v.IsOpen }
@@ -52,13 +52,13 @@ func (v *MarketsMarketsMarket) GetIsOpen() bool { return v.IsOpen }
 func (v *MarketsMarketsMarket) GetResult() int { return v.Result }
 
 // GetLongAddress returns MarketsMarketsMarket.LongAddress, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetLongAddress() []byte { return v.LongAddress }
+func (v *MarketsMarketsMarket) GetLongAddress() string { return v.LongAddress }
 
 // GetShortAddress returns MarketsMarketsMarket.ShortAddress, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetShortAddress() []byte { return v.ShortAddress }
+func (v *MarketsMarketsMarket) GetShortAddress() string { return v.ShortAddress }
 
 // GetFinalPrice returns MarketsMarketsMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetFinalPrice() int { return v.FinalPrice }
+func (v *MarketsMarketsMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // MarketsResponse is returned by Markets on success.
 type MarketsResponse struct {
@@ -80,7 +80,11 @@ func Markets(
 		"Markets",
 		`
 query Markets {
-	markets(first: 5) {
+	markets(
+		orderBy:timestamp,
+		orderDirection:desc,
+		where:{timestamp_gt: 1650000000}
+	  ) {
 		id
 		timestamp
 		creator
