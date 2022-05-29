@@ -1,4 +1,4 @@
-query SwapsWithArgs(
+query WithArgs(
   $skip: Int
   $first: Int
   $orderBy: Swap_orderBy

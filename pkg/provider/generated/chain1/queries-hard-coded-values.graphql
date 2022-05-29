@@ -1,4 +1,4 @@
-query Swaps {
+query HardCodedValues {
   Chain1_swaps(
     skip: 0
     first: 100

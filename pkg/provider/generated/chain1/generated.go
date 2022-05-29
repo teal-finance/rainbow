@@ -15,6 +15,148 @@ type BlockChangedFilter struct {
 // GetNumber_gte returns BlockChangedFilter.Number_gte, and is useful for accessing the field via an interface.
 func (v *BlockChangedFilter) GetNumber_gte() int { return v.Number_gte }
 
+// HardCodedValuesChain1_swapsSwap includes the requested fields of the GraphQL type Swap.
+type HardCodedValuesChain1_swapsSwap struct {
+	Id         string                              `json:"id"`
+	Timestamp  int                                 `json:"timestamp"`
+	Pair       HardCodedValuesChain1_swapsSwapPair `json:"pair"`
+	Sender     []byte                              `json:"sender"`
+	Amount0In  float64                             `json:"amount0In"`
+	Amount1In  float64                             `json:"amount1In"`
+	Amount0Out float64                             `json:"amount0Out"`
+	Amount1Out float64                             `json:"amount1Out"`
+	To         []byte                              `json:"to"`
+	LogIndex   int                                 `json:"logIndex"`
+	AmountUSD  float64                             `json:"amountUSD"`
+}
+
+// GetId returns HardCodedValuesChain1_swapsSwap.Id, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetId() string { return v.Id }
+
+// GetTimestamp returns HardCodedValuesChain1_swapsSwap.Timestamp, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetTimestamp() int { return v.Timestamp }
+
+// GetPair returns HardCodedValuesChain1_swapsSwap.Pair, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetPair() HardCodedValuesChain1_swapsSwapPair {
+	return v.Pair
+}
+
+// GetSender returns HardCodedValuesChain1_swapsSwap.Sender, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetSender() []byte { return v.Sender }
+
+// GetAmount0In returns HardCodedValuesChain1_swapsSwap.Amount0In, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetAmount0In() float64 { return v.Amount0In }
+
+// GetAmount1In returns HardCodedValuesChain1_swapsSwap.Amount1In, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetAmount1In() float64 { return v.Amount1In }
+
+// GetAmount0Out returns HardCodedValuesChain1_swapsSwap.Amount0Out, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetAmount0Out() float64 { return v.Amount0Out }
+
+// GetAmount1Out returns HardCodedValuesChain1_swapsSwap.Amount1Out, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetAmount1Out() float64 { return v.Amount1Out }
+
+// GetTo returns HardCodedValuesChain1_swapsSwap.To, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetTo() []byte { return v.To }
+
+// GetLogIndex returns HardCodedValuesChain1_swapsSwap.LogIndex, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetLogIndex() int { return v.LogIndex }
+
+// GetAmountUSD returns HardCodedValuesChain1_swapsSwap.AmountUSD, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwap) GetAmountUSD() float64 { return v.AmountUSD }
+
+// HardCodedValuesChain1_swapsSwapPair includes the requested fields of the GraphQL type Pair.
+type HardCodedValuesChain1_swapsSwapPair struct {
+	Id                     string  `json:"id"`
+	Reserve0               float64 `json:"reserve0"`
+	Reserve1               float64 `json:"reserve1"`
+	TotalSupply            float64 `json:"totalSupply"`
+	ReserveETH             float64 `json:"reserveETH"`
+	ReserveUSD             float64 `json:"reserveUSD"`
+	TrackedReserveETH      float64 `json:"trackedReserveETH"`
+	Token0Price            float64 `json:"token0Price"`
+	Token1Price            float64 `json:"token1Price"`
+	VolumeToken0           float64 `json:"volumeToken0"`
+	VolumeToken1           float64 `json:"volumeToken1"`
+	VolumeUSD              float64 `json:"volumeUSD"`
+	UntrackedVolumeUSD     float64 `json:"untrackedVolumeUSD"`
+	TxCount                int     `json:"txCount"`
+	CreatedAtTimestamp     int     `json:"createdAtTimestamp"`
+	CreatedAtBlockNumber   int     `json:"createdAtBlockNumber"`
+	LiquidityProviderCount int     `json:"liquidityProviderCount"`
+}
+
+// GetId returns HardCodedValuesChain1_swapsSwapPair.Id, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetId() string { return v.Id }
+
+// GetReserve0 returns HardCodedValuesChain1_swapsSwapPair.Reserve0, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetReserve0() float64 { return v.Reserve0 }
+
+// GetReserve1 returns HardCodedValuesChain1_swapsSwapPair.Reserve1, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetReserve1() float64 { return v.Reserve1 }
+
+// GetTotalSupply returns HardCodedValuesChain1_swapsSwapPair.TotalSupply, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetTotalSupply() float64 { return v.TotalSupply }
+
+// GetReserveETH returns HardCodedValuesChain1_swapsSwapPair.ReserveETH, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetReserveETH() float64 { return v.ReserveETH }
+
+// GetReserveUSD returns HardCodedValuesChain1_swapsSwapPair.ReserveUSD, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetReserveUSD() float64 { return v.ReserveUSD }
+
+// GetTrackedReserveETH returns HardCodedValuesChain1_swapsSwapPair.TrackedReserveETH, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetTrackedReserveETH() float64 {
+	return v.TrackedReserveETH
+}
+
+// GetToken0Price returns HardCodedValuesChain1_swapsSwapPair.Token0Price, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetToken0Price() float64 { return v.Token0Price }
+
+// GetToken1Price returns HardCodedValuesChain1_swapsSwapPair.Token1Price, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetToken1Price() float64 { return v.Token1Price }
+
+// GetVolumeToken0 returns HardCodedValuesChain1_swapsSwapPair.VolumeToken0, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetVolumeToken0() float64 { return v.VolumeToken0 }
+
+// GetVolumeToken1 returns HardCodedValuesChain1_swapsSwapPair.VolumeToken1, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetVolumeToken1() float64 { return v.VolumeToken1 }
+
+// GetVolumeUSD returns HardCodedValuesChain1_swapsSwapPair.VolumeUSD, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetVolumeUSD() float64 { return v.VolumeUSD }
+
+// GetUntrackedVolumeUSD returns HardCodedValuesChain1_swapsSwapPair.UntrackedVolumeUSD, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetUntrackedVolumeUSD() float64 {
+	return v.UntrackedVolumeUSD
+}
+
+// GetTxCount returns HardCodedValuesChain1_swapsSwapPair.TxCount, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetTxCount() int { return v.TxCount }
+
+// GetCreatedAtTimestamp returns HardCodedValuesChain1_swapsSwapPair.CreatedAtTimestamp, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetCreatedAtTimestamp() int {
+	return v.CreatedAtTimestamp
+}
+
+// GetCreatedAtBlockNumber returns HardCodedValuesChain1_swapsSwapPair.CreatedAtBlockNumber, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetCreatedAtBlockNumber() int {
+	return v.CreatedAtBlockNumber
+}
+
+// GetLiquidityProviderCount returns HardCodedValuesChain1_swapsSwapPair.LiquidityProviderCount, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesChain1_swapsSwapPair) GetLiquidityProviderCount() int {
+	return v.LiquidityProviderCount
+}
+
+// HardCodedValuesResponse is returned by HardCodedValues on success.
+type HardCodedValuesResponse struct {
+	Chain1_swaps []HardCodedValuesChain1_swapsSwap `json:"Chain1_swaps"`
+}
+
+// GetChain1_swaps returns HardCodedValuesResponse.Chain1_swaps, and is useful for accessing the field via an interface.
+func (v *HardCodedValuesResponse) GetChain1_swaps() []HardCodedValuesChain1_swapsSwap {
+	return v.Chain1_swaps
+}
+
 // Defines the order direction, either ascending or descending
 type OrderDirection string
 
@@ -520,56 +662,56 @@ const (
 	Swap_orderByAmountusd   Swap_orderBy = "amountUSD"
 )
 
-// SwapsChain1_swapsSwap includes the requested fields of the GraphQL type Swap.
-type SwapsChain1_swapsSwap struct {
-	Id         string                    `json:"id"`
-	Timestamp  int                       `json:"timestamp"`
-	Pair       SwapsChain1_swapsSwapPair `json:"pair"`
-	Sender     []byte                    `json:"sender"`
-	Amount0In  float64                   `json:"amount0In"`
-	Amount1In  float64                   `json:"amount1In"`
-	Amount0Out float64                   `json:"amount0Out"`
-	Amount1Out float64                   `json:"amount1Out"`
-	To         []byte                    `json:"to"`
-	LogIndex   int                       `json:"logIndex"`
-	AmountUSD  float64                   `json:"amountUSD"`
+// WithArgsChain1_swapsSwap includes the requested fields of the GraphQL type Swap.
+type WithArgsChain1_swapsSwap struct {
+	Id         string                       `json:"id"`
+	Timestamp  int                          `json:"timestamp"`
+	Pair       WithArgsChain1_swapsSwapPair `json:"pair"`
+	Sender     []byte                       `json:"sender"`
+	Amount0In  float64                      `json:"amount0In"`
+	Amount1In  float64                      `json:"amount1In"`
+	Amount0Out float64                      `json:"amount0Out"`
+	Amount1Out float64                      `json:"amount1Out"`
+	To         []byte                       `json:"to"`
+	LogIndex   int                          `json:"logIndex"`
+	AmountUSD  float64                      `json:"amountUSD"`
 }
 
-// GetId returns SwapsChain1_swapsSwap.Id, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetId() string { return v.Id }
+// GetId returns WithArgsChain1_swapsSwap.Id, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetId() string { return v.Id }
 
-// GetTimestamp returns SwapsChain1_swapsSwap.Timestamp, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetTimestamp() int { return v.Timestamp }
+// GetTimestamp returns WithArgsChain1_swapsSwap.Timestamp, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetTimestamp() int { return v.Timestamp }
 
-// GetPair returns SwapsChain1_swapsSwap.Pair, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetPair() SwapsChain1_swapsSwapPair { return v.Pair }
+// GetPair returns WithArgsChain1_swapsSwap.Pair, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetPair() WithArgsChain1_swapsSwapPair { return v.Pair }
 
-// GetSender returns SwapsChain1_swapsSwap.Sender, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetSender() []byte { return v.Sender }
+// GetSender returns WithArgsChain1_swapsSwap.Sender, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetSender() []byte { return v.Sender }
 
-// GetAmount0In returns SwapsChain1_swapsSwap.Amount0In, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetAmount0In() float64 { return v.Amount0In }
+// GetAmount0In returns WithArgsChain1_swapsSwap.Amount0In, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetAmount0In() float64 { return v.Amount0In }
 
-// GetAmount1In returns SwapsChain1_swapsSwap.Amount1In, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetAmount1In() float64 { return v.Amount1In }
+// GetAmount1In returns WithArgsChain1_swapsSwap.Amount1In, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetAmount1In() float64 { return v.Amount1In }
 
-// GetAmount0Out returns SwapsChain1_swapsSwap.Amount0Out, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetAmount0Out() float64 { return v.Amount0Out }
+// GetAmount0Out returns WithArgsChain1_swapsSwap.Amount0Out, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetAmount0Out() float64 { return v.Amount0Out }
 
-// GetAmount1Out returns SwapsChain1_swapsSwap.Amount1Out, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetAmount1Out() float64 { return v.Amount1Out }
+// GetAmount1Out returns WithArgsChain1_swapsSwap.Amount1Out, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetAmount1Out() float64 { return v.Amount1Out }
 
-// GetTo returns SwapsChain1_swapsSwap.To, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetTo() []byte { return v.To }
+// GetTo returns WithArgsChain1_swapsSwap.To, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetTo() []byte { return v.To }
 
-// GetLogIndex returns SwapsChain1_swapsSwap.LogIndex, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetLogIndex() int { return v.LogIndex }
+// GetLogIndex returns WithArgsChain1_swapsSwap.LogIndex, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetLogIndex() int { return v.LogIndex }
 
-// GetAmountUSD returns SwapsChain1_swapsSwap.AmountUSD, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwap) GetAmountUSD() float64 { return v.AmountUSD }
+// GetAmountUSD returns WithArgsChain1_swapsSwap.AmountUSD, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwap) GetAmountUSD() float64 { return v.AmountUSD }
 
-// SwapsChain1_swapsSwapPair includes the requested fields of the GraphQL type Pair.
-type SwapsChain1_swapsSwapPair struct {
+// WithArgsChain1_swapsSwapPair includes the requested fields of the GraphQL type Pair.
+type WithArgsChain1_swapsSwapPair struct {
 	Id                     string  `json:"id"`
 	Reserve0               float64 `json:"reserve0"`
 	Reserve1               float64 `json:"reserve1"`
@@ -589,205 +731,69 @@ type SwapsChain1_swapsSwapPair struct {
 	LiquidityProviderCount int     `json:"liquidityProviderCount"`
 }
 
-// GetId returns SwapsChain1_swapsSwapPair.Id, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetId() string { return v.Id }
+// GetId returns WithArgsChain1_swapsSwapPair.Id, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetId() string { return v.Id }
 
-// GetReserve0 returns SwapsChain1_swapsSwapPair.Reserve0, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetReserve0() float64 { return v.Reserve0 }
+// GetReserve0 returns WithArgsChain1_swapsSwapPair.Reserve0, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetReserve0() float64 { return v.Reserve0 }
 
-// GetReserve1 returns SwapsChain1_swapsSwapPair.Reserve1, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetReserve1() float64 { return v.Reserve1 }
+// GetReserve1 returns WithArgsChain1_swapsSwapPair.Reserve1, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetReserve1() float64 { return v.Reserve1 }
 
-// GetTotalSupply returns SwapsChain1_swapsSwapPair.TotalSupply, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetTotalSupply() float64 { return v.TotalSupply }
+// GetTotalSupply returns WithArgsChain1_swapsSwapPair.TotalSupply, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetTotalSupply() float64 { return v.TotalSupply }
 
-// GetReserveETH returns SwapsChain1_swapsSwapPair.ReserveETH, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetReserveETH() float64 { return v.ReserveETH }
+// GetReserveETH returns WithArgsChain1_swapsSwapPair.ReserveETH, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetReserveETH() float64 { return v.ReserveETH }
 
-// GetReserveUSD returns SwapsChain1_swapsSwapPair.ReserveUSD, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetReserveUSD() float64 { return v.ReserveUSD }
+// GetReserveUSD returns WithArgsChain1_swapsSwapPair.ReserveUSD, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetReserveUSD() float64 { return v.ReserveUSD }
 
-// GetTrackedReserveETH returns SwapsChain1_swapsSwapPair.TrackedReserveETH, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetTrackedReserveETH() float64 { return v.TrackedReserveETH }
+// GetTrackedReserveETH returns WithArgsChain1_swapsSwapPair.TrackedReserveETH, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetTrackedReserveETH() float64 { return v.TrackedReserveETH }
 
-// GetToken0Price returns SwapsChain1_swapsSwapPair.Token0Price, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetToken0Price() float64 { return v.Token0Price }
+// GetToken0Price returns WithArgsChain1_swapsSwapPair.Token0Price, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetToken0Price() float64 { return v.Token0Price }
 
-// GetToken1Price returns SwapsChain1_swapsSwapPair.Token1Price, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetToken1Price() float64 { return v.Token1Price }
+// GetToken1Price returns WithArgsChain1_swapsSwapPair.Token1Price, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetToken1Price() float64 { return v.Token1Price }
 
-// GetVolumeToken0 returns SwapsChain1_swapsSwapPair.VolumeToken0, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetVolumeToken0() float64 { return v.VolumeToken0 }
+// GetVolumeToken0 returns WithArgsChain1_swapsSwapPair.VolumeToken0, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetVolumeToken0() float64 { return v.VolumeToken0 }
 
-// GetVolumeToken1 returns SwapsChain1_swapsSwapPair.VolumeToken1, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetVolumeToken1() float64 { return v.VolumeToken1 }
+// GetVolumeToken1 returns WithArgsChain1_swapsSwapPair.VolumeToken1, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetVolumeToken1() float64 { return v.VolumeToken1 }
 
-// GetVolumeUSD returns SwapsChain1_swapsSwapPair.VolumeUSD, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetVolumeUSD() float64 { return v.VolumeUSD }
+// GetVolumeUSD returns WithArgsChain1_swapsSwapPair.VolumeUSD, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetVolumeUSD() float64 { return v.VolumeUSD }
 
-// GetUntrackedVolumeUSD returns SwapsChain1_swapsSwapPair.UntrackedVolumeUSD, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetUntrackedVolumeUSD() float64 { return v.UntrackedVolumeUSD }
+// GetUntrackedVolumeUSD returns WithArgsChain1_swapsSwapPair.UntrackedVolumeUSD, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetUntrackedVolumeUSD() float64 { return v.UntrackedVolumeUSD }
 
-// GetTxCount returns SwapsChain1_swapsSwapPair.TxCount, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetTxCount() int { return v.TxCount }
+// GetTxCount returns WithArgsChain1_swapsSwapPair.TxCount, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetTxCount() int { return v.TxCount }
 
-// GetCreatedAtTimestamp returns SwapsChain1_swapsSwapPair.CreatedAtTimestamp, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetCreatedAtTimestamp() int { return v.CreatedAtTimestamp }
+// GetCreatedAtTimestamp returns WithArgsChain1_swapsSwapPair.CreatedAtTimestamp, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetCreatedAtTimestamp() int { return v.CreatedAtTimestamp }
 
-// GetCreatedAtBlockNumber returns SwapsChain1_swapsSwapPair.CreatedAtBlockNumber, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetCreatedAtBlockNumber() int { return v.CreatedAtBlockNumber }
+// GetCreatedAtBlockNumber returns WithArgsChain1_swapsSwapPair.CreatedAtBlockNumber, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetCreatedAtBlockNumber() int { return v.CreatedAtBlockNumber }
 
-// GetLiquidityProviderCount returns SwapsChain1_swapsSwapPair.LiquidityProviderCount, and is useful for accessing the field via an interface.
-func (v *SwapsChain1_swapsSwapPair) GetLiquidityProviderCount() int { return v.LiquidityProviderCount }
-
-// SwapsResponse is returned by Swaps on success.
-type SwapsResponse struct {
-	Chain1_swaps []SwapsChain1_swapsSwap `json:"Chain1_swaps"`
-}
-
-// GetChain1_swaps returns SwapsResponse.Chain1_swaps, and is useful for accessing the field via an interface.
-func (v *SwapsResponse) GetChain1_swaps() []SwapsChain1_swapsSwap { return v.Chain1_swaps }
-
-// SwapsWithArgsChain1_swapsSwap includes the requested fields of the GraphQL type Swap.
-type SwapsWithArgsChain1_swapsSwap struct {
-	Id         string                            `json:"id"`
-	Timestamp  int                               `json:"timestamp"`
-	Pair       SwapsWithArgsChain1_swapsSwapPair `json:"pair"`
-	Sender     []byte                            `json:"sender"`
-	Amount0In  float64                           `json:"amount0In"`
-	Amount1In  float64                           `json:"amount1In"`
-	Amount0Out float64                           `json:"amount0Out"`
-	Amount1Out float64                           `json:"amount1Out"`
-	To         []byte                            `json:"to"`
-	LogIndex   int                               `json:"logIndex"`
-	AmountUSD  float64                           `json:"amountUSD"`
-}
-
-// GetId returns SwapsWithArgsChain1_swapsSwap.Id, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetId() string { return v.Id }
-
-// GetTimestamp returns SwapsWithArgsChain1_swapsSwap.Timestamp, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetTimestamp() int { return v.Timestamp }
-
-// GetPair returns SwapsWithArgsChain1_swapsSwap.Pair, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetPair() SwapsWithArgsChain1_swapsSwapPair { return v.Pair }
-
-// GetSender returns SwapsWithArgsChain1_swapsSwap.Sender, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetSender() []byte { return v.Sender }
-
-// GetAmount0In returns SwapsWithArgsChain1_swapsSwap.Amount0In, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetAmount0In() float64 { return v.Amount0In }
-
-// GetAmount1In returns SwapsWithArgsChain1_swapsSwap.Amount1In, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetAmount1In() float64 { return v.Amount1In }
-
-// GetAmount0Out returns SwapsWithArgsChain1_swapsSwap.Amount0Out, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetAmount0Out() float64 { return v.Amount0Out }
-
-// GetAmount1Out returns SwapsWithArgsChain1_swapsSwap.Amount1Out, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetAmount1Out() float64 { return v.Amount1Out }
-
-// GetTo returns SwapsWithArgsChain1_swapsSwap.To, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetTo() []byte { return v.To }
-
-// GetLogIndex returns SwapsWithArgsChain1_swapsSwap.LogIndex, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetLogIndex() int { return v.LogIndex }
-
-// GetAmountUSD returns SwapsWithArgsChain1_swapsSwap.AmountUSD, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwap) GetAmountUSD() float64 { return v.AmountUSD }
-
-// SwapsWithArgsChain1_swapsSwapPair includes the requested fields of the GraphQL type Pair.
-type SwapsWithArgsChain1_swapsSwapPair struct {
-	Id                     string  `json:"id"`
-	Reserve0               float64 `json:"reserve0"`
-	Reserve1               float64 `json:"reserve1"`
-	TotalSupply            float64 `json:"totalSupply"`
-	ReserveETH             float64 `json:"reserveETH"`
-	ReserveUSD             float64 `json:"reserveUSD"`
-	TrackedReserveETH      float64 `json:"trackedReserveETH"`
-	Token0Price            float64 `json:"token0Price"`
-	Token1Price            float64 `json:"token1Price"`
-	VolumeToken0           float64 `json:"volumeToken0"`
-	VolumeToken1           float64 `json:"volumeToken1"`
-	VolumeUSD              float64 `json:"volumeUSD"`
-	UntrackedVolumeUSD     float64 `json:"untrackedVolumeUSD"`
-	TxCount                int     `json:"txCount"`
-	CreatedAtTimestamp     int     `json:"createdAtTimestamp"`
-	CreatedAtBlockNumber   int     `json:"createdAtBlockNumber"`
-	LiquidityProviderCount int     `json:"liquidityProviderCount"`
-}
-
-// GetId returns SwapsWithArgsChain1_swapsSwapPair.Id, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetId() string { return v.Id }
-
-// GetReserve0 returns SwapsWithArgsChain1_swapsSwapPair.Reserve0, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetReserve0() float64 { return v.Reserve0 }
-
-// GetReserve1 returns SwapsWithArgsChain1_swapsSwapPair.Reserve1, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetReserve1() float64 { return v.Reserve1 }
-
-// GetTotalSupply returns SwapsWithArgsChain1_swapsSwapPair.TotalSupply, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetTotalSupply() float64 { return v.TotalSupply }
-
-// GetReserveETH returns SwapsWithArgsChain1_swapsSwapPair.ReserveETH, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetReserveETH() float64 { return v.ReserveETH }
-
-// GetReserveUSD returns SwapsWithArgsChain1_swapsSwapPair.ReserveUSD, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetReserveUSD() float64 { return v.ReserveUSD }
-
-// GetTrackedReserveETH returns SwapsWithArgsChain1_swapsSwapPair.TrackedReserveETH, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetTrackedReserveETH() float64 {
-	return v.TrackedReserveETH
-}
-
-// GetToken0Price returns SwapsWithArgsChain1_swapsSwapPair.Token0Price, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetToken0Price() float64 { return v.Token0Price }
-
-// GetToken1Price returns SwapsWithArgsChain1_swapsSwapPair.Token1Price, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetToken1Price() float64 { return v.Token1Price }
-
-// GetVolumeToken0 returns SwapsWithArgsChain1_swapsSwapPair.VolumeToken0, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetVolumeToken0() float64 { return v.VolumeToken0 }
-
-// GetVolumeToken1 returns SwapsWithArgsChain1_swapsSwapPair.VolumeToken1, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetVolumeToken1() float64 { return v.VolumeToken1 }
-
-// GetVolumeUSD returns SwapsWithArgsChain1_swapsSwapPair.VolumeUSD, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetVolumeUSD() float64 { return v.VolumeUSD }
-
-// GetUntrackedVolumeUSD returns SwapsWithArgsChain1_swapsSwapPair.UntrackedVolumeUSD, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetUntrackedVolumeUSD() float64 {
-	return v.UntrackedVolumeUSD
-}
-
-// GetTxCount returns SwapsWithArgsChain1_swapsSwapPair.TxCount, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetTxCount() int { return v.TxCount }
-
-// GetCreatedAtTimestamp returns SwapsWithArgsChain1_swapsSwapPair.CreatedAtTimestamp, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetCreatedAtTimestamp() int { return v.CreatedAtTimestamp }
-
-// GetCreatedAtBlockNumber returns SwapsWithArgsChain1_swapsSwapPair.CreatedAtBlockNumber, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetCreatedAtBlockNumber() int {
-	return v.CreatedAtBlockNumber
-}
-
-// GetLiquidityProviderCount returns SwapsWithArgsChain1_swapsSwapPair.LiquidityProviderCount, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsChain1_swapsSwapPair) GetLiquidityProviderCount() int {
+// GetLiquidityProviderCount returns WithArgsChain1_swapsSwapPair.LiquidityProviderCount, and is useful for accessing the field via an interface.
+func (v *WithArgsChain1_swapsSwapPair) GetLiquidityProviderCount() int {
 	return v.LiquidityProviderCount
 }
 
-// SwapsWithArgsResponse is returned by SwapsWithArgs on success.
-type SwapsWithArgsResponse struct {
-	Chain1_swaps []SwapsWithArgsChain1_swapsSwap `json:"Chain1_swaps"`
+// WithArgsResponse is returned by WithArgs on success.
+type WithArgsResponse struct {
+	Chain1_swaps []WithArgsChain1_swapsSwap `json:"Chain1_swaps"`
 }
 
-// GetChain1_swaps returns SwapsWithArgsResponse.Chain1_swaps, and is useful for accessing the field via an interface.
-func (v *SwapsWithArgsResponse) GetChain1_swaps() []SwapsWithArgsChain1_swapsSwap {
-	return v.Chain1_swaps
-}
+// GetChain1_swaps returns WithArgsResponse.Chain1_swaps, and is useful for accessing the field via an interface.
+func (v *WithArgsResponse) GetChain1_swaps() []WithArgsChain1_swapsSwap { return v.Chain1_swaps }
 
-// __SwapsWithArgsInput is used internally by genqlient
-type __SwapsWithArgsInput struct {
+// __WithArgsInput is used internally by genqlient
+type __WithArgsInput struct {
 	Skip           int            `json:"skip"`
 	First          int            `json:"first"`
 	OrderBy        Swap_orderBy   `json:"orderBy"`
@@ -795,33 +801,33 @@ type __SwapsWithArgsInput struct {
 	Where          Swap_filter    `json:"where"`
 }
 
-// GetSkip returns __SwapsWithArgsInput.Skip, and is useful for accessing the field via an interface.
-func (v *__SwapsWithArgsInput) GetSkip() int { return v.Skip }
+// GetSkip returns __WithArgsInput.Skip, and is useful for accessing the field via an interface.
+func (v *__WithArgsInput) GetSkip() int { return v.Skip }
 
-// GetFirst returns __SwapsWithArgsInput.First, and is useful for accessing the field via an interface.
-func (v *__SwapsWithArgsInput) GetFirst() int { return v.First }
+// GetFirst returns __WithArgsInput.First, and is useful for accessing the field via an interface.
+func (v *__WithArgsInput) GetFirst() int { return v.First }
 
-// GetOrderBy returns __SwapsWithArgsInput.OrderBy, and is useful for accessing the field via an interface.
-func (v *__SwapsWithArgsInput) GetOrderBy() Swap_orderBy { return v.OrderBy }
+// GetOrderBy returns __WithArgsInput.OrderBy, and is useful for accessing the field via an interface.
+func (v *__WithArgsInput) GetOrderBy() Swap_orderBy { return v.OrderBy }
 
-// GetOrderDirection returns __SwapsWithArgsInput.OrderDirection, and is useful for accessing the field via an interface.
-func (v *__SwapsWithArgsInput) GetOrderDirection() OrderDirection { return v.OrderDirection }
+// GetOrderDirection returns __WithArgsInput.OrderDirection, and is useful for accessing the field via an interface.
+func (v *__WithArgsInput) GetOrderDirection() OrderDirection { return v.OrderDirection }
 
-// GetWhere returns __SwapsWithArgsInput.Where, and is useful for accessing the field via an interface.
-func (v *__SwapsWithArgsInput) GetWhere() Swap_filter { return v.Where }
+// GetWhere returns __WithArgsInput.Where, and is useful for accessing the field via an interface.
+func (v *__WithArgsInput) GetWhere() Swap_filter { return v.Where }
 
-func Swaps(
+func HardCodedValues(
 	ctx context.Context,
 	client graphql.Client,
-) (*SwapsResponse, error) {
+) (*HardCodedValuesResponse, error) {
 	var err error
 
-	var retval SwapsResponse
+	var retval HardCodedValuesResponse
 	err = client.MakeRequest(
 		ctx,
-		"Swaps",
+		"HardCodedValues",
 		`
-query Swaps {
+query HardCodedValues {
 	Chain1_swaps(skip: 0, first: 100, orderBy: timestamp, orderDirection: desc, where: {timestamp_gt:1650000000}) {
 		id
 		timestamp
@@ -861,7 +867,7 @@ query Swaps {
 	return &retval, err
 }
 
-func SwapsWithArgs(
+func WithArgs(
 	ctx context.Context,
 	client graphql.Client,
 	skip int,
@@ -869,8 +875,8 @@ func SwapsWithArgs(
 	orderBy Swap_orderBy,
 	orderDirection OrderDirection,
 	where Swap_filter,
-) (*SwapsWithArgsResponse, error) {
-	__input := __SwapsWithArgsInput{
+) (*WithArgsResponse, error) {
+	__input := __WithArgsInput{
 		Skip:           skip,
 		First:          first,
 		OrderBy:        orderBy,
@@ -879,12 +885,12 @@ func SwapsWithArgs(
 	}
 	var err error
 
-	var retval SwapsWithArgsResponse
+	var retval WithArgsResponse
 	err = client.MakeRequest(
 		ctx,
-		"SwapsWithArgs",
+		"WithArgs",
 		`
-query SwapsWithArgs ($skip: Int, $first: Int, $orderBy: Swap_orderBy, $orderDirection: OrderDirection, $where: Swap_filter) {
+query WithArgs ($skip: Int, $first: Int, $orderBy: Swap_orderBy, $orderDirection: OrderDirection, $where: Swap_filter) {
 	Chain1_swaps(skip: $skip, first: $first, orderBy: $orderBy, orderDirection: $orderDirection, where: $where) {
 		id
 		timestamp
