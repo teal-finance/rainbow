@@ -1,3 +1,22 @@
+query Market($id: ID!) {
+  market(id: $id) {
+    timestamp
+    creator
+    currencyKey
+    strikePrice
+    maturityDate
+    expiryDate
+    isOpen
+    poolSize
+    longAddress
+    shortAddress
+    result
+    customMarket
+    customOracle
+    finalPrice
+  }
+}
+
 query Markets($skip: Int, $first: Int, $t: BigInt) {
   markets(
     skip: $skip
@@ -20,6 +39,111 @@ query Markets($skip: Int, $first: Int, $t: BigInt) {
     result
     customMarket
     customOracle
+    finalPrice
+  }
+}
+
+query RangedMarket($id: ID!) {
+  rangedMarket(id: $id) {
+    timestamp
+    currencyKey
+    maturityDate
+    leftPrice
+    rightPrice
+    inAddress
+    outAddress
+    rightMarket {
+      id
+      timestamp
+      creator
+      currencyKey
+      strikePrice
+      maturityDate
+      expiryDate
+      isOpen
+      poolSize
+      longAddress
+      shortAddress
+      result
+      customMarket
+      customOracle
+      finalPrice
+    }
+    leftMarket {
+      id
+      timestamp
+      creator
+      currencyKey
+      strikePrice
+      maturityDate
+      expiryDate
+      isOpen
+      poolSize
+      longAddress
+      shortAddress
+      result
+      customMarket
+      customOracle
+      finalPrice
+    }
+    isOpen
+    result
+    finalPrice
+  }
+}
+
+query RangedMarkets($skip: Int, $first: Int, $t: BigInt) {
+  rangedMarkets(
+    skip: $skip
+    first: $first
+    orderBy: timestamp
+    orderDirection: desc
+    where: { timestamp_gt: $t }
+  ) {
+    id
+    timestamp
+    currencyKey
+    maturityDate
+    leftPrice
+    rightPrice
+    inAddress
+    outAddress
+    rightMarket {
+      id
+      timestamp
+      creator
+      currencyKey
+      strikePrice
+      maturityDate
+      expiryDate
+      isOpen
+      poolSize
+      longAddress
+      shortAddress
+      result
+      customMarket
+      customOracle
+      finalPrice
+    }
+    leftMarket {
+      id
+      timestamp
+      creator
+      currencyKey
+      strikePrice
+      maturityDate
+      expiryDate
+      isOpen
+      poolSize
+      longAddress
+      shortAddress
+      result
+      customMarket
+      customOracle
+      finalPrice
+    }
+    isOpen
+    result
     finalPrice
   }
 }
