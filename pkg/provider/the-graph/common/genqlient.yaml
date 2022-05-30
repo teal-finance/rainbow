@@ -9,7 +9,7 @@ generated: generated.go
 
 bindings:
   BigInt:
-    type: int
+    type: int64
   BigDecimal:
     type: float64
   Bytes:

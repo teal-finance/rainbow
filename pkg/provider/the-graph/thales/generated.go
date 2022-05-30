@@ -11,27 +11,27 @@ import (
 // MarketsMarketsMarket includes the requested fields of the GraphQL type Market.
 type MarketsMarketsMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int    `json:"timestamp"`
+	Timestamp    int64  `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int    `json:"strikePrice"`
-	MaturityDate int    `json:"maturityDate"`
-	ExpiryDate   int    `json:"expiryDate"`
+	StrikePrice  int64  `json:"strikePrice"`
+	MaturityDate int64  `json:"maturityDate"`
+	ExpiryDate   int64  `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int    `json:"poolSize"`
+	PoolSize     int64  `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int    `json:"finalPrice"`
+	FinalPrice   int64  `json:"finalPrice"`
 }
 
 // GetId returns MarketsMarketsMarket.Id, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns MarketsMarketsMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetTimestamp() int { return v.Timestamp }
+func (v *MarketsMarketsMarket) GetTimestamp() int64 { return v.Timestamp }
 
 // GetCreator returns MarketsMarketsMarket.Creator, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetCreator() []byte { return v.Creator }
@@ -40,19 +40,19 @@ func (v *MarketsMarketsMarket) GetCreator() []byte { return v.Creator }
 func (v *MarketsMarketsMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetStrikePrice returns MarketsMarketsMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetStrikePrice() int { return v.StrikePrice }
+func (v *MarketsMarketsMarket) GetStrikePrice() int64 { return v.StrikePrice }
 
 // GetMaturityDate returns MarketsMarketsMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetMaturityDate() int { return v.MaturityDate }
+func (v *MarketsMarketsMarket) GetMaturityDate() int64 { return v.MaturityDate }
 
 // GetExpiryDate returns MarketsMarketsMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetExpiryDate() int { return v.ExpiryDate }
+func (v *MarketsMarketsMarket) GetExpiryDate() int64 { return v.ExpiryDate }
 
 // GetIsOpen returns MarketsMarketsMarket.IsOpen, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns MarketsMarketsMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetPoolSize() int { return v.PoolSize }
+func (v *MarketsMarketsMarket) GetPoolSize() int64 { return v.PoolSize }
 
 // GetLongAddress returns MarketsMarketsMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetLongAddress() []byte { return v.LongAddress }
@@ -70,7 +70,7 @@ func (v *MarketsMarketsMarket) GetCustomMarket() bool { return v.CustomMarket }
 func (v *MarketsMarketsMarket) GetCustomOracle() []byte { return v.CustomOracle }
 
 // GetFinalPrice returns MarketsMarketsMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetFinalPrice() int { return v.FinalPrice }
+func (v *MarketsMarketsMarket) GetFinalPrice() int64 { return v.FinalPrice }
 
 // MarketsResponse is returned by Markets on success.
 type MarketsResponse struct {
@@ -82,9 +82,9 @@ func (v *MarketsResponse) GetMarkets() []MarketsMarketsMarket { return v.Markets
 
 // __MarketsInput is used internally by genqlient
 type __MarketsInput struct {
-	Skip  int `json:"skip"`
-	First int `json:"first"`
-	T     int `json:"t"`
+	Skip  int   `json:"skip"`
+	First int   `json:"first"`
+	T     int64 `json:"t"`
 }
 
 // GetSkip returns __MarketsInput.Skip, and is useful for accessing the field via an interface.
@@ -94,14 +94,14 @@ func (v *__MarketsInput) GetSkip() int { return v.Skip }
 func (v *__MarketsInput) GetFirst() int { return v.First }
 
 // GetT returns __MarketsInput.T, and is useful for accessing the field via an interface.
-func (v *__MarketsInput) GetT() int { return v.T }
+func (v *__MarketsInput) GetT() int64 { return v.T }
 
 func Markets(
 	ctx context.Context,
 	client graphql.Client,
 	skip int,
 	first int,
-	t int,
+	t int64,
 ) (*MarketsResponse, error) {
 	__input := __MarketsInput{
 		Skip:  skip,

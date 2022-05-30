@@ -17,9 +17,9 @@ type OptionsOtokensOToken struct {
 	StrikeAsset     OptionsOtokensOTokenStrikeAssetERC20     `json:"strikeAsset"`
 	UnderlyingAsset OptionsOtokensOTokenUnderlyingAssetERC20 `json:"underlyingAsset"`
 	CollateralAsset OptionsOtokensOTokenCollateralAssetERC20 `json:"collateralAsset"`
-	StrikePrice     int                                      `json:"strikePrice"`
+	StrikePrice     int64                                    `json:"strikePrice"`
 	IsPut           bool                                     `json:"isPut"`
-	ExpiryTimestamp int                                      `json:"expiryTimestamp"`
+	ExpiryTimestamp int64                                    `json:"expiryTimestamp"`
 }
 
 // GetId returns OptionsOtokensOToken.Id, and is useful for accessing the field via an interface.
@@ -50,13 +50,13 @@ func (v *OptionsOtokensOToken) GetCollateralAsset() OptionsOtokensOTokenCollater
 }
 
 // GetStrikePrice returns OptionsOtokensOToken.StrikePrice, and is useful for accessing the field via an interface.
-func (v *OptionsOtokensOToken) GetStrikePrice() int { return v.StrikePrice }
+func (v *OptionsOtokensOToken) GetStrikePrice() int64 { return v.StrikePrice }
 
 // GetIsPut returns OptionsOtokensOToken.IsPut, and is useful for accessing the field via an interface.
 func (v *OptionsOtokensOToken) GetIsPut() bool { return v.IsPut }
 
 // GetExpiryTimestamp returns OptionsOtokensOToken.ExpiryTimestamp, and is useful for accessing the field via an interface.
-func (v *OptionsOtokensOToken) GetExpiryTimestamp() int { return v.ExpiryTimestamp }
+func (v *OptionsOtokensOToken) GetExpiryTimestamp() int64 { return v.ExpiryTimestamp }
 
 // OptionsOtokensOTokenCollateralAssetERC20 includes the requested fields of the GraphQL type ERC20.
 type OptionsOtokensOTokenCollateralAssetERC20 struct {
@@ -116,9 +116,9 @@ func (v *OptionsResponse) GetOtokens() []OptionsOtokensOToken { return v.Otokens
 
 // __OptionsInput is used internally by genqlient
 type __OptionsInput struct {
-	Skip  int `json:"skip"`
-	First int `json:"first"`
-	T     int `json:"t"`
+	Skip  int   `json:"skip"`
+	First int   `json:"first"`
+	T     int64 `json:"t"`
 }
 
 // GetSkip returns __OptionsInput.Skip, and is useful for accessing the field via an interface.
@@ -128,14 +128,14 @@ func (v *__OptionsInput) GetSkip() int { return v.Skip }
 func (v *__OptionsInput) GetFirst() int { return v.First }
 
 // GetT returns __OptionsInput.T, and is useful for accessing the field via an interface.
-func (v *__OptionsInput) GetT() int { return v.T }
+func (v *__OptionsInput) GetT() int64 { return v.T }
 
 func Options(
 	ctx context.Context,
 	client graphql.Client,
 	skip int,
 	first int,
-	t int,
+	t int64,
 ) (*OptionsResponse, error) {
 	__input := __OptionsInput{
 		Skip:  skip,
