@@ -1,8 +1,10 @@
-query Markets {
+query Markets($skip: Int, $first: Int, $t: BigInt) {
   markets(
+    skip: $skip
+    first: $first
     orderBy: timestamp
     orderDirection: desc
-    where: { timestamp_gt: 1650000000 }
+    where: { timestamp_gt: $t }
   ) {
     id
     timestamp

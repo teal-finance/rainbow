@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/teal-finance/rainbow/pkg/provider/generated/opyn"
+	"github.com/teal-finance/rainbow/pkg/provider/the-graph/opyn"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 

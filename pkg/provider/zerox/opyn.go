@@ -13,7 +13,7 @@ import (
 
 	"github.com/Khan/genqlient/graphql"
 
-	"github.com/teal-finance/rainbow/pkg/provider/generated/opyn"
+	"github.com/teal-finance/rainbow/pkg/provider/the-graph/opyn"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -37,10 +37,13 @@ func (Provider) Options() ([]rainbow.Option, error) {
 
 func QueryTheGraph() []opyn.OptionsOtokensOToken {
 	const url = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
+	const skip = 0
+	const first = 100
+	const minExpiry = 1651300000
 
 	graphqlClient := graphql.NewClient(url, nil)
 
-	resp, err := opyn.Options(context.TODO(), graphqlClient)
+	resp, err := opyn.Options(context.TODO(), graphqlClient, skip, first, minExpiry)
 	if err != nil {
 		log.Print("ERR: ", err)
 	}

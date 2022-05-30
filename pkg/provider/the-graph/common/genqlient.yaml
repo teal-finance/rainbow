@@ -3,14 +3,14 @@
 
 # See https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml
 
-schema: schema.graphql
-operations: queries.graphql
+schema: schema*.graphql
+operations: query*.graphql
 generated: generated.go
 
 bindings:
-#  DateTime:
-#    type: time.Time
   BigInt:
     type: int
+  BigDecimal:
+    type: float64
   Bytes:
     type: "[]byte"

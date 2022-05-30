@@ -114,10 +114,34 @@ type OptionsResponse struct {
 // GetOtokens returns OptionsResponse.Otokens, and is useful for accessing the field via an interface.
 func (v *OptionsResponse) GetOtokens() []OptionsOtokensOToken { return v.Otokens }
 
+// __OptionsInput is used internally by genqlient
+type __OptionsInput struct {
+	Skip  int `json:"skip"`
+	First int `json:"first"`
+	T     int `json:"t"`
+}
+
+// GetSkip returns __OptionsInput.Skip, and is useful for accessing the field via an interface.
+func (v *__OptionsInput) GetSkip() int { return v.Skip }
+
+// GetFirst returns __OptionsInput.First, and is useful for accessing the field via an interface.
+func (v *__OptionsInput) GetFirst() int { return v.First }
+
+// GetT returns __OptionsInput.T, and is useful for accessing the field via an interface.
+func (v *__OptionsInput) GetT() int { return v.T }
+
 func Options(
 	ctx context.Context,
 	client graphql.Client,
+	skip int,
+	first int,
+	t int,
 ) (*OptionsResponse, error) {
+	__input := __OptionsInput{
+		Skip:  skip,
+		First: first,
+		T:     t,
+	}
 	var err error
 
 	var retval OptionsResponse
@@ -125,8 +149,8 @@ func Options(
 		ctx,
 		"Options",
 		`
-query Options {
-	otokens {
+query Options ($skip: Int, $first: Int, $t: BigInt) {
+	otokens(skip: $skip, first: $first, orderBy: timestamp, orderDirection: desc, where: {timestamp_gt:$t}) {
 		id
 		symbol
 		name
@@ -153,7 +177,7 @@ query Options {
 }
 `,
 		&retval,
-		nil,
+		&__input,
 	)
 	return &retval, err
 }

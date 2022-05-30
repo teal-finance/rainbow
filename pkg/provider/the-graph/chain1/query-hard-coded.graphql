@@ -1,4 +1,4 @@
-query HardCodedValues {
+query HardCoded {
   Chain1_swaps(
     skip: 0
     first: 100

@@ -1,7 +1,10 @@
-# GraphQL with genqlient
+# TheGraph Go code generation
 
-[genqlient](https://github.com/Khan/genqlient)
-generates Go code to query GraphQL API:
+This folder is to generate type-safe Go code to request TheGraph API.
+
+## genqlient
+
+The Go-code generator is [genqlient](https://github.com/Khan/genqlient):
 
 - Compile-time validation of GraphQL queries: no invalid GraphQL query again!
 - Type-safe response objects: genqlient generates the right type for each query,
@@ -9,7 +12,7 @@ generates Go code to query GraphQL API:
 
 ## Step 1: Download the GraphQL schema
 
-Put it in `pkg/provider/generated/<provider-name>/schema.graphql`.
+Put it in `pkg/provider/the-graph/<provider-name>/schema-xxxx.graphql`.
 Format = [Schema Definition Language (SDL)](https://graphql.org/learn/schema/#type-language).
 
 ```graphql
