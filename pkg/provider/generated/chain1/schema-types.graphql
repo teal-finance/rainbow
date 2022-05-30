@@ -1,27 +1,4 @@
 
-"Marks the GraphQL type as indexable entity.  Each type that should be an entity is required to be annotated with this directive."
-directive @entity on OBJECT
-
-"Defined a Subgraph ID for an object type"
-directive @subgraphId(id: String!) on OBJECT
-
-"creates a virtual field on the entity that may be queried but cannot be set manually through the mappings API."
-directive @derivedFrom(field: String!) on FIELD_DEFINITION
-
-scalar BigDecimal
-
-scalar BigInt
-
-input BlockChangedFilter {
-  number_gte: Int!
-}
-
-input Block_height {
-  hash: Bytes
-  number: Int
-  number_gte: Int
-}
-
 type Bundle {
   id: ID!
   ethPrice: BigDecimal!
@@ -222,7 +199,6 @@ enum Burn_orderBy {
   feeLiquidity
 }
 
-scalar Bytes
 
 type LiquidityPosition {
   id: ID!
@@ -639,14 +615,6 @@ enum Mint_orderBy {
   amountUSD
   feeTo
   feeLiquidity
-}
-
-"""
-Defines the order direction, either ascending or descending
-"""
-enum OrderDirection {
-  asc
-  desc
 }
 
 type Pair {
@@ -2007,47 +1975,4 @@ enum User_orderBy {
   id
   liquidityPositions
   usdSwapped
-}
-
-type _Block_ {
-  """
-  The hash of the block
-  """
-  hash: Bytes
-  """
-  The block number
-  """
-  number: Int!
-}
-
-"""
-The type for the top-level _meta field
-"""
-type _Meta_ {
-  """
-  Information about a specific subgraph block. The hash of the block
-  will be null if the _meta field has a block constraint that asks for
-  a block number. It will be filled if the _meta field has no block constraint
-  and therefore asks for the latest  block
-  """
-  block: _Block_!
-  """
-  The deployment ID
-  """
-  deployment: String!
-  """
-  If `true`, the subgraph encountered indexing errors at some past block
-  """
-  hasIndexingErrors: Boolean!
-}
-
-enum _SubgraphErrorPolicy_ {
-  """
-  Data will be returned even if the subgraph has indexing errors
-  """
-  allow
-  """
-  If the subgraph has indexing errors, data will be omitted. The default.
-  """
-  deny
 }
