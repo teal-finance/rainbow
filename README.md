@@ -1,86 +1,95 @@
 # ![Rainbow](doc/rainbow-chancery.png)
 
-![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With the Rainbow screener, users can scan CEX/DEX markets to fetch available options data. Empowered by the [Teal.Finance](https://teal.finance/) [team](https://teal.finance/#team).
----|---
+| ![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With the Rainbow screener, users can scan CEX/DEX markets to fetch available options data. Empowered by the [Teal.Finance](https://teal.finance/) [team](https://teal.finance/#team). |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 Rainbow is live at [**teal.finance/rainbow**](https://teal.finance/rainbow/)
 
 Please give any feedback:
 
-* GitHub [issue](https://github.com/teal-finance/rainbow/issues) or
-* Contact us at Teal.Finance[at]pm.me or
-* Twitter [@TealFinance](https://twitter.com/TealFinance).
+- GitHub [issue](https://github.com/teal-finance/rainbow/issues) or
+- Contact us at Teal.Finance[at]pm.me or
+- Twitter [@TealFinance](https://twitter.com/TealFinance).
 
 ## Motivations
 
 **Rainbow** is inspired by the following trends:
 
-* Crypto-assets and DeFi becoming mainstream,
-
-* Advent of the Internet of Blockchains’ world  with more cross-chain applications and communications,
-
-* Crypto options trading growing bigger than the spot market, like in traditional Finance.
+- Crypto-assets and DeFi becoming mainstream,
+- Advent of the Internet of Blockchains’ world
+  with more cross-chain applications and communications,
+- Crypto options trading growing bigger
+  than the spot market, like in traditional Finance.
 
 The crypto derivatives markets are expected to grow a lot more in the upcoming years.
-Specifically, the options markets will see the biggest growth because in Finance, Option market is much bigger
-than the underlying spot market. This is lagging in Crypto, when we look at Deribit's volume, the main (centralized) venue for Crypto Options, compared to Perpetuals future.
+Specifically, the options markets will see the biggest growth,
+because in Finance, Option market is much bigger than the underlying spot market.
+This is lagging in Crypto, when we look at Deribit's volume (the main centralized venue for Crypto Options),
+compared to Perpetuals future.
 
-We participated to hackathons and have won prices: [Ethereum's EthGlobal Hackathon](https://showcase.ethglobal.com/ethonline2021/rainbow), [Solana's Ignition Hackathon](https://devpost.com/software/rainbow-ai5p7m) and [Encode Club's Hack DeFi](https://www.encode.club/hack-defi).
+We participated to hackathons and have won super prices:
+[Ethereum's EthGlobal Hackathon](https://showcase.ethglobal.com/ethonline2021/rainbow),
+[Solana's Ignition Hackathon](https://devpost.com/software/rainbow-ai5p7m)
+and [Encode Club's Hack DeFi](https://www.encode.club/hack-defi).
 
-More info on our motivations: [cryptonuage.com/posts/internet-of-decentralized-options](https://cryptonuage.com/posts/internet-of-decentralized-options/)
+More info on our motivations:
+[cryptonuage.com/posts/internet-of-decentralized-options](https://cryptonuage.com/posts/internet-of-decentralized-options/)
 
 ## Currently supported options exchanges
 
-* [Deribit](https://www.deribit.com):
+- [Deribit](https://www.deribit.com):
   Centralized exchange.
   Main venue for crypto Options trading.
 
-* [Delta Exchange](https://www.delta.exchange/):
+- [Delta Exchange](https://www.delta.exchange/):
   Centralized exchange for futures, options and interest
   rate swaps on 50 underlying cryptocurrencies.
 
-* [Lyra](https://www.lyra.finance/) (Ethereum):
+- [Lyra](https://www.lyra.finance/) (Ethereum):
   DeFi protocol for trading options based on Layer 2,
   Optimism, using a custom AMM.
 
-* [PsyOptions](https://www.psyoptions.io/) (Solana):
+- [PsyOptions](https://www.psyoptions.io/) (Solana):
   DeFi options protocol build on Serum order books.
 
-* [Opyn](https://www.opyn.co/) (Ethereum):
+- [Opyn](https://www.opyn.co/) (Ethereum):
   DeFi options protocol using TheGraph & 0x.
 
-* [Zeta](https://zeta.markets/) (Solana):
+- [Zeta](https://zeta.markets/) (Solana):
   DeFi options protocol built using Serum order books.
 
 ## Run it from source code
 
-Rainbow can be used as a [CLI](#run-the-cli) or with a [front-end](#makefile-for-server--web).
+Rainbow can be used as a [CLI](#run-the-cli)
+or with a [front-end](#makefile-for-server--web)
+as our official instance:
+<https://teal.finance/rainbow>.
 
 ### Requirements
 
-* Go v1.17+
-* Node v14+ (optional)
-* Yarn v1.20+ (optional)
-* Docker v20 (optional)
-* Podman v3 (optional)
+- Go v1.18+ (single requirement for the CLI)
+- Node v14+
+- Yarn v1.20+
+- Docker v20 (optional)
+- Podman v3 (optional)
 
-Rainbow can be used in the [CLI](#run-the-cli), not requiring Node and Yarn.
+Rainbow can be used in the [CLI](#run-the-cli), not using Node, Yarn, Docker…
 
 [Snap](https://en.wikipedia.org/wiki/Snap_(package_manager)) provides a simple way to install these requirements on many Linux distributions:
 
     snap install go   --classic
-    snap install node --classic  # also installs yarn
+    snap install node --classic  # installs yarn too
 
     # check
     go   version
     yarn versions
 
 On Debian/Ubuntu, the command `sudo apt install golang` may install an older version.
-Check it with `apt list --all-versions golang`.
+Check it with `apt list --all-versions golang golang-1.*`.
 To install a more recent Go version, you may try:
 
     sudo apt purge   golang
-    sudo apt install golang-1.17
+    sudo apt install golang-1.18
 
 The [Dockerfile](#container) can be used equally with Docker or Podman.
 
@@ -110,13 +119,13 @@ See the `make help` [output](Makefile).
 
 #### Run
 
-The *run* targets do not depend on the above *build* targets.
-You do not need to *make build* before *make run*.
+The _run_ targets do not depend on the above _build_ targets.
+You do not need to _make build_ before _make run_.
 
     make run           # Run the backend
     make run-front     # Run the frontend in dev mode
 
-To let Rainbow backend serving the static website, as in production:
+To serve the static website using the Rainbow backend only, as in production:
 
     make clean -j && make all -j && make run
 
@@ -125,7 +134,7 @@ To let Rainbow backend serving the static website, as in production:
     make container-run  # Build and run backend + frontend
     make container-rm   # Stop and remove all
 
-The *container* targets try to use `docker`, then `podman`.
+The _container_ targets try to use `docker`, then `podman`.
 
 The `container-run` also opens a browser window on <http://localhost:1111/>
 and prints the container logs indefinitely.
@@ -133,12 +142,12 @@ and prints the container logs indefinitely.
 Use CTRL+C to stop the log printing. This does not stop, the container.
 To stop the container simply use `make container-rm`.
 
-The two other *containers* targets are not needed to be invoked manually:
+The two other _containers_ targets are not needed to be invoked manually:
 
     make container-build  # Build the container image
     make container-stop   # Stop/remove the container
 
-The *container* parameters can be customized: :slightly_smiling_face:
+The _container_ parameters can be customized: :slightly_smiling_face:
 
     make container-run expose=80 port=80 base=/rainbow/
 
@@ -181,7 +190,7 @@ The image contains the hardened sever executable and the front-end static files.
 The container enables by default the CORS, the export ports and a rate limiter.
 Some of these features can be customized using environments variables.
 
-The following commands configures the server listening on port 2222 (published to port 1111) and front-end using CORS with `http://localhost:1111`.
+The following commands configures the server listening on port 2222 (published to port 1111) and front-end using CORS with `http://localhost:1111`. See also the comments within the [Dockerfile](Dockerfile) for the details.
 
     podman build --build-arg addr=http://localhost:1111 --build-arg port=2222 -t rainbow .
     podman stop rainbow # if already running in background
@@ -190,11 +199,9 @@ The following commands configures the server listening on port 2222 (published t
 
 Open <http://localhost:1111>.
 
-The above can be obtained with:
+The above manual commands can be obtained using the [Makefile](Makefile):
 
     make container-run addr=http://localhost:1111 expose=1111 port=2222
-
-See also the comments within the [Dockerfile](Dockerfile) for more information.
 
 ### Server command line flags
 
@@ -208,30 +215,34 @@ $ go build ./cmd/server
 $ ./server -help
 Usage of ./server:
   -addr string
-    	Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR (default "http://localhost")
+        Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR (default "http://localhost")
+  -aes string
+         128-bit AES key (32 hex digits) for the session cookies, has precedence over AES128
   -alert string
-    	Mattermost webhook endpoint to activate alerter
+        Webhook endpoint to notify anomalies, has precedence over ALERT_URL
   -burst int
-    	Max requests during a burst, has precedence over REQ_BURST (default 22)
+        Max requests during a burst, has precedence over REQ_BURST (default 22)
   -dev
-    	Enable the developer mode
+        Enable the developer mode (enabled by default if -addr and -port are not used)
   -exp int
-    	Export port for Prometheus, has precedence over EXP_PORT
+        Export port for Prometheus, has precedence over EXP_PORT
+  -hmac string
+        HMAC-SHA256 key (64 hex digits) for the JWT tokens, has precedence over HMAC_SHA256
   -port int
-    	API port, has precedence over MAIN_PORT (default 8090)
+        API port, has precedence over MAIN_PORT (default 8090)
   -rate int
-    	Max requests per minute, has precedence over REQ_PER_MINUTE (default 88)
+        Max requests per minute, has precedence over REQ_PER_MINUTE (default 88)
   -www string
-    	Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
+        Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
 
 ### Join the team
 
 Interested on what we build. Please contact us:
 
-* GitHub [issue](https://github.com/teal-finance/rainbow/issues)
-* Teal.Finance[at]pm.me
-* Twitter [@TealFinance](https://twitter.com/TealFinance)
+- GitHub [issue](https://github.com/teal-finance/rainbow/issues)
+- Teal.Finance[at]pm.me
+- Twitter [@TealFinance](https://twitter.com/TealFinance)
 
 ## API
 
@@ -251,10 +262,15 @@ The [/v0/options](http://localhost:8090/v0/options) endpoint accepts optional pa
 
 Progressive filtering:
 
-* [/v0/options/BTC](http://localhost:8090/v0/options/BTC) (only the BTC-based options)
-* [/v0/options/BTC/2022-04-29](http://localhost:8090/v0/options/BTC/2022-04-29) (only the BTC-based options expiring on 2022-04-29)
-* [/v0/options/BTC/2022-04-29/Deribit](http://localhost:8090/v0/options/BTC/2022-04-29/Deribit) (only the BTC-based options expiring on 2022-04-29 from Deribit)
-* [/v0/options/BTC/2022-04-29/Deribit/csv](http://localhost:8090/v0/options/BTC/2022-04-29/Deribit/csv) (the same but in a [CSV](https://wikiless.org/wiki/Comma-separated_values "Comma-Separated Values") file, see the [supported formats](#supported-formats))
+- [/v0/options/BTC](http://localhost:8090/v0/options/BTC)
+  (only the BTC-based options)
+- [/v0/options/BTC/2022-04-29](http://localhost:8090/v0/options/BTC/2022-04-29)
+  (only the BTC-based options expiring on 2022-04-29)
+- [/v0/options/BTC/2022-04-29/Deribit](http://localhost:8090/v0/options/BTC/2022-04-29/Deribit)
+  (only the BTC-based options expiring on 2022-04-29 from Deribit)
+- [/v0/options/BTC/2022-04-29/Deribit/csv](http://localhost:8090/v0/options/BTC/2022-04-29/Deribit/csv)
+  (the same but in a [CSV](https://wikiless.org/wiki/Comma-separated_values "Comma-Separated Values") file,
+  see the [supported formats](#supported-formats))
 
 The general URL pattern:
 
@@ -276,8 +292,8 @@ The API may be tested with [cURL](https://wikiless.org/wiki/cURL):
 
 Moreover, the parameters can also be passed using the query string:
 
-* [/v0/options?asset=BTC&asset=ETH](http://localhost:8090/v0/options?asset=BTC&asset=ETH) (multiple underlying assets)
-* [/v0/options?asset=BTC&expiry=2022&provider=Deribit&format=csv](http://localhost:8090/v0/options?asset=BTC&expiry=2022&provider=Deribit&format=csv)
+- [/v0/options?asset=BTC&asset=ETH](http://localhost:8090/v0/options?asset=BTC&asset=ETH) (multiple underlying assets)
+- [/v0/options?asset=BTC&expiry=2022&provider=Deribit&format=csv](http://localhost:8090/v0/options?asset=BTC&expiry=2022&provider=Deribit&format=csv)
 
 #### Web form
 
@@ -293,21 +309,24 @@ The POST [form](https://wikiless.org/wiki/Application/x-www-form-urlencoded#The_
 
 The expiry filtering matches for the beginning of the dates:
 
-* [/v0/options/ALL](http://localhost:8090/v0/options/ALL) for `ALL` options and any expiry date
-* [/v0/options/ALL/2022](http://localhost:8090/v0/options/ALL/2022) for expiry dates in 2022
-* [/v0/options/ALL/2022-04](http://localhost:8090/v0/options/ALL/2022-04) for expiry dates in April 2022
-* [/v0/options/ALL/2022-04-01](http://localhost:8090/v0/options/ALL/2022-04-01) for April 1st 2022
+- [/v0/options/ALL](http://localhost:8090/v0/options/ALL) for `ALL` options and any expiry date
+- [/v0/options/ALL/2022](http://localhost:8090/v0/options/ALL/2022) for expiry dates in 2022
+- [/v0/options/ALL/2022-04](http://localhost:8090/v0/options/ALL/2022-04) for expiry dates in April 2022
+- [/v0/options/ALL/2022-04-01](http://localhost:8090/v0/options/ALL/2022-04-01) for April 1st 2022
 
 #### Supported formats
 
 The `{format}` parameter is the last one at any position.
 
-* [/v0/options](http://localhost:8090/v0/options) (default is JSON in the browser)
-* [/v0/options/json](http://localhost:8090/v0/options/json) (download a file in JSON format)
-* [/v0/options/csv](http://localhost:8090/v0/options/csv) (CSV file)
-* [/v0/options/tsv](http://localhost:8090/v0/options/tsv) (TSV = [Tab-Separated Values](https://wikiless.org/wiki/Tab-separated_values))
-* [/v0/options/BTC/csv](http://localhost:8090/v0/options/BTC/csv) (only the BTC-based options in CSV)
-* [/v0/options/ALL/2022-06/csv](http://localhost:8090/v0/options/ALL/2022-06/csv) (all options expiring in June 2022 in CSV)
+- [/v0/options](http://localhost:8090/v0/options) (default is JSON in the browser)
+- [/v0/options/json](http://localhost:8090/v0/options/json) (download a file in JSON format)
+- [/v0/options/csv](http://localhost:8090/v0/options/csv) (CSV file)
+- [/v0/options/tsv](http://localhost:8090/v0/options/tsv)
+  (TSV = [Tab-Separated Values](https://wikiless.org/wiki/Tab-separated_values))
+- [/v0/options/BTC/csv](http://localhost:8090/v0/options/BTC/csv)
+  (only the BTC-based options in CSV)
+- [/v0/options/ALL/2022-06/csv](http://localhost:8090/v0/options/ALL/2022-06/csv)
+  (all options expiring in June 2022 in CSV)
 
 The current supported formats are JSON,
 [CSV](https://wikiless.org/wiki/Comma-separated_values "Comma-Separated Values") and
@@ -321,8 +340,7 @@ Depending on user requests, more formats may be supported such as
 [Parquet](https://github.com/xitongsys/parquet-go),
 [DataFrame](https://github.com/rocketlaunchr/dataframe-go),
 [Excel](https://github.com/qax-os/excelize),
-[Google Sheets Docs](https://github.com/Iwark/spreadsheet)
-…
+[Google Sheets Docs](https://github.com/Iwark/spreadsheet).
 
 #### HTTP header
 
@@ -432,6 +450,6 @@ This endpoint should not yet used by API users because we may drop it in a furth
 
 Please contact us and join our efforts to build awesome tools:
 
-* GitHub [issue](https://github.com/teal-finance/rainbow/issues)
-* Teal.Finance[at]pm.me
-* Twitter [@TealFinance](https://twitter.com/TealFinance)
+- GitHub [issue](https://github.com/teal-finance/rainbow/issues)
+- Teal.Finance[at]pm.me
+- Twitter [@TealFinance](https://twitter.com/TealFinance)
