@@ -1,5 +1,11 @@
-query getOptions {  
-  otokens (where: {expiryTimestamp_gt:"1651300000"}){
+query Options($skip: Int, $first: Int, $t: BigInt) {
+  otokens(
+    skip: $skip
+    first: $first
+    orderBy: timestamp
+    orderDirection: desc
+    where: { timestamp_gt: $t }
+  ) {
     id
     symbol
     name

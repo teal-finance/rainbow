@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fileB, err := os.OpenFile("raw.txt", os.O_CREATE|os.O_WRONLY, 0644)
+	fileB, err := os.OpenFile("raw.txt", os.O_CREATE|os.O_WRONLY, 0600)
 
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
@@ -32,7 +32,7 @@ func main() {
 	datawriterB.Flush()
 	fileB.Close()
 	b := buildCallPut(options)
-	file, err := os.OpenFile("dump.txt", os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile("dump.txt", os.O_CREATE|os.O_WRONLY, 0600)
 
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)
@@ -44,7 +44,7 @@ func main() {
 	datawriter.Flush()
 	file.Close()
 	arbs := buylowsellhigh(b, 0.25)
-	fileA, err := os.OpenFile("arbs.txt", os.O_CREATE|os.O_WRONLY, 0644)
+	fileA, err := os.OpenFile("arbs.txt", os.O_CREATE|os.O_WRONLY, 0600)
 
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)

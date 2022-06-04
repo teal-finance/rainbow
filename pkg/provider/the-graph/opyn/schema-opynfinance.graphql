@@ -1,18 +1,15 @@
 # fixed copy from https://github.com/opynfinance/Gamma-Subgraph/blob/master/schema.graphql
 
-scalar Bytes
-scalar BigInt
-
-type ERC20 { 
+type ERC20 @entity {
   id: ID!
   symbol: String!
   name: String!
   decimals: Int!
 }
 
-type OToken {
+type OToken @entity {
   id: ID!
-  
+
   # implementation address
   implementation: Bytes!
 
@@ -23,9 +20,8 @@ type OToken {
   underlyingAsset: ERC20! # address
   collateralAsset: ERC20! # address
   creator: Bytes! # address
-  
-  strikePrice: String!
-  expiryTimestamp: String!
+  strikePrice: BigInt!
+  expiryTimestamp: BigInt!
   isPut: Boolean!
 
   createdAt: BigInt!
@@ -34,46 +30,46 @@ type OToken {
   totalSupply: BigInt!
 }
 
-type Account {
+type Account @entity {
   id: ID!
 
   "Amount of vaults this account has"
   vaultCount: BigInt!
 
   "Array of all vaults"
-  vaults: [Vault!]! # # @derivedFrom(field: "owner")
+  vaults: [Vault!]! @derivedFrom(field: "owner")
 
   "Amount of operators"
   operatorCount: BigInt!
 
   "Array of operator this account has"
-  operators: [AccountOperator!]! # @derivedFrom(field: "account")
+  operators: [AccountOperator!]! @derivedFrom(field: "account")
 
   "Balances"
-  balances: [AccountBalance!]! # @derivedFrom(field: "account")
+  balances: [AccountBalance!]! @derivedFrom(field: "account")
 
-  positions: [Position!]! # @derivedFrom(field: "account")
+  positions: [Position!]! @derivedFrom(field: "account")
 }
 
-type Operator {
+type Operator @entity {
   id: ID!
 
   "Amount of account this operator is controlling"
   accountCount: BigInt!
 
   "Array of accounts this operator is controlling"
-  accounts: [AccountOperator!]! # @derivedFrom(field: "operator")
+  accounts: [AccountOperator!]! @derivedFrom(field: "operator")
 }
 
 # For manage many-to-many relationship between operators and accounts
-type AccountOperator {
+type AccountOperator @entity {
   " Equals to ${account}-${operator}`"
   id: ID!
   account: Account
   operator: Operator
 }
 
-type AccountBalance {
+type AccountBalance @entity {
   " Equals to ${account}-${otoken}"
   id: ID!
   account: Account!
@@ -81,7 +77,7 @@ type AccountBalance {
   balance: BigInt!
 }
 
-type Position {
+type Position @entity {
   "Equals to <account>-<oToken>-<id>"
   id: ID!
 
@@ -103,7 +99,7 @@ type Position {
   active: Boolean!
 }
 
-type Vault {
+type Vault @entity {
   "Equals to <owner>-<vaultId>"
   id: ID!
   type: BigInt
@@ -114,7 +110,6 @@ type Vault {
   shortOToken: OToken # address
   longOToken: OToken # address
   collateralAsset: ERC20 # address
-  
   shortAmount: BigInt
   longAmount: BigInt
   collateralAmount: BigInt
@@ -141,8 +136,8 @@ interface VaultAction {
   timestamp: BigInt!
 }
 
-type OpenVaultAction implements VaultAction {
-    # Vault fields
+type OpenVaultAction implements VaultAction @entity {
+  # Vault fields
   id: ID!
   messageSender: Bytes!
   vault: Vault!
@@ -151,7 +146,7 @@ type OpenVaultAction implements VaultAction {
   timestamp: BigInt!
 }
 
-type DepositCollateralAction implements VaultAction {
+type DepositCollateralAction implements VaultAction @entity {
   # Vault fields
   id: ID!
   messageSender: Bytes!
@@ -159,7 +154,7 @@ type DepositCollateralAction implements VaultAction {
   block: BigInt!
   transactionHash: Bytes!
   timestamp: BigInt!
-  
+
   # Specific field
   " Collateral sender, either account or operator"
   from: Bytes!
@@ -169,15 +164,15 @@ type DepositCollateralAction implements VaultAction {
   amount: BigInt!
 }
 
-type WithdrawCollateralAction implements VaultAction {
-    # Vault fields
+type WithdrawCollateralAction implements VaultAction @entity {
+  # Vault fields
   id: ID!
   messageSender: Bytes!
   vault: Vault!
   block: BigInt!
   transactionHash: Bytes!
   timestamp: BigInt!
-  
+
   " Collateral sender, either account or operator"
   to: Bytes!
   " Collateral Asset"
@@ -186,7 +181,7 @@ type WithdrawCollateralAction implements VaultAction {
   amount: BigInt!
 }
 
-type DepositLongAction implements VaultAction {
+type DepositLongAction implements VaultAction @entity {
   # Vault fields
   id: ID!
   messageSender: Bytes!
@@ -194,7 +189,7 @@ type DepositLongAction implements VaultAction {
   block: BigInt!
   transactionHash: Bytes!
   timestamp: BigInt!
-  
+
   # Specific field
   " oToken sender, either account or operator"
   from: Bytes!
@@ -204,15 +199,15 @@ type DepositLongAction implements VaultAction {
   amount: BigInt!
 }
 
-type WithdrawLongAction implements VaultAction {
-    # Vault fields
+type WithdrawLongAction implements VaultAction @entity {
+  # Vault fields
   id: ID!
   messageSender: Bytes!
   vault: Vault!
   block: BigInt!
   transactionHash: Bytes!
   timestamp: BigInt!
-  
+
   " Long oToken sender, either account or operator"
   to: Bytes!
   " Long oToken Asset"
@@ -221,7 +216,7 @@ type WithdrawLongAction implements VaultAction {
   amount: BigInt!
 }
 
-type BurnShortAction implements VaultAction {
+type BurnShortAction implements VaultAction @entity {
   # Vault fields
   id: ID!
   messageSender: Bytes!
@@ -229,7 +224,7 @@ type BurnShortAction implements VaultAction {
   block: BigInt!
   transactionHash: Bytes!
   timestamp: BigInt!
-  
+
   # Specific field
   " oToken holder, either account or operator"
   from: Bytes!
@@ -239,15 +234,15 @@ type BurnShortAction implements VaultAction {
   amount: BigInt!
 }
 
-type MintShortAction implements VaultAction {
-    # Vault fields
+type MintShortAction implements VaultAction @entity {
+  # Vault fields
   id: ID!
   messageSender: Bytes!
   vault: Vault!
   block: BigInt!
   transactionHash: Bytes!
   timestamp: BigInt!
-  
+
   " Create oToken to"
   to: Bytes!
   " OToken asset"
@@ -256,7 +251,7 @@ type MintShortAction implements VaultAction {
   amount: BigInt!
 }
 
-type SettleAction implements VaultAction {
+type SettleAction implements VaultAction @entity {
   # Vault fields
   id: ID!
   messageSender: Bytes!
@@ -270,10 +265,10 @@ type SettleAction implements VaultAction {
 
   "original collateral in the vault"
   collateralAmount: BigInt
-  
+
   " Payout to to"
   to: Bytes!
-  
+
   "long oToken"
   long: OToken
 
@@ -288,7 +283,7 @@ type SettleAction implements VaultAction {
   amount: BigInt!
 }
 
-type Liquidation implements VaultAction {
+type Liquidation implements VaultAction @entity {
   # Vault fields
   id: ID!
   messageSender: Bytes!
@@ -296,8 +291,8 @@ type Liquidation implements VaultAction {
   block: BigInt!
   transactionHash: Bytes!
   timestamp: BigInt!
-  
-  # Liquidation 
+
+  # Liquidation
   auctionPrice: BigInt!
   auctionStartingRound: BigInt!
   collateralPayout: BigInt!
@@ -305,8 +300,8 @@ type Liquidation implements VaultAction {
   liquidator: Bytes!
 }
 
-type RedeemAction {
-  "REDEEM-TxHash-logIndex" 
+type RedeemAction @entity {
+  "REDEEM-TxHash-logIndex"
   id: ID!
 
   block: BigInt!
@@ -329,19 +324,18 @@ type RedeemAction {
 
   "the payout goes to"
   receiver: Bytes!
-
 }
 
-type WhitelistedProduct {
+type WhitelistedProduct @entity {
   id: ID!
   underlying: ERC20!
   strike: ERC20!
   collateral: ERC20!
   isPut: Boolean!
-  isWhitelisted: Boolean!  
+  isWhitelisted: Boolean!
 }
 
-type Controller {
+type Controller @entity {
   id: ID!
   addressBook: Bytes!
   partialPauser: Bytes!
@@ -353,25 +347,25 @@ type Controller {
   callRestricted: Boolean!
 }
 
-type Oracle {
+type Oracle @entity {
   id: ID!
-  
+
   disputer: Bytes!
 }
 
-type OracleAsset {
+type OracleAsset @entity {
   "the address of the asset"
   id: ID!
-  
+
   asset: ERC20!
 
   "pricer for the asset"
   pricer: OraclePricer!
 
-  prices: [ExpiryPrice!]! # @derivedFrom(field: "asset")
+  prices: [ExpiryPrice!]! @derivedFrom(field: "asset")
 }
 
-type OraclePricer {
+type OraclePricer @entity {
   "address of the pricer"
   id: ID!
 
@@ -380,33 +374,32 @@ type OraclePricer {
 
   "disput period for this pricer"
   disputePeriod: BigInt!
-
 }
 
-type ExpiryPrice {
-   "asset-expiry"
-   id: ID!
+type ExpiryPrice @entity {
+  "asset-expiry"
+  id: ID!
 
-   "the asset"
-   asset: OracleAsset!
+  "the asset"
+  asset: OracleAsset!
 
-   "timestamp"
-   expiry: BigInt!
+  "timestamp"
+  expiry: BigInt!
 
   # "the transaction hash"
-   reportedTx: Bytes!
+  reportedTx: Bytes!
 
-   "timestamp reported by pricer"
-   reportedTimestamp: BigInt!
+  "timestamp reported by pricer"
+  reportedTimestamp: BigInt!
 
-   "price in USD sacled by 1e8"
-   price: BigInt!
+  "price in USD sacled by 1e8"
+  price: BigInt!
 
-   "if the price is overrided by the disputer"
-   isDisputed: Boolean!
+  "if the price is overrided by the disputer"
+  isDisputed: Boolean!
 }
 
-type OTokenTrade {
+type OTokenTrade @entity {
   id: ID!
 
   timestamp: BigInt!
@@ -433,7 +426,7 @@ type OTokenTrade {
   feeToken: Bytes!
 }
 
-type FillOrderV3 {
+type FillOrderV3 @entity {
   id: ID!
   timestamp: BigInt!
 
@@ -447,7 +440,7 @@ type FillOrderV3 {
 
   "0x protocol fee, denominated in eth"
   protocolFeePaid: BigInt!
-  
+
   "maker asset data"
   makerAssetData: String!
 
@@ -461,7 +454,7 @@ type FillOrderV3 {
   makerAsset: String!
 }
 
-type FillOrderV4 {
+type FillOrderV4 @entity {
   id: ID!
   timestamp: BigInt!
 
@@ -481,9 +474,3 @@ type FillOrderV4 {
   "maker asset address"
   makerAsset: String!
 }
-
-type Query {
-  otoken(id: ID!): OToken
-  otokens: [OToken]
-}
-

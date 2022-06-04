@@ -9,11 +9,11 @@ package zerox
 import (
 	"context"
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
 
+	"github.com/teal-finance/rainbow/pkg/provider/the-graph/opyn"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -35,12 +35,15 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	return options, err
 }
 
-func QueryTheGraph() []getOptionsOtokensOToken {
+func QueryTheGraph() []opyn.OptionsOtokensOToken {
 	const url = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
+	const skip = 0
+	const first = 100
+	const minExpiry = 1651300000
 
 	graphqlClient := graphql.NewClient(url, nil)
 
-	resp, err := getOptions(context.TODO(), graphqlClient)
+	resp, err := opyn.Options(context.TODO(), graphqlClient, skip, first, minExpiry)
 	if err != nil {
 		log.Print("ERR: ", err)
 	}
@@ -54,14 +57,9 @@ func QueryTheGraph() []getOptionsOtokensOToken {
 	return filterExpired(resp.Otokens, time.Now())
 }
 
-func filterExpired(instruments []getOptionsOtokensOToken, date time.Time) (filtered []getOptionsOtokensOToken) {
+func filterExpired(instruments []opyn.OptionsOtokensOToken, date time.Time) (filtered []opyn.OptionsOtokensOToken) {
 	for _, i := range instruments {
-		seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 0)
-		if err != nil {
-			log.Print("Oh Sh*t ", i.ExpiryTimestamp)
-			continue // TODO should do much better than failing silently
-		}
-
+		seconds := int64(i.ExpiryTimestamp)
 		expiryTime := time.Unix(seconds, 0)
 		// we keep an option even 2 days after expiry
 		// mainly because not all protocol stop at expiry or right before

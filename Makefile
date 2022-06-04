@@ -2,20 +2,24 @@
 help:
 	# Usage: 'make <target>' where <target> is one of:
 	#
-	#   all            Build both backend and frontend
-	#   server         Build the backend only
-	#   front          Build the frontend only
-	#   clean          Clean all
+	# make all -j         Build both backend and frontend
+	# make server         Build the backend only
+	# make front          Build the frontend only
+	# make clean          Clean all
 	#
-	#   run            Run the backend
-	#   run-front      Run the frontend in dev mode
+	# make run            Run the backend
+	# make run-front      Run the frontend in dev mode
 	#
-	#   container-run  Build and run the container
-	#   container-rm   Stop and remove the container image
+	# make container-run  Build and run the container
+	# make container-rm   Stop and remove the container image
 	#
 	# Example:
 	#
-	#   make clean build -j2       Rebuild all in parallel
+	# make clean all -j   Rebuild all in parallel
+
+# Allow using a different Go executable by running as
+# "GOEXE=xxx make ..." or as "make ... GOEXE=xxx ..."
+GOEXE ?= go
 
 .PHONY: clean
 clean:
@@ -25,11 +29,11 @@ clean:
 all: server frontend/dist
 
 server: go.sum
-	go build -o $@ ./cmd/server
+	${GOEXE} build -o $@ ./cmd/server
 
 go.mod:
-	go mod tidy
-	go mod verify
+	${GOEXE} mod tidy
+	${GOEXE} mod verify
 
 go.sum: go.mod
 
@@ -41,7 +45,7 @@ frontend/dist: frontend/src/*
 
 .PHONY: run
 run: go.sum
-	go run ./cmd/server
+	${GOEXE} run ./cmd/server
 
 .PHONY: run-front
 run-front:

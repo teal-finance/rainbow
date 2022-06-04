@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@apollo/client": "^3.6.4",
+    "express": "^4.18.1",
+    "graphql": "^16.5.0",
+    "urql": "^2.2.0"
+  }
+}

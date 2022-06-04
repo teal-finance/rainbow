@@ -1,0 +1,39 @@
+query HardCoded {
+  Chain1_swaps(
+    skip: 0
+    first: 100
+    orderBy: timestamp
+    orderDirection: desc
+    where: { timestamp_gt: 1650000000 }
+  ) {
+    id
+    timestamp
+    pair {
+      id
+      reserve0
+      reserve1
+      totalSupply
+      reserveETH
+      reserveUSD
+      trackedReserveETH
+      token0Price
+      token1Price
+      volumeToken0
+      volumeToken1
+      volumeUSD
+      untrackedVolumeUSD
+      txCount
+      createdAtTimestamp
+      createdAtBlockNumber
+      liquidityProviderCount
+    }
+    sender
+    amount0In
+    amount1In
+    amount0Out
+    amount1Out
+    to
+    logIndex
+    amountUSD
+  }
+}
