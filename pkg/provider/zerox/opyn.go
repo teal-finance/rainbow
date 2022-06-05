@@ -9,6 +9,7 @@ package zerox
 import (
 	"context"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
@@ -16,6 +17,8 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/opyn"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+const url = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
 
 type Provider struct{}
 
@@ -36,38 +39,27 @@ func (Provider) Options() ([]rainbow.Option, error) {
 }
 
 func QueryTheGraph() []opyn.OptionsOtokensOToken {
-	const url = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
 	const skip = 0
 	const first = 100
-	const minExpiry = 1651300000
 
 	graphqlClient := graphql.NewClient(url, nil)
 
-	resp, err := opyn.Options(context.TODO(), graphqlClient, skip, first, minExpiry)
-	if err != nil {
-		log.Print("ERR: ", err)
-	}
+	// we keep an option even 2 days after expiry
+	// mainly because not all protocol stop at expiry or right before
+	minExpiry := time.Now().Add(-time.Hour * 48)
+	minExpiryStr := strconv.FormatInt(minExpiry.Unix(), 10)
 
+	resp, err := opyn.Options(context.TODO(), graphqlClient, skip, first, minExpiryStr)
+	if err != nil {
+		log.Print("ERR Opyn: ", err)
+		return nil
+	}
 	if resp == nil {
-		log.Print("ERR: resp=nil")
+		log.Print("ERR Opyn: resp=nil")
 		return nil
 	}
 
-	// always filter to not get old options
-	return filterExpired(resp.Otokens, time.Now())
-}
+	log.Printf("Query Opyn: minExpiry=%v => %v options", minExpiry, len(resp.Otokens))
 
-func filterExpired(instruments []opyn.OptionsOtokensOToken, date time.Time) (filtered []opyn.OptionsOtokensOToken) {
-	for _, i := range instruments {
-		seconds := int64(i.ExpiryTimestamp)
-		expiryTime := time.Unix(seconds, 0)
-		// we keep an option even 2 days after expiry
-		// mainly because not all protocol stop at expiry or right before
-		// TODO re-check later
-		if expiryTime.After(date.Add(-time.Hour * 48)) {
-			filtered = append(filtered, i)
-		}
-	}
-
-	return filtered
+	return resp.Otokens
 }

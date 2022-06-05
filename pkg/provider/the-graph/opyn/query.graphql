@@ -2,9 +2,9 @@ query Options($skip: Int, $first: Int, $t: BigInt) {
   otokens(
     skip: $skip
     first: $first
-    orderBy: timestamp
+    orderBy: expiryTimestamp
     orderDirection: desc
-    where: { timestamp_gt: $t }
+    where: { expiryTimestamp_gt: $t }
   ) {
     id
     symbol

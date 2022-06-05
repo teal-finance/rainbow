@@ -37,11 +37,20 @@ func extract(i opyn.OptionsOtokensOToken) (optionType, expiry string, strike flo
 		optionType = "PUT"
 	}
 
-	seconds := int64(i.ExpiryTimestamp)
+	seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 64)
+	if err != nil {
+		log.Print("ERR Opyn ExpiryTimestamp: ", err)
+		return optionType, "", 0
+	}
+
 	expiryTime := time.Unix(seconds, 0).UTC()
 	expiry = expiryTime.Format("2006-01-02 15:04:05")
 
-	strike = float64(i.StrikePrice)
+	strike, err = strconv.ParseFloat(i.StrikePrice, 64)
+	if err != nil {
+		log.Print("ERR Opyn StrikePrice: ", err)
+		return optionType, "", 0
+	}
 
 	return optionType, expiry, strike
 }
