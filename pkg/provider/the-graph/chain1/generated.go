@@ -18,7 +18,7 @@ func (v *BlockChangedFilter) GetNumber_gte() int { return v.Number_gte }
 // HardCodedChain1_swapsSwap includes the requested fields of the GraphQL type Swap.
 type HardCodedChain1_swapsSwap struct {
 	Id         string                        `json:"id"`
-	Timestamp  string                        `json:"timestamp"`
+	Timestamp  int64                         `json:"timestamp"`
 	Pair       HardCodedChain1_swapsSwapPair `json:"pair"`
 	Sender     []byte                        `json:"sender"`
 	Amount0In  float64                       `json:"amount0In"`
@@ -26,7 +26,7 @@ type HardCodedChain1_swapsSwap struct {
 	Amount0Out float64                       `json:"amount0Out"`
 	Amount1Out float64                       `json:"amount1Out"`
 	To         []byte                        `json:"to"`
-	LogIndex   string                        `json:"logIndex"`
+	LogIndex   int64                         `json:"logIndex"`
 	AmountUSD  float64                       `json:"amountUSD"`
 }
 
@@ -34,7 +34,7 @@ type HardCodedChain1_swapsSwap struct {
 func (v *HardCodedChain1_swapsSwap) GetId() string { return v.Id }
 
 // GetTimestamp returns HardCodedChain1_swapsSwap.Timestamp, and is useful for accessing the field via an interface.
-func (v *HardCodedChain1_swapsSwap) GetTimestamp() string { return v.Timestamp }
+func (v *HardCodedChain1_swapsSwap) GetTimestamp() int64 { return v.Timestamp }
 
 // GetPair returns HardCodedChain1_swapsSwap.Pair, and is useful for accessing the field via an interface.
 func (v *HardCodedChain1_swapsSwap) GetPair() HardCodedChain1_swapsSwapPair { return v.Pair }
@@ -58,7 +58,7 @@ func (v *HardCodedChain1_swapsSwap) GetAmount1Out() float64 { return v.Amount1Ou
 func (v *HardCodedChain1_swapsSwap) GetTo() []byte { return v.To }
 
 // GetLogIndex returns HardCodedChain1_swapsSwap.LogIndex, and is useful for accessing the field via an interface.
-func (v *HardCodedChain1_swapsSwap) GetLogIndex() string { return v.LogIndex }
+func (v *HardCodedChain1_swapsSwap) GetLogIndex() int64 { return v.LogIndex }
 
 // GetAmountUSD returns HardCodedChain1_swapsSwap.AmountUSD, and is useful for accessing the field via an interface.
 func (v *HardCodedChain1_swapsSwap) GetAmountUSD() float64 { return v.AmountUSD }
@@ -78,10 +78,10 @@ type HardCodedChain1_swapsSwapPair struct {
 	VolumeToken1           float64 `json:"volumeToken1"`
 	VolumeUSD              float64 `json:"volumeUSD"`
 	UntrackedVolumeUSD     float64 `json:"untrackedVolumeUSD"`
-	TxCount                string  `json:"txCount"`
-	CreatedAtTimestamp     string  `json:"createdAtTimestamp"`
-	CreatedAtBlockNumber   string  `json:"createdAtBlockNumber"`
-	LiquidityProviderCount string  `json:"liquidityProviderCount"`
+	TxCount                int64   `json:"txCount"`
+	CreatedAtTimestamp     int64   `json:"createdAtTimestamp"`
+	CreatedAtBlockNumber   int64   `json:"createdAtBlockNumber"`
+	LiquidityProviderCount int64   `json:"liquidityProviderCount"`
 }
 
 // GetId returns HardCodedChain1_swapsSwapPair.Id, and is useful for accessing the field via an interface.
@@ -124,18 +124,18 @@ func (v *HardCodedChain1_swapsSwapPair) GetVolumeUSD() float64 { return v.Volume
 func (v *HardCodedChain1_swapsSwapPair) GetUntrackedVolumeUSD() float64 { return v.UntrackedVolumeUSD }
 
 // GetTxCount returns HardCodedChain1_swapsSwapPair.TxCount, and is useful for accessing the field via an interface.
-func (v *HardCodedChain1_swapsSwapPair) GetTxCount() string { return v.TxCount }
+func (v *HardCodedChain1_swapsSwapPair) GetTxCount() int64 { return v.TxCount }
 
 // GetCreatedAtTimestamp returns HardCodedChain1_swapsSwapPair.CreatedAtTimestamp, and is useful for accessing the field via an interface.
-func (v *HardCodedChain1_swapsSwapPair) GetCreatedAtTimestamp() string { return v.CreatedAtTimestamp }
+func (v *HardCodedChain1_swapsSwapPair) GetCreatedAtTimestamp() int64 { return v.CreatedAtTimestamp }
 
 // GetCreatedAtBlockNumber returns HardCodedChain1_swapsSwapPair.CreatedAtBlockNumber, and is useful for accessing the field via an interface.
-func (v *HardCodedChain1_swapsSwapPair) GetCreatedAtBlockNumber() string {
+func (v *HardCodedChain1_swapsSwapPair) GetCreatedAtBlockNumber() int64 {
 	return v.CreatedAtBlockNumber
 }
 
 // GetLiquidityProviderCount returns HardCodedChain1_swapsSwapPair.LiquidityProviderCount, and is useful for accessing the field via an interface.
-func (v *HardCodedChain1_swapsSwapPair) GetLiquidityProviderCount() string {
+func (v *HardCodedChain1_swapsSwapPair) GetLiquidityProviderCount() int64 {
 	return v.LiquidityProviderCount
 }
 
@@ -184,14 +184,14 @@ type Swap_filter struct {
 	Transaction_ends_with_nocase       string    `json:"transaction_ends_with_nocase"`
 	Transaction_not_ends_with          string    `json:"transaction_not_ends_with"`
 	Transaction_not_ends_with_nocase   string    `json:"transaction_not_ends_with_nocase"`
-	Timestamp                          string    `json:"timestamp"`
-	Timestamp_not                      string    `json:"timestamp_not"`
-	Timestamp_gt                       string    `json:"timestamp_gt"`
-	Timestamp_lt                       string    `json:"timestamp_lt"`
-	Timestamp_gte                      string    `json:"timestamp_gte"`
-	Timestamp_lte                      string    `json:"timestamp_lte"`
-	Timestamp_in                       []string  `json:"timestamp_in"`
-	Timestamp_not_in                   []string  `json:"timestamp_not_in"`
+	Timestamp                          int64     `json:"timestamp"`
+	Timestamp_not                      int64     `json:"timestamp_not"`
+	Timestamp_gt                       int64     `json:"timestamp_gt"`
+	Timestamp_lt                       int64     `json:"timestamp_lt"`
+	Timestamp_gte                      int64     `json:"timestamp_gte"`
+	Timestamp_lte                      int64     `json:"timestamp_lte"`
+	Timestamp_in                       []int64   `json:"timestamp_in"`
+	Timestamp_not_in                   []int64   `json:"timestamp_not_in"`
 	Pair                               string    `json:"pair"`
 	Pair_not                           string    `json:"pair_not"`
 	Pair_gt                            string    `json:"pair_gt"`
@@ -256,14 +256,14 @@ type Swap_filter struct {
 	To_not_in                          [][]byte  `json:"to_not_in"`
 	To_contains                        []byte    `json:"to_contains"`
 	To_not_contains                    []byte    `json:"to_not_contains"`
-	LogIndex                           string    `json:"logIndex"`
-	LogIndex_not                       string    `json:"logIndex_not"`
-	LogIndex_gt                        string    `json:"logIndex_gt"`
-	LogIndex_lt                        string    `json:"logIndex_lt"`
-	LogIndex_gte                       string    `json:"logIndex_gte"`
-	LogIndex_lte                       string    `json:"logIndex_lte"`
-	LogIndex_in                        []string  `json:"logIndex_in"`
-	LogIndex_not_in                    []string  `json:"logIndex_not_in"`
+	LogIndex                           int64     `json:"logIndex"`
+	LogIndex_not                       int64     `json:"logIndex_not"`
+	LogIndex_gt                        int64     `json:"logIndex_gt"`
+	LogIndex_lt                        int64     `json:"logIndex_lt"`
+	LogIndex_gte                       int64     `json:"logIndex_gte"`
+	LogIndex_lte                       int64     `json:"logIndex_lte"`
+	LogIndex_in                        []int64   `json:"logIndex_in"`
+	LogIndex_not_in                    []int64   `json:"logIndex_not_in"`
 	AmountUSD                          float64   `json:"amountUSD"`
 	AmountUSD_not                      float64   `json:"amountUSD_not"`
 	AmountUSD_gt                       float64   `json:"amountUSD_gt"`
@@ -369,28 +369,28 @@ func (v *Swap_filter) GetTransaction_not_ends_with_nocase() string {
 }
 
 // GetTimestamp returns Swap_filter.Timestamp, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetTimestamp() string { return v.Timestamp }
+func (v *Swap_filter) GetTimestamp() int64 { return v.Timestamp }
 
 // GetTimestamp_not returns Swap_filter.Timestamp_not, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetTimestamp_not() string { return v.Timestamp_not }
+func (v *Swap_filter) GetTimestamp_not() int64 { return v.Timestamp_not }
 
 // GetTimestamp_gt returns Swap_filter.Timestamp_gt, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetTimestamp_gt() string { return v.Timestamp_gt }
+func (v *Swap_filter) GetTimestamp_gt() int64 { return v.Timestamp_gt }
 
 // GetTimestamp_lt returns Swap_filter.Timestamp_lt, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetTimestamp_lt() string { return v.Timestamp_lt }
+func (v *Swap_filter) GetTimestamp_lt() int64 { return v.Timestamp_lt }
 
 // GetTimestamp_gte returns Swap_filter.Timestamp_gte, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetTimestamp_gte() string { return v.Timestamp_gte }
+func (v *Swap_filter) GetTimestamp_gte() int64 { return v.Timestamp_gte }
 
 // GetTimestamp_lte returns Swap_filter.Timestamp_lte, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetTimestamp_lte() string { return v.Timestamp_lte }
+func (v *Swap_filter) GetTimestamp_lte() int64 { return v.Timestamp_lte }
 
 // GetTimestamp_in returns Swap_filter.Timestamp_in, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetTimestamp_in() []string { return v.Timestamp_in }
+func (v *Swap_filter) GetTimestamp_in() []int64 { return v.Timestamp_in }
 
 // GetTimestamp_not_in returns Swap_filter.Timestamp_not_in, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetTimestamp_not_in() []string { return v.Timestamp_not_in }
+func (v *Swap_filter) GetTimestamp_not_in() []int64 { return v.Timestamp_not_in }
 
 // GetPair returns Swap_filter.Pair, and is useful for accessing the field via an interface.
 func (v *Swap_filter) GetPair() string { return v.Pair }
@@ -585,28 +585,28 @@ func (v *Swap_filter) GetTo_contains() []byte { return v.To_contains }
 func (v *Swap_filter) GetTo_not_contains() []byte { return v.To_not_contains }
 
 // GetLogIndex returns Swap_filter.LogIndex, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetLogIndex() string { return v.LogIndex }
+func (v *Swap_filter) GetLogIndex() int64 { return v.LogIndex }
 
 // GetLogIndex_not returns Swap_filter.LogIndex_not, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetLogIndex_not() string { return v.LogIndex_not }
+func (v *Swap_filter) GetLogIndex_not() int64 { return v.LogIndex_not }
 
 // GetLogIndex_gt returns Swap_filter.LogIndex_gt, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetLogIndex_gt() string { return v.LogIndex_gt }
+func (v *Swap_filter) GetLogIndex_gt() int64 { return v.LogIndex_gt }
 
 // GetLogIndex_lt returns Swap_filter.LogIndex_lt, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetLogIndex_lt() string { return v.LogIndex_lt }
+func (v *Swap_filter) GetLogIndex_lt() int64 { return v.LogIndex_lt }
 
 // GetLogIndex_gte returns Swap_filter.LogIndex_gte, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetLogIndex_gte() string { return v.LogIndex_gte }
+func (v *Swap_filter) GetLogIndex_gte() int64 { return v.LogIndex_gte }
 
 // GetLogIndex_lte returns Swap_filter.LogIndex_lte, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetLogIndex_lte() string { return v.LogIndex_lte }
+func (v *Swap_filter) GetLogIndex_lte() int64 { return v.LogIndex_lte }
 
 // GetLogIndex_in returns Swap_filter.LogIndex_in, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetLogIndex_in() []string { return v.LogIndex_in }
+func (v *Swap_filter) GetLogIndex_in() []int64 { return v.LogIndex_in }
 
 // GetLogIndex_not_in returns Swap_filter.LogIndex_not_in, and is useful for accessing the field via an interface.
-func (v *Swap_filter) GetLogIndex_not_in() []string { return v.LogIndex_not_in }
+func (v *Swap_filter) GetLogIndex_not_in() []int64 { return v.LogIndex_not_in }
 
 // GetAmountUSD returns Swap_filter.AmountUSD, and is useful for accessing the field via an interface.
 func (v *Swap_filter) GetAmountUSD() float64 { return v.AmountUSD }
@@ -655,7 +655,7 @@ const (
 // WithArgsChain1_swapsSwap includes the requested fields of the GraphQL type Swap.
 type WithArgsChain1_swapsSwap struct {
 	Id         string                       `json:"id"`
-	Timestamp  string                       `json:"timestamp"`
+	Timestamp  int64                        `json:"timestamp"`
 	Pair       WithArgsChain1_swapsSwapPair `json:"pair"`
 	Sender     []byte                       `json:"sender"`
 	Amount0In  float64                      `json:"amount0In"`
@@ -663,7 +663,7 @@ type WithArgsChain1_swapsSwap struct {
 	Amount0Out float64                      `json:"amount0Out"`
 	Amount1Out float64                      `json:"amount1Out"`
 	To         []byte                       `json:"to"`
-	LogIndex   string                       `json:"logIndex"`
+	LogIndex   int64                        `json:"logIndex"`
 	AmountUSD  float64                      `json:"amountUSD"`
 }
 
@@ -671,7 +671,7 @@ type WithArgsChain1_swapsSwap struct {
 func (v *WithArgsChain1_swapsSwap) GetId() string { return v.Id }
 
 // GetTimestamp returns WithArgsChain1_swapsSwap.Timestamp, and is useful for accessing the field via an interface.
-func (v *WithArgsChain1_swapsSwap) GetTimestamp() string { return v.Timestamp }
+func (v *WithArgsChain1_swapsSwap) GetTimestamp() int64 { return v.Timestamp }
 
 // GetPair returns WithArgsChain1_swapsSwap.Pair, and is useful for accessing the field via an interface.
 func (v *WithArgsChain1_swapsSwap) GetPair() WithArgsChain1_swapsSwapPair { return v.Pair }
@@ -695,7 +695,7 @@ func (v *WithArgsChain1_swapsSwap) GetAmount1Out() float64 { return v.Amount1Out
 func (v *WithArgsChain1_swapsSwap) GetTo() []byte { return v.To }
 
 // GetLogIndex returns WithArgsChain1_swapsSwap.LogIndex, and is useful for accessing the field via an interface.
-func (v *WithArgsChain1_swapsSwap) GetLogIndex() string { return v.LogIndex }
+func (v *WithArgsChain1_swapsSwap) GetLogIndex() int64 { return v.LogIndex }
 
 // GetAmountUSD returns WithArgsChain1_swapsSwap.AmountUSD, and is useful for accessing the field via an interface.
 func (v *WithArgsChain1_swapsSwap) GetAmountUSD() float64 { return v.AmountUSD }
@@ -715,10 +715,10 @@ type WithArgsChain1_swapsSwapPair struct {
 	VolumeToken1           float64 `json:"volumeToken1"`
 	VolumeUSD              float64 `json:"volumeUSD"`
 	UntrackedVolumeUSD     float64 `json:"untrackedVolumeUSD"`
-	TxCount                string  `json:"txCount"`
-	CreatedAtTimestamp     string  `json:"createdAtTimestamp"`
-	CreatedAtBlockNumber   string  `json:"createdAtBlockNumber"`
-	LiquidityProviderCount string  `json:"liquidityProviderCount"`
+	TxCount                int64   `json:"txCount"`
+	CreatedAtTimestamp     int64   `json:"createdAtTimestamp"`
+	CreatedAtBlockNumber   int64   `json:"createdAtBlockNumber"`
+	LiquidityProviderCount int64   `json:"liquidityProviderCount"`
 }
 
 // GetId returns WithArgsChain1_swapsSwapPair.Id, and is useful for accessing the field via an interface.
@@ -761,18 +761,16 @@ func (v *WithArgsChain1_swapsSwapPair) GetVolumeUSD() float64 { return v.VolumeU
 func (v *WithArgsChain1_swapsSwapPair) GetUntrackedVolumeUSD() float64 { return v.UntrackedVolumeUSD }
 
 // GetTxCount returns WithArgsChain1_swapsSwapPair.TxCount, and is useful for accessing the field via an interface.
-func (v *WithArgsChain1_swapsSwapPair) GetTxCount() string { return v.TxCount }
+func (v *WithArgsChain1_swapsSwapPair) GetTxCount() int64 { return v.TxCount }
 
 // GetCreatedAtTimestamp returns WithArgsChain1_swapsSwapPair.CreatedAtTimestamp, and is useful for accessing the field via an interface.
-func (v *WithArgsChain1_swapsSwapPair) GetCreatedAtTimestamp() string { return v.CreatedAtTimestamp }
+func (v *WithArgsChain1_swapsSwapPair) GetCreatedAtTimestamp() int64 { return v.CreatedAtTimestamp }
 
 // GetCreatedAtBlockNumber returns WithArgsChain1_swapsSwapPair.CreatedAtBlockNumber, and is useful for accessing the field via an interface.
-func (v *WithArgsChain1_swapsSwapPair) GetCreatedAtBlockNumber() string {
-	return v.CreatedAtBlockNumber
-}
+func (v *WithArgsChain1_swapsSwapPair) GetCreatedAtBlockNumber() int64 { return v.CreatedAtBlockNumber }
 
 // GetLiquidityProviderCount returns WithArgsChain1_swapsSwapPair.LiquidityProviderCount, and is useful for accessing the field via an interface.
-func (v *WithArgsChain1_swapsSwapPair) GetLiquidityProviderCount() string {
+func (v *WithArgsChain1_swapsSwapPair) GetLiquidityProviderCount() int64 {
 	return v.LiquidityProviderCount
 }
 
