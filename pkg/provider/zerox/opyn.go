@@ -18,6 +18,8 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
+const url = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
+
 type Provider struct{}
 
 func (Provider) Name() string {
@@ -37,14 +39,17 @@ func (Provider) Options() ([]rainbow.Option, error) {
 }
 
 func QueryTheGraph() []opyn.OptionsOtokensOToken {
-	const url = "https://api.thegraph.com/subgraphs/name/opynfinance/gamma-mainnet"
 	const skip = 0
 	const first = 100
-	const minExpiry = "1651300000"
 
 	graphqlClient := graphql.NewClient(url, nil)
 
-	resp, err := opyn.Options(context.TODO(), graphqlClient, skip, first, minExpiry)
+	// we keep an option even 2 days after expiry
+	// mainly because not all protocol stop at expiry or right before
+	minExpiry := time.Now().Add(-time.Hour * 48)
+	minExpiryStr := strconv.FormatInt(minExpiry.Unix(), 10)
+
+	resp, err := opyn.Options(context.TODO(), graphqlClient, skip, first, minExpiryStr)
 	if err != nil {
 		log.Print("ERR Opyn: ", err)
 		return nil
@@ -54,28 +59,7 @@ func QueryTheGraph() []opyn.OptionsOtokensOToken {
 		return nil
 	}
 
-	log.Printf("Query Opyn: minExpiry=%v => %+v", minExpiry, resp)
+	log.Printf("Query Opyn: minExpiry=%v => %v options", minExpiry, len(resp.Otokens))
 
-	// always filter to not get old options
-	return resp.Otokens // filterExpired(resp.Otokens, time.Now())
-}
-
-func filterExpired(instruments []opyn.OptionsOtokensOToken, date time.Time) (filtered []opyn.OptionsOtokensOToken) {
-	for _, i := range instruments {
-		seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 64)
-		if err != nil {
-			log.Print("ERR Opyn ExpiryTimestamp: ", err)
-			return nil
-		}
-
-		expiryTime := time.Unix(seconds, 0)
-		// we keep an option even 2 days after expiry
-		// mainly because not all protocol stop at expiry or right before
-		// TODO re-check later
-		if expiryTime.After(date.Add(-time.Hour * 48)) {
-			filtered = append(filtered, i)
-		}
-	}
-
-	return filtered
+	return resp.Otokens
 }
