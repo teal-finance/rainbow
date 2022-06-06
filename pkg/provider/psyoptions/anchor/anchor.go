@@ -181,7 +181,7 @@ func (o Option) Strike() float64 {
 		} else {
 			s = o.QuotePerContract() / o.UnderlyingPerContract()
 		}
-		return s * 1000
+		return s / 100000 // TODO verify the good number of decimal to shift
 	}
 
 	if o.OptionType() == "PUT" {
