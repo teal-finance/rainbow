@@ -85,14 +85,14 @@ func (o Option) SerumMarketAddress() solana.PublicKey {
 }
 
 // https://github.com/mithraiclabs/psyoptions-ts/blob/87afa7280c33f341198c60676d2302c55bbfab5f/packages/psy-american/src/serumUtils.ts#L161-L174
-func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, programid solana.PublicKey) (solana.PublicKey, uint8, error) {
+func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, programID solana.PublicKey) (solana.PublicKey, uint8, error) {
 	seed := [][]byte{
 		optionMarketAddress[:],
 		priceCurrencyAddress[:],
 		[]byte("serumMarket"),
 	}
 
-	return solana.FindProgramAddress(seed, programid)
+	return solana.FindProgramAddress(seed, programID)
 }
 
 // the Options have a field "Expired"(bool) but it is not set to false even for expired hence the function.

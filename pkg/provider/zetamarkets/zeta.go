@@ -15,7 +15,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const serummainnet = "https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
+const serumMainnet = "https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
 
 type Provider struct{}
 
@@ -29,7 +29,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
 
-	client := rpc.NewClient(serummainnet)
+	client := rpc.NewClient(serumMainnet)
 
 	options := make([]rainbow.Option, 0, len(rawOptions))
 
@@ -40,7 +40,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 
 		out, err := serum.FetchMarket(ctx, client, pubKey)
 		if err != nil {
-			// for now because error in serumaddress generated
+			// for now because error in serumAddress generated
 			continue
 		}
 
