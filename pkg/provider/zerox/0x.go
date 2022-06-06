@@ -40,15 +40,16 @@ func extract(i opyn.OptionsOtokensOToken) (optionType, expiry string, strike flo
 	seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 64)
 	if err != nil {
 		log.Printf("ERR Opyn ExpiryTimestamp: %v from %+v", err, i)
-		return optionType, "", 0
+		expiry = ""
+	} else {
+		expiry = time.Unix(seconds, 0).Format("2006-01-02 15:04:05")
 	}
-	expiry = time.Unix(seconds, 0).Format("2006-01-02 15:04:05")
 
 	// thought the USDCdecimals were correct but apparently not (whatever)
 	strike, err = convertFromSolidity(i.StrikePrice, OTokensDecimals)
 	if err != nil {
 		log.Printf("ERR Strike: %v from %+v", err, i)
-		return optionType, "", 0
+		strike = 0
 	}
 
 	return optionType, expiry, strike
