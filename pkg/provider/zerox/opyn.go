@@ -31,7 +31,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 
 	options, err := normalize(instruments, "Opyn", 10.0)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR Opyn: ", err)
 		return nil, err
 	}
 
