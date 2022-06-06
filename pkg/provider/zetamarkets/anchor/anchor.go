@@ -86,8 +86,10 @@ func (o Option) SerumAddress() solana.PublicKey {
 }
 
 // watch out if they ever use something else than USDC.
+var divisor = math.Pow10(USDCDecimals)
+
 func (o Option) Strike() float64 {
-	return float64(o.Product.Strike.Value / uint64(math.Pow10(USDCDecimals)))
+	return float64(o.Product.Strike.Value) / divisor
 }
 
 // same comment as previous.
