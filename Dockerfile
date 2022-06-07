@@ -30,7 +30,7 @@ ARG port=8888
 # port = 8888
 
 # --------------------------------------------------------------------
-FROM docker.io/node:17-alpine AS web_builder
+FROM docker.io/node:18-alpine AS web_builder
 
 WORKDIR /code
 
