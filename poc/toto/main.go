@@ -22,7 +22,7 @@ const deltaex = "https://api.delta.exchange/v2/products?contract_types="
 const deltaorder = "https://api.delta.exchange/v2/l2orderbook/"
 
 func main() {
-	dex()
+	tl()
 }
 
 func dex() {
@@ -82,10 +82,10 @@ func rpc(count int) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	client2, err := ethclient.Dial(optimism) //+ INFURA_KEY)
+	/*client, err := ethclient.Dial(optimism) //+ INFURA_KEY)
 	if err != nil {
 		log.Fatal(err)
-	}
+	}*/
 	amount := big.Int{}
 	amount.SetString("1000000000000000000", 10) //1000000000000000000
 	v := "0x43592bffCF14f1e0A096091E125f023B2ccC2525"
@@ -94,48 +94,15 @@ func rpc(count int) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	viewer2, err := lyra.NewLyrap(address, client2)
+	board := big.NewInt(33)
+	oldtbd, _ := viewer.GetOpenPremiumsForBoard(&bind.CallOpts{}, board, 0, &amount)
+	_ = oldtbd
+	spew.Dump(oldtbd[3])
+	vlist, err := viewer.GetListingView(&bind.CallOpts{}, board)
 	if err != nil {
 		log.Fatal(err)
 	}
-	board := big.NewInt(17)
-	oldtbd, _ := viewer.GetOpenPremiumsForBoard(&bind.CallOpts{}, board, 0, &amount)
-	oldtbd2, _ := viewer2.GetOpenPremiumsForBoard(&bind.CallOpts{}, board, 0, &amount)
-
-	for i := 1; i < count; i++ {
-
-		tbd, err := viewer.GetOpenPremiumsForBoard(&bind.CallOpts{}, board, 0, &amount)
-		tbd2, err2 := viewer2.GetOpenPremiumsForBoard(&bind.CallOpts{}, board, 0, &amount)
-		oldtbd = tbd
-		oldtbd2 = tbd2
-		if err != nil {
-			fmt.Println(i)
-			//spe
-			log.Fatal(err)
-		}
-		if err2 != nil {
-			fmt.Println(i)
-			//spe
-			log.Fatal(err2)
-		}
-		tbd, err = viewer.GetOpenPremiumsForBoard(&bind.CallOpts{}, board, 3, &amount)
-		tbd2, err2 = viewer2.GetOpenPremiumsForBoard(&bind.CallOpts{}, board, 3, &amount)
-		oldtbd = tbd
-		oldtbd2 = tbd2
-		if err != nil {
-			fmt.Println(i)
-			//spe
-			log.Fatal(err)
-		}
-		if err2 != nil {
-			fmt.Println(i)
-			//spe
-			log.Fatal(err2)
-		}
-	}
-
-	spew.Dump(oldtbd)
-	spew.Dump(oldtbd2)
+	spew.Dump(vlist)
 
 	fmt.Println(count, "2 OK")
 }

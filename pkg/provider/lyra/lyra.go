@@ -121,6 +121,10 @@ func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketVi
 	return ammOrder, err
 }
 
+// Question: should the premium be with or without the fees?
+// ideally fees should be included for what you have to pay and removed from what you received
+// so as to reflect the true cost (not counting blockchain tx fees though)
+// here we only do premium, which don't take fees into account
 func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarketViewerTradePremiumView, amount int, asset string) []rainbow.Option {
 	options := []rainbow.Option{}
 	call := rainbow.Option{
@@ -159,21 +163,25 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 		Price: ToFloat(ammOrder[0].Premium),
 		Size:  float64(amount),
 	})
+	call.BidIV = 100 * ToFloat(ammOrder[0].NewIv)
 
 	call.Ask = append(call.Ask, rainbow.Order{
 		Price: ToFloat(ammOrder[1].Premium),
 		Size:  float64(amount),
 	})
+	call.AskIV = 100 * ToFloat(ammOrder[1].NewIv)
 
 	put.Bid = append(put.Bid, rainbow.Order{
 		Price: ToFloat(ammOrder[2].Premium),
 		Size:  float64(amount),
 	})
+	put.BidIV = 100 * ToFloat(ammOrder[2].NewIv)
 
 	put.Ask = append(put.Ask, rainbow.Order{
 		Price: ToFloat(ammOrder[3].Premium),
 		Size:  float64(amount),
 	})
+	put.AskIV = 100 * ToFloat(ammOrder[3].NewIv)
 
 	options = append(options, call, put)
 	return options
