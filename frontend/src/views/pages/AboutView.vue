@@ -8,10 +8,10 @@
           <p class="mb-8 leading-8 sm:w-full">
             Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With Rainbow, users can scan CEX/DEX markets to fetch available options data.
 <br>
-This project has been initiated by <a class="text-green-500 hover:text-primary" href="https://teal.finance">Teal.Finance</a> during the 
+This project has been initiated by <a class="text-green-500 hover:text-primary" href="https://teal.finance">Teal.Finance</a> during the
 <a class="text-green-500 hover:text-primary" href="https://showcase.ethglobal.com/ethonline2021/rainbow">Ethereum's EthGlobal Hackathon</a>, Solana's Ignition Hackathon and Encode .
 <a class="text-green-500 hover:text-primary" href="https://www.encode.club/hack-defi">Club's Hack DeFi</a>
-<br> 
+<br>
 </p>
         </div>
         <div class="mb-10 md:mb-0">
