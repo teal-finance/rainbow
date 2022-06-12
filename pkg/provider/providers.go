@@ -71,7 +71,7 @@ func (p withAlert) Options() ([]rainbow.Option, error) {
 			return
 		}
 
-		// TO DO other anomality checks
+		// TODO: Check other anomalies
 	}()
 
 	return options, err
