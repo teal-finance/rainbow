@@ -2,8 +2,6 @@ module github.com/teal-finance/rainbow
 
 go 1.18
 
-replace github.com/dfuse-io/logging => github.com/streamingfast/logging v0.0.0-20220405224725-2755dab2ce75
-
 require (
 	github.com/Khan/genqlient v0.4.0
 	github.com/davecgh/go-spew v1.1.1
@@ -31,7 +29,7 @@ require (
 
 require (
 	4d63.com/gochecknoglobals v0.1.0 // indirect
-	contrib.go.opencensus.io/exporter/stackdriver v0.13.10 // indirect
+	contrib.go.opencensus.io/exporter/stackdriver v0.13.13 // indirect
 	filippo.io/edwards25519 v1.0.0 // indirect
 	github.com/Antonboom/errname v0.1.7 // indirect
 	github.com/Antonboom/nilnil v0.1.1 // indirect
@@ -71,8 +69,7 @@ require (
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
-	github.com/dfuse-io/logging v0.0.0-20220511154537-ce373d264338 // indirect
-	github.com/edsrzf/mmap-go v1.1.0 // indirect
+	github.com/dfuse-io/logging v0.0.0-20210109005628-b97a57253f70 // indirect
 	github.com/esimonov/ifshort v1.0.4 // indirect
 	github.com/ettle/strcase v0.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
@@ -95,7 +92,6 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gofrs/flock v0.8.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
-	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golangci/check v0.0.0-20180506172741-cfe4005ccda2 // indirect
@@ -152,7 +148,6 @@ require (
 	github.com/mbilski/exhaustivestruct v1.2.0 // indirect
 	github.com/mgechev/revive v1.2.1 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
-	github.com/miekg/dns v1.1.49 // indirect
 	github.com/minio/highwayhash v1.0.2 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
@@ -196,7 +191,7 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/sivchari/containedctx v1.0.2 // indirect
-	github.com/sivchari/tenv v1.5.0 // indirect
+	github.com/sivchari/tenv v1.6.0 // indirect
 	github.com/sonatard/noctx v0.0.1 // indirect
 	github.com/sourcegraph/go-diff v0.6.1 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
@@ -215,7 +210,7 @@ require (
 	github.com/tdakkota/asciicheck v0.1.1 // indirect
 	github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a // indirect
 	github.com/teal-finance/incorruptible v0.0.0-20220603212550-d7124988df5b // indirect
-	github.com/teal-finance/quid v0.0.0-20220614032722-fccc269235bd // indirect
+	github.com/teal-finance/quid v0.0.0-20220614042305-0190e96a7c05 // indirect
 	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 // indirect
 	github.com/tetafro/godot v1.4.11 // indirect
 	github.com/tidwall/gjson v1.14.1 // indirect
@@ -224,7 +219,7 @@ require (
 	github.com/timakin/bodyclose v0.0.0-20210704033933-f49887972144 // indirect
 	github.com/tklauser/go-sysconf v0.3.10 // indirect
 	github.com/tklauser/numcpus v0.5.0 // indirect
-	github.com/tomarrell/wrapcheck/v2 v2.6.1 // indirect
+	github.com/tomarrell/wrapcheck/v2 v2.6.2 // indirect
 	github.com/tommy-muehle/go-mnd/v2 v2.5.0 // indirect
 	github.com/ultraware/funlen v0.0.3 // indirect
 	github.com/ultraware/whitespace v0.0.5 // indirect
@@ -250,7 +245,7 @@ require (
 	golang.org/x/exp/typeparams v0.0.0-20220613132600-b0d781184e0d // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f // indirect
-	golang.org/x/sys v0.0.0-20220610221304-9f5ed59c137d // indirect
+	golang.org/x/sys v0.0.0-20220614162138-6c1b26c55098 // indirect
 	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
