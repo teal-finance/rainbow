@@ -36,7 +36,7 @@ var (
 	htmlBuf  = boldTag
 )
 
-func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
+func BestLimitHTML(option *Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
 		bidPx = rightAlignFloatOnDecimalPointHTML(option.Bid[0].Price)
 		bidSz = leftAlignFloatOnDecimalPointHTML(option.Bid[0].Size)
@@ -54,7 +54,7 @@ func BestLimitHTML(option Option) (bidPx, bidSz, askPx, askSz string) {
 	return bidPx, bidSz, askPx, askSz
 }
 
-func BestLimitStr(option Option) (bidPx, bidSz, askPx, askSz string) {
+func BestLimitStr(option *Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
 		bidPx = leftAlignFloatOnDecimalPointStr(option.Bid[0].Price)
 		bidSz = leftAlignFloatOnDecimalPointStr(option.Bid[0].Size)

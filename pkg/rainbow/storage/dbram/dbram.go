@@ -25,76 +25,96 @@ func NewDB() *DB {
 }
 
 func (db *DB) InsertOptions(options []rainbow.Option) error {
-	for _, o := range options {
-		if _, ok := db.optionsByProvider[o.Provider]; !ok {
-			db.optionsByProvider[o.Provider] = []rainbow.Option{}
+	for i := range options {
+		provider := options[i].Provider
+		if _, ok := db.optionsByProvider[provider]; !ok {
+			db.optionsByProvider[provider] = []rainbow.Option{}
 		}
 
-		db.insertOption(o)
+		db.insertOption(&options[i])
 	}
 	return nil
 }
 
-func (db *DB) insertOption(o rainbow.Option) {
-	for i, oldOpt := range db.optionsByProvider[o.Provider] {
-		if oldOpt.Name == o.Name &&
-			oldOpt.Type == o.Type &&
-			oldOpt.Expiry == o.Expiry &&
-			oldOpt.Strike == o.Strike {
-			// Update the option attributes
-			db.optionsByProvider[o.Provider][i] = o
+func (db *DB) insertOption(newOpt *rainbow.Option) {
+	options := db.optionsByProvider[newOpt.Provider]
+	for i := range options {
+		// if newOpt is already present, just update the fields and return
+		if options[i].Name == newOpt.Name &&
+			options[i].Type == newOpt.Type &&
+			options[i].Expiry == newOpt.Expiry &&
+			options[i].Strike == newOpt.Strike {
+			options[i] = *newOpt
 			return
 		}
 	}
 
 	// Append the new option
-	db.optionsByProvider[o.Provider] = append(db.optionsByProvider[o.Provider], o)
+	db.optionsByProvider[newOpt.Provider] = append(
+		db.optionsByProvider[newOpt.Provider],
+		*newOpt)
 }
 
 func (db *DB) Options(args rainbow.StoreArgs) ([]rainbow.Option, error) {
-	n := 0
-	for provider, o := range db.optionsByProvider {
-		if len(args.Providers) > 0 {
-			if !in(provider, args.Providers) {
+	total := db.numberOfOptions(args)
+	filtered := make([]rainbow.Option, 0, total)
+
+	for provider, options := range db.optionsByProvider {
+		if !in(provider, args.Providers) {
+			continue
+		}
+
+		for i := range options {
+			if !contains(options[i].Asset, args.Assets) ||
+				!startsWith(options[i].Expiry, args.Expiries) {
 				continue
 			}
+			filtered = append(filtered, options[i])
 		}
-		n += len(o)
 	}
 
-	options := make([]rainbow.Option, 0, n)
-	for provider, o := range db.optionsByProvider {
-		if len(args.Providers) > 0 {
-			if !in(provider, args.Providers) {
+	return filtered, nil
+}
+
+func (db *DB) numberOfOptions(args rainbow.StoreArgs) int {
+	total := 0
+
+	for provider, options := range db.optionsByProvider {
+		if !in(provider, args.Providers) {
+			continue
+		}
+
+		for i := range options {
+			if !contains(options[i].Asset, args.Assets) ||
+				!startsWith(options[i].Expiry, args.Expiries) {
 				continue
 			}
+			total++
 		}
-		options = append(options, o...)
 	}
 
-	i := 0
-	for _, o := range options {
-		if len(args.Assets) > 0 {
-			if !contains(o.Asset, args.Assets) {
-				continue
-			}
-		}
+	return total
+}
 
-		if len(args.Expiries) > 0 {
-			if !startsWith(o.Expiry, args.Expiries) {
-				continue
-			}
-		}
-
-		options[i] = o
-		i++
+func in(provider string, wanted []string) bool {
+	if len(wanted) == 0 {
+		return true
 	}
 
-	return options[:i], nil
+	for _, w := range wanted {
+		if w == provider {
+			return true
+		}
+	}
+	return false
 }
 
 // TODO go1.18: use generics with constraint comparable.
 func contains(asset string, subStrings []string) bool {
+	if len(subStrings) == 0 {
+		return true
+	}
+
 	for _, substr := range subStrings {
 		// use of strings.Contains because we allow some cases like WETH as ETH
 		// TODO: sanitize data before put it in db
@@ -105,16 +125,11 @@ func contains(asset string, subStrings []string) bool {
 	return false
 }
 
-func in(provider string, wanted []string) bool {
-	for _, w := range wanted {
-		if w == provider {
-			return true
-		}
-	}
-	return false
-}
-
 func startsWith(expiry string, prefixes []string) bool {
+	if len(prefixes) == 0 {
+		return true
+	}
+
 	for _, prefix := range prefixes {
 		if strings.HasPrefix(expiry, prefix) {
 			return true

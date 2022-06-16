@@ -44,13 +44,13 @@ func printTable(options []rainbow.Option) {
 		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", red(" Ask"), "Size", "Instrument",
 	})
 
-	for _, option := range options {
-		bestBidPx, bestBidQty, bestAskPx, bestAskQty := rainbow.BestLimitStr(option)
-
+	for i := range options {
+		o := &options[i]
+		bestBidPx, bestBidQty, bestAskPx, bestAskQty := rainbow.BestLimitStr(o)
 		t.AppendRows([]table.Row{{
-			highlight(option.Provider), option.Asset, option.Type,
-			bestBidQty, green(bestBidPx), math.Round(option.Strike*100) / 100,
-			red(bestAskPx), bestAskQty, option.Name,
+			highlight(o.Provider), o.Asset, o.Type,
+			bestBidQty, green(bestBidPx), math.Round(o.Strike*100) / 100,
+			red(bestAskPx), bestAskQty, o.Name,
 		}})
 	}
 
