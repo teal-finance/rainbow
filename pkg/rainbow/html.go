@@ -107,26 +107,28 @@ func RightAlign(f float64, addMissingDot bool) []byte {
 
 	// i is the position of the '.'
 	for i := 1 + len(boldTag); i < len(htmlBuf); i++ {
-		if htmlBuf[i] == '.' {
-			tinyIntegralPart := i == 1+len(boldTag)
-
-			if end := i + 1 + digitsInFractionalPart; end > len(htmlBuf) {
-				htmlBuf = append(htmlBuf, byte('0'))
-			} else {
-				htmlBuf = htmlBuf[:end]
-			}
-
-			if i > 3+len(boldTag) {
-				htmlBuf = insertThousandSeparator(htmlBuf, i-3)
-				i += len(narrowSp)
-			}
-
-			if tinyIntegralPart {
-				return append(htmlBuf, byte('<'), byte('/'), byte('b'), byte('>'))
-			}
-
-			return append(htmlBuf[:i], append(boldEnd, htmlBuf[i:]...)...)
+		if htmlBuf[i] != '.' {
+			continue
 		}
+
+		tinyIntegralPart := i == 1+len(boldTag)
+
+		if end := i + 1 + digitsInFractionalPart; end > len(htmlBuf) {
+			htmlBuf = append(htmlBuf, byte('0'))
+		} else {
+			htmlBuf = htmlBuf[:end]
+		}
+
+		if i > 3+len(boldTag) {
+			htmlBuf = insertThousandSeparator(htmlBuf, i-3)
+			i += len(narrowSp)
+		}
+
+		if tinyIntegralPart {
+			return append(htmlBuf, byte('<'), byte('/'), byte('b'), byte('>'))
+		}
+
+		return append(htmlBuf[:i], append(boldEnd, htmlBuf[i:]...)...)
 	}
 
 	// Missing dot
