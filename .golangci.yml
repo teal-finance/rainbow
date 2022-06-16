@@ -85,7 +85,7 @@ linters-settings:
     max-complexity: 15
 
   gci:
-    sections: [prefix(tealapi)]
+    sections: [prefix(github.com/teal-finance/)]
 
   goconst:
     min-len: 2
@@ -113,6 +113,9 @@ linters-settings:
   gofumpt:
     lang-version: "1.18"
     extra-rules: true
+
+  goimports:
+    local-prefixes: github.com/teal-finance/
 
   golint:
     min-confidence: 0

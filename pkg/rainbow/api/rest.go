@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/mpvl/unique"
+
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
