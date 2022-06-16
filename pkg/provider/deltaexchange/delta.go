@@ -122,59 +122,6 @@ func queryProducts() (ProductResult, error) {
 	return products, nil
 }
 
-func (p Product) Orderbook() ([]rainbow.Order, []rainbow.Order, error) {
-	resp, err := http.Get(deltaOrders + p.Symbol)
-	if err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" Fetch order book : %w", err)
-	}
-	defer resp.Body.Close()
-
-	orders := struct {
-		Orders OrderbookResult `json:"result"`
-	}{}
-
-	if err = json.NewDecoder(resp.Body).Decode(&orders); err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" fetch  order book json issue : %w", err)
-	}
-
-	contractSize, err := strconv.ParseFloat(p.ContractValue, 64)
-	if err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" contract value conversion: %w", err)
-	}
-
-	bids, err := orderConversion(orders.Orders.Buy, contractSize)
-	if err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, err
-	}
-	asks, err := orderConversion(orders.Orders.Sell, contractSize)
-	if err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, err
-	}
-	return bids, asks, nil
-}
-
-func orderConversion(orders Orders, contractSize float64) ([]rainbow.Order, error) {
-	rOrders := []rainbow.Order{}
-	for _, o := range orders {
-		price, err := strconv.ParseFloat(o.Price, 64)
-		if err != nil {
-			return []rainbow.Order{}, err
-		}
-		rOrders = append(rOrders, rainbow.Order{
-			Price: price,
-			Size:  float64(o.Size) * contractSize,
-		})
-	}
-	return rOrders, nil
-}
-
-func (p Product) OptionsType() string {
-	if p.ContractType == "call_options" {
-		return "CALL"
-	}
-	return "PUT"
-}
-
 type (
 	ProductResult []Product
 	Product       struct {
@@ -344,4 +291,57 @@ type Orders []struct {
 	Depth string `json:"depth"`
 	Price string `json:"price"`
 	Size  int    `json:"size"`
+}
+
+func (p Product) Orderbook() ([]rainbow.Order, []rainbow.Order, error) {
+	resp, err := http.Get(deltaOrders + p.Symbol)
+	if err != nil {
+		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" Fetch order book : %w", err)
+	}
+	defer resp.Body.Close()
+
+	orders := struct {
+		Orders OrderbookResult `json:"result"`
+	}{}
+
+	if err = json.NewDecoder(resp.Body).Decode(&orders); err != nil {
+		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" fetch  order book json issue : %w", err)
+	}
+
+	contractSize, err := strconv.ParseFloat(p.ContractValue, 64)
+	if err != nil {
+		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" contract value conversion: %w", err)
+	}
+
+	bids, err := orderConversion(orders.Orders.Buy, contractSize)
+	if err != nil {
+		return []rainbow.Order{}, []rainbow.Order{}, err
+	}
+	asks, err := orderConversion(orders.Orders.Sell, contractSize)
+	if err != nil {
+		return []rainbow.Order{}, []rainbow.Order{}, err
+	}
+	return bids, asks, nil
+}
+
+func (p Product) OptionsType() string {
+	if p.ContractType == "call_options" {
+		return "CALL"
+	}
+	return "PUT"
+}
+
+func orderConversion(orders Orders, contractSize float64) ([]rainbow.Order, error) {
+	rOrders := []rainbow.Order{}
+	for _, o := range orders {
+		price, err := strconv.ParseFloat(o.Price, 64)
+		if err != nil {
+			return []rainbow.Order{}, err
+		}
+		rOrders = append(rOrders, rainbow.Order{
+			Price: price,
+			Size:  float64(o.Size) * contractSize,
+		})
+	}
+	return rOrders, nil
 }
