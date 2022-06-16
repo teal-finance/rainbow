@@ -15,6 +15,7 @@ import (
 
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/garcon/webserver"
+	"github.com/teal-finance/notifier/mattermost"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
@@ -30,7 +31,7 @@ func main() {
 		providers = provider.AllProviders()
 	default:
 		providers = provider.AllProvidersWithAlert(
-			provider.NewOracle(*alert),
+			mattermost.NewNotifier(*alert),
 		)
 	}
 

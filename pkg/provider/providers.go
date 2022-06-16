@@ -7,13 +7,11 @@
 package provider
 
 import (
-	"bytes"
 	"fmt"
 	"log"
-	"net/http"
-	"net/url"
 	"os"
 
+	"github.com/teal-finance/notifier"
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
@@ -39,19 +37,19 @@ func AllProviders() []rainbow.Provider {
 
 // AllProvidersWithAlert returns all active providers with an alerter on anomalies.
 // Do not panic if alerter endpoint is not reachable.
-func AllProvidersWithAlert(o Oracle) []rainbow.Provider {
-	hello := ":wave: Hi, RainbowOracle has just started"
+func AllProvidersWithAlert(n notifier.Notifier) []rainbow.Provider {
+	hello := ":wave: Hi, RainbowAlerter has just started"
 
 	host, err := os.Hostname()
 	if err == nil {
 		hello += " on " + host
 	}
 
-	o.Query(hello)
+	_ = n.Notify(hello)
 
 	providers := AllProviders()
 	for i, p := range providers {
-		providers[i] = alerter{p, o}
+		providers[i] = alerter{p, n}
 	}
 
 	return providers
@@ -59,7 +57,7 @@ func AllProvidersWithAlert(o Oracle) []rainbow.Provider {
 
 type alerter struct {
 	provider rainbow.Provider
-	oracle   Oracle
+	notifier notifier.Notifier
 }
 
 func (a alerter) Name() string {
@@ -70,52 +68,25 @@ func (a alerter) Options() ([]rainbow.Option, error) {
 	options, err := a.provider.Options()
 
 	go func() {
+		err := a.vet(options, err)
 		if err != nil {
-			a.oracle.Query(fmt.Sprintf(":alert: **%s**: API error: %s\n", a.Name(), err))
-			return
+			log.Print("ERR Alerter: ", err)
 		}
-
-		if len(options) == 0 {
-			a.oracle.Query(fmt.Sprintf(":question: **%s**: no options\n", a.Name()))
-			return
-		}
-		// TODO: Check other anomalies
 	}()
 
 	return options, err
 }
 
-type Oracle struct {
-	endpoint string
-}
-
-func NewOracle(endpoint string) Oracle {
-	return Oracle{endpoint}
-}
-
-func (o Oracle) Query(query string) {
-	resp, err := http.Post(
-		o.endpoint,
-		"application/json",
-		bytes.NewBuffer([]byte(`{"username":"Oracle","text":"`+query+`"}`)),
-	)
+func (a alerter) vet(options []rainbow.Option, err error) error {
 	if err != nil {
-		log.Print("ERR Alerter POST: ", err)
-		return
+		return a.notifier.Notify(fmt.Sprintf(":alert: **%s**: API error: %s\n", a.Name(), err))
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		host := ""
-		if url, er := url.Parse(o.endpoint); er == nil {
-			host = url.Hostname()
-		} else {
-			log.Printf("ERR Alerter: URL=%q %s", o.endpoint, er)
-		}
-		log.Printf("ERR Alerter: %s returned status code %d", host, resp.StatusCode)
+	if len(options) == 0 {
+		return a.notifier.Notify(fmt.Sprintf(":question: **%s**: no options\n", a.Name()))
 	}
 
-	err = resp.Body.Close()
-	if err != nil {
-		log.Print("ERR Alerter: ", err)
-	}
+	// TODO: Check other anomalies
+
+	return nil
 }
