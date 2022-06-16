@@ -143,7 +143,6 @@ func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount f
 		}
 
 		q, err = getQuote(side, sellToken, buyToken, amount, decimals)
-
 		if err == nil {
 			sr.success(n)
 			break
@@ -203,7 +202,7 @@ type Record struct {
 }
 
 func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount float64) ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
+	options := make([]rainbow.Option, 0, len(instruments))
 
 	requester := defaultStubbornRequester
 
