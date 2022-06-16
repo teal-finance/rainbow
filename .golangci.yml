@@ -21,8 +21,8 @@ run:
   skip-dirs:
     - vendor
     - poc
+  go: "1.17"
 
-# output configuration options
 output:
   # colored-line-number|line-number|json|tab|checkstyle, default is "colored-line-number"
   format: colored-line-number
@@ -45,29 +45,17 @@ linters:
   disable:
     # DEPRECATED
     - exhaustivestruct
-    - gofmt
     - golint
     - interfacer
     - maligned
     - scopelint
-    # MISSING GO-1.18 SUPPORT
-    - bodyclose
-    - contextcheck
-    - nilerr
-    - noctx
-    - rowserrcheck
-    - sqlclosecheck
-    - structcheck
-    - tparallel
-    - unparam
-    - wastedassign
-      # ANNOYING
+    # ANNOYING
+    - errcheck
     - exhaustruct
     - gci
     - gochecknoglobals
     - godox
     - goerr113
-    # gofumpt
     - gomnd
     - lll
     - nlreturn
