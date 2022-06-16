@@ -43,8 +43,8 @@ func (h Handler) Options(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func query(r *http.Request) (sa rainbow.StoreArgs, format string, err error) {
-	if err = r.ParseForm(); err != nil {
+func query(r *http.Request) (sa rainbow.StoreArgs, format string, _ error) {
+	if err := r.ParseForm(); err != nil {
 		return sa, "", err
 	}
 
