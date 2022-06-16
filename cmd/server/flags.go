@@ -56,7 +56,7 @@ func parseFlags() {
 	log.Print("HMAC_SHA256    -hmac  len=", len(*hmac), " (need 64 hexadecimal digits)")
 
 	// mandatory: -aes or -hmac
-	if len(*aes) == 0 && len(*hmac) == 0 {
+	if *aes == "" && *hmac == "" {
 		if *dev {
 			*hmac = "9d2e0a02121179a3c3de1b035ae1355b1548781c8ce8538a1dc0853a12dfb13d"
 		} else {
