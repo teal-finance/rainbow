@@ -111,9 +111,7 @@ func (o Option) Name() string {
 		fmt.Sprintf("%.0f", o.Strike()) + "-" + o.Product.Kind.String()
 }
 
-func (o Option) ContractSize() float64 {
-	return 1000
-}
+const ContractSize = 1000
 
 func (o Option) Expiration() string {
 	seconds := int64(o.expiry)

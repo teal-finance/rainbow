@@ -25,12 +25,8 @@ func (Provider) Name() string {
 	return "Deribit"
 }
 
-// return the hour (UTC) at which the options expires
-// 8:00 UTC
-// should that be a "func (Provider)"?
-func Hour() int {
-	return 8
-}
+// Hour at which the options expires = 8:00 UTC.
+const Hour = 8
 
 func (Provider) Options() ([]rainbow.Option, error) {
 	instruments, err := query("BTC")
@@ -116,8 +112,11 @@ type instrument struct {
 	IsActive             bool    `json:"is_active"`
 }
 
-func filterTooFar(instruments []instrument) (filtered []instrument) {
-	expiries := rainbow.Expiries(time.Now(), Hour())
+func filterTooFar(instruments []instrument) []instrument {
+	expiries := rainbow.Expiries(time.Now(), Hour)
+
+	filtered := make([]instrument, 0, len(instruments))
+
 	for _, i := range instruments {
 		seconds := i.ExpirationTimestamp / 1000
 		ns := (i.ExpirationTimestamp % 1000) * 1000_000
@@ -128,6 +127,7 @@ func filterTooFar(instruments []instrument) (filtered []instrument) {
 			filtered = append(filtered, i)
 		}
 	}
+
 	return filtered
 }
 

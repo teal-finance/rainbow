@@ -44,13 +44,13 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			continue
 		}
 
-		// inversing the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
-		bids, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, i.ContractSize())
+		// inverting the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
+		bids, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, anchor.ContractSize)
 		if err != nil {
 			return nil, err
 		}
 
-		asks, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false, i.ContractSize())
+		asks, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false, anchor.ContractSize)
 		if err != nil {
 			return nil, err
 		}
