@@ -54,5 +54,4 @@ func main() {
 	spew.Fdump(datawriterA, arbs)
 	datawriterA.Flush()
 	fileA.Close()
-
 }

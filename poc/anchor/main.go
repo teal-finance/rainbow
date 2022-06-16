@@ -44,9 +44,9 @@ func main() {
 		panic(err)
 	}
 	spew.Dump(out)*/
-	//spew.Dump(len(out[0:3]))
+	// spew.Dump(len(out[0:3]))
 	for _, i := range out {
-		//spew.Dump(i.Pubkey)
+		// spew.Dump(i.Pubkey)
 		/*out, err := client.GetAccountInfo(
 			context.TODO(),
 			i.Pubkey,
@@ -71,8 +71,8 @@ func main() {
 			a, b, c = deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.UnderlyingAssetMint), pub)
 			spew.Dump(a, b, c)*/
 	}
-	//f()
-	//solana.MustPublicKeyFromBase58(test))
+	// f()
+	// solana.MustPublicKeyFromBase58(test))
 	/*res, err := client.GetAccountInfo(
 		context.TODO(),
 		pub,
@@ -82,8 +82,8 @@ func main() {
 	}
 	//spew.Dump(len(res))
 	spew.Dump(res)*/
-	//psy_american.SetProgramID(pub)
-	//fmt.Println(psy_american.ProgramName)
+	// psy_american.SetProgramID(pub)
+	// fmt.Println(psy_american.ProgramName)
 }
 
 func deriveSerumMarketAddress(id, quote, programid solana.PublicKey) (solana.PublicKey, uint8, error) {
@@ -125,7 +125,7 @@ func f() {
 
 	got, _ = solana.CreateProgramAddress([][]byte{
 		[]byte(""),
-		//{1},
+		// {1},
 	},
 		program_id,
 	)

@@ -14,7 +14,7 @@ type Arb struct {
 	SellPx       float64
 	SellProvider string
 	SellM        float64
-	ROI          float64 //percentage of benef
+	ROI          float64 // percentage of benef
 }
 
 type Arbs []Arb
@@ -22,19 +22,18 @@ type Arbs []Arb
 func buylowsellhigh(blocks Blocks, limit float64) Arbs {
 	arbs := Arbs{}
 	for _, block := range blocks {
-		if len(block.Options) == 1 { //normally shouldn't be empty but weird error I can't fix
+		if len(block.Options) == 1 { // normally shouldn't be empty but weird error I can't fix
 			continue
 		}
 
 		for i := 0; i < len(block.Options)-1; i++ {
 			opt := block.Options[i]
-			//this also test local arbs, if in one place the bid > ask
+			// this also test local arbs, if in one place the bid > ask
 			for _, o := range block.Options[i:] {
 				if conditions(o.Bid, opt.Ask) {
 					r := roi(block.Strike, o.Bid, opt.Ask)
 					if r >= limit {
 						arbs = saveArbitrage(arbs, block, r, o, opt)
-
 					}
 				} else if conditions(opt.Bid, o.Ask) {
 					r := roi(block.Strike, opt.Bid, o.Ask)
@@ -42,23 +41,19 @@ func buylowsellhigh(blocks Blocks, limit float64) Arbs {
 						arbs = saveArbitrage(arbs, block, r, opt, o)
 					}
 				}
-
 			}
 		}
 	}
 
 	return arbs
-
 }
 
 func conditions(bid, ask []rainbow.Order) bool {
 	return len(bid) != 0 && len(ask) != 0 &&
 		ask[0].Price*ask[0].Size != 0 && bid[0].Price*bid[0].Size != 0 &&
 		ask[0].Price < bid[0].Price
-
 }
 
-//roi in percentage
 func roi(strike float64, bid, ask []rainbow.Order) float64 {
 	return 100 * (bid[0].Price - ask[0].Price) / strike
 }
