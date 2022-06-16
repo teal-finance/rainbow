@@ -1,11 +1,14 @@
+# List the available linters:
+# go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest linters --no-config
+
 # Run the last version:
 # go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
 
+# Documentation:
 # https://golangci-lint.run/usage/configuration/#run-configuration
 ---
 modules-download-mode: readonly
 
-# options for analysis running
 run:
   # timeout for analysis, e.g. 30s, 5m, default is 1m
   deadline: 9m
@@ -157,12 +160,52 @@ linters-settings:
   stylecheck:
     go: "1.18"
     # https://staticcheck.io/docs/options#checks
-    checks: ["all", "-ST1000", "-ST1003", "-ST1016", "-ST1020", "-ST1021", "-ST1022"]
+    checks:
+      ["all", "-ST1000", "-ST1003", "-ST1016", "-ST1020", "-ST1021", "-ST1022"]
     # https://staticcheck.io/docs/options#dot_import_whitelist
     dot-import-whitelist:
       - fmt
     # https://staticcheck.io/docs/options#initialisms
-    initialisms: ["ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "QPS", "RAM", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP", "TLS", "TTL", "UDP", "UI", "GID", "UID", "UUID", "URI", "URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS"]
+    initialisms:
+      [
+        "ACL",
+        "API",
+        "ASCII",
+        "CPU",
+        "CSS",
+        "DNS",
+        "EOF",
+        "GUID",
+        "HTML",
+        "HTTP",
+        "HTTPS",
+        "ID",
+        "IP",
+        "JSON",
+        "QPS",
+        "RAM",
+        "RPC",
+        "SLA",
+        "SMTP",
+        "SQL",
+        "SSH",
+        "TCP",
+        "TLS",
+        "TTL",
+        "UDP",
+        "UI",
+        "GID",
+        "UID",
+        "UUID",
+        "URI",
+        "URL",
+        "UTF8",
+        "VM",
+        "XML",
+        "XMPP",
+        "XSRF",
+        "XSS",
+      ]
     # https://staticcheck.io/docs/options#http_status_code_whitelist
     http-status-code-whitelist: ["200", "400", "404", "500"]
 
