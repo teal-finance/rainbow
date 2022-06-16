@@ -65,7 +65,8 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		return nil, err
 	}
 
-	options := append(optionsBTC, optionsETH...)
+	options := optionsBTC
+	options = append(options, optionsETH...)
 	options = append(options, optionsSOL...)
 	return options, nil
 }
