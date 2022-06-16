@@ -36,6 +36,7 @@ var (
 	htmlBuf  = boldTag
 )
 
+// BestLimitHTML is used by the web/API server to align numbers with HTML <tags>.
 func BestLimitHTML(option *Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
 		bidPx = rightAlignFloatOnDecimalPointHTML(option.Bid[0].Price)
@@ -54,6 +55,7 @@ func BestLimitHTML(option *Option) (bidPx, bidSz, askPx, askSz string) {
 	return bidPx, bidSz, askPx, askSz
 }
 
+// BestLimitStr is used by the CLI to align numbers with whitespaces.
 func BestLimitStr(option *Option) (bidPx, bidSz, askPx, askSz string) {
 	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
 		bidPx = leftAlignFloatOnDecimalPointStr(option.Bid[0].Price)

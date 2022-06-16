@@ -72,7 +72,7 @@ linters:
 
 linters-settings:
   dupl:
-    threshold: 200
+    threshold: 100
 
   funlen:
     lines: 100
