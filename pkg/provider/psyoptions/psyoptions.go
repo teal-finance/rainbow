@@ -76,22 +76,22 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	return options, nil
 }
 
-// I don't really need the totalsize but I am keeping it since it was in the original func:
+// I don't really need the totalSize but I am keeping it since it was in the original func:
 //     - ASK on the top so desc=true
 //     - BID down so desc=false
-func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) (offers []rainbow.Order, err error) {
-	var o serum.Orderbook
-	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
-		return nil, fmt.Errorf("cli.GetAccountDataIn: %w", err)
-	}
-
+func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) ([]rainbow.Order, error) {
 	// quick & dirty extra rate limit
 	time.Sleep(300 * time.Microsecond)
+
+	var book serum.Orderbook
+	if err := cli.GetAccountDataIn(ctx, address, &book); err != nil {
+		return nil, fmt.Errorf("cli.GetAccountDataIn: %w", err)
+	}
 
 	limit := 20
 	levels := [][]*big.Int{}
 
-	err = o.Items(desc, func(node *serum.SlabLeafNode) error {
+	err := book.Items(desc, func(node *serum.SlabLeafNode) error {
 		quantity := big.NewInt(int64(node.Quantity))
 		price := node.GetPrice()
 		if len(levels) > 0 && levels[len(levels)-1][0].Cmp(price) == 0 {
@@ -102,24 +102,25 @@ func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Cli
 		}
 		return nil
 	})
-
 	if err != nil {
 		return nil, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
 
-	for _, level := range levels {
-		p := market.PriceLotsToNumber(level[0])
-		price, _ := p.Float64()
-		q := market.BaseSizeLotsToNumber(level[1])
-		qty, _ := q.Float64()
+	orders := make([]rainbow.Order, 0, len(levels))
 
-		offers = append(offers,
+	for _, level := range levels {
+		pBig := market.PriceLotsToNumber(level[0])
+		qBig := market.BaseSizeLotsToNumber(level[1])
+		px, _ := pBig.Float64()
+		sz, _ := qBig.Float64()
+
+		orders = append(orders,
 			rainbow.Order{
-				Price: price / contractSize, // to get the price for 1 asset since psyoptions has <1 contract size
-				Size:  qty * contractSize,   // to convert the right quantity
+				Price: px / contractSize, // to get the price for 1 asset since psyoptions has <1 contract size
+				Size:  sz * contractSize, // to convert the right quantity
 			},
 		)
 	}
 
-	return offers, nil
+	return orders, nil
 }
