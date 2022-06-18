@@ -17,12 +17,13 @@
 #   - by backend to set CORS origin ard Cookie domain.
 # - base is passed to frontend with --base (the path prefix stripped by the reverse-proxy).
 #   The frontend also uses it to compose the API URL.
-# - port is used by backend as the litenning port to serve API and static website files.
+# - port is used by backend as the listening port to serve API and static website files.
 
 # Default values are for dev mode:
 ARG addr=http://localhost:8888
 ARG base=/
 ARG port=8888
+ARG uid=5505
 
 # Example of Prod values:
 # addr = https://my.dns.co
@@ -108,12 +109,12 @@ FROM docker.io/golang:1.18-alpine AS integrator
 WORKDIR /target
 
 # HTTPS root certificates (adds about 200 KB)
-# Creaate user & group files
+# Create user & group files
 RUN set -x                                                  &&\
     mkdir -p                                 etc/ssl/certs  &&\
     cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs  &&\
-    echo 'teal:x:5505:5505::/:' > etc/passwd                &&\
-    echo 'teal:x:5505:'         > etc/group
+    echo "teal:x:$uid:$uid::/:" > etc/passwd                &&\
+    echo "teal:x:$uid:"         > etc/group
 
 # Static website and back-end
 COPY --from=web_builder /code/dist   var/www
@@ -135,7 +136,7 @@ ARG addr
 ARG base
 ARG port
 
-COPY --chown=5505:5505 --from=integrator /target /
+COPY --chown=$uid:$uid --from=integrator /target /
 
 # Run as unprivileged
 USER teal:teal
