@@ -1597,6 +1597,8 @@ github.com/teal-finance/garcon v0.13.5 h1:HIk1wz+B0RrQHsz+3qbFItR4NcslRkoS5CTdYR
 github.com/teal-finance/garcon v0.13.5/go.mod h1:T2qsShxkH9yNJMxYpK8n5Ts8OtDJeNEFXPnExuhhLWM=
 github.com/teal-finance/incorruptible v0.0.0-20220603212550-d7124988df5b h1:p1M9nygSJe8a7Z1uOT6KlhTICzawqIoCPQxczkbFoOw=
 github.com/teal-finance/incorruptible v0.0.0-20220603212550-d7124988df5b/go.mod h1:IC9C5y8WcmGFY+lYN9FDutifO7Cdv6fA3LLUUEWG46A=
+github.com/teal-finance/notifier v1.0.0 h1:6R4EaSK12TpFCpKZRRnNvkcNFTR7ebbQPiBSLj1hGxk=
+github.com/teal-finance/notifier v1.0.0/go.mod h1:ARs60Js0UCD7wXvHqEUjcqxuw0FMgzodVDbdmIyOq8s=
 github.com/teal-finance/quid v0.0.0-20220614042305-0190e96a7c05 h1:yK1VwTPunv0+pwB6pSm0y7hHrO6vXWcHvsz3G6eYTnQ=
 github.com/teal-finance/quid v0.0.0-20220614042305-0190e96a7c05/go.mod h1:rzDpt0xququ1avBI+ltJXzOqz7c1Q5YS9/20SBP71p4=
 github.com/tenntenn/modver v1.0.1 h1:2klLppGhDgzJrScMpkj9Ujy3rXPUspSjAcev9tSEBgA=

@@ -210,6 +210,7 @@ require (
 	github.com/tdakkota/asciicheck v0.1.1 // indirect
 	github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a // indirect
 	github.com/teal-finance/incorruptible v0.0.0-20220603212550-d7124988df5b // indirect
+	github.com/teal-finance/notifier v1.0.0
 	github.com/teal-finance/quid v0.0.0-20220614042305-0190e96a7c05 // indirect
 	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 // indirect
 	github.com/tetafro/godot v1.4.11 // indirect

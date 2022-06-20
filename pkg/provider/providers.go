@@ -7,10 +7,11 @@
 package provider
 
 import (
-	"bytes"
 	"fmt"
-	"net/http"
+	"log"
+	"os"
 
+	"github.com/teal-finance/notifier"
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
@@ -20,84 +21,72 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-// AllProviders returns all active providers.
+// AllProviders returns all active providers (without alerter).
 func AllProviders() []rainbow.Provider {
 	// changing the order to not exhaust our solana/serum rpc quota
 	// used by zeta and psy
 	return []rainbow.Provider{
-		zetamarkets.Provider{},
-		zerox.Provider{},
+		deltaexchange.Provider{},
 		deribit.Provider{},
 		lyra.Provider{},
-		deltaexchange.Provider{},
 		psyoptions.Provider{},
+		zerox.Provider{},
+		zetamarkets.Provider{},
 	}
 }
 
-// AllProvidersWithAlert returns all active providers with an alerter on anormalities.
-func AllProvidersWithAlert(o Oracle) []rainbow.Provider {
-	err := o.Query("Hello, I am the new updated Oracle !")
-	if err != nil {
-		panic(err)
+// AllProvidersWithAlert returns all active providers with an alerter on anomalies.
+// Do not panic if alerter endpoint is not reachable.
+func AllProvidersWithAlert(n notifier.Notifier) []rainbow.Provider {
+	hello := ":wave: Hi, RainbowAlerter has just started"
+
+	host, err := os.Hostname()
+	if err == nil {
+		hello += " on " + host
 	}
 
-	// changing the order to not exhaust our solana/serum rpc quota
-	// used by zeta and psy
-	return []rainbow.Provider{
-		withAlert{zetamarkets.Provider{}, o},
-		withAlert{zerox.Provider{}, o},
-		withAlert{deribit.Provider{}, o},
-		withAlert{lyra.Provider{}, o},
-		withAlert{deltaexchange.Provider{}, o},
-		withAlert{psyoptions.Provider{}, o},
+	_ = n.Notify(hello)
+
+	providers := AllProviders()
+	for i, p := range providers {
+		providers[i] = alerter{p, n}
 	}
+
+	return providers
 }
 
-type withAlert struct {
-	prov   rainbow.Provider
-	oracle Oracle
+type alerter struct {
+	provider rainbow.Provider
+	notifier notifier.Notifier
 }
 
-func (p withAlert) Name() string {
-	return p.prov.Name()
+func (a alerter) Name() string {
+	return a.provider.Name()
 }
 
-func (p withAlert) Options() ([]rainbow.Option, error) {
-	options, err := p.prov.Options()
+func (a alerter) Options() ([]rainbow.Option, error) {
+	options, err := a.provider.Options()
 
 	go func() {
+		err := a.vet(options, err)
 		if err != nil {
-			p.oracle.Query(fmt.Sprintf(":alert: **%s**: api error: %s\n", p.Name(), err))
-			return
+			log.Print("ERR Alerter: ", err)
 		}
-
-		// TODO: Check other anomalies
 	}()
 
 	return options, err
 }
 
-type Oracle struct {
-	endpoint string
-}
-
-func NewOracle(endpoint string) Oracle {
-	return Oracle{endpoint}
-}
-
-func (o Oracle) Query(query string) error {
-	resp, err := http.Post(
-		o.endpoint,
-		"application/json",
-		bytes.NewBuffer([]byte(`{"username":"Oracle","text":"`+query+`"}`)),
-	)
+func (a alerter) vet(options []rainbow.Option, err error) error {
 	if err != nil {
-		return err
+		return a.notifier.Notify(fmt.Sprintf(":alert: **%s**: API error: %s\n", a.Name(), err))
 	}
-	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("framateam.org returned status code %d", resp.StatusCode)
+	if len(options) == 0 {
+		return a.notifier.Notify(fmt.Sprintf(":question: **%s**: no options\n", a.Name()))
 	}
+
+	// TODO: Check other anomalies
+
 	return nil
 }
