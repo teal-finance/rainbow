@@ -79,15 +79,26 @@ func main() {
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
 
+	web := webserver.WebServer{
+		Dir:        *wwwDir,
+		ResErr:     g.ResErr,
+		Redirect:   "/",
+		Notifier:   nil,
+		FormLimits: webserver.DefaultFormLimits(),
+	}
+	if *form != "" {
+		web.Notifier = mattermost.NewNotifier(*form)
+	}
+
 	// Static website: set the cookie only when visiting index.html
 	c := g.Checker
-	web := webserver.WebServer{Dir: *wwwDir, ResErr: g.ResErr}
 	r.With(c.Set).NotFound(web.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
 	r.Get("/favicon.ico", web.ServeFile("favicon.ico", "image/x-icon"))
 	r.Get("/favicon.png", web.ServeFile("favicon.png", "image/png"))
 	r.Get("/preview.jpg", web.ServeFile("preview.jpg", "image/jpeg"))
 	r.With(c.Chk).Get("/js/*", web.ServeDir("text/javascript; charset=utf-8"))
 	r.With(c.Chk).Get("/assets/*", web.ServeAssets())
+	r.With(c.Chk).Post("/", web.WebForm()) // process filled contact form et forward to Mattermost
 
 	r.Route("/v0", func(r chi.Router) {
 		h := api.Handler{Service: s}
