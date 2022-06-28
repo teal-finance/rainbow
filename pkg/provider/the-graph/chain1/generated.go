@@ -810,13 +810,9 @@ func HardCoded(
 	ctx context.Context,
 	client graphql.Client,
 ) (*HardCodedResponse, error) {
-	var err error
-
-	var retval HardCodedResponse
-	err = client.MakeRequest(
-		ctx,
-		"HardCoded",
-		`
+	req := &graphql.Request{
+		OpName: "HardCoded",
+		Query: `
 query HardCoded {
 	Chain1_swaps(skip: 0, first: 100, orderBy: timestamp, orderDirection: desc, where: {timestamp_gt:1650000000}) {
 		id
@@ -851,10 +847,19 @@ query HardCoded {
 	}
 }
 `,
-		&retval,
-		nil,
+	}
+	var err error
+
+	var data HardCodedResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
 	)
-	return &retval, err
+
+	return &data, err
 }
 
 func WithArgs(
@@ -866,20 +871,9 @@ func WithArgs(
 	orderDirection OrderDirection,
 	where Swap_filter,
 ) (*WithArgsResponse, error) {
-	__input := __WithArgsInput{
-		Skip:           skip,
-		First:          first,
-		OrderBy:        orderBy,
-		OrderDirection: orderDirection,
-		Where:          where,
-	}
-	var err error
-
-	var retval WithArgsResponse
-	err = client.MakeRequest(
-		ctx,
-		"WithArgs",
-		`
+	req := &graphql.Request{
+		OpName: "WithArgs",
+		Query: `
 query WithArgs ($skip: Int, $first: Int, $orderBy: Swap_orderBy, $orderDirection: OrderDirection, $where: Swap_filter) {
 	Chain1_swaps(skip: $skip, first: $first, orderBy: $orderBy, orderDirection: $orderDirection, where: $where) {
 		id
@@ -914,8 +908,24 @@ query WithArgs ($skip: Int, $first: Int, $orderBy: Swap_orderBy, $orderDirection
 	}
 }
 `,
-		&retval,
-		&__input,
+		Variables: &__WithArgsInput{
+			Skip:           skip,
+			First:          first,
+			OrderBy:        orderBy,
+			OrderDirection: orderDirection,
+			Where:          where,
+		},
+	}
+	var err error
+
+	var data WithArgsResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
 	)
-	return &retval, err
+
+	return &data, err
 }

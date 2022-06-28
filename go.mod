@@ -3,7 +3,7 @@ module github.com/teal-finance/rainbow
 go 1.18
 
 require (
-	github.com/Khan/genqlient v0.4.0
+	github.com/Khan/genqlient v0.5.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/ethereum/go-ethereum v1.10.19
 	github.com/friendsofgo/graphiql v0.2.2

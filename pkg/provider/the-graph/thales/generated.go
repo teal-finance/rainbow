@@ -623,16 +623,9 @@ func Market(
 	client graphql.Client,
 	id string,
 ) (*MarketResponse, error) {
-	__input := __MarketInput{
-		Id: id,
-	}
-	var err error
-
-	var retval MarketResponse
-	err = client.MakeRequest(
-		ctx,
-		"Market",
-		`
+	req := &graphql.Request{
+		OpName: "Market",
+		Query: `
 query Market ($id: ID!) {
 	market(id: $id) {
 		timestamp
@@ -652,10 +645,22 @@ query Market ($id: ID!) {
 	}
 }
 `,
-		&retval,
-		&__input,
+		Variables: &__MarketInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data MarketResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
 	)
-	return &retval, err
+
+	return &data, err
 }
 
 func Markets(
@@ -665,18 +670,9 @@ func Markets(
 	first int,
 	t int64,
 ) (*MarketsResponse, error) {
-	__input := __MarketsInput{
-		Skip:  skip,
-		First: first,
-		T:     t,
-	}
-	var err error
-
-	var retval MarketsResponse
-	err = client.MakeRequest(
-		ctx,
-		"Markets",
-		`
+	req := &graphql.Request{
+		OpName: "Markets",
+		Query: `
 query Markets ($skip: Int, $first: Int, $t: BigInt) {
 	markets(skip: $skip, first: $first, orderBy: timestamp, orderDirection: desc, where: {timestamp_gt:$t}) {
 		id
@@ -697,10 +693,24 @@ query Markets ($skip: Int, $first: Int, $t: BigInt) {
 	}
 }
 `,
-		&retval,
-		&__input,
+		Variables: &__MarketsInput{
+			Skip:  skip,
+			First: first,
+			T:     t,
+		},
+	}
+	var err error
+
+	var data MarketsResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
 	)
-	return &retval, err
+
+	return &data, err
 }
 
 func RangedMarket(
@@ -708,16 +718,9 @@ func RangedMarket(
 	client graphql.Client,
 	id string,
 ) (*RangedMarketResponse, error) {
-	__input := __RangedMarketInput{
-		Id: id,
-	}
-	var err error
-
-	var retval RangedMarketResponse
-	err = client.MakeRequest(
-		ctx,
-		"RangedMarket",
-		`
+	req := &graphql.Request{
+		OpName: "RangedMarket",
+		Query: `
 query RangedMarket ($id: ID!) {
 	rangedMarket(id: $id) {
 		timestamp
@@ -767,10 +770,22 @@ query RangedMarket ($id: ID!) {
 	}
 }
 `,
-		&retval,
-		&__input,
+		Variables: &__RangedMarketInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data RangedMarketResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
 	)
-	return &retval, err
+
+	return &data, err
 }
 
 func RangedMarkets(
@@ -780,18 +795,9 @@ func RangedMarkets(
 	first int,
 	t int64,
 ) (*RangedMarketsResponse, error) {
-	__input := __RangedMarketsInput{
-		Skip:  skip,
-		First: first,
-		T:     t,
-	}
-	var err error
-
-	var retval RangedMarketsResponse
-	err = client.MakeRequest(
-		ctx,
-		"RangedMarkets",
-		`
+	req := &graphql.Request{
+		OpName: "RangedMarkets",
+		Query: `
 query RangedMarkets ($skip: Int, $first: Int, $t: BigInt) {
 	rangedMarkets(skip: $skip, first: $first, orderBy: timestamp, orderDirection: desc, where: {timestamp_gt:$t}) {
 		id
@@ -842,8 +848,22 @@ query RangedMarkets ($skip: Int, $first: Int, $t: BigInt) {
 	}
 }
 `,
-		&retval,
-		&__input,
+		Variables: &__RangedMarketsInput{
+			Skip:  skip,
+			First: first,
+			T:     t,
+		},
+	}
+	var err error
+
+	var data RangedMarketsResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
 	)
-	return &retval, err
+
+	return &data, err
 }

@@ -105,7 +105,7 @@ Example:
 ```go
 ctx := context.Background()
 client := graphql.NewClient("https://api.github.com/graphql", http.DefaultClient)
-resp, err := getUser(ctx, client, "benjaminjkraft")
+resp, err := getUser(ctx, client, "bob")
 fmt.Println(resp.User.Name, err)
 ```
 
