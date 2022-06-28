@@ -1,8 +1,8 @@
-# List the available linters:
-# go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest linters --no-config
+# List all linters:
+# go run github.com/golangci/golangci-lint/cmd/golangci-lint linters --no-config
 
-# Run the last version:
-# go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
+# Run:
+# go run github.com/golangci/golangci-lint/cmd/golangci-lint run --fix
 
 # Documentation:
 # https://golangci-lint.run/usage/configuration/#run-configuration
@@ -43,8 +43,84 @@ output:
   sort-results: true
 
 linters:
-  enable-all: true
-
+  enable:
+    # Alternatives for golint 
+    - revive            # drop-in replacement of golint
+    - stylecheck        # replacement for golint
+    # Code complexity
+    - gocognit          # compute the cognitive complexity of functions
+    - gocyclo           # check the cyclomatic complexity of functions
+    # Go code format
+    - gofmt             # check if code was gofmt-ed and check for code simplification
+    - gofumpt           # check if  code was gofumpt-ed.
+    - goimports         # fix imports and format code in the same style as gofmt.
+    - maintidx          # measure the maintainability index of each function.
+    # Context
+    - containedctx      # detect struct contained context.Context field
+    - contextcheck      # check the function whether use a non-inherited context
+    - noctx             # noctx finds sending http request without context.Context
+    # Other linters
+    - asciicheck        # check code does not contain non-ASCII identifiers
+    - bidichk           # check for dangerous unicode character sequences
+    - bodyclose         # check if HTTP response body is closed successfully
+    - cyclop            # check function and package cyclomatic complexity
+    - deadcode          # find unused code
+    - decorder          # check declaration order and count of types, constants, variables and functions
+    - depguard          # check if package imports are in a list of acceptable packages
+    - dogsled           # check assignments with too many blank identifiers (e.g. x, _, _, _, := f())
+    - dupl              # find duplicated code
+    - durationcheck     # check for two durations multiplied together
+    - errchkjson        # check types passed to the json encoding functions. Reports unsupported types and optionally reports occasions, where the check for the returned error can be omitted.
+    - errname           # check sentinel errors are prefixed with the `Err` and error types are suffixed with the `Error`
+    - errorlint         # find code that will cause problems with the error wrapping scheme introduced in Go 1.13
+    - execinquery       # check query string in Query function which reads your Go src files
+    - exhaustive        # check exhaustiveness of enum switch statements
+    - exportloopref     # check for pointers to enclosing loop variables
+    - forbidigo         # forbids identifiers
+    - forcetypeassert   # finds forced type assertions
+    - funlen            # detect long functions
+    - gochecknoinits    # check that no init functions are present in Go code
+    - goconst           # find repeated strings that could be replaced by a constant
+    - gocritic          # check bugs, performance and style issues
+    - godot             # check if comments end in a period
+    - goheader          # check if file header matches to pattern
+    - gomoddirectives   # manage the use of 'replace', 'retract', and 'excludes' directives in go.mod.
+    - gomodguard        # allow and block list linter for direct Go module dependencies. This is different from depguard where there are different block types for example version constraints and module recommendations.
+    - goprintffuncname  # check printf-like functions are named with `f` at the end
+    - gosec             # inspect source code for security problems
+    - gosimple          # simplify code
+    - govet             # report suspicious constructs, such as Printf calls whose arguments do not align with the format string
+    - grouper           # Aanalyze expression groups
+    - ifshort           # check code uses short syntax for if-statements whenever possible
+    - importas          # enforce consistent import aliases
+    - ineffassign       # detect when assignments to existing variables are not used
+    - ireturn           # accept Interfaces, return Concrete Types
+    - makezero          # find slice declarations with non-zero initial length
+    - misspell          # find commonly misspelled English words in comments
+    - nakedret          # find naked returns in functions greater than a specified function length
+    - nestif            # report deeply nested if statements
+    - nilerr            # find the code that returns nil even if it checks that the error is not nil
+    - nilnil            # chec there is no simultaneous return of `nil` error and an invalid value
+    - nolintlint        # reports ill-formed or insufficient nolint directives
+    - nosprintfhostport # check for misuse of Sprintf to construct a host with port in a URL
+    - prealloc          # find slice declarations that could potentially be preallocated
+    - predeclared       # find code that shadows one of Go's predeclared identifiers
+    - promlinter        # check Prometheus metrics naming via promlint
+    - rowserrcheck      # check whether Err of rows is checked successfully
+    - sqlclosecheck     # check that sql.Rows and sql.Stmt are closed.
+    - staticcheck       # apply a ton of static analysis checks
+    - structcheck       # find unused struct fields
+    - tenv              # detect using os.Setenv instead of t.Setenv since Go1.17
+    - thelper           # detect golang test helpers without t.Helper() call and checks the consistency of test helpers
+    - tparallel         # detect inappropriate usage of t.Parallel() method in your Go test codes
+    - typecheck         # check types
+    - unconvert         # remove unnecessary type conversions
+    - unparam           # report unused function parameters
+    - unused            # check for unused constants, variables, functions and types
+    - varcheck          # find unused global variables and constants
+    - wastedassign      # find wasted assignment statements
+    - whitespace        # detect leading and trailing whitespace
+  
   disable:
     # DEPRECATED
     - exhaustivestruct
