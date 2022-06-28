@@ -62,11 +62,11 @@ ENV GZIPPER_INCREMENTAL     0
 ENV GZIPPER_VERBOSE         0
 ENV GZIPPER_SKIP_COMPRESSED 1
 
-RUN set -x                                             &&\
-    ls -lA                                             &&\
-    sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  &&\
-    head .env                                          &&\
-    yarn build --base "$base"                          &&\
+RUN set -ex                                            ;\
+    ls -lA                                             ;\
+    sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  ;\
+    head .env                                          ;\
+    yarn build --base "$base"                          ;\
     yarn compress
 
 # --------------------------------------------------------------------
@@ -85,15 +85,15 @@ COPY pkg pkg
 
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
-RUN set -x                                                &&\
-    ls -lA                                                &&\
-    export GOOS=linux                                     &&\
-    export CGO_ENABLED=0                                  &&\
-    export GOFLAGS="-buildmode=pie -trimpath -modcacherw" &&\
-    export GOLDFLAGS="-linkmode=external -s -w"           &&\
-    go build ./cmd/server                                 &&\
-    ls -sh server                                         &&\
-    ldd server                                            &&\
+RUN set -ex                                               ;\
+    ls -lA                                                ;\
+    export GOOS=linux                                     ;\
+    export CGO_ENABLED=0                                  ;\
+    export GOFLAGS="-buildmode=pie -trimpath -modcacherw" ;\
+    export GOLDFLAGS="-linkmode=external -s -w"           ;\
+    go build ./cmd/server                                 ;\
+    ls -sh server                                         ;\
+    ldd server                                            ;\
     ./server -help  # smoke test
 
 # To go further in Go hardening and FIPS 140-2 certification:
@@ -110,10 +110,10 @@ WORKDIR /target
 
 # HTTPS root certificates (adds about 200 KB)
 # Create user & group files
-RUN set -x                                                  &&\
-    mkdir -p                                 etc/ssl/certs  &&\
-    cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs  &&\
-    echo "teal:x:$uid:$uid::/:" > etc/passwd                &&\
+RUN set -ex                                                 ;\
+    mkdir -p                                 etc/ssl/certs  ;\
+    cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs  ;\
+    echo "teal:x:$uid:$uid::/:" > etc/passwd                ;\
     echo "teal:x:$uid:"         > etc/group
 
 # Static website and back-end
