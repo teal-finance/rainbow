@@ -7,14 +7,16 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-type Blocks []Block
-type Block struct {
-	Expiry  string  `json:"expiry"`
-	Asset   string  `json:"asset"`
-	Strike  float64 `json:"strike"`
-	Type    string  `json:"type"`
-	Options []rainbow.Option
-}
+type (
+	Blocks []Block
+	Block  struct {
+		Expiry  string  `json:"expiry"`
+		Asset   string  `json:"asset"`
+		Strike  float64 `json:"strike"`
+		Type    string  `json:"type"`
+		Options []rainbow.Option
+	}
+)
 
 func buildCallPut(options []rainbow.Option) Blocks {
 	blocks := Blocks{}
