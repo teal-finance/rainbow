@@ -66,7 +66,8 @@ func buildCallPut(options []rainbow.Option) []Row {
 					call := Limit{}
 					put := Limit{}
 
-					for _, o := range optionsSameProvider {
+					for i := range optionsSameProvider {
+						o := &optionsSameProvider[i]
 						if o.Type == "PUT" {
 							put = newLimit(o)
 						} else {
@@ -150,7 +151,7 @@ func groupByProvider(options []rainbow.Option) (providerToOptions map[string][]r
 	return providerToOptions
 }
 
-func newLimit(o rainbow.Option) Limit {
+func newLimit(o *rainbow.Option) Limit {
 	bPx, bSz, aPx, aSz := rainbow.BestLimitHTML(o)
 	return Limit{
 		Bid: StrOrder{Price: bPx, Size: bSz},

@@ -66,33 +66,39 @@ func TestExpiries(t *testing.T) {
 }
 
 func TestNextNFridays(t *testing.T) {
-	tests := map[string]struct {
+	t.Parallel()
+
+	cases := []struct {
+		name string
 		t    time.Time
 		n    int
 		want []time.Time
-	}{
-		"one-month": {
-			t: time.Date(2020, time.January, 1, 0, 0, 0, 0, time.UTC),
-			n: 2,
-			want: []time.Time{
-				time.Date(2020, time.January, 10, 0, 0, 0, 0, time.UTC),
-				time.Date(2020, time.January, 17, 0, 0, 0, 0, time.UTC),
-			},
+	}{{
+		name: "one-month",
+		t:    time.Date(2020, time.January, 1, 0, 0, 0, 0, time.UTC),
+		n:    2,
+		want: []time.Time{
+			time.Date(2020, time.January, 10, 0, 0, 0, 0, time.UTC),
+			time.Date(2020, time.January, 17, 0, 0, 0, 0, time.UTC),
 		},
-		"two-months": {
-			t: time.Date(2021, time.January, 20, 0, 0, 0, 0, time.UTC),
-			n: 3,
-			want: []time.Time{
-				time.Date(2021, time.January, 29, 0, 0, 0, 0, time.UTC),
-				time.Date(2021, time.February, 05, 0, 0, 0, 0, time.UTC),
-				time.Date(2021, time.February, 12, 0, 0, 0, 0, time.UTC),
-			},
+	}, {
+		name: "two-months",
+		t:    time.Date(2021, time.January, 20, 0, 0, 0, 0, time.UTC),
+		n:    3,
+		want: []time.Time{
+			time.Date(2021, time.January, 29, 0, 0, 0, 0, time.UTC),
+			time.Date(2021, time.February, 5, 0, 0, 0, 0, time.UTC),
+			time.Date(2021, time.February, 12, 0, 0, 0, 0, time.UTC),
 		},
-	}
-	for name, tt := range tests {
-		t.Run(name, func(t *testing.T) {
-			got := NextNFridays(tt.t, tt.n)
-			assert.ElementsMatch(t, tt.want, got)
+	}}
+
+	for _, c := range cases {
+		c := c // required for parallel test
+
+		t.Run(c.name, func(t *testing.T) {
+			t.Parallel()
+			got := NextNFridays(c.t, c.n)
+			assert.ElementsMatch(t, c.want, got)
 		})
 	}
 }

@@ -31,24 +31,24 @@ const (
 	WBTCDEcimals    = 8
 )
 
-func extract(i opyn.OptionsOtokensOToken) (optionType, expiry string, strike float64) {
+func extract(o *opyn.OptionsOtokensOToken) (optionType, expiry string, strike float64) {
 	optionType = "CALL"
-	if i.IsPut {
+	if o.IsPut {
 		optionType = "PUT"
 	}
 
-	seconds, err := strconv.ParseInt(i.ExpiryTimestamp, 10, 64)
+	seconds, err := strconv.ParseInt(o.ExpiryTimestamp, 10, 64)
 	if err != nil {
-		log.Printf("ERR Opyn ExpiryTimestamp: %v from %+v", err, i)
+		log.Printf("ERR Opyn ExpiryTimestamp: %v from %+v", err, o)
 		expiry = ""
 	} else {
 		expiry = time.Unix(seconds, 0).Format("2006-01-02 15:04:05")
 	}
 
 	// thought the USDCdecimals were correct but apparently not (whatever)
-	strike, err = convertFromSolidity(i.StrikePrice, OTokensDecimals)
+	strike, err = convertFromSolidity(o.StrikePrice, OTokensDecimals)
 	if err != nil {
-		log.Printf("ERR Strike: %v from %+v", err, i)
+		log.Printf("ERR Strike: %v from %+v", err, o)
 		strike = 0
 	}
 
@@ -143,7 +143,6 @@ func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount f
 		}
 
 		q, err = getQuote(side, sellToken, buyToken, amount, decimals)
-
 		if err == nil {
 			sr.success(n)
 			break
@@ -203,24 +202,25 @@ type Record struct {
 }
 
 func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount float64) ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
+	options := make([]rainbow.Option, 0, len(instruments))
 
-	sr := defaultStubbornRequester
+	requester := defaultStubbornRequester
 
-	for _, i := range instruments {
-		optionType, expiry, strike := extract(i)
+	for i := range instruments {
+		instr := &instruments[i]
+		optionType, expiry, strike := extract(instr)
 
 		var decimals int
 		var quoteCcy string
 		if provider == "Opyn" {
 			decimals = OTokensDecimals
-			quoteCcy = i.StrikeAsset.Symbol
+			quoteCcy = instr.StrikeAsset.Symbol
 		}
 
 		o := rainbow.Option{
-			Name:          i.Name,
+			Name:          instr.Name,
 			Type:          optionType,
-			Asset:         i.UnderlyingAsset.Symbol,
+			Asset:         instr.UnderlyingAsset.Symbol,
 			Expiry:        expiry,
 			Strike:        strike,
 			ExchangeType:  "DEX",
@@ -232,14 +232,14 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 			Ask:           nil,
 		}
 
-		b, err := sr.getQuote("BUY", i.Id, USDC, amount, decimals)
+		bid, err := requester.getQuote("BUY", instr.Id, USDC, amount, decimals)
 		if err != nil {
 			log.Print("getQuote BUY ", err)
 			return nil, err
 		}
 
-		if b.Price != "" {
-			price, err := strconv.ParseFloat(b.Price, 64)
+		if bid.Price != "" {
+			price, err := strconv.ParseFloat(bid.Price, 64)
 			if err != nil {
 				log.Print("WARN price ", err)
 				continue
@@ -256,14 +256,14 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 			})
 		}
 
-		a, err := sr.getQuote("SELL", USDC, i.Id, amount, decimals)
+		ask, err := requester.getQuote("SELL", USDC, instr.Id, amount, decimals)
 		if err != nil {
 			log.Print("getQuote SELL ", err)
 			return nil, err
 		}
 
-		if a.Price != "" {
-			price, err := strconv.ParseFloat(a.Price, 64)
+		if ask.Price != "" {
+			price, err := strconv.ParseFloat(ask.Price, 64)
 			if err != nil {
 				return nil, err
 			}
@@ -282,7 +282,7 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 		options = append(options, o)
 	}
 
-	sr.logStats()
+	requester.logStats()
 
 	return options, nil
 }

@@ -68,12 +68,12 @@ func (h Handler) fieldsCallPut() *graphql.Field {
 				Type: graphql.NewList(graphql.String),
 			},
 		},
-		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		Resolve: func(params graphql.ResolveParams) (any, error) {
 			// parse args
 			args := rainbow.StoreArgs{}
 
 			if v, ok := params.Args["assets"]; ok {
-				assets := v.([]interface{})
+				assets := v.([]any)
 				args.Assets = make([]string, len(assets))
 				for i, a := range assets {
 					args.Assets[i] = a.(string)
@@ -81,7 +81,7 @@ func (h Handler) fieldsCallPut() *graphql.Field {
 			}
 
 			if v, ok := params.Args["expiries"]; ok {
-				expiries := v.([]interface{})
+				expiries := v.([]any)
 				args.Expiries = make([]string, len(expiries))
 				for i, e := range expiries {
 					args.Expiries[i] = e.(string)
@@ -89,7 +89,7 @@ func (h Handler) fieldsCallPut() *graphql.Field {
 			}
 
 			if v, ok := params.Args["providers"]; ok {
-				providers := v.([]interface{})
+				providers := v.([]any)
 				args.Providers = make([]string, len(providers))
 				for i, p := range providers {
 					args.Providers[i] = p.(string)

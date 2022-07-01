@@ -7,14 +7,16 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-type Blocks []Block
-type Block struct {
-	Expiry  string  `json:"expiry"`
-	Asset   string  `json:"asset"`
-	Strike  float64 `json:"strike"`
-	Type    string  `json:"type"`
-	Options []rainbow.Option
-}
+type (
+	Blocks []Block
+	Block  struct {
+		Expiry  string  `json:"expiry"`
+		Asset   string  `json:"asset"`
+		Strike  float64 `json:"strike"`
+		Type    string  `json:"type"`
+		Options []rainbow.Option
+	}
+)
 
 func buildCallPut(options []rainbow.Option) Blocks {
 	blocks := Blocks{}
@@ -22,7 +24,7 @@ func buildCallPut(options []rainbow.Option) Blocks {
 		asset = sanitizeAsset(asset)
 
 		for date, optionsSameExpiry := range groupByExpiry(optionsSameAsset) {
-			expiry := date //sanitizeDate(date)
+			expiry := date // sanitizeDate(date)
 
 			for strike, optionsSameStrike := range groupByStrike(optionsSameExpiry) {
 				for t, optionsSameType := range groupByType(optionsSameStrike) {
@@ -34,7 +36,6 @@ func buildCallPut(options []rainbow.Option) Blocks {
 						Options: optionsSameType,
 					})
 				}
-
 			}
 		}
 	}
@@ -123,7 +124,7 @@ func sanitizeDate(date string) string {
 	if err != nil {
 		log.Printf("WARN prettyDate() cannot parse %q", date)
 
-		return date //maybe we should properly fail, ¯\_(ツ)_/¯
+		return date // maybe we should properly fail, ¯\_(ツ)_/¯
 	}
 
 	return t.Format("Jan _2")

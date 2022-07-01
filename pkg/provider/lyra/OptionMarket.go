@@ -145,7 +145,7 @@ func bindLyra(address common.Address, caller bind.ContractCaller, transactor bin
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Lyra *LyraRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Lyra *LyraRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Lyra.Contract.LyraCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -156,7 +156,7 @@ func (_Lyra *LyraRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, err
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Lyra *LyraRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Lyra *LyraRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Lyra.Contract.LyraTransactor.contract.Transact(opts, method, params...)
 }
 
@@ -164,7 +164,7 @@ func (_Lyra *LyraRaw) Transact(opts *bind.TransactOpts, method string, params ..
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Lyra *LyraCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Lyra *LyraCallerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Lyra.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -175,7 +175,7 @@ func (_Lyra *LyraTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transa
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Lyra *LyraTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Lyra *LyraTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Lyra.Contract.contract.Transact(opts, method, params...)
 }
 
@@ -183,7 +183,7 @@ func (_Lyra *LyraTransactorRaw) Transact(opts *bind.TransactOpts, method string,
 //
 // Solidity: function boardToPriceAtExpiry(uint256 ) view returns(uint256)
 func (_Lyra *LyraCaller) BoardToPriceAtExpiry(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyra.contract.Call(opts, &out, "boardToPriceAtExpiry", arg0)
 
 	if err != nil {
@@ -214,7 +214,7 @@ func (_Lyra *LyraCallerSession) BoardToPriceAtExpiry(arg0 *big.Int) (*big.Int, e
 //
 // Solidity: function getBoardListings(uint256 boardId) view returns(uint256[])
 func (_Lyra *LyraCaller) GetBoardListings(opts *bind.CallOpts, boardId *big.Int) ([]*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyra.contract.Call(opts, &out, "getBoardListings", boardId)
 
 	if err != nil {
@@ -245,7 +245,7 @@ func (_Lyra *LyraCallerSession) GetBoardListings(boardId *big.Int) ([]*big.Int, 
 //
 // Solidity: function getLiveBoards() view returns(uint256[] _liveBoards)
 func (_Lyra *LyraCaller) GetLiveBoards(opts *bind.CallOpts) ([]*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyra.contract.Call(opts, &out, "getLiveBoards")
 
 	if err != nil {
@@ -276,7 +276,7 @@ func (_Lyra *LyraCallerSession) GetLiveBoards() ([]*big.Int, error) {
 //
 // Solidity: function listingToBaseReturnedRatio(uint256 ) view returns(uint256)
 func (_Lyra *LyraCaller) ListingToBaseReturnedRatio(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyra.contract.Call(opts, &out, "listingToBaseReturnedRatio", arg0)
 
 	if err != nil {
@@ -307,7 +307,7 @@ func (_Lyra *LyraCallerSession) ListingToBaseReturnedRatio(arg0 *big.Int) (*big.
 //
 // Solidity: function maxExpiryTimestamp() view returns(uint256)
 func (_Lyra *LyraCaller) MaxExpiryTimestamp(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyra.contract.Call(opts, &out, "maxExpiryTimestamp")
 
 	if err != nil {
@@ -343,7 +343,7 @@ func (_Lyra *LyraCaller) OptionBoards(opts *bind.CallOpts, arg0 *big.Int) (struc
 	Iv     *big.Int
 	Frozen bool
 }, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyra.contract.Call(opts, &out, "optionBoards", arg0)
 
 	outstruct := new(struct {
@@ -402,7 +402,7 @@ func (_Lyra *LyraCaller) OptionListings(opts *bind.CallOpts, arg0 *big.Int) (str
 	ShortPut  *big.Int
 	BoardId   *big.Int
 }, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyra.contract.Call(opts, &out, "optionListings", arg0)
 
 	outstruct := new(struct {
@@ -774,7 +774,7 @@ type LyraBoardBaseIvSet struct {
 // Solidity: event BoardBaseIvSet(uint256 indexed boardId, uint256 baseIv)
 func (_Lyra *LyraFilterer) FilterBoardBaseIvSet(opts *bind.FilterOpts, boardId []*big.Int) (*LyraBoardBaseIvSetIterator, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
@@ -791,7 +791,7 @@ func (_Lyra *LyraFilterer) FilterBoardBaseIvSet(opts *bind.FilterOpts, boardId [
 // Solidity: event BoardBaseIvSet(uint256 indexed boardId, uint256 baseIv)
 func (_Lyra *LyraFilterer) WatchBoardBaseIvSet(opts *bind.WatchOpts, sink chan<- *LyraBoardBaseIvSet, boardId []*big.Int) (event.Subscription, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
@@ -920,7 +920,7 @@ type LyraBoardCreated struct {
 // Solidity: event BoardCreated(uint256 indexed boardId, uint256 expiry, uint256 baseIv)
 func (_Lyra *LyraFilterer) FilterBoardCreated(opts *bind.FilterOpts, boardId []*big.Int) (*LyraBoardCreatedIterator, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
@@ -937,7 +937,7 @@ func (_Lyra *LyraFilterer) FilterBoardCreated(opts *bind.FilterOpts, boardId []*
 // Solidity: event BoardCreated(uint256 indexed boardId, uint256 expiry, uint256 baseIv)
 func (_Lyra *LyraFilterer) WatchBoardCreated(opts *bind.WatchOpts, sink chan<- *LyraBoardCreated, boardId []*big.Int) (event.Subscription, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
@@ -1065,7 +1065,7 @@ type LyraBoardFrozen struct {
 // Solidity: event BoardFrozen(uint256 indexed boardId, bool frozen)
 func (_Lyra *LyraFilterer) FilterBoardFrozen(opts *bind.FilterOpts, boardId []*big.Int) (*LyraBoardFrozenIterator, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
@@ -1082,7 +1082,7 @@ func (_Lyra *LyraFilterer) FilterBoardFrozen(opts *bind.FilterOpts, boardId []*b
 // Solidity: event BoardFrozen(uint256 indexed boardId, bool frozen)
 func (_Lyra *LyraFilterer) WatchBoardFrozen(opts *bind.WatchOpts, sink chan<- *LyraBoardFrozen, boardId []*big.Int) (event.Subscription, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
@@ -1214,7 +1214,7 @@ type LyraBoardLiquidated struct {
 // Solidity: event BoardLiquidated(uint256 indexed boardId, uint256 totalUserLongProfitQuote, uint256 totalBoardLongCallCollateral, uint256 totalBoardLongPutCollateral, uint256 totalAMMShortCallProfitBase, uint256 totalAMMShortPutProfitQuote)
 func (_Lyra *LyraFilterer) FilterBoardLiquidated(opts *bind.FilterOpts, boardId []*big.Int) (*LyraBoardLiquidatedIterator, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
@@ -1231,7 +1231,7 @@ func (_Lyra *LyraFilterer) FilterBoardLiquidated(opts *bind.FilterOpts, boardId 
 // Solidity: event BoardLiquidated(uint256 indexed boardId, uint256 totalUserLongProfitQuote, uint256 totalBoardLongCallCollateral, uint256 totalBoardLongPutCollateral, uint256 totalAMMShortCallProfitBase, uint256 totalAMMShortPutProfitQuote)
 func (_Lyra *LyraFilterer) WatchBoardLiquidated(opts *bind.WatchOpts, sink chan<- *LyraBoardLiquidated, boardId []*big.Int) (event.Subscription, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
@@ -1361,11 +1361,11 @@ type LyraListingAdded struct {
 // Solidity: event ListingAdded(uint256 indexed boardId, uint256 indexed listingId, uint256 strike, uint256 skew)
 func (_Lyra *LyraFilterer) FilterListingAdded(opts *bind.FilterOpts, boardId []*big.Int, listingId []*big.Int) (*LyraListingAddedIterator, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
-	var listingIdRule []interface{}
+	var listingIdRule []any
 	for _, listingIdItem := range listingId {
 		listingIdRule = append(listingIdRule, listingIdItem)
 	}
@@ -1382,11 +1382,11 @@ func (_Lyra *LyraFilterer) FilterListingAdded(opts *bind.FilterOpts, boardId []*
 // Solidity: event ListingAdded(uint256 indexed boardId, uint256 indexed listingId, uint256 strike, uint256 skew)
 func (_Lyra *LyraFilterer) WatchListingAdded(opts *bind.WatchOpts, sink chan<- *LyraListingAdded, boardId []*big.Int, listingId []*big.Int) (event.Subscription, error) {
 
-	var boardIdRule []interface{}
+	var boardIdRule []any
 	for _, boardIdItem := range boardId {
 		boardIdRule = append(boardIdRule, boardIdItem)
 	}
-	var listingIdRule []interface{}
+	var listingIdRule []any
 	for _, listingIdItem := range listingId {
 		listingIdRule = append(listingIdRule, listingIdItem)
 	}
@@ -1514,7 +1514,7 @@ type LyraListingSkewSet struct {
 // Solidity: event ListingSkewSet(uint256 indexed listingId, uint256 skew)
 func (_Lyra *LyraFilterer) FilterListingSkewSet(opts *bind.FilterOpts, listingId []*big.Int) (*LyraListingSkewSetIterator, error) {
 
-	var listingIdRule []interface{}
+	var listingIdRule []any
 	for _, listingIdItem := range listingId {
 		listingIdRule = append(listingIdRule, listingIdItem)
 	}
@@ -1531,7 +1531,7 @@ func (_Lyra *LyraFilterer) FilterListingSkewSet(opts *bind.FilterOpts, listingId
 // Solidity: event ListingSkewSet(uint256 indexed listingId, uint256 skew)
 func (_Lyra *LyraFilterer) WatchListingSkewSet(opts *bind.WatchOpts, sink chan<- *LyraListingSkewSet, listingId []*big.Int) (event.Subscription, error) {
 
-	var listingIdRule []interface{}
+	var listingIdRule []any
 	for _, listingIdItem := range listingId {
 		listingIdRule = append(listingIdRule, listingIdItem)
 	}
@@ -1659,11 +1659,11 @@ type LyraOwnershipTransferred struct {
 // Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
 func (_Lyra *LyraFilterer) FilterOwnershipTransferred(opts *bind.FilterOpts, previousOwner []common.Address, newOwner []common.Address) (*LyraOwnershipTransferredIterator, error) {
 
-	var previousOwnerRule []interface{}
+	var previousOwnerRule []any
 	for _, previousOwnerItem := range previousOwner {
 		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
 	}
-	var newOwnerRule []interface{}
+	var newOwnerRule []any
 	for _, newOwnerItem := range newOwner {
 		newOwnerRule = append(newOwnerRule, newOwnerItem)
 	}
@@ -1680,11 +1680,11 @@ func (_Lyra *LyraFilterer) FilterOwnershipTransferred(opts *bind.FilterOpts, pre
 // Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
 func (_Lyra *LyraFilterer) WatchOwnershipTransferred(opts *bind.WatchOpts, sink chan<- *LyraOwnershipTransferred, previousOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
 
-	var previousOwnerRule []interface{}
+	var previousOwnerRule []any
 	for _, previousOwnerItem := range previousOwner {
 		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
 	}
-	var newOwnerRule []interface{}
+	var newOwnerRule []any
 	for _, newOwnerItem := range newOwner {
 		newOwnerRule = append(newOwnerRule, newOwnerItem)
 	}
@@ -1815,15 +1815,15 @@ type LyraPositionClosed struct {
 // Solidity: event PositionClosed(address indexed trader, uint256 indexed listingId, uint8 indexed tradeType, uint256 amount, uint256 totalCost)
 func (_Lyra *LyraFilterer) FilterPositionClosed(opts *bind.FilterOpts, trader []common.Address, listingId []*big.Int, tradeType []uint8) (*LyraPositionClosedIterator, error) {
 
-	var traderRule []interface{}
+	var traderRule []any
 	for _, traderItem := range trader {
 		traderRule = append(traderRule, traderItem)
 	}
-	var listingIdRule []interface{}
+	var listingIdRule []any
 	for _, listingIdItem := range listingId {
 		listingIdRule = append(listingIdRule, listingIdItem)
 	}
-	var tradeTypeRule []interface{}
+	var tradeTypeRule []any
 	for _, tradeTypeItem := range tradeType {
 		tradeTypeRule = append(tradeTypeRule, tradeTypeItem)
 	}
@@ -1840,15 +1840,15 @@ func (_Lyra *LyraFilterer) FilterPositionClosed(opts *bind.FilterOpts, trader []
 // Solidity: event PositionClosed(address indexed trader, uint256 indexed listingId, uint8 indexed tradeType, uint256 amount, uint256 totalCost)
 func (_Lyra *LyraFilterer) WatchPositionClosed(opts *bind.WatchOpts, sink chan<- *LyraPositionClosed, trader []common.Address, listingId []*big.Int, tradeType []uint8) (event.Subscription, error) {
 
-	var traderRule []interface{}
+	var traderRule []any
 	for _, traderItem := range trader {
 		traderRule = append(traderRule, traderItem)
 	}
-	var listingIdRule []interface{}
+	var listingIdRule []any
 	for _, listingIdItem := range listingId {
 		listingIdRule = append(listingIdRule, listingIdItem)
 	}
-	var tradeTypeRule []interface{}
+	var tradeTypeRule []any
 	for _, tradeTypeItem := range tradeType {
 		tradeTypeRule = append(tradeTypeRule, tradeTypeItem)
 	}
@@ -1979,15 +1979,15 @@ type LyraPositionOpened struct {
 // Solidity: event PositionOpened(address indexed trader, uint256 indexed listingId, uint8 indexed tradeType, uint256 amount, uint256 totalCost)
 func (_Lyra *LyraFilterer) FilterPositionOpened(opts *bind.FilterOpts, trader []common.Address, listingId []*big.Int, tradeType []uint8) (*LyraPositionOpenedIterator, error) {
 
-	var traderRule []interface{}
+	var traderRule []any
 	for _, traderItem := range trader {
 		traderRule = append(traderRule, traderItem)
 	}
-	var listingIdRule []interface{}
+	var listingIdRule []any
 	for _, listingIdItem := range listingId {
 		listingIdRule = append(listingIdRule, listingIdItem)
 	}
-	var tradeTypeRule []interface{}
+	var tradeTypeRule []any
 	for _, tradeTypeItem := range tradeType {
 		tradeTypeRule = append(tradeTypeRule, tradeTypeItem)
 	}
@@ -2004,15 +2004,15 @@ func (_Lyra *LyraFilterer) FilterPositionOpened(opts *bind.FilterOpts, trader []
 // Solidity: event PositionOpened(address indexed trader, uint256 indexed listingId, uint8 indexed tradeType, uint256 amount, uint256 totalCost)
 func (_Lyra *LyraFilterer) WatchPositionOpened(opts *bind.WatchOpts, sink chan<- *LyraPositionOpened, trader []common.Address, listingId []*big.Int, tradeType []uint8) (event.Subscription, error) {
 
-	var traderRule []interface{}
+	var traderRule []any
 	for _, traderItem := range trader {
 		traderRule = append(traderRule, traderItem)
 	}
-	var listingIdRule []interface{}
+	var listingIdRule []any
 	for _, listingIdItem := range listingId {
 		listingIdRule = append(listingIdRule, listingIdItem)
 	}
-	var tradeTypeRule []interface{}
+	var tradeTypeRule []any
 	for _, tradeTypeItem := range tradeType {
 		tradeTypeRule = append(tradeTypeRule, tradeTypeItem)
 	}

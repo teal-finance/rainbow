@@ -232,7 +232,7 @@ func bindLyrap(address common.Address, caller bind.ContractCaller, transactor bi
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Lyrap *LyrapRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Lyrap *LyrapRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Lyrap.Contract.LyrapCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -243,7 +243,7 @@ func (_Lyrap *LyrapRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, e
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Lyrap *LyrapRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Lyrap *LyrapRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Lyrap.Contract.LyrapTransactor.contract.Transact(opts, method, params...)
 }
 
@@ -251,7 +251,7 @@ func (_Lyrap *LyrapRaw) Transact(opts *bind.TransactOpts, method string, params 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Lyrap *LyrapCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Lyrap *LyrapCallerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Lyrap.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -262,7 +262,7 @@ func (_Lyrap *LyrapTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Tran
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Lyrap *LyrapTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Lyrap *LyrapTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Lyrap.Contract.contract.Transact(opts, method, params...)
 }
 
@@ -270,7 +270,7 @@ func (_Lyrap *LyrapTransactorRaw) Transact(opts *bind.TransactOpts, method strin
 //
 // Solidity: function _getPremiumForTrade((uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256) listing, (uint256,uint256,uint256,bool,uint256[]) board, (bool,uint256,uint256,uint256,(uint256,uint256,uint256,uint256)) trade, (uint256,uint256,uint256,uint256,uint256,uint256,int256,int256,uint256,uint256) pricingGlobals, bool isCall) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256) premium)
 func (_Lyrap *LyrapCaller) InternalGetPremiumForTrade(opts *bind.CallOpts, listing IOptionMarketOptionListing, board IOptionMarketOptionBoard, trade IOptionMarketTrade, pricingGlobals ILyraGlobalsPricingGlobals, isCall bool) (OptionMarketViewerTradePremiumView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "_getPremiumForTrade", listing, board, trade, pricingGlobals, isCall)
 
 	if err != nil {
@@ -301,7 +301,7 @@ func (_Lyrap *LyrapCallerSession) InternalGetPremiumForTrade(listing IOptionMark
 //
 // Solidity: function blackScholes() view returns(address)
 func (_Lyrap *LyrapCaller) BlackScholes(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "blackScholes")
 
 	if err != nil {
@@ -332,7 +332,7 @@ func (_Lyrap *LyrapCallerSession) BlackScholes() (common.Address, error) {
 //
 // Solidity: function getBoard(uint256 boardId) view returns((uint256,uint256,uint256,bool,uint256[]))
 func (_Lyrap *LyrapCaller) GetBoard(opts *bind.CallOpts, boardId *big.Int) (IOptionMarketOptionBoard, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getBoard", boardId)
 
 	if err != nil {
@@ -363,7 +363,7 @@ func (_Lyrap *LyrapCallerSession) GetBoard(boardId *big.Int) (IOptionMarketOptio
 //
 // Solidity: function getClosePremiumsForBoard(uint256 _boardId, uint8 tradeType, uint256 amount) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256)[])
 func (_Lyrap *LyrapCaller) GetClosePremiumsForBoard(opts *bind.CallOpts, _boardId *big.Int, tradeType uint8, amount *big.Int) ([]OptionMarketViewerTradePremiumView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getClosePremiumsForBoard", _boardId, tradeType, amount)
 
 	if err != nil {
@@ -394,7 +394,7 @@ func (_Lyrap *LyrapCallerSession) GetClosePremiumsForBoard(_boardId *big.Int, tr
 //
 // Solidity: function getListing(uint256 listingId) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256))
 func (_Lyrap *LyrapCaller) GetListing(opts *bind.CallOpts, listingId *big.Int) (IOptionMarketOptionListing, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getListing", listingId)
 
 	if err != nil {
@@ -425,7 +425,7 @@ func (_Lyrap *LyrapCallerSession) GetListing(listingId *big.Int) (IOptionMarketO
 //
 // Solidity: function getListingView(uint256 listingId) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,int256,int256,uint256,uint256,uint256,uint256) listingView)
 func (_Lyrap *LyrapCaller) GetListingView(opts *bind.CallOpts, listingId *big.Int) (OptionMarketViewerListingView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getListingView", listingId)
 
 	if err != nil {
@@ -462,7 +462,7 @@ func (_Lyrap *LyrapCaller) GetListingViewAndBalance(opts *bind.CallOpts, listing
 	ShortCallAmt *big.Int
 	ShortPutAmt  *big.Int
 }, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getListingViewAndBalance", listingId, user)
 
 	outstruct := new(struct {
@@ -516,7 +516,7 @@ func (_Lyrap *LyrapCallerSession) GetListingViewAndBalance(listingId *big.Int, u
 //
 // Solidity: function getListingsForBoard(uint256 boardId) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,int256,int256,uint256,uint256,uint256,uint256)[] boardListings)
 func (_Lyrap *LyrapCaller) GetListingsForBoard(opts *bind.CallOpts, boardId *big.Int) ([]OptionMarketViewerListingView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getListingsForBoard", boardId)
 
 	if err != nil {
@@ -547,7 +547,7 @@ func (_Lyrap *LyrapCallerSession) GetListingsForBoard(boardId *big.Int) ([]Optio
 //
 // Solidity: function getLiveBoards() view returns((uint256,uint256)[] boards)
 func (_Lyrap *LyrapCaller) GetLiveBoards(opts *bind.CallOpts) ([]OptionMarketViewerBoardView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getLiveBoards")
 
 	if err != nil {
@@ -578,7 +578,7 @@ func (_Lyrap *LyrapCallerSession) GetLiveBoards() ([]OptionMarketViewerBoardView
 //
 // Solidity: function getOpenPremiumsForBoard(uint256 _boardId, uint8 tradeType, uint256 amount) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256)[])
 func (_Lyrap *LyrapCaller) GetOpenPremiumsForBoard(opts *bind.CallOpts, _boardId *big.Int, tradeType uint8, amount *big.Int) ([]OptionMarketViewerTradePremiumView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getOpenPremiumsForBoard", _boardId, tradeType, amount)
 
 	if err != nil {
@@ -609,7 +609,7 @@ func (_Lyrap *LyrapCallerSession) GetOpenPremiumsForBoard(_boardId *big.Int, tra
 //
 // Solidity: function getPremiumForClose(uint256 _listingId, uint8 tradeType, uint256 amount) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256))
 func (_Lyrap *LyrapCaller) GetPremiumForClose(opts *bind.CallOpts, _listingId *big.Int, tradeType uint8, amount *big.Int) (OptionMarketViewerTradePremiumView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getPremiumForClose", _listingId, tradeType, amount)
 
 	if err != nil {
@@ -640,7 +640,7 @@ func (_Lyrap *LyrapCallerSession) GetPremiumForClose(_listingId *big.Int, tradeT
 //
 // Solidity: function getPremiumForOpen(uint256 _listingId, uint8 tradeType, uint256 amount) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256))
 func (_Lyrap *LyrapCaller) GetPremiumForOpen(opts *bind.CallOpts, _listingId *big.Int, tradeType uint8, amount *big.Int) (OptionMarketViewerTradePremiumView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getPremiumForOpen", _listingId, tradeType, amount)
 
 	if err != nil {
@@ -671,7 +671,7 @@ func (_Lyrap *LyrapCallerSession) GetPremiumForOpen(_listingId *big.Int, tradeTy
 //
 // Solidity: function getPremiumForTrade(uint256 _listingId, uint8 tradeType, bool isBuy, uint256 amount) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256))
 func (_Lyrap *LyrapCaller) GetPremiumForTrade(opts *bind.CallOpts, _listingId *big.Int, tradeType uint8, isBuy bool, amount *big.Int) (OptionMarketViewerTradePremiumView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getPremiumForTrade", _listingId, tradeType, isBuy, amount)
 
 	if err != nil {
@@ -702,7 +702,7 @@ func (_Lyrap *LyrapCallerSession) GetPremiumForTrade(_listingId *big.Int, tradeT
 //
 // Solidity: function getPremiumsForBoard(uint256 _boardId, uint8 tradeType, bool isBuy, uint256 amount) view returns((uint256,uint256,uint256,uint256,uint256,uint256,uint256)[] tradePremiums)
 func (_Lyrap *LyrapCaller) GetPremiumsForBoard(opts *bind.CallOpts, _boardId *big.Int, tradeType uint8, isBuy bool, amount *big.Int) ([]OptionMarketViewerTradePremiumView, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "getPremiumsForBoard", _boardId, tradeType, isBuy, amount)
 
 	if err != nil {
@@ -733,7 +733,7 @@ func (_Lyrap *LyrapCallerSession) GetPremiumsForBoard(_boardId *big.Int, tradeTy
 //
 // Solidity: function globals() view returns(address)
 func (_Lyrap *LyrapCaller) Globals(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "globals")
 
 	if err != nil {
@@ -764,7 +764,7 @@ func (_Lyrap *LyrapCallerSession) Globals() (common.Address, error) {
 //
 // Solidity: function greekCache() view returns(address)
 func (_Lyrap *LyrapCaller) GreekCache(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "greekCache")
 
 	if err != nil {
@@ -795,7 +795,7 @@ func (_Lyrap *LyrapCallerSession) GreekCache() (common.Address, error) {
 //
 // Solidity: function liquidityPool() view returns(address)
 func (_Lyrap *LyrapCaller) LiquidityPool(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "liquidityPool")
 
 	if err != nil {
@@ -826,7 +826,7 @@ func (_Lyrap *LyrapCallerSession) LiquidityPool() (common.Address, error) {
 //
 // Solidity: function optionMarket() view returns(address)
 func (_Lyrap *LyrapCaller) OptionMarket(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "optionMarket")
 
 	if err != nil {
@@ -857,7 +857,7 @@ func (_Lyrap *LyrapCallerSession) OptionMarket() (common.Address, error) {
 //
 // Solidity: function optionMarketPricer() view returns(address)
 func (_Lyrap *LyrapCaller) OptionMarketPricer(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "optionMarketPricer")
 
 	if err != nil {
@@ -888,7 +888,7 @@ func (_Lyrap *LyrapCallerSession) OptionMarketPricer() (common.Address, error) {
 //
 // Solidity: function optionToken() view returns(address)
 func (_Lyrap *LyrapCaller) OptionToken(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Lyrap.contract.Call(opts, &out, "optionToken")
 
 	if err != nil {

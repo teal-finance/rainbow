@@ -137,18 +137,9 @@ func Options(
 	first int,
 	t string,
 ) (*OptionsResponse, error) {
-	__input := __OptionsInput{
-		Skip:  skip,
-		First: first,
-		T:     t,
-	}
-	var err error
-
-	var retval OptionsResponse
-	err = client.MakeRequest(
-		ctx,
-		"Options",
-		`
+	req := &graphql.Request{
+		OpName: "Options",
+		Query: `
 query Options ($skip: Int, $first: Int, $t: BigInt) {
 	otokens(skip: $skip, first: $first, orderBy: expiryTimestamp, orderDirection: desc, where: {expiryTimestamp_gt:$t}) {
 		id
@@ -176,8 +167,22 @@ query Options ($skip: Int, $first: Int, $t: BigInt) {
 	}
 }
 `,
-		&retval,
-		&__input,
+		Variables: &__OptionsInput{
+			Skip:  skip,
+			First: first,
+			T:     t,
+		},
+	}
+	var err error
+
+	var data OptionsResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
 	)
-	return &retval, err
+
+	return &data, err
 }
