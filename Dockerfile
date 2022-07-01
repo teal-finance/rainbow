@@ -38,10 +38,10 @@ WORKDIR /code
 COPY frontend/package.json \
      frontend/yarn.lock   ./
 
-RUN set -x                          &&\
-    node --version                  &&\
-    yarn --version                  &&\
-    yarn install --frozen-lockfile  &&\
+RUN set -ex                         ;\
+    node --version                  ;\
+    yarn versions                   ;\
+    yarn install --frozen-lockfile  ;\
     yarn cache clean
 
 COPY frontend/index.html         \
