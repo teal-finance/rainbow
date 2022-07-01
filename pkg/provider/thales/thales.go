@@ -6,14 +6,16 @@ import (
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
+	"github.com/davecgh/go-spew/spew"
 
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
 )
 
 const (
-	url   = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
-	skip  = 0
-	first = 100
+	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
+	urlPolygon  = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
+	skip        = 0
+	first       = 100
 )
 
 type Provider struct{}
@@ -28,7 +30,7 @@ func twoWeeksInThePast() int64 {
 }
 
 func QueryMarket(id string) *thales.MarketMarket {
-	graphqlClient := graphql.NewClient(url, nil)
+	graphqlClient := graphql.NewClient(urlOptimism, nil)
 	resp, err := thales.Market(context.TODO(), graphqlClient, id)
 	if err != nil {
 		log.Print("ERR QueryMarket: ", err)
@@ -41,7 +43,7 @@ func QueryMarket(id string) *thales.MarketMarket {
 }
 
 func QueryRangedMarket(id string) *thales.RangedMarketRangedMarket {
-	graphqlClient := graphql.NewClient(url, nil)
+	graphqlClient := graphql.NewClient(urlOptimism, nil)
 	resp, err := thales.RangedMarket(context.TODO(), graphqlClient, id)
 	if err != nil {
 		log.Print("ERR QueryRangedMarket: ", err)
@@ -54,9 +56,10 @@ func QueryRangedMarket(id string) *thales.RangedMarketRangedMarket {
 }
 
 func QueryMarkets() []thales.MarketsMarketsMarket {
-	graphqlClient := graphql.NewClient(url, nil)
+	graphqlClient := graphql.NewClient(urlOptimism, nil)
 	minExpiry := twoWeeksInThePast()
 	resp, err := thales.Markets(context.TODO(), graphqlClient, skip, first, minExpiry)
+	spew.Dump(resp)
 	if err != nil {
 		log.Print("ERR QueryMarkets: ", err)
 	}
@@ -68,7 +71,7 @@ func QueryMarkets() []thales.MarketsMarketsMarket {
 }
 
 func QueryRangedMarkets() []thales.RangedMarketsRangedMarketsRangedMarket {
-	graphqlClient := graphql.NewClient(url, nil)
+	graphqlClient := graphql.NewClient(urlOptimism, nil)
 	minExpiry := twoWeeksInThePast()
 	resp, err := thales.RangedMarkets(context.TODO(), graphqlClient, skip, first, minExpiry)
 	if err != nil {
