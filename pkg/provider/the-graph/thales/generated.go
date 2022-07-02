@@ -8,6 +8,66 @@ import (
 	"github.com/Khan/genqlient/graphql"
 )
 
+// AllLiveMarketsMarket includes the requested fields of the GraphQL type Market.
+type AllLiveMarketsMarket struct {
+	Id           string `json:"id"`
+	Timestamp    int64  `json:"timestamp"`
+	Creator      []byte `json:"creator"`
+	CurrencyKey  []byte `json:"currencyKey"`
+	StrikePrice  int64  `json:"strikePrice"`
+	MaturityDate int64  `json:"maturityDate"`
+	ExpiryDate   int64  `json:"expiryDate"`
+	IsOpen       bool   `json:"isOpen"`
+	Result       int    `json:"result"`
+	LongAddress  []byte `json:"longAddress"`
+	ShortAddress []byte `json:"shortAddress"`
+	FinalPrice   int64  `json:"finalPrice"`
+}
+
+// GetId returns AllLiveMarketsMarket.Id, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetId() string { return v.Id }
+
+// GetTimestamp returns AllLiveMarketsMarket.Timestamp, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetTimestamp() int64 { return v.Timestamp }
+
+// GetCreator returns AllLiveMarketsMarket.Creator, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetCreator() []byte { return v.Creator }
+
+// GetCurrencyKey returns AllLiveMarketsMarket.CurrencyKey, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
+
+// GetStrikePrice returns AllLiveMarketsMarket.StrikePrice, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetStrikePrice() int64 { return v.StrikePrice }
+
+// GetMaturityDate returns AllLiveMarketsMarket.MaturityDate, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetMaturityDate() int64 { return v.MaturityDate }
+
+// GetExpiryDate returns AllLiveMarketsMarket.ExpiryDate, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetExpiryDate() int64 { return v.ExpiryDate }
+
+// GetIsOpen returns AllLiveMarketsMarket.IsOpen, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetIsOpen() bool { return v.IsOpen }
+
+// GetResult returns AllLiveMarketsMarket.Result, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetResult() int { return v.Result }
+
+// GetLongAddress returns AllLiveMarketsMarket.LongAddress, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetLongAddress() []byte { return v.LongAddress }
+
+// GetShortAddress returns AllLiveMarketsMarket.ShortAddress, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetShortAddress() []byte { return v.ShortAddress }
+
+// GetFinalPrice returns AllLiveMarketsMarket.FinalPrice, and is useful for accessing the field via an interface.
+func (v *AllLiveMarketsMarket) GetFinalPrice() int64 { return v.FinalPrice }
+
+// AllLiveResponse is returned by AllLive on success.
+type AllLiveResponse struct {
+	Markets []AllLiveMarketsMarket `json:"markets"`
+}
+
+// GetMarkets returns AllLiveResponse.Markets, and is useful for accessing the field via an interface.
+func (v *AllLiveResponse) GetMarkets() []AllLiveMarketsMarket { return v.Markets }
+
 // AllMarketsMarketsMarket includes the requested fields of the GraphQL type Market.
 type AllMarketsMarketsMarket struct {
 	Id           string `json:"id"`
@@ -951,6 +1011,45 @@ func (v *__RangedMarketsInput) GetFirst() int { return v.First }
 
 // GetT returns __RangedMarketsInput.T, and is useful for accessing the field via an interface.
 func (v *__RangedMarketsInput) GetT() int64 { return v.T }
+
+func AllLive(
+	ctx context.Context,
+	client graphql.Client,
+) (*AllLiveResponse, error) {
+	req := &graphql.Request{
+		OpName: "AllLive",
+		Query: `
+query AllLive {
+	markets(where: {result:null}) {
+		id
+		timestamp
+		creator
+		currencyKey
+		strikePrice
+		maturityDate
+		expiryDate
+		isOpen
+		result
+		longAddress
+		shortAddress
+		finalPrice
+	}
+}
+`,
+	}
+	var err error
+
+	var data AllLiveResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
 
 func AllMarkets(
 	ctx context.Context,
