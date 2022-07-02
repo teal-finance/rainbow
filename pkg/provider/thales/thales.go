@@ -17,11 +17,23 @@ import (
 )
 
 const (
+	selection   = "polygon"
 	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
 	urlPolygon  = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
 	skip        = 0
 	first       = 100
 )
+
+var url = selectURL()
+
+func selectURL() string {
+	switch selection {
+	case "optimism":
+		return urlOptimism
+	default:
+		return urlPolygon
+	}
+}
 
 type Provider struct{}
 
@@ -34,57 +46,95 @@ func twoWeeksInThePast() int64 {
 	return time.Now().Add(-twoWeeks).Unix()
 }
 
-func QueryMarket(id string) *thales.MarketMarket {
-	graphqlClient := graphql.NewClient(urlOptimism, nil)
-	resp, err := thales.Market(context.TODO(), graphqlClient, id)
-	if err != nil {
-		log.Print("ERR QueryMarket: ", err)
-	}
-	if resp == nil {
-		log.Print("ERR QueryMarket: resp=nil")
-		return nil
-	}
-	return &resp.Market
-}
-
-func QueryRangedMarket(id string) *thales.RangedMarketRangedMarket {
-	graphqlClient := graphql.NewClient(urlOptimism, nil)
-	resp, err := thales.RangedMarket(context.TODO(), graphqlClient, id)
-	if err != nil {
-		log.Print("ERR QueryRangedMarket: ", err)
-	}
-	if resp == nil {
-		log.Print("ERR QueryRangedMarket: resp=nil")
-		return nil
-	}
-	return &resp.RangedMarket
-}
-
-func QueryMarkets() []thales.MarketsMarketsMarket {
-	graphqlClient := graphql.NewClient(urlOptimism, nil)
-	minExpiry := twoWeeksInThePast()
-	resp, err := thales.Markets(context.TODO(), graphqlClient, skip, first, minExpiry)
-	spew.Dump(resp)
+func QueryAllMarkets() []thales.AllMarketsMarketsMarket {
+	graphqlClient := graphql.NewClient(url, nil)
+	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)
 	if err != nil {
 		log.Print("ERR QueryMarkets: ", err)
+		return nil
 	}
 	if resp == nil {
 		log.Print("ERR QueryMarkets: resp=nil")
 		return nil
 	}
+	spew.Dump(resp)
 	return resp.Markets
 }
 
-func QueryRangedMarkets() []thales.RangedMarketsRangedMarketsRangedMarket {
-	graphqlClient := graphql.NewClient(urlOptimism, nil)
+func QueryMarkets() []thales.MarketsMarketsMarket {
+	graphqlClient := graphql.NewClient(url, nil)
 	minExpiry := twoWeeksInThePast()
-	resp, err := thales.RangedMarkets(context.TODO(), graphqlClient, skip, first, minExpiry)
+	resp, err := thales.Markets(context.TODO(), graphqlClient, skip, first, minExpiry)
+	if err != nil {
+		log.Print("ERR QueryMarkets: ", err)
+		return nil
+	}
+	if resp == nil {
+		log.Print("ERR QueryMarkets: resp=nil")
+		return nil
+	}
+	spew.Dump(resp)
+	return resp.Markets
+}
+
+func QueryMarket(id string) *thales.MarketMarket {
+	graphqlClient := graphql.NewClient(url, nil)
+	resp, err := thales.Market(context.TODO(), graphqlClient, id)
+	if err != nil {
+		log.Print("ERR QueryMarket: ", err)
+		return nil
+	}
+	if resp == nil {
+		log.Print("ERR QueryMarket: resp=nil")
+		return nil
+	}
+	spew.Dump(resp)
+	return &resp.Market
+}
+
+func QueryAllRangedMarkets() []thales.AllRangedMarketsRangedMarketsRangedMarket {
+	graphqlClient := graphql.NewClient(url, nil)
+	resp, err := thales.AllRangedMarkets(context.TODO(), graphqlClient, skip, first)
 	if err != nil {
 		log.Print("ERR QueryRangedMarkets: ", err)
+		return nil
 	}
 	if resp == nil {
 		log.Print("ERR QueryRangedMarkets: resp=nil")
 		return nil
 	}
+	spew.Dump(resp)
 	return resp.RangedMarkets
+}
+
+func QueryRangedMarkets() []thales.RangedMarketsRangedMarketsRangedMarket {
+	graphqlClient := graphql.NewClient(url, nil)
+	minExpiry := twoWeeksInThePast()
+	resp, err := thales.RangedMarkets(context.TODO(), graphqlClient, skip, first, minExpiry)
+	if err != nil {
+		log.Print("ERR QueryRangedMarkets: ", err)
+		return nil
+	}
+	if resp == nil {
+		log.Print("ERR QueryRangedMarkets: resp=nil")
+		return nil
+	}
+	spew.Dump(resp)
+	return resp.RangedMarkets
+}
+
+func QueryRangedMarket(id string) *thales.RangedMarketRangedMarket {
+	graphqlClient := graphql.NewClient(url, nil)
+	resp, err := thales.RangedMarket(context.TODO(), graphqlClient, id)
+	spew.Dump(resp)
+	if err != nil {
+		log.Print("ERR QueryRangedMarket: ", err)
+		return nil
+	}
+	if resp == nil {
+		log.Print("ERR QueryRangedMarket: resp=nil")
+		return nil
+	}
+	spew.Dump(resp)
+	return &resp.RangedMarket
 }

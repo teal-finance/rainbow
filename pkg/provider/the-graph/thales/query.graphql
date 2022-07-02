@@ -1,5 +1,11 @@
-query Market($id: ID!) {
-  market(id: $id) {
+query AllMarkets($skip: Int, $first: Int) {
+  markets(
+    skip: $skip
+    first: $first
+    orderBy: timestamp
+    orderDirection: desc
+  ) {
+    id
     timestamp
     creator
     currencyKey
@@ -61,8 +67,33 @@ query Markets($skip: Int, $first: Int, $t: BigInt) {
   }
 }
 
-query RangedMarket($id: ID!) {
-  rangedMarket(id: $id) {
+query Market($id: ID!) {
+  market(id: $id) {
+    timestamp
+    creator
+    currencyKey
+    strikePrice
+    maturityDate
+    expiryDate
+    isOpen
+    poolSize
+    longAddress
+    shortAddress
+    result
+    customMarket
+    customOracle
+    finalPrice
+  }
+}
+
+query AllRangedMarkets($skip: Int, $first: Int) {
+  rangedMarkets(
+    skip: $skip
+    first: $first
+    orderBy: timestamp
+    orderDirection: desc
+  ) {
+    id
     timestamp
     currencyKey
     maturityDate
@@ -119,6 +150,55 @@ query RangedMarkets($skip: Int, $first: Int, $t: BigInt) {
     where: { timestamp_gt: $t }
   ) {
     id
+    timestamp
+    currencyKey
+    maturityDate
+    leftPrice
+    rightPrice
+    inAddress
+    outAddress
+    rightMarket {
+      id
+      timestamp
+      creator
+      currencyKey
+      strikePrice
+      maturityDate
+      expiryDate
+      isOpen
+      poolSize
+      longAddress
+      shortAddress
+      result
+      customMarket
+      customOracle
+      finalPrice
+    }
+    leftMarket {
+      id
+      timestamp
+      creator
+      currencyKey
+      strikePrice
+      maturityDate
+      expiryDate
+      isOpen
+      poolSize
+      longAddress
+      shortAddress
+      result
+      customMarket
+      customOracle
+      finalPrice
+    }
+    isOpen
+    result
+    finalPrice
+  }
+}
+
+query RangedMarket($id: ID!) {
+  rangedMarket(id: $id) {
     timestamp
     currencyKey
     maturityDate
