@@ -17,6 +17,24 @@ query Market($id: ID!) {
   }
 }
 
+query AllLive(){
+  markets(where: {result: null}) {
+    id
+    timestamp
+    creator
+    currencyKey
+    strikePrice
+    maturityDate
+    expiryDate
+    isOpen
+    result
+    longAddress
+    shortAddress
+    finalPrice
+  }
+}
+
+
 query Markets($skip: Int, $first: Int, $t: BigInt) {
   markets(
     skip: $skip

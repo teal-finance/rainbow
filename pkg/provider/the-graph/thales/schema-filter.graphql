@@ -7,6 +7,14 @@ input Market_filter {
   id_lte: ID
   id_in: [ID!]
   id_not_in: [ID!]
+  result: Int
+  result_not: Int
+  result_gt: Int
+  result_lt: Int
+  result_gte: Int
+  result_lte: Int
+  result_in: [Int!]
+  result_not_in: [Int!]
   timestamp: BigInt
   timestamp_not: BigInt
   timestamp_gt: BigInt
