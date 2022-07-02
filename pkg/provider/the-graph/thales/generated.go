@@ -11,24 +11,24 @@ import (
 // AllLiveMarketsMarket includes the requested fields of the GraphQL type Market.
 type AllLiveMarketsMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
 	Result       int    `json:"result"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns AllLiveMarketsMarket.Id, and is useful for accessing the field via an interface.
 func (v *AllLiveMarketsMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns AllLiveMarketsMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *AllLiveMarketsMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *AllLiveMarketsMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCreator returns AllLiveMarketsMarket.Creator, and is useful for accessing the field via an interface.
 func (v *AllLiveMarketsMarket) GetCreator() []byte { return v.Creator }
@@ -37,13 +37,13 @@ func (v *AllLiveMarketsMarket) GetCreator() []byte { return v.Creator }
 func (v *AllLiveMarketsMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetStrikePrice returns AllLiveMarketsMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *AllLiveMarketsMarket) GetStrikePrice() int64 { return v.StrikePrice }
+func (v *AllLiveMarketsMarket) GetStrikePrice() string { return v.StrikePrice }
 
 // GetMaturityDate returns AllLiveMarketsMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *AllLiveMarketsMarket) GetMaturityDate() int64 { return v.MaturityDate }
+func (v *AllLiveMarketsMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetExpiryDate returns AllLiveMarketsMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *AllLiveMarketsMarket) GetExpiryDate() int64 { return v.ExpiryDate }
+func (v *AllLiveMarketsMarket) GetExpiryDate() string { return v.ExpiryDate }
 
 // GetIsOpen returns AllLiveMarketsMarket.IsOpen, and is useful for accessing the field via an interface.
 func (v *AllLiveMarketsMarket) GetIsOpen() bool { return v.IsOpen }
@@ -58,7 +58,7 @@ func (v *AllLiveMarketsMarket) GetLongAddress() []byte { return v.LongAddress }
 func (v *AllLiveMarketsMarket) GetShortAddress() []byte { return v.ShortAddress }
 
 // GetFinalPrice returns AllLiveMarketsMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *AllLiveMarketsMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *AllLiveMarketsMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // AllLiveResponse is returned by AllLive on success.
 type AllLiveResponse struct {
@@ -71,27 +71,27 @@ func (v *AllLiveResponse) GetMarkets() []AllLiveMarketsMarket { return v.Markets
 // AllMarketsMarketsMarket includes the requested fields of the GraphQL type Market.
 type AllMarketsMarketsMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int64  `json:"poolSize"`
+	PoolSize     string `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns AllMarketsMarketsMarket.Id, and is useful for accessing the field via an interface.
 func (v *AllMarketsMarketsMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns AllMarketsMarketsMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *AllMarketsMarketsMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *AllMarketsMarketsMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCreator returns AllMarketsMarketsMarket.Creator, and is useful for accessing the field via an interface.
 func (v *AllMarketsMarketsMarket) GetCreator() []byte { return v.Creator }
@@ -100,19 +100,19 @@ func (v *AllMarketsMarketsMarket) GetCreator() []byte { return v.Creator }
 func (v *AllMarketsMarketsMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetStrikePrice returns AllMarketsMarketsMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *AllMarketsMarketsMarket) GetStrikePrice() int64 { return v.StrikePrice }
+func (v *AllMarketsMarketsMarket) GetStrikePrice() string { return v.StrikePrice }
 
 // GetMaturityDate returns AllMarketsMarketsMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *AllMarketsMarketsMarket) GetMaturityDate() int64 { return v.MaturityDate }
+func (v *AllMarketsMarketsMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetExpiryDate returns AllMarketsMarketsMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *AllMarketsMarketsMarket) GetExpiryDate() int64 { return v.ExpiryDate }
+func (v *AllMarketsMarketsMarket) GetExpiryDate() string { return v.ExpiryDate }
 
 // GetIsOpen returns AllMarketsMarketsMarket.IsOpen, and is useful for accessing the field via an interface.
 func (v *AllMarketsMarketsMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns AllMarketsMarketsMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *AllMarketsMarketsMarket) GetPoolSize() int64 { return v.PoolSize }
+func (v *AllMarketsMarketsMarket) GetPoolSize() string { return v.PoolSize }
 
 // GetLongAddress returns AllMarketsMarketsMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *AllMarketsMarketsMarket) GetLongAddress() []byte { return v.LongAddress }
@@ -130,7 +130,7 @@ func (v *AllMarketsMarketsMarket) GetCustomMarket() bool { return v.CustomMarket
 func (v *AllMarketsMarketsMarket) GetCustomOracle() []byte { return v.CustomOracle }
 
 // GetFinalPrice returns AllMarketsMarketsMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *AllMarketsMarketsMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *AllMarketsMarketsMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // AllMarketsResponse is returned by AllMarkets on success.
 type AllMarketsResponse struct {
@@ -143,37 +143,37 @@ func (v *AllMarketsResponse) GetMarkets() []AllMarketsMarketsMarket { return v.M
 // AllRangedMarketsRangedMarketsRangedMarket includes the requested fields of the GraphQL type RangedMarket.
 type AllRangedMarketsRangedMarketsRangedMarket struct {
 	Id           string                                               `json:"id"`
-	Timestamp    int64                                                `json:"timestamp"`
+	Timestamp    string                                               `json:"timestamp"`
 	CurrencyKey  []byte                                               `json:"currencyKey"`
-	MaturityDate int64                                                `json:"maturityDate"`
-	LeftPrice    int64                                                `json:"leftPrice"`
-	RightPrice   int64                                                `json:"rightPrice"`
+	MaturityDate string                                               `json:"maturityDate"`
+	LeftPrice    string                                               `json:"leftPrice"`
+	RightPrice   string                                               `json:"rightPrice"`
 	InAddress    []byte                                               `json:"inAddress"`
 	OutAddress   []byte                                               `json:"outAddress"`
 	RightMarket  AllRangedMarketsRangedMarketsRangedMarketRightMarket `json:"rightMarket"`
 	LeftMarket   AllRangedMarketsRangedMarketsRangedMarketLeftMarket  `json:"leftMarket"`
 	IsOpen       bool                                                 `json:"isOpen"`
 	Result       int                                                  `json:"result"`
-	FinalPrice   int64                                                `json:"finalPrice"`
+	FinalPrice   string                                               `json:"finalPrice"`
 }
 
 // GetId returns AllRangedMarketsRangedMarketsRangedMarket.Id, and is useful for accessing the field via an interface.
 func (v *AllRangedMarketsRangedMarketsRangedMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns AllRangedMarketsRangedMarketsRangedMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *AllRangedMarketsRangedMarketsRangedMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCurrencyKey returns AllRangedMarketsRangedMarketsRangedMarket.CurrencyKey, and is useful for accessing the field via an interface.
 func (v *AllRangedMarketsRangedMarketsRangedMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetMaturityDate returns AllRangedMarketsRangedMarketsRangedMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarket) GetMaturityDate() int64 { return v.MaturityDate }
+func (v *AllRangedMarketsRangedMarketsRangedMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetLeftPrice returns AllRangedMarketsRangedMarketsRangedMarket.LeftPrice, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarket) GetLeftPrice() int64 { return v.LeftPrice }
+func (v *AllRangedMarketsRangedMarketsRangedMarket) GetLeftPrice() string { return v.LeftPrice }
 
 // GetRightPrice returns AllRangedMarketsRangedMarketsRangedMarket.RightPrice, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarket) GetRightPrice() int64 { return v.RightPrice }
+func (v *AllRangedMarketsRangedMarketsRangedMarket) GetRightPrice() string { return v.RightPrice }
 
 // GetInAddress returns AllRangedMarketsRangedMarketsRangedMarket.InAddress, and is useful for accessing the field via an interface.
 func (v *AllRangedMarketsRangedMarketsRangedMarket) GetInAddress() []byte { return v.InAddress }
@@ -198,32 +198,32 @@ func (v *AllRangedMarketsRangedMarketsRangedMarket) GetIsOpen() bool { return v.
 func (v *AllRangedMarketsRangedMarketsRangedMarket) GetResult() int { return v.Result }
 
 // GetFinalPrice returns AllRangedMarketsRangedMarketsRangedMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *AllRangedMarketsRangedMarketsRangedMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // AllRangedMarketsRangedMarketsRangedMarketLeftMarket includes the requested fields of the GraphQL type Market.
 type AllRangedMarketsRangedMarketsRangedMarketLeftMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int64  `json:"poolSize"`
+	PoolSize     string `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns AllRangedMarketsRangedMarketsRangedMarketLeftMarket.Id, and is useful for accessing the field via an interface.
 func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns AllRangedMarketsRangedMarketsRangedMarketLeftMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetTimestamp() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetTimestamp() string {
 	return v.Timestamp
 }
 
@@ -236,17 +236,17 @@ func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetCurrencyKey() [
 }
 
 // GetStrikePrice returns AllRangedMarketsRangedMarketsRangedMarketLeftMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetStrikePrice() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetStrikePrice() string {
 	return v.StrikePrice
 }
 
 // GetMaturityDate returns AllRangedMarketsRangedMarketsRangedMarketLeftMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetMaturityDate() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetMaturityDate() string {
 	return v.MaturityDate
 }
 
 // GetExpiryDate returns AllRangedMarketsRangedMarketsRangedMarketLeftMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetExpiryDate() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetExpiryDate() string {
 	return v.ExpiryDate
 }
 
@@ -254,7 +254,7 @@ func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetExpiryDate() in
 func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns AllRangedMarketsRangedMarketsRangedMarketLeftMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetPoolSize() int64 { return v.PoolSize }
+func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetPoolSize() string { return v.PoolSize }
 
 // GetLongAddress returns AllRangedMarketsRangedMarketsRangedMarketLeftMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetLongAddress() []byte {
@@ -280,34 +280,34 @@ func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetCustomOracle() 
 }
 
 // GetFinalPrice returns AllRangedMarketsRangedMarketsRangedMarketLeftMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetFinalPrice() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketLeftMarket) GetFinalPrice() string {
 	return v.FinalPrice
 }
 
 // AllRangedMarketsRangedMarketsRangedMarketRightMarket includes the requested fields of the GraphQL type Market.
 type AllRangedMarketsRangedMarketsRangedMarketRightMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int64  `json:"poolSize"`
+	PoolSize     string `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns AllRangedMarketsRangedMarketsRangedMarketRightMarket.Id, and is useful for accessing the field via an interface.
 func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns AllRangedMarketsRangedMarketsRangedMarketRightMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetTimestamp() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetTimestamp() string {
 	return v.Timestamp
 }
 
@@ -320,17 +320,17 @@ func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetCurrencyKey() 
 }
 
 // GetStrikePrice returns AllRangedMarketsRangedMarketsRangedMarketRightMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetStrikePrice() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetStrikePrice() string {
 	return v.StrikePrice
 }
 
 // GetMaturityDate returns AllRangedMarketsRangedMarketsRangedMarketRightMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetMaturityDate() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetMaturityDate() string {
 	return v.MaturityDate
 }
 
 // GetExpiryDate returns AllRangedMarketsRangedMarketsRangedMarketRightMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetExpiryDate() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetExpiryDate() string {
 	return v.ExpiryDate
 }
 
@@ -338,7 +338,9 @@ func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetExpiryDate() i
 func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns AllRangedMarketsRangedMarketsRangedMarketRightMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetPoolSize() int64 { return v.PoolSize }
+func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetPoolSize() string {
+	return v.PoolSize
+}
 
 // GetLongAddress returns AllRangedMarketsRangedMarketsRangedMarketRightMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetLongAddress() []byte {
@@ -364,7 +366,7 @@ func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetCustomOracle()
 }
 
 // GetFinalPrice returns AllRangedMarketsRangedMarketsRangedMarketRightMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetFinalPrice() int64 {
+func (v *AllRangedMarketsRangedMarketsRangedMarketRightMarket) GetFinalPrice() string {
 	return v.FinalPrice
 }
 
@@ -380,24 +382,24 @@ func (v *AllRangedMarketsResponse) GetRangedMarkets() []AllRangedMarketsRangedMa
 
 // MarketMarket includes the requested fields of the GraphQL type Market.
 type MarketMarket struct {
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int64  `json:"poolSize"`
+	PoolSize     string `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetTimestamp returns MarketMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *MarketMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *MarketMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCreator returns MarketMarket.Creator, and is useful for accessing the field via an interface.
 func (v *MarketMarket) GetCreator() []byte { return v.Creator }
@@ -406,19 +408,19 @@ func (v *MarketMarket) GetCreator() []byte { return v.Creator }
 func (v *MarketMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetStrikePrice returns MarketMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *MarketMarket) GetStrikePrice() int64 { return v.StrikePrice }
+func (v *MarketMarket) GetStrikePrice() string { return v.StrikePrice }
 
 // GetMaturityDate returns MarketMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *MarketMarket) GetMaturityDate() int64 { return v.MaturityDate }
+func (v *MarketMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetExpiryDate returns MarketMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *MarketMarket) GetExpiryDate() int64 { return v.ExpiryDate }
+func (v *MarketMarket) GetExpiryDate() string { return v.ExpiryDate }
 
 // GetIsOpen returns MarketMarket.IsOpen, and is useful for accessing the field via an interface.
 func (v *MarketMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns MarketMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *MarketMarket) GetPoolSize() int64 { return v.PoolSize }
+func (v *MarketMarket) GetPoolSize() string { return v.PoolSize }
 
 // GetLongAddress returns MarketMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *MarketMarket) GetLongAddress() []byte { return v.LongAddress }
@@ -436,7 +438,7 @@ func (v *MarketMarket) GetCustomMarket() bool { return v.CustomMarket }
 func (v *MarketMarket) GetCustomOracle() []byte { return v.CustomOracle }
 
 // GetFinalPrice returns MarketMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *MarketMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *MarketMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // MarketResponse is returned by Market on success.
 type MarketResponse struct {
@@ -449,27 +451,27 @@ func (v *MarketResponse) GetMarket() MarketMarket { return v.Market }
 // MarketsMarketsMarket includes the requested fields of the GraphQL type Market.
 type MarketsMarketsMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int64  `json:"poolSize"`
+	PoolSize     string `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns MarketsMarketsMarket.Id, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns MarketsMarketsMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *MarketsMarketsMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCreator returns MarketsMarketsMarket.Creator, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetCreator() []byte { return v.Creator }
@@ -478,19 +480,19 @@ func (v *MarketsMarketsMarket) GetCreator() []byte { return v.Creator }
 func (v *MarketsMarketsMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetStrikePrice returns MarketsMarketsMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetStrikePrice() int64 { return v.StrikePrice }
+func (v *MarketsMarketsMarket) GetStrikePrice() string { return v.StrikePrice }
 
 // GetMaturityDate returns MarketsMarketsMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetMaturityDate() int64 { return v.MaturityDate }
+func (v *MarketsMarketsMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetExpiryDate returns MarketsMarketsMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetExpiryDate() int64 { return v.ExpiryDate }
+func (v *MarketsMarketsMarket) GetExpiryDate() string { return v.ExpiryDate }
 
 // GetIsOpen returns MarketsMarketsMarket.IsOpen, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns MarketsMarketsMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetPoolSize() int64 { return v.PoolSize }
+func (v *MarketsMarketsMarket) GetPoolSize() string { return v.PoolSize }
 
 // GetLongAddress returns MarketsMarketsMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *MarketsMarketsMarket) GetLongAddress() []byte { return v.LongAddress }
@@ -508,7 +510,7 @@ func (v *MarketsMarketsMarket) GetCustomMarket() bool { return v.CustomMarket }
 func (v *MarketsMarketsMarket) GetCustomOracle() []byte { return v.CustomOracle }
 
 // GetFinalPrice returns MarketsMarketsMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *MarketsMarketsMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *MarketsMarketsMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // MarketsResponse is returned by Markets on success.
 type MarketsResponse struct {
@@ -520,34 +522,34 @@ func (v *MarketsResponse) GetMarkets() []MarketsMarketsMarket { return v.Markets
 
 // RangedMarketRangedMarket includes the requested fields of the GraphQL type RangedMarket.
 type RangedMarketRangedMarket struct {
-	Timestamp    int64                               `json:"timestamp"`
+	Timestamp    string                              `json:"timestamp"`
 	CurrencyKey  []byte                              `json:"currencyKey"`
-	MaturityDate int64                               `json:"maturityDate"`
-	LeftPrice    int64                               `json:"leftPrice"`
-	RightPrice   int64                               `json:"rightPrice"`
+	MaturityDate string                              `json:"maturityDate"`
+	LeftPrice    string                              `json:"leftPrice"`
+	RightPrice   string                              `json:"rightPrice"`
 	InAddress    []byte                              `json:"inAddress"`
 	OutAddress   []byte                              `json:"outAddress"`
 	RightMarket  RangedMarketRangedMarketRightMarket `json:"rightMarket"`
 	LeftMarket   RangedMarketRangedMarketLeftMarket  `json:"leftMarket"`
 	IsOpen       bool                                `json:"isOpen"`
 	Result       int                                 `json:"result"`
-	FinalPrice   int64                               `json:"finalPrice"`
+	FinalPrice   string                              `json:"finalPrice"`
 }
 
 // GetTimestamp returns RangedMarketRangedMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *RangedMarketRangedMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCurrencyKey returns RangedMarketRangedMarket.CurrencyKey, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetMaturityDate returns RangedMarketRangedMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarket) GetMaturityDate() int64 { return v.MaturityDate }
+func (v *RangedMarketRangedMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetLeftPrice returns RangedMarketRangedMarket.LeftPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarket) GetLeftPrice() int64 { return v.LeftPrice }
+func (v *RangedMarketRangedMarket) GetLeftPrice() string { return v.LeftPrice }
 
 // GetRightPrice returns RangedMarketRangedMarket.RightPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarket) GetRightPrice() int64 { return v.RightPrice }
+func (v *RangedMarketRangedMarket) GetRightPrice() string { return v.RightPrice }
 
 // GetInAddress returns RangedMarketRangedMarket.InAddress, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarket) GetInAddress() []byte { return v.InAddress }
@@ -572,32 +574,32 @@ func (v *RangedMarketRangedMarket) GetIsOpen() bool { return v.IsOpen }
 func (v *RangedMarketRangedMarket) GetResult() int { return v.Result }
 
 // GetFinalPrice returns RangedMarketRangedMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *RangedMarketRangedMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // RangedMarketRangedMarketLeftMarket includes the requested fields of the GraphQL type Market.
 type RangedMarketRangedMarketLeftMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int64  `json:"poolSize"`
+	PoolSize     string `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns RangedMarketRangedMarketLeftMarket.Id, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarketLeftMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns RangedMarketRangedMarketLeftMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketLeftMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *RangedMarketRangedMarketLeftMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCreator returns RangedMarketRangedMarketLeftMarket.Creator, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarketLeftMarket) GetCreator() []byte { return v.Creator }
@@ -606,19 +608,19 @@ func (v *RangedMarketRangedMarketLeftMarket) GetCreator() []byte { return v.Crea
 func (v *RangedMarketRangedMarketLeftMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetStrikePrice returns RangedMarketRangedMarketLeftMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketLeftMarket) GetStrikePrice() int64 { return v.StrikePrice }
+func (v *RangedMarketRangedMarketLeftMarket) GetStrikePrice() string { return v.StrikePrice }
 
 // GetMaturityDate returns RangedMarketRangedMarketLeftMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketLeftMarket) GetMaturityDate() int64 { return v.MaturityDate }
+func (v *RangedMarketRangedMarketLeftMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetExpiryDate returns RangedMarketRangedMarketLeftMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketLeftMarket) GetExpiryDate() int64 { return v.ExpiryDate }
+func (v *RangedMarketRangedMarketLeftMarket) GetExpiryDate() string { return v.ExpiryDate }
 
 // GetIsOpen returns RangedMarketRangedMarketLeftMarket.IsOpen, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarketLeftMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns RangedMarketRangedMarketLeftMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketLeftMarket) GetPoolSize() int64 { return v.PoolSize }
+func (v *RangedMarketRangedMarketLeftMarket) GetPoolSize() string { return v.PoolSize }
 
 // GetLongAddress returns RangedMarketRangedMarketLeftMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarketLeftMarket) GetLongAddress() []byte { return v.LongAddress }
@@ -636,32 +638,32 @@ func (v *RangedMarketRangedMarketLeftMarket) GetCustomMarket() bool { return v.C
 func (v *RangedMarketRangedMarketLeftMarket) GetCustomOracle() []byte { return v.CustomOracle }
 
 // GetFinalPrice returns RangedMarketRangedMarketLeftMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketLeftMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *RangedMarketRangedMarketLeftMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // RangedMarketRangedMarketRightMarket includes the requested fields of the GraphQL type Market.
 type RangedMarketRangedMarketRightMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int64  `json:"poolSize"`
+	PoolSize     string `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns RangedMarketRangedMarketRightMarket.Id, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarketRightMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns RangedMarketRangedMarketRightMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketRightMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *RangedMarketRangedMarketRightMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCreator returns RangedMarketRangedMarketRightMarket.Creator, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarketRightMarket) GetCreator() []byte { return v.Creator }
@@ -670,19 +672,19 @@ func (v *RangedMarketRangedMarketRightMarket) GetCreator() []byte { return v.Cre
 func (v *RangedMarketRangedMarketRightMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetStrikePrice returns RangedMarketRangedMarketRightMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketRightMarket) GetStrikePrice() int64 { return v.StrikePrice }
+func (v *RangedMarketRangedMarketRightMarket) GetStrikePrice() string { return v.StrikePrice }
 
 // GetMaturityDate returns RangedMarketRangedMarketRightMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketRightMarket) GetMaturityDate() int64 { return v.MaturityDate }
+func (v *RangedMarketRangedMarketRightMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetExpiryDate returns RangedMarketRangedMarketRightMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketRightMarket) GetExpiryDate() int64 { return v.ExpiryDate }
+func (v *RangedMarketRangedMarketRightMarket) GetExpiryDate() string { return v.ExpiryDate }
 
 // GetIsOpen returns RangedMarketRangedMarketRightMarket.IsOpen, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarketRightMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns RangedMarketRangedMarketRightMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketRightMarket) GetPoolSize() int64 { return v.PoolSize }
+func (v *RangedMarketRangedMarketRightMarket) GetPoolSize() string { return v.PoolSize }
 
 // GetLongAddress returns RangedMarketRangedMarketRightMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *RangedMarketRangedMarketRightMarket) GetLongAddress() []byte { return v.LongAddress }
@@ -700,7 +702,7 @@ func (v *RangedMarketRangedMarketRightMarket) GetCustomMarket() bool { return v.
 func (v *RangedMarketRangedMarketRightMarket) GetCustomOracle() []byte { return v.CustomOracle }
 
 // GetFinalPrice returns RangedMarketRangedMarketRightMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketRangedMarketRightMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *RangedMarketRangedMarketRightMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // RangedMarketResponse is returned by RangedMarket on success.
 type RangedMarketResponse struct {
@@ -713,37 +715,37 @@ func (v *RangedMarketResponse) GetRangedMarket() RangedMarketRangedMarket { retu
 // RangedMarketsRangedMarketsRangedMarket includes the requested fields of the GraphQL type RangedMarket.
 type RangedMarketsRangedMarketsRangedMarket struct {
 	Id           string                                            `json:"id"`
-	Timestamp    int64                                             `json:"timestamp"`
+	Timestamp    string                                            `json:"timestamp"`
 	CurrencyKey  []byte                                            `json:"currencyKey"`
-	MaturityDate int64                                             `json:"maturityDate"`
-	LeftPrice    int64                                             `json:"leftPrice"`
-	RightPrice   int64                                             `json:"rightPrice"`
+	MaturityDate string                                            `json:"maturityDate"`
+	LeftPrice    string                                            `json:"leftPrice"`
+	RightPrice   string                                            `json:"rightPrice"`
 	InAddress    []byte                                            `json:"inAddress"`
 	OutAddress   []byte                                            `json:"outAddress"`
 	RightMarket  RangedMarketsRangedMarketsRangedMarketRightMarket `json:"rightMarket"`
 	LeftMarket   RangedMarketsRangedMarketsRangedMarketLeftMarket  `json:"leftMarket"`
 	IsOpen       bool                                              `json:"isOpen"`
 	Result       int                                               `json:"result"`
-	FinalPrice   int64                                             `json:"finalPrice"`
+	FinalPrice   string                                            `json:"finalPrice"`
 }
 
 // GetId returns RangedMarketsRangedMarketsRangedMarket.Id, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns RangedMarketsRangedMarketsRangedMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *RangedMarketsRangedMarketsRangedMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCurrencyKey returns RangedMarketsRangedMarketsRangedMarket.CurrencyKey, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarket) GetCurrencyKey() []byte { return v.CurrencyKey }
 
 // GetMaturityDate returns RangedMarketsRangedMarketsRangedMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarket) GetMaturityDate() int64 { return v.MaturityDate }
+func (v *RangedMarketsRangedMarketsRangedMarket) GetMaturityDate() string { return v.MaturityDate }
 
 // GetLeftPrice returns RangedMarketsRangedMarketsRangedMarket.LeftPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarket) GetLeftPrice() int64 { return v.LeftPrice }
+func (v *RangedMarketsRangedMarketsRangedMarket) GetLeftPrice() string { return v.LeftPrice }
 
 // GetRightPrice returns RangedMarketsRangedMarketsRangedMarket.RightPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarket) GetRightPrice() int64 { return v.RightPrice }
+func (v *RangedMarketsRangedMarketsRangedMarket) GetRightPrice() string { return v.RightPrice }
 
 // GetInAddress returns RangedMarketsRangedMarketsRangedMarket.InAddress, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarket) GetInAddress() []byte { return v.InAddress }
@@ -768,32 +770,32 @@ func (v *RangedMarketsRangedMarketsRangedMarket) GetIsOpen() bool { return v.IsO
 func (v *RangedMarketsRangedMarketsRangedMarket) GetResult() int { return v.Result }
 
 // GetFinalPrice returns RangedMarketsRangedMarketsRangedMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *RangedMarketsRangedMarketsRangedMarket) GetFinalPrice() string { return v.FinalPrice }
 
 // RangedMarketsRangedMarketsRangedMarketLeftMarket includes the requested fields of the GraphQL type Market.
 type RangedMarketsRangedMarketsRangedMarketLeftMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int64  `json:"poolSize"`
+	PoolSize     string `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns RangedMarketsRangedMarketsRangedMarketLeftMarket.Id, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns RangedMarketsRangedMarketsRangedMarketLeftMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCreator returns RangedMarketsRangedMarketsRangedMarketLeftMarket.Creator, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetCreator() []byte { return v.Creator }
@@ -804,23 +806,25 @@ func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetCurrencyKey() []by
 }
 
 // GetStrikePrice returns RangedMarketsRangedMarketsRangedMarketLeftMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetStrikePrice() int64 {
+func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetStrikePrice() string {
 	return v.StrikePrice
 }
 
 // GetMaturityDate returns RangedMarketsRangedMarketsRangedMarketLeftMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetMaturityDate() int64 {
+func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetMaturityDate() string {
 	return v.MaturityDate
 }
 
 // GetExpiryDate returns RangedMarketsRangedMarketsRangedMarketLeftMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetExpiryDate() int64 { return v.ExpiryDate }
+func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetExpiryDate() string {
+	return v.ExpiryDate
+}
 
 // GetIsOpen returns RangedMarketsRangedMarketsRangedMarketLeftMarket.IsOpen, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns RangedMarketsRangedMarketsRangedMarketLeftMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetPoolSize() int64 { return v.PoolSize }
+func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetPoolSize() string { return v.PoolSize }
 
 // GetLongAddress returns RangedMarketsRangedMarketsRangedMarketLeftMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetLongAddress() []byte {
@@ -846,32 +850,34 @@ func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetCustomOracle() []b
 }
 
 // GetFinalPrice returns RangedMarketsRangedMarketsRangedMarketLeftMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetFinalPrice() int64 { return v.FinalPrice }
+func (v *RangedMarketsRangedMarketsRangedMarketLeftMarket) GetFinalPrice() string {
+	return v.FinalPrice
+}
 
 // RangedMarketsRangedMarketsRangedMarketRightMarket includes the requested fields of the GraphQL type Market.
 type RangedMarketsRangedMarketsRangedMarketRightMarket struct {
 	Id           string `json:"id"`
-	Timestamp    int64  `json:"timestamp"`
+	Timestamp    string `json:"timestamp"`
 	Creator      []byte `json:"creator"`
 	CurrencyKey  []byte `json:"currencyKey"`
-	StrikePrice  int64  `json:"strikePrice"`
-	MaturityDate int64  `json:"maturityDate"`
-	ExpiryDate   int64  `json:"expiryDate"`
+	StrikePrice  string `json:"strikePrice"`
+	MaturityDate string `json:"maturityDate"`
+	ExpiryDate   string `json:"expiryDate"`
 	IsOpen       bool   `json:"isOpen"`
-	PoolSize     int64  `json:"poolSize"`
+	PoolSize     string `json:"poolSize"`
 	LongAddress  []byte `json:"longAddress"`
 	ShortAddress []byte `json:"shortAddress"`
 	Result       int    `json:"result"`
 	CustomMarket bool   `json:"customMarket"`
 	CustomOracle []byte `json:"customOracle"`
-	FinalPrice   int64  `json:"finalPrice"`
+	FinalPrice   string `json:"finalPrice"`
 }
 
 // GetId returns RangedMarketsRangedMarketsRangedMarketRightMarket.Id, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetId() string { return v.Id }
 
 // GetTimestamp returns RangedMarketsRangedMarketsRangedMarketRightMarket.Timestamp, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetTimestamp() int64 { return v.Timestamp }
+func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetTimestamp() string { return v.Timestamp }
 
 // GetCreator returns RangedMarketsRangedMarketsRangedMarketRightMarket.Creator, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetCreator() []byte { return v.Creator }
@@ -882,17 +888,17 @@ func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetCurrencyKey() []b
 }
 
 // GetStrikePrice returns RangedMarketsRangedMarketsRangedMarketRightMarket.StrikePrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetStrikePrice() int64 {
+func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetStrikePrice() string {
 	return v.StrikePrice
 }
 
 // GetMaturityDate returns RangedMarketsRangedMarketsRangedMarketRightMarket.MaturityDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetMaturityDate() int64 {
+func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetMaturityDate() string {
 	return v.MaturityDate
 }
 
 // GetExpiryDate returns RangedMarketsRangedMarketsRangedMarketRightMarket.ExpiryDate, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetExpiryDate() int64 {
+func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetExpiryDate() string {
 	return v.ExpiryDate
 }
 
@@ -900,7 +906,7 @@ func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetExpiryDate() int6
 func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetIsOpen() bool { return v.IsOpen }
 
 // GetPoolSize returns RangedMarketsRangedMarketsRangedMarketRightMarket.PoolSize, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetPoolSize() int64 { return v.PoolSize }
+func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetPoolSize() string { return v.PoolSize }
 
 // GetLongAddress returns RangedMarketsRangedMarketsRangedMarketRightMarket.LongAddress, and is useful for accessing the field via an interface.
 func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetLongAddress() []byte {
@@ -926,7 +932,7 @@ func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetCustomOracle() []
 }
 
 // GetFinalPrice returns RangedMarketsRangedMarketsRangedMarketRightMarket.FinalPrice, and is useful for accessing the field via an interface.
-func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetFinalPrice() int64 {
+func (v *RangedMarketsRangedMarketsRangedMarketRightMarket) GetFinalPrice() string {
 	return v.FinalPrice
 }
 
@@ -974,9 +980,9 @@ func (v *__MarketInput) GetId() string { return v.Id }
 
 // __MarketsInput is used internally by genqlient
 type __MarketsInput struct {
-	Skip  int   `json:"skip"`
-	First int   `json:"first"`
-	T     int64 `json:"t"`
+	Skip  int    `json:"skip"`
+	First int    `json:"first"`
+	T     string `json:"t"`
 }
 
 // GetSkip returns __MarketsInput.Skip, and is useful for accessing the field via an interface.
@@ -986,7 +992,7 @@ func (v *__MarketsInput) GetSkip() int { return v.Skip }
 func (v *__MarketsInput) GetFirst() int { return v.First }
 
 // GetT returns __MarketsInput.T, and is useful for accessing the field via an interface.
-func (v *__MarketsInput) GetT() int64 { return v.T }
+func (v *__MarketsInput) GetT() string { return v.T }
 
 // __RangedMarketInput is used internally by genqlient
 type __RangedMarketInput struct {
@@ -998,9 +1004,9 @@ func (v *__RangedMarketInput) GetId() string { return v.Id }
 
 // __RangedMarketsInput is used internally by genqlient
 type __RangedMarketsInput struct {
-	Skip  int   `json:"skip"`
-	First int   `json:"first"`
-	T     int64 `json:"t"`
+	Skip  int    `json:"skip"`
+	First int    `json:"first"`
+	T     string `json:"t"`
 }
 
 // GetSkip returns __RangedMarketsInput.Skip, and is useful for accessing the field via an interface.
@@ -1010,7 +1016,7 @@ func (v *__RangedMarketsInput) GetSkip() int { return v.Skip }
 func (v *__RangedMarketsInput) GetFirst() int { return v.First }
 
 // GetT returns __RangedMarketsInput.T, and is useful for accessing the field via an interface.
-func (v *__RangedMarketsInput) GetT() int64 { return v.T }
+func (v *__RangedMarketsInput) GetT() string { return v.T }
 
 func AllLive(
 	ctx context.Context,
@@ -1227,7 +1233,7 @@ func Markets(
 	client graphql.Client,
 	skip int,
 	first int,
-	t int64,
+	t string,
 ) (*MarketsResponse, error) {
 	req := &graphql.Request{
 		OpName: "Markets",
@@ -1352,7 +1358,7 @@ func RangedMarkets(
 	client graphql.Client,
 	skip int,
 	first int,
-	t int64,
+	t string,
 ) (*RangedMarketsResponse, error) {
 	req := &graphql.Request{
 		OpName: "RangedMarkets",

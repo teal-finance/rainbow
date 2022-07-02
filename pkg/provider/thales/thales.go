@@ -8,6 +8,7 @@ package thales
 import (
 	"context"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
@@ -41,9 +42,10 @@ func (Provider) Name() string {
 	return "Thales"
 }
 
-func twoWeeksInThePast() int64 {
+func twoWeeksInThePast() string {
 	const twoWeeks = -14 * 24 * time.Hour
-	return time.Now().Add(-twoWeeks).Unix()
+	t := time.Now().Add(-twoWeeks).Unix()
+	return strconv.FormatInt(t, 10)
 }
 
 func QueryAllMarkets() []thales.AllMarketsMarketsMarket {
