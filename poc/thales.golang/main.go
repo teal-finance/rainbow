@@ -16,10 +16,16 @@ import (
 )
 
 func main() {
-	markets := thales.QueryAllMarkets()
+	log.Print("-------- thales.QueryAllMarkets --------")
+	all := thales.QueryAllMarkets()
+	log.Print(all)
+
+	log.Print("-------- thales.QueryMarkets --------")
+	markets := thales.QueryMarkets()
 	log.Print(markets)
 
-	m := thales.QueryMarket("0xd9e137e43fb366fb500553c2066b805616d9b0d4")
+	log.Print("-------- thales.QueryMarket --------")
+	m := thales.QueryMarket("0x5416c2ab11c7852ed9648aa006ee69d412c735c9")
 	log.Print(m)
 
 	httpResponse := `{"data":{"markets":[{
@@ -36,7 +42,8 @@ func main() {
 		"shortAddress":"0xa3487b9c100c25a162d2df56dc00b4fdf4cb4d15",
 		"result":null,
 		...`
-	log.Print("HTTP response from TheGraph:", httpResponse)
+	log.Print("-------- HTTP response from TheGraph --------")
+	log.Print(httpResponse)
 }
 
 func name(c []byte) string {
