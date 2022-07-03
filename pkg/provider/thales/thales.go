@@ -90,7 +90,6 @@ func QueryMarket(id string) *thales.MarketMarket {
 		log.Print("ERR thales.Market: resp=nil")
 		return nil
 	}
-	spew.Dump(resp)
 	return &resp.Market
 }
 
