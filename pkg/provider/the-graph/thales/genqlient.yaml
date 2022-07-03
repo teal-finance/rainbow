@@ -13,4 +13,4 @@ bindings:
   BigDecimal:
     type: float64
   Bytes:
-    type: "[]byte"
+    type: string
