@@ -36,12 +36,10 @@ func extract(o *opyn.OptionsOtokensOToken) (optionType, expiry string, strike fl
 		optionType = "PUT"
 	}
 
-	seconds, err := strconv.ParseInt(o.ExpiryTimestamp, 10, 64)
+	expiry, err := rainbow.TimeStringConvert(o.ExpiryTimestamp)
 	if err != nil {
 		log.Printf("ERR Opyn ExpiryTimestamp: %v from %+v", err, o)
 		expiry = ""
-	} else {
-		expiry = time.Unix(seconds, 0).Format("2006-01-02 15:04:05")
 	}
 
 	// thought the USDCdecimals were correct but apparently not (whatever)

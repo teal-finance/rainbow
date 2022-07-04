@@ -6,21 +6,25 @@
 package thales
 
 import (
+	"bytes"
 	"context"
 	"log"
 	"strconv"
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
-	"github.com/davecgh/go-spew/spew"
+	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
 )
 
 const (
-	selection   = "polygon"
+	selection   = "optimism"
 	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
 	urlPolygon  = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
+	OptimismRPC = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
+	PolygonRPC  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
+	name        = "Thales"
 	skip        = 0
 	first       = 100
 )
@@ -39,7 +43,7 @@ func selectURL() string {
 type Provider struct{}
 
 func (Provider) Name() string {
-	return "Thales"
+	return name
 }
 
 func twoWeeksInThePast() string {
@@ -59,7 +63,6 @@ func QueryAllMarkets() []thales.AllMarketsMarketsMarket {
 		log.Print("ERR thales.AllMarkets: resp=nil")
 		return nil
 	}
-	spew.Dump(resp)
 	return resp.Markets
 }
 
@@ -75,7 +78,6 @@ func QueryMarkets() []thales.MarketsMarketsMarket {
 		log.Print("ERR thales.Markets: resp=nil")
 		return nil
 	}
-	spew.Dump(resp)
 	return resp.Markets
 }
 
@@ -104,7 +106,6 @@ func QueryAllRangedMarkets() []thales.AllRangedMarketsRangedMarketsRangedMarket 
 		log.Print("ERR thales.AllRangedMarkets: resp=nil")
 		return nil
 	}
-	spew.Dump(resp)
 	return resp.RangedMarkets
 }
 
@@ -120,14 +121,12 @@ func QueryRangedMarkets() []thales.RangedMarketsRangedMarketsRangedMarket {
 		log.Print("ERR thales.RangedMarkets: resp=nil")
 		return nil
 	}
-	spew.Dump(resp)
 	return resp.RangedMarkets
 }
 
 func QueryRangedMarket(id string) *thales.RangedMarketRangedMarket {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.RangedMarket(context.TODO(), graphqlClient, id)
-	spew.Dump(resp)
 	if err != nil {
 		log.Print("ERR thales.RangedMarket: ", err)
 		return nil
@@ -136,6 +135,12 @@ func QueryRangedMarket(id string) *thales.RangedMarketRangedMarket {
 		log.Print("ERR thales.RangedMarket: resp=nil")
 		return nil
 	}
-	spew.Dump(resp)
 	return &resp.RangedMarket
+}
+
+func Underlying(s string) string {
+	l := common.HexToHash(s)
+	b := l.Bytes()
+	b = bytes.Trim(b, "\x00")
+	return string(b)
 }
