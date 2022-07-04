@@ -111,7 +111,7 @@ func QueryAllRangedMarkets(url string) []thales.AllRangedMarketsRangedMarketsRan
 
 func QueryRangedMarkets(url string) []thales.RangedMarketsRangedMarketsRangedMarket {
 	graphqlClient := graphql.NewClient(url, nil)
-	minExpiry := twoWeeksInThePast()
+	minExpiry := rainbow.TwoWeeksInThePast()
 	resp, err := thales.RangedMarkets(context.TODO(), graphqlClient, skip, first, minExpiry)
 	if err != nil {
 		log.Print("ERR thales.RangedMarkets: ", err)
