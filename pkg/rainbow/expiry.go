@@ -6,6 +6,7 @@
 package rainbow
 
 import (
+	"strconv"
 	"time"
 )
 
@@ -66,4 +67,11 @@ func LastFridayOfEachQuarter(t time.Time, hour int) []time.Time {
 		i++
 	}
 	return expiries
+}
+
+// TwoWeeksInThePast gives the timestamps of now - 2weeks
+func TwoWeeksInThePast() string {
+	const twoWeeks = -14 * 24 * time.Hour
+	t := time.Now().Add(-twoWeeks).Unix()
+	return strconv.FormatInt(t, 10)
 }

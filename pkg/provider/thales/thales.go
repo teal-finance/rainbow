@@ -9,13 +9,12 @@ import (
 	"bytes"
 	"context"
 	"log"
-	"strconv"
-	"time"
 
 	"github.com/Khan/genqlient/graphql"
 	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
+	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 const (
@@ -29,30 +28,31 @@ const (
 	first       = 100
 )
 
-var url = selectURL()
-
-func selectURL() string {
-	switch selection {
-	case "optimism":
-		return urlOptimism
-	default:
-		return urlPolygon
-	}
-}
-
 type Provider struct{}
 
 func (Provider) Name() string {
 	return name
 }
 
-func twoWeeksInThePast() string {
-	const twoWeeks = -14 * 24 * time.Hour
-	t := time.Now().Add(-twoWeeks).Unix()
-	return strconv.FormatInt(t, 10)
+func (Provider) Options() ([]rainbow.Option, error) {
+	return nil, nil
+}
+func QueryAllLiveMarkets(url string) []thales.AllLiveMarketsMarket {
+
+	graphqlClient := graphql.NewClient(url, nil)
+	resp, err := thales.AllLive(context.TODO(), graphqlClient)
+	if err != nil {
+		log.Print("ERR: ", err)
+	}
+
+	if resp == nil {
+		log.Print("ERR: resp=nil")
+		return nil
+	}
+	return resp.Markets
 }
 
-func QueryAllMarkets() []thales.AllMarketsMarketsMarket {
+func QueryAllMarkets(url string) []thales.AllMarketsMarketsMarket {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)
 	if err != nil {
@@ -66,9 +66,9 @@ func QueryAllMarkets() []thales.AllMarketsMarketsMarket {
 	return resp.Markets
 }
 
-func QueryMarkets() []thales.MarketsMarketsMarket {
+func QueryMarkets(url string) []thales.MarketsMarketsMarket {
 	graphqlClient := graphql.NewClient(url, nil)
-	minExpiry := twoWeeksInThePast()
+	minExpiry := rainbow.TwoWeeksInThePast()
 	resp, err := thales.Markets(context.TODO(), graphqlClient, skip, first, minExpiry)
 	if err != nil {
 		log.Print("ERR thales.Markets: ", err)
@@ -81,7 +81,7 @@ func QueryMarkets() []thales.MarketsMarketsMarket {
 	return resp.Markets
 }
 
-func QueryMarket(id string) *thales.MarketMarket {
+func QueryMarket(id, url string) *thales.MarketMarket {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.Market(context.TODO(), graphqlClient, id)
 	if err != nil {
@@ -95,7 +95,7 @@ func QueryMarket(id string) *thales.MarketMarket {
 	return &resp.Market
 }
 
-func QueryAllRangedMarkets() []thales.AllRangedMarketsRangedMarketsRangedMarket {
+func QueryAllRangedMarkets(url string) []thales.AllRangedMarketsRangedMarketsRangedMarket {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.AllRangedMarkets(context.TODO(), graphqlClient, skip, first)
 	if err != nil {
@@ -109,7 +109,7 @@ func QueryAllRangedMarkets() []thales.AllRangedMarketsRangedMarketsRangedMarket 
 	return resp.RangedMarkets
 }
 
-func QueryRangedMarkets() []thales.RangedMarketsRangedMarketsRangedMarket {
+func QueryRangedMarkets(url string) []thales.RangedMarketsRangedMarketsRangedMarket {
 	graphqlClient := graphql.NewClient(url, nil)
 	minExpiry := twoWeeksInThePast()
 	resp, err := thales.RangedMarkets(context.TODO(), graphqlClient, skip, first, minExpiry)
@@ -124,7 +124,7 @@ func QueryRangedMarkets() []thales.RangedMarketsRangedMarketsRangedMarket {
 	return resp.RangedMarkets
 }
 
-func QueryRangedMarket(id string) *thales.RangedMarketRangedMarket {
+func QueryRangedMarket(id, url string) *thales.RangedMarketRangedMarket {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.RangedMarket(context.TODO(), graphqlClient, id)
 	if err != nil {

@@ -6,17 +6,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 
-	"github.com/Khan/genqlient/graphql"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/spewerspew/spew"
 	"github.com/teal-finance/rainbow/pkg/provider/thales"
-	th "github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
 	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
@@ -24,25 +21,17 @@ import (
 func main() {
 	options := zerox.QueryTheGraph()
 	spew.Dump(len(options))
-	id := "0x5416c2ab11c7852ed9648aa006ee69d412c735c9"
-	opt := thales.QueryMarket(id)
-	spew.Dump(opt)
-
 	const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
 	//const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
-	graphqlClient := graphql.NewClient(url, nil)
-	resp, err := th.AllLive(context.TODO(), graphqlClient)
-	if err != nil {
-		log.Print("ERR: ", err)
-	}
 
-	if resp == nil {
-		log.Print("ERR: resp=nil")
-		return
-	}
-	spew.Dump(len(resp.Markets))
+	id := "0x5416c2ab11c7852ed9648aa006ee69d412c735c9"
+	opt := thales.QueryMarket(id, url)
+	spew.Dump(opt)
 
-	markets := thales.QueryAllMarkets()
+	allLive := thales.QueryAllLiveMarkets(url)
+	spew.Dump(len(allLive))
+
+	markets := thales.QueryAllMarkets(url)
 	spew.Dump(len(markets))
 	fmt.Println(thales.Underlying(opt.CurrencyKey))
 
@@ -94,6 +83,9 @@ func main() {
 	}
 	spew.Dump(rainbow.ToFloat(quote))
 	spew.Dump(rainbow.ToFloat(amount))
+
+	t, _ := rainbow.TimeStringConvert(opt.MaturityDate)
+	fmt.Println("expiration ", t)
 	/*
 		var t int64 = 1654041600 //01-JUN-2022
 		response, err := thales.Markets(context.TODO(), graphqlClient, 0, 0, t)
