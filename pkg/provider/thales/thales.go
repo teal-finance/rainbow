@@ -57,7 +57,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 			log.Print("ERR: ", err)
 			return nil, err
 		}
-		options, errmione := ProcessMarkets(markets, l)
+		options, errmione := ProcessMarkets(markets[0:20], l)
 		if errmione != nil {
 			log.Print("ERR: ", err)
 			return nil, err
@@ -94,9 +94,13 @@ func ProcessMarkets(markets []thales.AllLiveMarketsMarket, layer string) ([]rain
 
 }
 func getOption(m thales.AllLiveMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
-	binaryType := "DOWN"
+	// TODO change front to take care of UP/DOWN properly
+	// here we do a hack where
+	// DOWN == PUT
+	// UP   == CALL
+	binaryType := "PUT" //"DOWN"
 	if side != 0 {
-		binaryType = "UP"
+		binaryType = "CALL" //"UP"
 	}
 
 	expiry, err := rainbow.TimeStringConvert(m.MaturityDate)
