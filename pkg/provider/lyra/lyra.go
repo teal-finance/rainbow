@@ -154,8 +154,8 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 		Strike:        rainbow.ToFloat(listing.Strike),
 	}
 
-	call.Name = rainbow.OptionName(call)
-	put.Name = rainbow.OptionName(put)
+	call.Name = call.OptionName()
+	put.Name = put.OptionName()
 
 	call.Bid = append(call.Bid, rainbow.Order{
 		Price: rainbow.ToFloat(ammOrder[0].Premium),

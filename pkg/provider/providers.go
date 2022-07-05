@@ -13,10 +13,7 @@ import (
 	"github.com/teal-finance/notifier"
 	"github.com/teal-finance/notifier/logger"
 	"github.com/teal-finance/notifier/mattermost"
-	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/thales"
-	"github.com/teal-finance/rainbow/pkg/provider/zerox"
-	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -29,11 +26,11 @@ const (
 func AllProvidersNoAlerter() []rainbow.Provider {
 	return []rainbow.Provider{
 		//psyoptions.Provider{},    // separate psy and zeta to not
-		deribit.Provider{}, //                  |
+		//deribit.Provider{}, //                  |
 		//lyra.Provider{},          //                  |
-		zerox.Provider{},       //                  |
-		zetamarkets.Provider{}, // <----------------` exhaust solana/serum rpc quota
-		thales.Provider{},      //
+		//zerox.Provider{},       //                  |
+		//zetamarkets.Provider{}, // <----------------` exhaust solana/serum rpc quota
+		thales.Provider{}, //
 		//deltaexchange.Provider{}, // last because slow (rate limit)
 	}
 }

@@ -47,16 +47,17 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	rpc := []string{urlOptimism, urlPolygon}
+	layer := []string{"Optimism", "Polygon"}
 	var o []rainbow.Option
-	for _, url := range rpc {
+	for _, l := range layer {
 
+		_, url, _ := LayerInfo(l)
 		markets, err := QueryAllLiveMarkets(url)
 		if err != nil {
 			log.Print("ERR: ", err)
 			return nil, err
 		}
-		options, errmione := ProcessMarkets(markets)
+		options, errmione := ProcessMarkets(markets, l)
 		if errmione != nil {
 			log.Print("ERR: ", err)
 			return nil, err
@@ -69,18 +70,18 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	return o, nil
 }
 
-func ProcessMarkets(markets []thales.AllLiveMarketsMarket) ([]rainbow.Option, error) {
+func ProcessMarkets(markets []thales.AllLiveMarketsMarket, layer string) ([]rainbow.Option, error) {
 	spew.Dump(len(markets))
 
 	r := make([]rainbow.Option, 0, 2*len(markets))
 
 	for _, m := range markets {
-		up, err := getOption(m, UP)
+		up, err := getOption(m, UP, layer)
 		if err != nil {
 			log.Print("ERR: ", err)
 			return nil, err
 		}
-		down, err := getOption(m, DOWN)
+		down, err := getOption(m, DOWN, layer)
 		if err != nil {
 			log.Print("ERR: ", err)
 			return nil, err
@@ -92,7 +93,7 @@ func ProcessMarkets(markets []thales.AllLiveMarketsMarket) ([]rainbow.Option, er
 	return r, nil
 
 }
-func getOption(m thales.AllLiveMarketsMarket, side int8) (rainbow.Option, error) {
+func getOption(m thales.AllLiveMarketsMarket, side int8, layer string) (rainbow.Option, error) {
 	binaryType := "DOWN"
 	if side != 0 {
 		binaryType = "UP"
@@ -119,7 +120,7 @@ func getOption(m thales.AllLiveMarketsMarket, side int8) (rainbow.Option, error)
 		ExchangeType:  "DEX",
 		Chain:         "Ethereum",
 		Layer:         "L2",
-		LayerName:     "",
+		LayerName:     layer,
 		Provider:      name,
 		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon
 		//TODO add underlying quote currency to be able to specify the token
@@ -131,11 +132,11 @@ func getOption(m thales.AllLiveMarketsMarket, side int8) (rainbow.Option, error)
 	return binary, nil
 }
 func LayerInfo(s string) (rpc, thegraphURL, amm string) {
-	if s == "optimism" {
+	if s == "Optimism" {
 		rpc = rpcOptimism
 		thegraphURL = urlOptimism
 		amm = ammOptimism
-	} else if s == "polygon" {
+	} else if s == "Polygon" {
 		rpc = rpcPolygon
 		thegraphURL = urlPolygon
 		amm = ammPolygon
