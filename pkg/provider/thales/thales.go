@@ -30,14 +30,14 @@ const (
 	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
 	//amm
-	ammPolygon  = "0x9b6d76B1C6140FbB0ABc9C4a348BFf4e4e8a1213"
-	ammOptimism = "0x5ae7454827D83526261F3871C1029792644Ef1B1"
-	name        = "Thales"
-	skip        = 0
-	first       = 100
-	UP          = 0
-	DOWN        = 1
-	amount      = 1
+	ammPolygon        = "0x9b6d76B1C6140FbB0ABc9C4a348BFf4e4e8a1213"
+	ammOptimism       = "0x5ae7454827D83526261F3871C1029792644Ef1B1"
+	name              = "Thales"
+	skip              = 0
+	first             = 100
+	UP          uint8 = 0
+	DOWN        uint8 = 1
+	amount            = 1
 )
 
 type Provider struct{}
@@ -93,7 +93,7 @@ func ProcessMarkets(markets []thales.AllLiveMarketsMarket, layer string) ([]rain
 	return r, nil
 
 }
-func getOption(m thales.AllLiveMarketsMarket, side int8, layer string) (rainbow.Option, error) {
+func getOption(m thales.AllLiveMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
 	binaryType := "DOWN"
 	if side != 0 {
 		binaryType = "UP"
@@ -129,6 +129,27 @@ func getOption(m thales.AllLiveMarketsMarket, side int8, layer string) (rainbow.
 		Strike: rainbow.ToFloat(strikeInt),
 	}
 	binary.Name = binary.OptionName()
+	buy, err := getQuote(m, side, "BUY", layer)
+	if err != nil {
+		log.Print("ERR: ", err)
+		return rainbow.Option{}, err
+	}
+
+	sell, err := getQuote(m, side, "SELL", layer)
+	if err != nil {
+		log.Print("ERR: ", err)
+		return rainbow.Option{}, err
+	}
+	binary.Bid = append(binary.Bid, rainbow.Order{
+		Price: sell,
+		Size:  float64(amount),
+	})
+
+	binary.Ask = append(binary.Ask, rainbow.Order{
+		Price: buy,
+		Size:  float64(amount),
+	})
+
 	return binary, nil
 }
 func LayerInfo(s string) (rpc, thegraphURL, amm string) {
@@ -144,30 +165,34 @@ func LayerInfo(s string) (rpc, thegraphURL, amm string) {
 	return rpc, thegraphURL, amm
 }
 
-func getQuote(m thales.AllLiveMarketsMarket, side int8, action, layer string) (float64, error) {
+func getQuote(m thales.AllLiveMarketsMarket, side uint8, action, layer string) (float64, error) {
 	rpc, _, amm := LayerInfo(layer)
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
-		log.Fatal(err)
+		log.Print("ERR: ", err)
+		return 0, err
 	}
 
 	address := common.HexToAddress(amm)
 	instance, err := NewThales(address, client)
 	if err != nil {
-		log.Fatal(err)
+		log.Print("ERR: ", err)
+		return 0, err
 	}
 	amountToQuote := rainbow.IntToEthereumFormat(amount)
 	quote := new(big.Int)
 	if action == "BUY" {
-		quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), UP, amountToQuote)
+		quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
-			log.Fatal(err)
+			log.Print("ERR: ", err)
+			return 0, err
 
 		}
 	} else if action == "SELL" {
-		quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), UP, amountToQuote)
+		quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
-			log.Fatal(err)
+			log.Print("ERR: ", err)
+			return 0, err
 		}
 	}
 
