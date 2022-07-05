@@ -14,23 +14,30 @@ import (
 
 	"github.com/Khan/genqlient/graphql"
 	"github.com/davecgh/go-spew/spew"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 const (
-	selection   = "optimism"
+	//thegraph urls
 	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
 	urlPolygon  = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
-	OptimismRPC = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
-	PolygonRPC  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
+	//rpc
+	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
+	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
+	//amm
+	ammPolygon  = "0x9b6d76B1C6140FbB0ABc9C4a348BFf4e4e8a1213"
+	ammOptimism = "0x5ae7454827D83526261F3871C1029792644Ef1B1"
 	name        = "Thales"
 	skip        = 0
 	first       = 100
 	UP          = 0
 	DOWN        = 1
+	amount      = 1
 )
 
 type Provider struct{}
@@ -112,6 +119,7 @@ func getOption(m thales.AllLiveMarketsMarket, side int8) (rainbow.Option, error)
 		ExchangeType:  "DEX",
 		Chain:         "Ethereum",
 		Layer:         "L2",
+		LayerName:     "",
 		Provider:      name,
 		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon
 		//TODO add underlying quote currency to be able to specify the token
@@ -122,7 +130,48 @@ func getOption(m thales.AllLiveMarketsMarket, side int8) (rainbow.Option, error)
 	binary.Name = binary.OptionName()
 	return binary, nil
 }
+func LayerInfo(s string) (rpc, thegraphURL, amm string) {
+	if s == "optimism" {
+		rpc = rpcOptimism
+		thegraphURL = urlOptimism
+		amm = ammOptimism
+	} else if s == "polygon" {
+		rpc = rpcPolygon
+		thegraphURL = urlPolygon
+		amm = ammPolygon
+	}
+	return rpc, thegraphURL, amm
+}
 
+func getQuote(m thales.AllLiveMarketsMarket, side int8, action, layer string) (float64, error) {
+	rpc, _, amm := LayerInfo(layer)
+	client, err := ethclient.Dial(rpc)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	address := common.HexToAddress(amm)
+	instance, err := NewThales(address, client)
+	if err != nil {
+		log.Fatal(err)
+	}
+	amountToQuote := rainbow.IntToEthereumFormat(amount)
+	quote := new(big.Int)
+	if action == "BUY" {
+		quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), UP, amountToQuote)
+		if err != nil {
+			log.Fatal(err)
+
+		}
+	} else if action == "SELL" {
+		quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), UP, amountToQuote)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	return rainbow.ToFloat(quote), nil
+}
 func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 
 	graphqlClient := graphql.NewClient(url, nil)

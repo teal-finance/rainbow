@@ -8,15 +8,16 @@ package rainbow
 import "fmt"
 
 type Option struct {
-	Name          string  `json:"name"`     // ASSET-DATE-Strike-OptionsType
-	Type          string  `json:"type"`     // CALL / PUT
-	Asset         string  `json:"asset"`    // ETH, BTC, SOL
-	Expiry        string  `json:"expiry"`   // Expiry date in format 2021-12-31
-	ExchangeType  string  `json:"exchange"` // CEX / DEX
-	Chain         string  `json:"chain"`    // Ethereum, Solana and "–" for CEX (Deribit)
-	Layer         string  `json:"layer"`    // L1, L2 and "–" for CEX (Deribit)
-	Provider      string  `json:"provider"` // Opyn, Lyra, Thales, Deribit, Psyoptions
-	QuoteCurrency string  `json:"currency"` // ETH, BTC, USDT...
+	Name          string  `json:"name"`      // ASSET-DATE-Strike-OptionsType
+	Type          string  `json:"type"`      // CALL / PUT
+	Asset         string  `json:"asset"`     // ETH, BTC, SOL
+	Expiry        string  `json:"expiry"`    // Expiry date in format 2021-12-31
+	ExchangeType  string  `json:"exchange"`  // CEX / DEX
+	Chain         string  `json:"chain"`     // Ethereum, Solana and "–" for CEX (Deribit)
+	Layer         string  `json:"layer"`     // L1, L2 and "–" for CEX (Deribit)
+	LayerName     string  `json:"layername"` // name of the layer 1/2. "-" for CEX
+	Provider      string  `json:"provider"`  // Opyn, Lyra, Thales, Deribit, Psyoptions
+	QuoteCurrency string  `json:"currency"`  // ETH, BTC, USDT...
 	Bid           []Order `json:"bid"`
 	Ask           []Order `json:"ask"`
 	Strike        float64 `json:"strike"`

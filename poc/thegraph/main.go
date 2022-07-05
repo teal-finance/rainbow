@@ -35,14 +35,14 @@ func main() {
 	markets := thales.QueryAllMarkets(url)
 	spew.Dump(len(markets))
 	fmt.Println(thales.Underlying(opt.CurrencyKey))
-
-	client, err := ethclient.Dial(thales.OptimismRPC)
+	rpc, _, amm := thales.LayerInfo("optimism")
+	client, err := ethclient.Dial(rpc)
 	if err != nil {
 		log.Fatal(err)
 	}
-	AMM := "0x5ae7454827D83526261F3871C1029792644Ef1B1"
+	//AMM := "0x5ae7454827D83526261F3871C1029792644Ef1B1"
 
-	address := common.HexToAddress(AMM)
+	address := common.HexToAddress(amm)
 	instance, err := thales.NewThales(address, client)
 	if err != nil {
 		log.Fatal(err)
