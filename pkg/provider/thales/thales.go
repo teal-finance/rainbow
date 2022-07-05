@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"log"
 	"math/big"
+	"time"
 
 	"github.com/Khan/genqlient/graphql"
 	"github.com/davecgh/go-spew/spew"
@@ -75,7 +76,7 @@ func ProcessMarkets(markets []thales.AllLiveMarketsMarket, layer string) ([]rain
 
 	r := make([]rainbow.Option, 0, 2*len(markets))
 
-	for _, m := range markets {
+	for count, m := range markets {
 		up, err := getOption(m, UP, layer)
 		if err != nil {
 			log.Print("ERR: ", err)
@@ -87,6 +88,9 @@ func ProcessMarkets(markets []thales.AllLiveMarketsMarket, layer string) ([]rain
 			return nil, err
 		}
 		r = append(r, up, down)
+		if count%30 == 0 {
+			time.Sleep(1 * time.Second)
+		}
 
 	}
 	spew.Dump(len(r))
