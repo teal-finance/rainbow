@@ -88,7 +88,7 @@ func ProcessMarkets(markets []thales.AllLiveMarketsMarket, layer string) ([]rain
 			return nil, err
 		}
 		r = append(r, up, down)
-		if count%15 == 0 {
+		if count%10 == 0 {
 			time.Sleep(1 * time.Second)
 		}
 
