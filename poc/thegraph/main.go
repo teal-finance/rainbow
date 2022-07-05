@@ -22,13 +22,14 @@ func main() {
 	options := zerox.QueryTheGraph()
 	spew.Dump(len(options))
 	const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
-	//const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
-
 	id := "0x5416c2ab11c7852ed9648aa006ee69d412c735c9"
+
+	//const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
+	//id := "0x3831f981fe62a081ccf4acb7ed1d3fea1ac761db"
 	opt := thales.QueryMarket(id, url)
 	spew.Dump(opt)
 
-	allLive := thales.QueryAllLiveMarkets(url)
+	allLive, _ := thales.QueryAllLiveMarkets(url)
 	spew.Dump(len(allLive))
 
 	markets := thales.QueryAllMarkets(url)

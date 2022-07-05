@@ -8,9 +8,12 @@ package thales
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"log"
+	"math/big"
 
 	"github.com/Khan/genqlient/graphql"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
@@ -26,6 +29,8 @@ const (
 	name        = "Thales"
 	skip        = 0
 	first       = 100
+	UP          = 0
+	DOWN        = 1
 )
 
 type Provider struct{}
@@ -35,23 +40,106 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	return nil, nil
+	rpc := []string{urlOptimism, urlPolygon}
+	var o []rainbow.Option
+	for _, url := range rpc {
+
+		markets, err := QueryAllLiveMarkets(url)
+		if err != nil {
+			log.Print("ERR: ", err)
+			return nil, err
+		}
+		options, errmione := ProcessMarkets(markets)
+		if errmione != nil {
+			log.Print("ERR: ", err)
+			return nil, err
+
+		}
+		o = append(o, options...)
+
+	}
+
+	return o, nil
 }
-func QueryAllLiveMarkets(url string) []thales.AllLiveMarketsMarket {
+
+func ProcessMarkets(markets []thales.AllLiveMarketsMarket) ([]rainbow.Option, error) {
+	spew.Dump(len(markets))
+
+	r := make([]rainbow.Option, 0, 2*len(markets))
+
+	for _, m := range markets {
+		up, err := getOption(m, UP)
+		if err != nil {
+			log.Print("ERR: ", err)
+			return nil, err
+		}
+		down, err := getOption(m, DOWN)
+		if err != nil {
+			log.Print("ERR: ", err)
+			return nil, err
+		}
+		r = append(r, up, down)
+
+	}
+	spew.Dump(len(r))
+	return r, nil
+
+}
+func getOption(m thales.AllLiveMarketsMarket, side int8) (rainbow.Option, error) {
+	binaryType := "DOWN"
+	if side != 0 {
+		binaryType = "UP"
+	}
+
+	expiry, err := rainbow.TimeStringConvert(m.MaturityDate)
+	if err != nil {
+		log.Print("ERR: ", err)
+		return rainbow.Option{}, err
+	}
+
+	strikeInt := new(big.Int)
+	_, err = fmt.Sscan(m.StrikePrice, strikeInt)
+	if err != nil {
+		log.Print("ERR: ", err)
+		return rainbow.Option{}, err
+	}
+
+	binary := rainbow.Option{
+		Name:          "",
+		Type:          binaryType,
+		Asset:         Underlying(m.CurrencyKey),
+		Expiry:        expiry,
+		ExchangeType:  "DEX",
+		Chain:         "Ethereum",
+		Layer:         "L2",
+		Provider:      name,
+		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon
+		//TODO add underlying quote currency to be able to specify the token
+		Bid:    nil,
+		Ask:    nil,
+		Strike: rainbow.ToFloat(strikeInt),
+	}
+	binary.Name = binary.OptionName()
+	return binary, nil
+}
+
+func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.AllLive(context.TODO(), graphqlClient)
 	if err != nil {
 		log.Print("ERR: ", err)
+		return nil, err
 	}
 
 	if resp == nil {
 		log.Print("ERR: resp=nil")
-		return nil
+		return nil, err
 	}
-	return resp.Markets
+	return resp.Markets, err
 }
 
+//TODO add err
 func QueryAllMarkets(url string) []thales.AllMarketsMarketsMarket {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)

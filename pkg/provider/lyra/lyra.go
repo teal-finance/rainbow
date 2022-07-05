@@ -6,7 +6,6 @@
 package lyra
 
 import (
-	"fmt"
 	"log"
 	"math/big"
 	"time"
@@ -155,8 +154,8 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 		Strike:        rainbow.ToFloat(listing.Strike),
 	}
 
-	call.Name = optionName(call)
-	put.Name = optionName(put)
+	call.Name = rainbow.OptionName(call)
+	put.Name = rainbow.OptionName(put)
 
 	call.Bid = append(call.Bid, rainbow.Order{
 		Price: rainbow.ToFloat(ammOrder[0].Premium),
@@ -180,11 +179,6 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 
 	options = append(options, call, put)
 	return options
-}
-
-func optionName(o rainbow.Option) string {
-	return o.Asset + "-" + o.Expiry + "-" +
-		fmt.Sprintf("%.2f", o.Strike) + "-" + o.Type
 }
 
 func expiration(e *big.Int) string {

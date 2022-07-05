@@ -5,6 +5,8 @@
 
 package rainbow
 
+import "fmt"
+
 type Option struct {
 	Name          string  `json:"name"`     // ASSET-DATE-Strike-OptionsType
 	Type          string  `json:"type"`     // CALL / PUT
@@ -18,6 +20,15 @@ type Option struct {
 	Bid           []Order `json:"bid"`
 	Ask           []Order `json:"ask"`
 	Strike        float64 `json:"strike"`
+}
+
+// TODO put standard name here
+func (o Option) OptionName() string {
+	if o.Name != "" {
+		return o.Name
+	}
+	return o.Provider + "-" + o.Asset + "-" + fmt.Sprintf("%.3f", o.Strike) + "-" + o.Type + "-" + o.Expiry
+
 }
 
 type Order struct {
