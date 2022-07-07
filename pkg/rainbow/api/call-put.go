@@ -92,7 +92,7 @@ func IsRowEmpty(row []rainbow.Option) bool {
 
 func IsOffersEmpty(order []rainbow.Order) bool {
 
-	return len(order) == 0 || order[0].Price*order[0].Size == 0
+	return len(order) == 0 || order[0].Size == 0 || order[0].Price < 0.001
 }
 
 func (a *Align) buildCallPut(options []rainbow.Option) []Row {

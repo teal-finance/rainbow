@@ -87,7 +87,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 
 func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketViewerTradePremiumView, error) {
 	ammOrder := []OptionMarketViewerTradePremiumView{}
-	a := rainbow.IntToEthereumFormat(amount)
+	a := rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals)
 
 	// Call BID
 	trade, err := v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 1, a)
@@ -137,7 +137,7 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
-		Strike:        rainbow.ToFloat(listing.Strike),
+		Strike:        rainbow.ToFloat(listing.Strike, rainbow.DefaultEthereumDecimals),
 	}
 	put := rainbow.Option{
 		Name:          "",
@@ -151,29 +151,29 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
-		Strike:        rainbow.ToFloat(listing.Strike),
+		Strike:        rainbow.ToFloat(listing.Strike, rainbow.DefaultEthereumDecimals),
 	}
 
 	call.Name = call.OptionName()
 	put.Name = put.OptionName()
 
 	call.Bid = append(call.Bid, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[0].Premium),
+		Price: rainbow.ToFloat(ammOrder[0].Premium, rainbow.DefaultEthereumDecimals),
 		Size:  float64(amount),
 	})
 
 	call.Ask = append(call.Ask, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[1].Premium),
+		Price: rainbow.ToFloat(ammOrder[1].Premium, rainbow.DefaultEthereumDecimals),
 		Size:  float64(amount),
 	})
 
 	put.Bid = append(put.Bid, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[2].Premium),
+		Price: rainbow.ToFloat(ammOrder[2].Premium, rainbow.DefaultEthereumDecimals),
 		Size:  float64(amount),
 	})
 
 	put.Ask = append(put.Ask, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[3].Premium),
+		Price: rainbow.ToFloat(ammOrder[3].Premium, rainbow.DefaultEthereumDecimals),
 		Size:  float64(amount),
 	})
 

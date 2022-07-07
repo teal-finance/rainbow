@@ -20,6 +20,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
+	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -31,14 +32,15 @@ const (
 	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
 	//amm
-	ammPolygon        = "0x9b6d76B1C6140FbB0ABc9C4a348BFf4e4e8a1213"
-	ammOptimism       = "0x5ae7454827D83526261F3871C1029792644Ef1B1"
-	name              = "Thales"
-	skip              = 0
-	first             = 500
-	UP          uint8 = 0
-	DOWN        uint8 = 1
-	amount            = 1
+	ammPolygon  = "0x9b6d76B1C6140FbB0ABc9C4a348BFf4e4e8a1213"
+	ammOptimism = "0x5ae7454827D83526261F3871C1029792644Ef1B1"
+	// other
+	name         = "Thales"
+	skip         = 0
+	first        = 500
+	UP     uint8 = 0
+	DOWN   uint8 = 1
+	amount       = 1
 )
 
 type Provider struct{}
@@ -48,11 +50,11 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	layer := []string{"Optimism", "Polygon"}
+	layer := []string{"Polygon"} //{"Optimism", "Polygon"}
 	var o []rainbow.Option
 	for _, l := range layer {
 
-		_, url, _ := LayerInfo(l)
+		_, url, _, _ := LayerInfo(l)
 		markets, err := QueryAllMarkets(url)
 		if err != nil {
 			log.Print("ERR: ", err)
@@ -134,7 +136,7 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 		//TODO add underlying quote currency to be able to specify the token
 		Bid:    nil,
 		Ask:    nil,
-		Strike: rainbow.ToFloat(strikeInt),
+		Strike: rainbow.ToFloat(strikeInt, rainbow.DefaultEthereumDecimals),
 	}
 	binary.Name = binary.OptionName()
 	buy, err := getQuote(m, side, "BUY", layer)
@@ -160,21 +162,23 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 	//spew.Dump(binary)
 	return binary, nil
 }
-func LayerInfo(s string) (rpc, thegraphURL, amm string) {
+func LayerInfo(s string) (rpc, thegraphURL, amm string, decimals int64) {
 	if s == "Optimism" {
 		rpc = rpcOptimism
 		thegraphURL = urlOptimism
 		amm = ammOptimism
+		decimals = rainbow.DefaultEthereumDecimals
 	} else if s == "Polygon" {
 		rpc = rpcPolygon
 		thegraphURL = urlPolygon
 		amm = ammPolygon
+		decimals = zerox.USDCDecimals
 	}
-	return rpc, thegraphURL, amm
+	return rpc, thegraphURL, amm, decimals
 }
 
 func getQuote(m thales.AllMarketsMarketsMarket, side uint8, action, layer string) (float64, error) {
-	rpc, _, amm := LayerInfo(layer)
+	rpc, _, amm, decimals := LayerInfo(layer)
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
 		log.Print("ERR: ", err)
@@ -187,7 +191,7 @@ func getQuote(m thales.AllMarketsMarketsMarket, side uint8, action, layer string
 		log.Print("ERR: ", err)
 		return 0, err
 	}
-	amountToQuote := rainbow.IntToEthereumFormat(amount)
+	amountToQuote := rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals)
 	quote := new(big.Int)
 	if action == "BUY" {
 		quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
@@ -204,7 +208,7 @@ func getQuote(m thales.AllMarketsMarketsMarket, side uint8, action, layer string
 		}
 	}
 
-	return rainbow.ToFloat(quote), nil
+	return rainbow.ToFloat(quote, decimals), nil
 }
 func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 

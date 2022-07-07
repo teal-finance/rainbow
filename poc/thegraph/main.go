@@ -25,22 +25,23 @@ func main() {
 	//id := "0x5416c2ab11c7852ed9648aa006ee69d412c735c9"
 
 	const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
-	id := "0x9876f861a3e8c1c6f40355c35bfe1d80bb495bda"
+	id := "0xb83d6cf233a9cc4d8153315c6420639ad16726ae"
 	opt := thales.QueryMarket(id, url)
 	spew.Dump(opt)
 
-	allLive, _ := thales.QueryAllLiveMarkets(url)
+	/*allLive, _ := thales.QueryAllLiveMarkets(url)
 	spew.Dump(len(allLive))
 
 	markets, _ := thales.QueryAllMarkets(url)
 	fmt.Println("test")
-	spew.Dump(len(markets))
+	spew.Dump(len(markets))*/
 	fmt.Println(thales.Underlying(opt.CurrencyKey))
-	rpc, _, amm := thales.LayerInfo("Polygon") //"Optimism")
+	rpc, _, amm, decimals := thales.LayerInfo("Polygon") //"Optimism")
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println(amm, "\t", rpc, "\t", decimals)
 	//AMM := "0x5ae7454827D83526261F3871C1029792644Ef1B1"
 
 	address := common.HexToAddress(amm)
@@ -52,39 +53,56 @@ func main() {
 	fmt.Println("contract is loaded")
 	const UP = 0
 	const DOWN = 1
-	amount := rainbow.IntToEthereumFormat(1)
+	amount := rainbow.IntToEthereumUint256(1, rainbow.DefaultEthereumDecimals)
+	k, err := instance.CapPerMarket(&bind.CallOpts{})
+	if err != nil {
+		log.Fatal(err)
+
+	}
+	spew.Dump(k)
+	spew.Dump(rainbow.ToFloat(k, rainbow.DefaultEthereumDecimals))
+	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
+	spew.Dump(decimals)
+	spew.Dump(amount)
 
 	quote, err := instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), UP, amount)
 	if err != nil {
 		log.Fatal(err)
 
 	}
-	spew.Dump(rainbow.ToFloat(quote))
-	spew.Dump(rainbow.ToFloat(amount))
+	spew.Dump(quote)
+	spew.Dump(rainbow.ToFloat(quote, decimals))
+	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
 
 	quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), UP, amount)
 	if err != nil {
 		log.Fatal(err)
 
 	}
-	spew.Dump(rainbow.ToFloat(quote))
-	spew.Dump(rainbow.ToFloat(amount))
+	spew.Dump(quote)
+
+	spew.Dump(rainbow.ToFloat(quote, decimals))
+	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
 
 	quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), DOWN, amount)
 	if err != nil {
 		log.Fatal(err)
 
 	}
-	spew.Dump(rainbow.ToFloat(quote))
-	spew.Dump(rainbow.ToFloat(amount))
+	spew.Dump(quote)
+
+	spew.Dump(rainbow.ToFloat(quote, decimals))
+	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
 
 	quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), DOWN, amount)
 	if err != nil {
 		log.Fatal(err)
 
 	}
-	spew.Dump(rainbow.ToFloat(quote))
-	spew.Dump(rainbow.ToFloat(amount))
+	spew.Dump(quote)
+
+	spew.Dump(rainbow.ToFloat(quote, decimals))
+	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
 
 	t, _ := rainbow.TimeStringConvert(opt.MaturityDate)
 	fmt.Println("expiration ", t)

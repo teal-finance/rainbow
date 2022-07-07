@@ -15,20 +15,21 @@ import (
 
 func main() {
 	log.Print("-------- thales.QueryAllMarkets --------")
-	all := thales.QueryAllMarkets()
+	_, url, _, _ := thales.LayerInfo("Optimism")
+	all, _ := thales.QueryAllMarkets(url)
 	log.Print("len = ", len(all))
 	if len(all) > 0 {
 		spew.Dump(all[0])
 	}
 
 	log.Print("-------- thales.QueryMarkets --------")
-	markets := thales.QueryMarkets()
+	markets := thales.QueryMarkets(url)
 	log.Print("len = ", len(markets))
 	if len(markets) > 0 {
 		spew.Dump(markets[0])
 	}
 
 	log.Print("-------- thales.QueryMarket --------")
-	m := thales.QueryMarket("0x5416c2ab11c7852ed9648aa006ee69d412c735c9")
+	m := thales.QueryMarket("0x5416c2ab11c7852ed9648aa006ee69d412c735c9", url)
 	spew.Dump(m)
 }
