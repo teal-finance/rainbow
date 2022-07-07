@@ -14,8 +14,6 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/garcon/webform"
-	"github.com/teal-finance/garcon/webserver"
 	"github.com/teal-finance/notifier/mattermost"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -79,33 +77,23 @@ func main() {
 
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
-
-	web := webserver.WebServer{
-		Dir:    *wwwDir,
-		ResErr: g.ResErr,
-	}
-
-	wf := webform.WebForm{
-		ResErr:     g.ResErr,
-		Redirect:   "/",
-		Notifier:   nil,
-		TextLimits: webform.DefaultTextLimits,
-		FileLimits: webform.DefaultFileLimits,
-	}
-	if *form != "" {
-		wf.Notifier = mattermost.NewNotifier(*form)
-	}
+	c := g.Checker
 
 	// Static website: set the cookie only when visiting index.html
-	c := g.Checker
-	r.With(c.Set).NotFound(web.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
-	r.Get("/favicon.ico", web.ServeFile("favicon.ico", "image/x-icon"))
-	r.Get("/favicon.png", web.ServeFile("favicon.png", "image/png"))
-	r.Get("/preview.jpg", web.ServeFile("preview.jpg", "image/jpeg"))
-	r.With(c.Chk).Get("/js/*", web.ServeDir("text/javascript; charset=utf-8"))
-	r.With(c.Chk).Get("/assets/*", web.ServeAssets())
-	r.With(c.Chk).Post("/", wf.WebForm()) // process filled contact form et forward to Mattermost
+	ws := garcon.NewStaticWebServer(*wwwDir, g.ErrWriter)
+	r.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
+	r.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))
+	r.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
+	r.With(c.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
+	r.With(c.Chk).Get("/assets/*", ws.ServeAssets())
+	// NotFound catches index.html and other Vue sub-folders
+	r.With(c.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))
 
+	// Send contact-form to Mattermost
+	cf := garcon.NewContactForm("/", *form, g.ErrWriter)
+	r.With(c.Chk).Post("/", cf.NotifyWebForm())
+
+	// API routes
 	r.Route("/v0", func(r chi.Router) {
 		h := api.Handler{Service: s}
 
