@@ -32,7 +32,8 @@ func main() {
 	allLive, _ := thales.QueryAllLiveMarkets(url)
 	spew.Dump(len(allLive))
 
-	markets := thales.QueryAllMarkets(url)
+	markets, _ := thales.QueryAllMarkets(url)
+	fmt.Println("test")
 	spew.Dump(len(markets))
 	fmt.Println(thales.Underlying(opt.CurrencyKey))
 	rpc, _, amm := thales.LayerInfo("optimism")

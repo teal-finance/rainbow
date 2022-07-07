@@ -35,7 +35,7 @@ const (
 	ammOptimism       = "0x5ae7454827D83526261F3871C1029792644Ef1B1"
 	name              = "Thales"
 	skip              = 0
-	first             = 100
+	first             = 500
 	UP          uint8 = 0
 	DOWN        uint8 = 1
 	amount            = 1
@@ -53,7 +53,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	for _, l := range layer {
 
 		_, url, _ := LayerInfo(l)
-		markets, err := QueryAllLiveMarkets(url)
+		markets, err := QueryAllMarkets(url)
 		if err != nil {
 			log.Print("ERR: ", err)
 			return nil, err
@@ -71,7 +71,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	return o, nil
 }
 
-func ProcessMarkets(markets []thales.AllLiveMarketsMarket, layer string) ([]rainbow.Option, error) {
+func ProcessMarkets(markets []thales.AllMarketsMarketsMarket, layer string) ([]rainbow.Option, error) {
 	spew.Dump(len(markets))
 
 	r := make([]rainbow.Option, 0, 2*len(markets))
@@ -97,7 +97,7 @@ func ProcessMarkets(markets []thales.AllLiveMarketsMarket, layer string) ([]rain
 	return r, nil
 
 }
-func getOption(m thales.AllLiveMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
+func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
 	// TODO change front to take care of UP/DOWN properly
 	// here we do a hack where
 	// DOWN == PUT
@@ -173,7 +173,7 @@ func LayerInfo(s string) (rpc, thegraphURL, amm string) {
 	return rpc, thegraphURL, amm
 }
 
-func getQuote(m thales.AllLiveMarketsMarket, side uint8, action, layer string) (float64, error) {
+func getQuote(m thales.AllMarketsMarketsMarket, side uint8, action, layer string) (float64, error) {
 	rpc, _, amm := LayerInfo(layer)
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
@@ -223,18 +223,18 @@ func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 }
 
 //TODO add err
-func QueryAllMarkets(url string) []thales.AllMarketsMarketsMarket {
+func QueryAllMarkets(url string) ([]thales.AllMarketsMarketsMarket, error) {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)
 	if err != nil {
 		log.Print("ERR thales.AllMarkets: ", err)
-		return nil
+		return nil, err
 	}
 	if resp == nil {
 		log.Print("ERR thales.AllMarkets: resp=nil")
-		return nil
+		return nil, err
 	}
-	return resp.Markets
+	return resp.Markets, nil
 }
 
 func QueryMarkets(url string) []thales.MarketsMarketsMarket {

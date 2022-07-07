@@ -4,6 +4,7 @@ query AllMarkets($skip: Int, $first: Int) {
     first: $first
     orderBy: timestamp
     orderDirection: desc
+    where: {result: null}
   ) {
     id
     timestamp

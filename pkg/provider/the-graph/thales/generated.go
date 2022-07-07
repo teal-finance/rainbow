@@ -1067,7 +1067,7 @@ func AllMarkets(
 		OpName: "AllMarkets",
 		Query: `
 query AllMarkets ($skip: Int, $first: Int) {
-	markets(skip: $skip, first: $first, orderBy: timestamp, orderDirection: desc) {
+	markets(skip: $skip, first: $first, orderBy: timestamp, orderDirection: desc, where: {result:null}) {
 		id
 		timestamp
 		creator

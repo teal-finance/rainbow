@@ -28,7 +28,7 @@ func (o Option) OptionName() string {
 	if o.Name != "" {
 		return o.Name
 	}
-	return o.Provider + "-" + o.Asset + "-" + fmt.Sprintf("%.3f", o.Strike) + "-" + o.Type + "-" + o.Expiry
+	return o.Provider + "-" + o.LayerName + "-" + o.Asset + "-" + fmt.Sprintf("%.3f", o.Strike) + "-" + o.Type + "-" + o.Expiry
 
 }
 
