@@ -48,7 +48,7 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	layer := []string{"Optimism", "Polygon"}
+	layer := []string{"Polygon"} //"Optimism", "Polygon"}
 	var o []rainbow.Option
 	for _, l := range layer {
 
@@ -58,7 +58,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 			log.Print("ERR: ", err)
 			return nil, err
 		}
-		options, errmione := ProcessMarkets(markets, l)
+		options, errmione := ProcessMarkets(markets[0:10], l)
 		if errmione != nil {
 			log.Print("ERR: ", err)
 			return nil, err
@@ -129,7 +129,7 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 		Chain:         "Ethereum",
 		Layer:         "L2",
 		LayerName:     layer,
-		Provider:      name,
+		Provider:      name + "::" + layer,
 		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon
 		//TODO add underlying quote currency to be able to specify the token
 		Bid:    nil,
@@ -157,7 +157,7 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 		Price: buy,
 		Size:  float64(amount),
 	})
-
+	//spew.Dump(binary)
 	return binary, nil
 }
 func LayerInfo(s string) (rpc, thegraphURL, amm string) {

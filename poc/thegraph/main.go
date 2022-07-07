@@ -21,11 +21,11 @@ import (
 func main() {
 	options := zerox.QueryTheGraph()
 	spew.Dump(len(options))
-	const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
-	id := "0x5416c2ab11c7852ed9648aa006ee69d412c735c9"
+	//const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
+	//id := "0x5416c2ab11c7852ed9648aa006ee69d412c735c9"
 
-	//const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
-	//id := "0x3831f981fe62a081ccf4acb7ed1d3fea1ac761db"
+	const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
+	id := "0x9876f861a3e8c1c6f40355c35bfe1d80bb495bda"
 	opt := thales.QueryMarket(id, url)
 	spew.Dump(opt)
 
@@ -36,7 +36,7 @@ func main() {
 	fmt.Println("test")
 	spew.Dump(len(markets))
 	fmt.Println(thales.Underlying(opt.CurrencyKey))
-	rpc, _, amm := thales.LayerInfo("optimism")
+	rpc, _, amm := thales.LayerInfo("Polygon") //"Optimism")
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
 		log.Fatal(err)
