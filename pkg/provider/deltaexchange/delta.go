@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	detlaProducts = "https://api.delta.exchange/v2/products?states=live&contract_types="
+	deltaProducts = "https://api.delta.exchange/v2/products?states=live&contract_types=put_options,call_options"
 	deltaOrders   = "https://api.delta.exchange/v2/l2orderbook/"
 )
 
@@ -22,12 +22,9 @@ func (Provider) Name() string {
 	return "Delta Exchange" // TODO real name but we use the short one to have a nice front for now "Delta Exchange"
 }
 
-// return the hour (UTC) at which the options expires
-// 12:00 UTC
-// should that be a "func (Provider)"?
-func Hour() int {
-	return 12
-}
+// Hour is the time in UTC at which the options expires
+// TODO: should we add a func in Provider interface?
+const Hour = 12 // 12:00 UTC
 
 func (pro Provider) Options() ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
@@ -36,22 +33,9 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		return nil, fmt.Errorf("delta options collect : %w", err)
 	}
 
-	expiries := rainbow.Expiries(time.Now(), Hour())
-	for _, p := range products {
-		resp, err := http.Get(deltaOrders + p.Symbol)
-		if err != nil {
-			return nil, fmt.Errorf("delta options orders : %w", err)
-		}
-
-		defer resp.Body.Close()
-
-		result := struct {
-			Result OrderbookResult `json:"result"`
-		}{}
-
-		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			return nil, fmt.Errorf(" order book : %w", err)
-		}
+	expiries := rainbow.Expiries(time.Now(), Hour)
+	for i := range products {
+		p := &products[i]
 
 		if !rainbow.IsExpiryAvailable(expiries, p.SettlementTime) {
 			continue
@@ -61,26 +45,28 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 
 		strike, err := strconv.ParseFloat(p.StrikePrice, 64)
 		if err != nil {
-			return nil, fmt.Errorf(" strike conversion : %w", err)
+			return nil, fmt.Errorf(" strike ParseFloat: %w", err)
 		}
+
 		// Ugly fix for front, the 100K strike is too long number so I will filter it out
 		// TODO, reduce the size of the front character to fit more things
 		if strike > 75000 {
 			continue
 		}
+
 		if p.ContractUnitCurrency == "BNB" || p.ContractUnitCurrency == "XRP" ||
 			p.ContractUnitCurrency == "MATIC" || p.ContractUnitCurrency == "AVAX" {
 			continue // We'll add them when those assets are on other providers
 		}
 
-		bids, asks, err := p.Orderbook()
+		bids, asks, err := p.orderbook()
 		if err != nil {
-			return nil, fmt.Errorf(" Order Book issue : %w", err)
+			return nil, fmt.Errorf(" p.Orderbook: %w", err)
 		}
 
 		options = append(options, rainbow.Option{
 			Name:          p.Symbol,
-			Type:          p.OptionsType(),
+			Type:          p.optionsType(),
 			Asset:         p.ContractUnitCurrency,
 			Expiry:        expiryStr,
 			Strike:        strike,
@@ -98,33 +84,27 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 }
 
 func queryProducts() (ProductResult, error) {
-	options := []string{"put_options", "call_options"}
-	var products ProductResult
-
-	for _, o := range options {
-		log.Print(detlaProducts + o)
-
-		resp, err := http.Get(detlaProducts + o)
-		if err != nil {
-			return nil, fmt.Errorf(" Fetch options issue : %w", err)
-		}
-		defer resp.Body.Close()
-
-		result := struct {
-			Result ProductResult `json:"result"`
-		}{}
-
-		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			return nil, fmt.Errorf(" Query Options json issue : %w", err)
-		}
-		products = append(products, result.Result...)
+	log.Print(deltaProducts)
+	resp, err := http.Get(deltaProducts)
+	if err != nil {
+		return nil, fmt.Errorf("queryProducts: %w", err)
 	}
-	return products, nil
+	defer resp.Body.Close()
+
+	var result struct {
+		Result ProductResult `json:"result"`
+	}
+	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, fmt.Errorf("decode json ProductResult: %w", err)
+	}
+
+	return result.Result, nil
 }
 
 type (
 	ProductResult []Product
-	Product       struct {
+
+	Product struct {
 		UIConfig struct {
 			DefaultTradingViewCandle string    `json:"default_trading_view_candle"`
 			LeverageSliderValues     []int     `json:"leverage_slider_values"`
@@ -280,7 +260,7 @@ type (
 	}
 )
 
-type OrderbookResult struct {
+type OrderBookResult struct {
 	Buy           Orders `json:"buy"`
 	LastUpdatedAt int64  `json:"last_updated_at"`
 	Sell          Orders `json:"sell"`
@@ -293,38 +273,40 @@ type Orders []struct {
 	Size  int    `json:"size"`
 }
 
-func (p Product) Orderbook() ([]rainbow.Order, []rainbow.Order, error) {
+func (p *Product) orderbook() (bid, ask []rainbow.Order, err error) {
+	log.Print(deltaOrders + p.Symbol)
 	resp, err := http.Get(deltaOrders + p.Symbol)
 	if err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" Fetch order book : %w", err)
+		return nil, nil, fmt.Errorf(" Fetch order book : %w", err)
 	}
 	defer resp.Body.Close()
 
-	orders := struct {
-		Orders OrderbookResult `json:"result"`
-	}{}
-
+	var orders struct {
+		Orders OrderBookResult `json:"result"`
+	}
 	if err = json.NewDecoder(resp.Body).Decode(&orders); err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" fetch  order book json issue : %w", err)
+		return nil, nil, fmt.Errorf(" fetch  order book json issue : %w", err)
 	}
 
 	contractSize, err := strconv.ParseFloat(p.ContractValue, 64)
 	if err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, fmt.Errorf(" contract value conversion: %w", err)
+		return nil, nil, fmt.Errorf(" contract value conversion: %w", err)
 	}
 
-	bids, err := orderConversion(orders.Orders.Buy, contractSize)
+	bid, err = orderConversion(orders.Orders.Buy, contractSize)
 	if err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, err
+		return nil, nil, err
 	}
-	asks, err := orderConversion(orders.Orders.Sell, contractSize)
+
+	ask, err = orderConversion(orders.Orders.Sell, contractSize)
 	if err != nil {
-		return []rainbow.Order{}, []rainbow.Order{}, err
+		return nil, nil, err
 	}
-	return bids, asks, nil
+
+	return bid, ask, nil
 }
 
-func (p Product) OptionsType() string {
+func (p *Product) optionsType() string {
 	if p.ContractType == "call_options" {
 		return "CALL"
 	}
@@ -332,16 +314,18 @@ func (p Product) OptionsType() string {
 }
 
 func orderConversion(orders Orders, contractSize float64) ([]rainbow.Order, error) {
-	rOrders := []rainbow.Order{}
+	rOrders := make([]rainbow.Order, 0, len(orders))
+
 	for _, o := range orders {
 		price, err := strconv.ParseFloat(o.Price, 64)
 		if err != nil {
-			return []rainbow.Order{}, err
+			return nil, err
 		}
 		rOrders = append(rOrders, rainbow.Order{
 			Price: price,
 			Size:  float64(o.Size) * contractSize,
 		})
 	}
+
 	return rOrders, nil
 }
