@@ -26,12 +26,12 @@ func AllProviders() []rainbow.Provider {
 	// changing the order to not exhaust our solana/serum rpc quota
 	// used by zeta and psy
 	return []rainbow.Provider{
-		deltaexchange.Provider{},
 		deribit.Provider{},
 		lyra.Provider{},
 		psyoptions.Provider{},
 		zerox.Provider{},
 		zetamarkets.Provider{},
+		deltaexchange.Provider{}, // last because slow (rate limit)
 	}
 }
 
