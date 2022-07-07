@@ -58,7 +58,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 			log.Print("ERR: ", err)
 			return nil, err
 		}
-		options, errmione := ProcessMarkets(markets[0:10], l)
+		options, errmione := ProcessMarkets(markets, l)
 		if errmione != nil {
 			log.Print("ERR: ", err)
 			return nil, err
