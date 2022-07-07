@@ -25,10 +25,9 @@ ARG base=/
 ARG port=8888
 ARG uid=5505
 
-# Example of Prod values:
+# Example of some Prod values:
 # addr = https://my.dns.co
 # base = /rainbow/
-# port = 8888
 
 # --------------------------------------------------------------------
 FROM docker.io/node:18-alpine AS web_builder
@@ -76,8 +75,9 @@ WORKDIR /code
 
 COPY go.mod go.sum ./
 
-RUN go version       &&\
-    go mod download  &&\
+RUN set -ex          ;\
+    go version       ;\
+    go mod download  ;\
     go mod verify
 
 COPY cmd cmd
@@ -135,11 +135,12 @@ FROM scratch AS final
 ARG addr
 ARG base
 ARG port
+ARG uid
 
 COPY --chown=$uid:$uid --from=integrator /target /
 
 # Run as unprivileged
-USER teal:teal
+USER $uid:$uid
 
 # Use UTC time zone by default
 ENV TZ        UTC0
