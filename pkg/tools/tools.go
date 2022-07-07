@@ -6,7 +6,10 @@ package tools
 
 import (
 	_ "github.com/Khan/genqlient"
-	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
+
+	// disable golangci-lint because fails when indirect deps are upgraded
+	// _ "github.com/golangci/golangci-lint/cmd/golangci-lint"
+
 	_ "github.com/segmentio/golines"
 	_ "mvdan.cc/gofumpt"
 )
