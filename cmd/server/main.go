@@ -14,6 +14,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/webform"
 	"github.com/teal-finance/garcon/webserver"
 	"github.com/teal-finance/notifier/mattermost"
 	"github.com/teal-finance/rainbow/pkg/provider"
@@ -80,14 +81,19 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
 
 	web := webserver.WebServer{
-		Dir:        *wwwDir,
+		Dir:    *wwwDir,
+		ResErr: g.ResErr,
+	}
+
+	wf := webform.WebForm{
 		ResErr:     g.ResErr,
 		Redirect:   "/",
 		Notifier:   nil,
-		FormLimits: webserver.DefaultFormLimits(),
+		TextLimits: webform.DefaultTextLimits,
+		FileLimits: webform.DefaultFileLimits,
 	}
 	if *form != "" {
-		web.Notifier = mattermost.NewNotifier(*form)
+		wf.Notifier = mattermost.NewNotifier(*form)
 	}
 
 	// Static website: set the cookie only when visiting index.html
@@ -98,7 +104,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r.Get("/preview.jpg", web.ServeFile("preview.jpg", "image/jpeg"))
 	r.With(c.Chk).Get("/js/*", web.ServeDir("text/javascript; charset=utf-8"))
 	r.With(c.Chk).Get("/assets/*", web.ServeAssets())
-	r.With(c.Chk).Post("/", web.WebForm()) // process filled contact form et forward to Mattermost
+	r.With(c.Chk).Post("/", wf.WebForm()) // process filled contact form et forward to Mattermost
 
 	r.Route("/v0", func(r chi.Router) {
 		h := api.Handler{Service: s}
