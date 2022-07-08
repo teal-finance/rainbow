@@ -1151,8 +1151,8 @@ github.com/syndtr/goleveldb v1.0.1-0.20220614013038-64ee5596c38a h1:1ur3QoCqvE5f
 github.com/tchap/go-patricia v2.2.6+incompatible/go.mod h1:bmLyhP68RS6kStMGxByiQ23RP/odRBOTVjwp2cDyi6I=
 github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a h1:XK+mgreUmTvaGc700wzuilsSNskR1hzY/AA+Xdytg9o=
 github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a/go.mod h1:1PNyO4kPCk3rmmQr5bDpsuvLIrIZ3YDvYqecRdU4Nzo=
-github.com/teal-finance/garcon v0.17.0 h1:sM5g+Dq1k2sXfo0cTFpbZxXZ80WAkk0aFow3F8ysQDs=
-github.com/teal-finance/garcon v0.17.0/go.mod h1:Hwp10BNgbcaZiRalooEv/KpcX3GsE+yub1PG2jv5hEI=
+github.com/teal-finance/garcon v0.17.1 h1:QM0AJ+VQPl06neRvxKNtSs/ftMdQ4Rpomo9PTK43CJs=
+github.com/teal-finance/garcon v0.17.1/go.mod h1:Hwp10BNgbcaZiRalooEv/KpcX3GsE+yub1PG2jv5hEI=
 github.com/teal-finance/incorruptible v0.0.0-20220628195218-038c37bc3b0c h1:ljw/yyPrYfDEK9NgPGMR3ctimMwgkZHfIDoSGMjRq0E=
 github.com/teal-finance/incorruptible v0.0.0-20220628195218-038c37bc3b0c/go.mod h1:Q5/io9p2W5z/35GbAu7f/fHUVxzi32FrkflN4CnBVPI=
 github.com/teal-finance/notifier v1.1.0 h1:Q5rPZPVjDCOH/nfh8jZ3mrJWP3bjaB8m/mTo0VoX6XI=
