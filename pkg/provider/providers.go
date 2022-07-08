@@ -82,7 +82,7 @@ func (a alerter) vet(options []rainbow.Option, err error) error {
 		return a.notifier.Notify(fmt.Sprintf(":alert: **%s**: API error: %s\n", a.Name(), err))
 	}
 
-	if len(options) == 0 {
+	if len(options) == 0 && a.Name() != "Lyra" {
 		return a.notifier.Notify(fmt.Sprintf(":question: **%s**: no options\n", a.Name()))
 	}
 
