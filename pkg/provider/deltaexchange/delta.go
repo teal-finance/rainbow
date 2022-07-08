@@ -274,7 +274,7 @@ type Orders []struct {
 }
 
 func (p *Product) orderbook() (bid, ask []rainbow.Order, err error) {
-	log.Print(deltaOrders + p.Symbol)
+	//log.Print(deltaOrders + p.Symbol)
 	resp, err := http.Get(deltaOrders + p.Symbol)
 	if err != nil {
 		return nil, nil, fmt.Errorf(" Fetch order book : %w", err)
