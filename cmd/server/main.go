@@ -91,7 +91,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 
 	// Send contact-form to Mattermost
 	cf := garcon.NewContactForm("/", *form, g.ErrWriter)
-	r.With(c.Chk).Post("/", cf.NotifyWebForm())
+	r.With(c.Chk).Post("/about", cf.NotifyWebForm())
 
 	// API routes
 	r.Route("/v0", func(r chi.Router) {
