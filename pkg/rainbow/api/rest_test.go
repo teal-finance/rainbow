@@ -1,6 +1,6 @@
-// Copyright 2022 Teal.Finance contributors
+// Copyright 2022 Teal.Finance/Rainbow contributors
 // This file is part of Teal.Finance/Rainbow,
-// a screener fo DeFi options, under the MIT License.
+// a screener for DeFi options under the MIT License.
 // SPDX-License-Identifier: MIT
 
 package api

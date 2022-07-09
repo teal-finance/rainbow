@@ -50,9 +50,9 @@
     "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
   },
   "author": {
-    "name": "Teal.Finance contributors",
+    "name": "Teal.Finance/Rainbow contributors",
     "email": "Teal.Finance@pm.me",
-    "url": "https://Teal.Finance"
+    "url": "https://teal.finance/rainbow/about"
   },
   "license": "MIT",
   "repository": {

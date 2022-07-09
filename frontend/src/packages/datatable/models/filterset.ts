@@ -1,3 +1,8 @@
+// Copyright 2021 Teal.Finance/Rainbow contributors
+// This file is part of Teal.Finance/Rainbow,
+// a screener for DeFi options under the MIT License.
+// SPDX-License-Identifier: MIT
+
 import ExcludeFilter from "./exclude_filter"
 
 export class FilterSet {
@@ -25,4 +30,3 @@ export class FilterSet {
     return Object.keys(this.exclude).includes(col)
   }
 }
-
