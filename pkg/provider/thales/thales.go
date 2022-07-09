@@ -104,9 +104,9 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 	// here we do a hack where
 	// DOWN == PUT
 	// UP   == CALL
-	binaryType := "PUT" //"DOWN"
+	binaryType := "CALL" //"DOWN"
 	if side != 0 {
-		binaryType = "CALL" //"UP"
+		binaryType = "PUT" //"UP"
 	}
 
 	expiry, err := rainbow.TimeStringConvert(m.MaturityDate)
