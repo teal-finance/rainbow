@@ -86,12 +86,13 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
 	r.With(c.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
 	r.With(c.Chk).Get("/assets/*", ws.ServeAssets())
+
 	// NotFound catches index.html and other Vue sub-folders
 	r.With(c.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))
 
-	// Send contact-form to Mattermost
-	cf := garcon.NewContactForm("/", *form, g.ErrWriter)
-	r.With(c.Chk).Post("/about", cf.NotifyWebForm())
+	// Forward submitted contact-form to Mattermost, and redirect browser to "/about".
+	cf := garcon.NewContactForm("/about", *form, g.ErrWriter)
+	r.With(c.Chk).Post("/submit", cf.NotifyWebForm())
 
 	// API routes
 	r.Route("/v0", func(r chi.Router) {
