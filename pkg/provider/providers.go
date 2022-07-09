@@ -21,11 +21,11 @@ import (
 
 // AllProviders returns all active providers (without alerter).
 func AllProviders() []rainbow.Provider {
-	// changing the order to not exhaust our solana/serum rpc quota
-	// used by zeta and psy
 	return []rainbow.Provider{
+		// separate psyoptions and zetamarkets to not exhaust solana/serum rpc quota
+		psyoptions.Provider{},
 		deribit.Provider{},
-		//lyra.Provider{},
+		// lyra.Provider{},  // pause Lyra because many errors
 		psyoptions.Provider{},
 		zerox.Provider{},
 		zetamarkets.Provider{},
