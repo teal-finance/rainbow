@@ -13,7 +13,6 @@ import (
 	"github.com/teal-finance/notifier"
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
-	"github.com/teal-finance/rainbow/pkg/provider/lyra"
 	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
 	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
@@ -26,7 +25,7 @@ func AllProviders() []rainbow.Provider {
 	// used by zeta and psy
 	return []rainbow.Provider{
 		deribit.Provider{},
-		lyra.Provider{},
+		//lyra.Provider{},
 		psyoptions.Provider{},
 		zerox.Provider{},
 		zetamarkets.Provider{},
