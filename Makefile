@@ -41,7 +41,9 @@ go.sum: go.mod
 front: frontend/dist
 
 frontend/dist: frontend/src/*
-	cd frontend && yarn && yarn build && yarn compress
+	cd frontend && \
+	{ yarn    && yarn    build && yarn    compress; } || \
+	{ yarnpkg && yarnpkg build && yarnpkg compress; }
 
 .PHONY: run
 run: go.sum
