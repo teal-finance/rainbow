@@ -4,6 +4,5 @@
 /.golangci.yml
 /dev
 /doc/ignore
-/go.work
-/go.work.sum
+/go.work*
 /server
