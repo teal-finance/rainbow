@@ -22,7 +22,7 @@ require (
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1
 	github.com/stretchr/testify v1.8.0
-	github.com/teal-finance/garcon v0.15.0
+	github.com/teal-finance/garcon v0.17.1
 	github.com/teal-finance/notifier v1.1.0
 	mvdan.cc/gofumpt v0.3.1
 )
@@ -43,6 +43,8 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blendle/zapdriver v1.3.1 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
+	github.com/carlmjohnson/flagx v0.22.2 // indirect
+	github.com/carlmjohnson/versioninfo v0.22.4 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/daaku/go.zipexe v1.0.1 // indirect
 	github.com/dave/dst v0.27.0 // indirect

@@ -13,7 +13,6 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/garcon/webserver"
 	"github.com/teal-finance/notifier/mattermost"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -77,17 +76,27 @@ func main() {
 
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
+	c := g.Checker
 
 	// Static website: set the cookie only when visiting index.html
-	c := g.Checker
-	web := webserver.WebServer{Dir: *wwwDir, ResErr: g.ResErr}
-	r.With(c.Set).NotFound(web.ServeFile("index.html", "text/html; charset=utf-8")) // catch index.html and other Vue sub-folders
-	r.Get("/favicon.ico", web.ServeFile("favicon.ico", "image/x-icon"))
-	r.Get("/favicon.png", web.ServeFile("favicon.png", "image/png"))
-	r.Get("/preview.jpg", web.ServeFile("preview.jpg", "image/jpeg"))
-	r.With(c.Chk).Get("/js/*", web.ServeDir("text/javascript; charset=utf-8"))
-	r.With(c.Chk).Get("/assets/*", web.ServeAssets())
+	ws := garcon.NewStaticWebServer(*wwwDir, g.ErrWriter)
+	r.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
+	r.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))
+	r.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
+	r.With(c.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
+	r.With(c.Chk).Get("/assets/*", ws.ServeAssets())
 
+	// NotFound catches index.html and other Vue sub-folders
+	r.With(c.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))
+
+	// Disable the contact-form endpoint until it is well protected (CSRF).
+	if false {
+		// Forward submitted contact-form to Mattermost, and redirect browser to "/about".
+		cf := garcon.NewContactForm("/about", *form, g.ErrWriter)
+		r.With(c.Chk).Post("/submit", cf.NotifyWebForm())
+	}
+
+	// API routes
 	r.Route("/v0", func(r chi.Router) {
 		h := api.Handler{Service: s}
 
