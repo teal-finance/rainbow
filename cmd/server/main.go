@@ -13,7 +13,6 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/notifier/mattermost"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
@@ -22,20 +21,6 @@ import (
 
 func main() {
 	parseFlags()
-
-	var providers []rainbow.Provider
-	switch len(*alert) {
-	case 0:
-		providers = provider.AllProviders()
-	default:
-		providers = provider.AllProvidersWithAlert(
-			mattermost.NewNotifier(*alert),
-		)
-	}
-
-	// Start the service in background
-	service := rainbow.NewService(providers, dbram.NewDB())
-	go service.Run()
 
 	var tokenOption garcon.Option
 	if len(*aes) > 0 {
@@ -58,6 +43,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	providers := provider.AllProviders(*alert, g.Namespace.String())
+
+	// Start the service in background
+	service := rainbow.NewService(providers, dbram.NewDB())
+	go service.Run()
 
 	server := http.Server{
 		Addr:              listenAddr,
