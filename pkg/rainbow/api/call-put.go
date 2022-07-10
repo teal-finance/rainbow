@@ -178,7 +178,7 @@ func sanitizeAsset(asset string) string {
 func sanitizeDate(date string) string {
 	t, err := time.Parse("2006-01-02 15:04:05", date)
 	if err != nil {
-		log.Printf("WARN prettyDate() cannot parse %q", date)
+		log.Printf("WRN prettyDate() cannot parse %q", date)
 		return date
 	}
 	return t.Format("Jan _2")

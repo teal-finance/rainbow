@@ -240,7 +240,7 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 		if bid.Price != "" {
 			price, err := strconv.ParseFloat(bid.Price, 64)
 			if err != nil {
-				log.Print("WARN price ", err)
+				log.Print("WRN price ", err)
 				continue
 			}
 

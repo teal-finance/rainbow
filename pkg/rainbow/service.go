@@ -40,13 +40,13 @@ func (s *Service) FetchOptionsFromProviders() {
 	for _, p := range s.providers {
 		o, err := p.Options()
 		if err != nil {
-			log.Print("WARN fetching data from ", p, " : ", err)
+			log.Print("WRN fetching data from ", p, " : ", err)
 			continue
 		}
 
 		err = s.store.InsertOptions(o)
 		if err != nil {
-			log.Print("WARN cannot store data in DB for ", p, " : ", err)
+			log.Print("WRN cannot store data in DB for ", p, " : ", err)
 			continue
 		}
 
