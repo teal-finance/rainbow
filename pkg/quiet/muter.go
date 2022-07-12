@@ -3,8 +3,8 @@
 // a screener for DeFi options under the MIT License.
 // SPDX-License-Identifier: MIT
 
-// Package quiet temporary inhibits notifications.
-// Similar wording: mute, limiter, quieter, mouth-closer, inhibitor.
+// Package quiet inhibits alerts when too much.
+// Similar wording: mute, limiter, reducer, quieter, mouth-closer, inhibitor.
 package quiet
 
 import (
@@ -16,39 +16,56 @@ import (
 	"github.com/teal-finance/notifier"
 )
 
-// Muter pauses notification when
-// the rate becomes too high and
-// waits for a lower level to resume notifications.
-// This is the Hysteresis principle:
+// Muter drops alerts when it is forwarding too much.
+// Muter counts the successive alerts, and decrements its counter in absence of alerts.
+// When the counter is over the Threshold, new incoming alerts are dropped.
+// Once the counter returns to zero, or after NoAlertDuration,
+// Muter resumes the alerting. Muter uses the Hysteresis principle:
 // https://wikiless.org/wiki/Hysteresis
 // Muter implements the Notifier interface.
 type Muter struct {
-	// Prefix is inserted in all notifications.
+	// Prefix is inserted in all alerts.
 	// Thus Prefix can be in Markdown format.
 	Prefix string
 
 	Notifier notifier.Notifier
 
-	// Threshold is the level disabling the notifications.
+	// Threshold is the level disabling the alerts.
 	// The counter must return to zero
 	// to consider the situation is back to normal.
 	Threshold int
 
-	// BackToNormalDuration also allows to
-	// consider the situation is back to normal.
-	BackToNormalDuration time.Duration
+	// NoAlertDuration also allows to
+	// consider the verbosity is back to normal.
+	NoAlertDuration time.Duration
 
 	// RemindMuteState, if non-zero, allows to
-	// still send a notification to remind
-	// the notifications are muted since a while.
+	// still send a alerts to remind
+	// the alerts are muted since a while.
 	// Set value 100 to send this reminder
-	// every 100 dropped notifications.
+	// every 100 dropped alerts.
 	RemindMuteState int
 
-	counter   int
-	muted     bool
+	// counter is incremented for each alerts
+	// (when Notify() is called), and decremented
+	// when NotifyLowVerbosity() is called.
+	// counter is always positive.
+	// The value counter=0 indicates the verbosity is low
+	// thus Muter enable again the alerts.
+	counter int
+
+	// muted becomes true when Muter starts inhibiting the alerting,
+	// (when counter > Threshold) and returns false when counter=0.
+	muted bool
+
+	// quietTime is the first call to NotifyLowVerbosity()
+	// after Notify() had been called. quietTime is used to
+	// inform the time since Notify() has not been called.
 	quietTime time.Time
-	drops     int // number of dropped notifications
+
+	// drops is the number of dropped alerts
+	// (the unsent alerts to Notifier).
+	drops int
 }
 
 func (m *Muter) Notify(msg string) error {
@@ -57,8 +74,9 @@ func (m *Muter) Notify(msg string) error {
 	if m.muted {
 		m.drops++
 		if (m.drops % m.RemindMuteState) > 0 {
-			log.Printf("DBG: Muter %s drops notification count=%d d=%s",
-				m.Prefix, m.counter, timex.DStr(time.Since(m.quietTime)))
+			log.Printf("DEBUG Muter %s dropped %d alerts since %s (%s ago) count=%d",
+				m.Prefix, m.drops, m.quietTime.Format("15:04"),
+				timex.DStr(time.Since(m.quietTime)), m.counter)
 			return nil
 		}
 	}
@@ -66,18 +84,18 @@ func (m *Muter) Notify(msg string) error {
 	note := ""
 	if m.muted {
 		note = fmt.Sprintf("\n"+"⛔ Still muted, "+
-			"already dropped %d notifications", m.drops)
+			"already dropped %d alerts", m.drops)
 	} else if m.counter > m.Threshold {
 		m.muted = true
 		m.drops = 0
 		m.quietTime = time.Time{}
-		note = "\n" + "⛔ Mute notifications"
+		note = "\n" + "⛔ Mute alerts"
 	}
 
 	return m.notify(msg + note)
 }
 
-func (m *Muter) NotifyIfBackToNormal() error {
+func (m *Muter) NotifyLowVerbosity() error {
 	if m.counter == 0 {
 		return nil // Already OK, do nothing
 	}
@@ -90,7 +108,7 @@ func (m *Muter) NotifyIfBackToNormal() error {
 	}
 
 	m.counter--
-	if (m.counter > 0) && (d < m.BackToNormalDuration) {
+	if (m.counter > 0) && (d < m.NoAlertDuration) {
 		log.Printf("DBG Muter %s: Not yet back to normal count=%d d=%s",
 			m.Prefix, m.counter, timex.DStr(time.Since(m.quietTime)))
 		return nil
@@ -99,11 +117,11 @@ func (m *Muter) NotifyIfBackToNormal() error {
 	m.muted = false
 	m.counter = 0
 
-	msg := "✅ Back to normal"
+	msg := "✅ Back to low verbosity"
 	if d > 0 {
 		msg += fmt.Sprintf(" since %s (%s ago)", m.quietTime.Format("15:04"), timex.DStr(d))
 	}
-	msg += fmt.Sprintf(", dropped %d notifications", m.drops)
+	msg += fmt.Sprintf(", dropped %d alerts", m.drops)
 	return m.notify(msg)
 }
 

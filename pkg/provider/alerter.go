@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	muteLevel            = 4         // above => mute the notifications
-	backToNormalDuration = time.Hour // after this time => return to normal
-	remindMuteState      = 100       // once notification every 100
+	muteLevel            = 4         // above => mute the alerting
+	backToNormalDuration = time.Hour // after this time => resumes alerting
+	remindMuteState      = 100       // one notification every 100
 )
 
 type alerter struct {
@@ -31,11 +31,11 @@ func newAlerter(namespace string, p rainbow.Provider, n notifier.Notifier) *aler
 	return &alerter{
 		provider: p,
 		notifier: quiet.Muter{
-			Prefix:               prefix,
-			Notifier:             n,
-			Threshold:            muteLevel,
-			BackToNormalDuration: backToNormalDuration,
-			RemindMuteState:      remindMuteState,
+			Prefix:          prefix,
+			Notifier:        n,
+			Threshold:       muteLevel,
+			NoAlertDuration: backToNormalDuration,
+			RemindMuteState: remindMuteState,
 		},
 	}
 }
@@ -68,5 +68,5 @@ func (a *alerter) vet(options []rainbow.Option, err error) error {
 		return a.notifier.Notify(":question: no options")
 	}
 
-	return a.notifier.NotifyIfBackToNormal()
+	return a.notifier.NotifyLowVerbosity()
 }
