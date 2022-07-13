@@ -11,7 +11,11 @@
 **/*.jfm
 
 # Git
-**/.git
+# ignore large Git internal files
+#.git/objects
+.git/rr-cache
+.git/logs
+# files not needed for the build
 **/.gitattributes
 **/.gitignore
 **/.github/

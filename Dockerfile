@@ -30,12 +30,32 @@ ARG uid=5505
 # base = /rainbow/
 
 # --------------------------------------------------------------------
+FROM docker.io/golang:1.18 AS version
+
+WORKDIR /code
+
+COPY .git .git
+
+RUN set -ex     ;\
+    find .git
+
+RUN set -ex                                                                      ;\
+    t="$(git describe --tags --abbrev=0 --always)"                               ;\
+    b="$(git branch --show-current)"                                             ;\
+    [[ $b == main ]] && b="" || b="-$b"                                          ;\
+    n="$(git rev-list --count "$t"..)"                                           ;\
+    [[ $n == 0 ]] && n="" || n="+$n"                                             ;\
+    v="$t$b$n"                                                                   ;\
+    echo "Produce version from Git repo info: $v"                                ;\
+    echo -n "$v" > version.txt
+
+# --------------------------------------------------------------------
 FROM docker.io/node:18-alpine AS web_builder
 
 WORKDIR /code
 
 COPY frontend/package.json \
-     frontend/yarn.lock   ./
+    frontend/yarn.lock    ./
 
 RUN set -ex                         ;\
     node --version                  ;\
@@ -43,15 +63,17 @@ RUN set -ex                         ;\
     yarn install --frozen-lockfile  ;\
     yarn cache clean
 
-COPY frontend/index.html         \
-     frontend/postcss.config.js  \
-     frontend/tailwind.config.js \
-     frontend/tsconfig.json      \
-     frontend/vite.config.ts     \
-     frontend/.env              ./
+COPY frontend/index.html        \
+    frontend/postcss.config.js  \
+    frontend/tailwind.config.js \
+    frontend/tsconfig.json      \
+    frontend/vite.config.ts     \
+    frontend/.env              ./
 
 COPY frontend/public public
 COPY frontend/src    src
+
+COPY --from=version /code/version.txt ./
 
 ARG addr
 ARG base
@@ -63,13 +85,16 @@ ENV GZIPPER_SKIP_COMPRESSED 1
 
 RUN set -ex                                            ;\
     ls -lA                                             ;\
+    v="$(cat version.txt)"                             ;\
+    echo "Use version: $v"                             ;\
+    sed -e "s|^VITE_VERS=.*|VITE_VERS=$v|"    -i .env  ;\
     sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  ;\
     head .env                                          ;\
     yarn build --base "$base"                          ;\
     yarn compress
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.18-alpine AS go_builder
+FROM docker.io/golang:1.18 AS go_builder
 
 WORKDIR /code
 
@@ -83,28 +108,31 @@ RUN set -ex          ;\
 COPY cmd cmd
 COPY pkg pkg
 
+COPY --from=version /code/version.txt ./
+
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
-RUN set -ex                                               ;\
-    ls -lA                                                ;\
-    export GOOS=linux                                     ;\
-    export CGO_ENABLED=0                                  ;\
-    export GOFLAGS="-buildmode=pie -trimpath -modcacherw" ;\
-    export GOLDFLAGS="-linkmode=external -s -w"           ;\
-    go build ./cmd/server                                 ;\
-    ls -sh server                                         ;\
-    ldd server                                            ;\
-    ./server -help  # smoke test
+RUN set -ex                                                                      ;\
+    v="$(cat version.txt)"                                                       ;\
+    echo "Use version: $v"                                                       ;\
+    ls -lA                                                                       ;\
+    export CGO_ENABLED=0                                                         ;\
+    export GOFLAGS="-trimpath -modcacherw"                                       ;\
+    export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
+    go build -v -ldflags="-X 'github.com/teal-finance/garcon.V=$v'" ./cmd/server ;\
+    ls -sh server                                                                ;\
+    ./server -version  # smoke test
 
-# To go further in Go hardening and FIPS 140-2 certification:
+# To enable Go hardening (FIPS 140-2 certification) set:
+# GOFLAGS="-buildmode=pie -trimpath -modcacherw"
+# GOLDFLAGS="-linkmode=external -s -w"
 # https://www.linkedin.com/pulse/go-crypto-kubernetes-fips-140-2-fedramp-compliance-gokul-chandra
 # https://github.com/golang/go/blob/dev.boringcrypto/README.boringcrypto.md
 # https://hub.docker.com/r/goboring/golang/tags
 # https://github.com/rancher/image-build-base/blob/master/Dockerfile.amd64
 
-
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.18-alpine AS integrator
+FROM docker.io/golang:1.18 AS integrator
 
 WORKDIR /target
 
@@ -120,14 +148,15 @@ RUN set -ex                                                 ;\
 COPY --from=web_builder /code/dist   var/www
 COPY --from=go_builder  /code/server .
 
+# Go hardening is disabled for Rainbow
 # Copy possible dynamic libs because we use CGO_ENABLED=1
 # https://stackoverflow.com/q/62817082
-RUN mkdir lib        &&\
-    ldd server        |\
-    while read f rest ;\
-    do cp -v "$f" lib ;\
-    done             &&\
-    ls -lA
+# RUN mkdir lib           &&\
+#     ldd server           |\
+#     while read f rest    ;\
+#     do cp -v "$f" lib    ;\
+#     done                &&\
+#     ls -lA
 
 # --------------------------------------------------------------------
 FROM scratch AS final
