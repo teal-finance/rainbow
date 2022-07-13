@@ -5,10 +5,12 @@ import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+import { createHtmlPlugin } from 'vite-plugin-html'
+import { loadEnv } from 'vite'
+const env = loadEnv("prod", process.cwd())
 
 // https://vitejs.dev/config/
 export default defineConfig({
-
   build: {
     rollupOptions: {
       output: {
@@ -28,6 +30,17 @@ export default defineConfig({
   },
 
   plugins: [
+    // https://github.com/vbenjs/vite-plugin-html
+    // https://stackoverflow.com/q/68180648
+    createHtmlPlugin({
+      minify: true,
+      inject: {
+        data: {
+          version: env.VITE_VERS,
+        },
+      },
+    }),
+
     typescript2({
       check: false,
       tsconfig: path.resolve(__dirname, 'tsconfig.json'),
