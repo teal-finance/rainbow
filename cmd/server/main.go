@@ -35,7 +35,7 @@ func main() {
 	g, err := garcon.New(
 		garcon.WithURLs(*mainAddr),
 		garcon.WithDocURL("/doc"),
-		garcon.WithServerHeader("Rainbow-v0"),
+		garcon.WithServerHeader("Rainbow"),
 		tokenOption,
 		garcon.WithLimiter(*reqBurst, *reqPerMinute),
 		garcon.WithProm(*expPort, *mainAddr),
