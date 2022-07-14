@@ -14,7 +14,7 @@ const (
 	// digitsInFractionalPart is the number of digits to keep in the fractional part.
 	digitsInFractionalPart = 2
 
-	// dashRightAlignHTML must show the dash with the number of trailing digits defined by digitsInfractionalPart.
+	// dashRightAlignHTML must show the dash with the number of trailing digits defined by digitsInFractionalPart.
 	dashRightAlignHTML = "&mdash;&numsp;&numsp;"
 
 	// dashLeftAlignHTML visual width must be same as the the number of digits defined by len(spaces)-1.
@@ -31,8 +31,6 @@ var (
 	boldTag  = []byte{byte('<'), byte('b'), byte('>')}
 	boldEnd  = []byte{byte('<'), byte('/'), byte('b'), byte('>')}
 	spaces   = [5]byte{32, 32, 32, 32, 32} // len(spaces) must be the max digits wanted before the decimal point
-	buffer   = make([]byte, 0, 10)
-	htmlBuf  = boldTag
 )
 
 // BestLimitHTML is used by the web/API server to align numbers with HTML <tags>.
@@ -87,68 +85,70 @@ func rightAlignFloatOnDecimalPointHTML(f float64) string {
 }
 
 func leftAlignFloatOnDecimalPoint(f float64) []byte {
-	buffer = strconv.AppendFloat(buffer[:0], f, 'f', 2, 64)
+	buf := make([]byte, 0, 16)
+	buf = strconv.AppendFloat(buf, f, 'f', 2, 64)
 
 	var i int // position of the '.' (if no '.' => i = len(b))
-	for i = 1; i < len(buffer); i++ {
-		if buffer[i] == '.' {
+	for i = 1; i < len(buf); i++ {
+		if buf[i] == '.' {
 			break
 		}
 	}
 
 	if i >= len(spaces) {
-		return buffer
+		return buf
 	}
 
-	return append(spaces[:len(spaces)-i-1], buffer...)
+	return append(spaces[:len(spaces)-i-1], buf...)
 }
 
 func RightAlign(f float64, addMissingDot bool) []byte {
-	htmlBuf = strconv.AppendFloat(htmlBuf[:len(boldTag)], f, 'f', -1, 64)
+	buf := make([]byte, 0, 16)
+	buf = strconv.AppendFloat(boldTag, f, 'f', -1, 64)
 
 	// i is the position of the '.'
-	for i := 1 + len(boldTag); i < len(htmlBuf); i++ {
-		if htmlBuf[i] != '.' {
+	for i := 1 + len(boldTag); i < len(buf); i++ {
+		if buf[i] != '.' {
 			continue
 		}
 
 		tinyIntegralPart := i == 1+len(boldTag)
 
-		if end := i + 1 + digitsInFractionalPart; end > len(htmlBuf) {
-			htmlBuf = append(htmlBuf, byte('0'))
+		if end := i + 1 + digitsInFractionalPart; end > len(buf) {
+			buf = append(buf, byte('0'))
 		} else {
-			htmlBuf = htmlBuf[:end]
+			buf = buf[:end]
 		}
 
 		if i > 3+len(boldTag) {
-			htmlBuf = insertThousandSeparator(htmlBuf, i-3)
+			buf = insertThousandSeparator(buf, i-3)
 			i += len(narrowSp)
 		}
 
 		if tinyIntegralPart {
-			return append(htmlBuf, byte('<'), byte('/'), byte('b'), byte('>'))
+			return append(buf, byte('<'), byte('/'), byte('b'), byte('>'))
 		}
 
-		return append(htmlBuf[:i], append(boldEnd, htmlBuf[i:]...)...)
+		return append(buf[:i], append(boldEnd, buf[i:]...)...)
 	}
 
 	// Missing dot
 
-	if len(htmlBuf) > 3+len(boldTag) {
-		htmlBuf = insertThousandSeparator(htmlBuf, len(htmlBuf)-3)
+	if len(buf) > 3+len(boldTag) {
+		buf = insertThousandSeparator(buf, len(buf)-3)
 	}
 
-	htmlBuf = append(htmlBuf, byte('<'), byte('/'), byte('b'), byte('>'))
+	buf = append(buf, byte('<'), byte('/'), byte('b'), byte('>'))
 
 	if addMissingDot {
-		htmlBuf = append(htmlBuf, byte('.'), byte('0'), byte('0'))
+		buf = append(buf, byte('.'), byte('0'), byte('0'))
 	}
 
-	return htmlBuf
+	return buf
 }
 
 // insertThousandSeparator inserts "&#x202f;" (narrow no-break space) that is thinner than "&nbsp;".
 // Recommendation is to use "&thinsp;" but it may break the line and "&numsp;" is too wide.
-func insertThousandSeparator(b []byte, i int) []byte {
-	return append(b[:i], append(narrowSp, b[i:]...)...)
+func insertThousandSeparator(buf []byte, i int) []byte {
+	return append(buf[:i], append(narrowSp, buf[i:]...)...)
 }
