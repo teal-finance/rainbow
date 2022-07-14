@@ -6,85 +6,82 @@
 package provider
 
 import (
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/teal-finance/notifier"
+	"github.com/teal-finance/notifier/logger"
+	"github.com/teal-finance/notifier/mattermost"
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
+	"github.com/teal-finance/rainbow/pkg/provider/lyra"
 	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
 	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-// AllProviders returns all active providers (without alerter).
-func AllProviders() []rainbow.Provider {
+const (
+	// useLoggerNotifier when no Mattermost endpoint.
+	useLoggerNotifier = true
+)
+
+// AllProvidersNoAlerter returns all active providers without alerter.
+func AllProvidersNoAlerter() []rainbow.Provider {
 	return []rainbow.Provider{
-		// separate psyoptions and zetamarkets to not exhaust solana/serum rpc quota
-		psyoptions.Provider{},
-		deribit.Provider{},
-		// lyra.Provider{},  // pause Lyra because many errors
-		psyoptions.Provider{},
-		zerox.Provider{},
-		zetamarkets.Provider{},
+		psyoptions.Provider{},    // separate psy and zeta to not
+		deribit.Provider{},       //                  |
+		lyra.Provider{},          //                  |
+		zerox.Provider{},         //                  |
+		zetamarkets.Provider{},   // <----------------` exhaust solana/serum rpc quota
 		deltaexchange.Provider{}, // last because slow (rate limit)
 	}
 }
 
 // AllProvidersWithAlert returns all active providers with an alerter on anomalies.
 // Do not panic if alerter endpoint is not reachable.
-func AllProvidersWithAlert(n notifier.Notifier) []rainbow.Provider {
-	hello := ":wave: Hi, RainbowAlerter has just started"
-
-	host, err := os.Hostname()
-	if err == nil {
-		hello += " on " + host
+func AllProvidersWithAlert(n notifier.Notifier, namespace string) []rainbow.Provider {
+	list := ""
+	providers := AllProvidersNoAlerter()
+	for i, p := range providers {
+		list += "\n" + "1. " + p.Name()
+		providers[i] = newAlerter(namespace, p, n)
 	}
 
-	_ = n.Notify(hello)
-
-	providers := AllProviders()
-	for i, p := range providers {
-		providers[i] = alerter{p, n}
+	err := notifyStartup(n, namespace, list)
+	if err != nil {
+		log.Print("ERR Alerter: ", err)
 	}
 
 	return providers
 }
 
-type alerter struct {
-	provider rainbow.Provider
-	notifier notifier.Notifier
-}
-
-func (a alerter) Name() string {
-	return a.provider.Name()
-}
-
-func (a alerter) Options() ([]rainbow.Option, error) {
-	options, err := a.provider.Options()
-
-	go func() {
-		err := a.vet(options, err)
-		if err != nil {
-			log.Print("ERR Alerter: ", err)
-		}
-	}()
-
-	return options, err
-}
-
-func (a alerter) vet(options []rainbow.Option, err error) error {
-	if err != nil {
-		return a.notifier.Notify(fmt.Sprintf(":alert: **%s**: API error: %s\n", a.Name(), err))
+// AllProviders returns all active providers with or without alerter
+// depending on endpoint emptiness and on onlyMattermost.
+func AllProviders(endpoint, namespace string) []rainbow.Provider {
+	var n notifier.Notifier
+	if endpoint != "" {
+		n = mattermost.NewNotifier(endpoint)
+	} else if useLoggerNotifier {
+		n = logger.NewNotifier()
 	}
 
-	if len(options) == 0 && a.Name() != "Lyra" {
-		return a.notifier.Notify(fmt.Sprintf(":question: **%s**: no options\n", a.Name()))
+	if n == nil {
+		return AllProvidersNoAlerter()
+	}
+	return AllProvidersWithAlert(n, namespace)
+}
+
+// notifyStartup is called only once to notify when Rainbow is started.
+func notifyStartup(n notifier.Notifier, namespace, list string) error {
+	msg := ":wave: Rainbow **" + namespace + "** just started"
+
+	host, err := os.Hostname()
+	if err == nil {
+		msg += " on " + host
 	}
 
-	// TODO: Check other anomalies
+	msg += " with:" + list
 
-	return nil
+	return n.Notify(msg)
 }
