@@ -77,6 +77,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r.With(c.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
 	r.With(c.Chk).Get("/assets/*", ws.ServeAssets())
 	r.With(c.Chk).Get("/version", g.ServeVersion())
+	r.With(c.Chk).Get("/version/", g.ServeVersion())
 
 	// NotFound catches index.html and other Vue sub-folders
 	r.With(c.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))

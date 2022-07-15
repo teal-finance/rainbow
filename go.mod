@@ -22,7 +22,7 @@ require (
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1
 	github.com/stretchr/testify v1.8.0
-	github.com/teal-finance/garcon v0.20.2
+	github.com/teal-finance/garcon v0.20.3
 	github.com/teal-finance/notifier v1.1.0
 	mvdan.cc/gofumpt v0.3.1
 )
