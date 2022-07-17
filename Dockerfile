@@ -50,9 +50,9 @@ COPY .git .git
 RUN set -ex                                           ;\
     t="$(git describe --tags --abbrev=0 --always)"    ;\
     b="$(git branch --show-current)"                  ;\
-    [[ $b == main ]] && b="" || b="-$b"               ;\
+    [ _$b = _main ] && b="" || b="-$b"                ;\
     n="$(git rev-list --count "$t"..)"                ;\
-    [[ $n == 0 ]] && n="" || n="+$n"                  ;\
+    [ "$n" -eq 0 ] && n="" || n="+$n"                 ;\
     v="$t$b$n"                                        ;\
     echo "Compute version string: $v"                 ;\
     echo -n "$v" > version.txt
