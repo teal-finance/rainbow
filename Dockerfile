@@ -131,6 +131,7 @@ RUN set -ex                                            ;\
     v="$(cat version.txt)"                             ;\
     sed -e "s|^VITE_VERS=.*|VITE_VERS=$v|"    -i .env  ;\
     sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  ;\
+    sed -e "s|^VITE_BASE=.*|VITE_BASE=$base|" -i .env  ;\
     head .env                                          ;\
     yarn build --base "$base"                          ;\
     yarn compress

@@ -38,8 +38,8 @@ export default defineConfig(({ command, mode }) => {
         minify: true,
         inject: {
           data: {
+            VersionEndpoint: env.VITE_ADDR + env.VITE_BASE + "/version",
             VersionInformation: env.VITE_VERS,
-            VersionEndpoint: env.VITE_ADDR + "/version"
           },
         },
       }),
