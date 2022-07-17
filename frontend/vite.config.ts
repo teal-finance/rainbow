@@ -38,7 +38,7 @@ export default defineConfig(({ command, mode }) => {
         minify: true,
         inject: {
           data: {
-            VersionEndpoint: env.VITE_ADDR + env.VITE_BASE + "/version",
+            VersionEndpoint: env.VITE_ADDR + env.VITE_BASE + "version",
             VersionInformation: env.VITE_VERS,
           },
         },
