@@ -76,6 +76,7 @@ COPY .git .git
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
 RUN set -ex                                                                      ;\
+    v="$(cat version.txt)"                                                       ;\
     export CGO_ENABLED=0                                                         ;\
     export GOFLAGS="-trimpath -modcacherw"                                       ;\
     export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
@@ -128,7 +129,6 @@ ENV GZIPPER_SKIP_COMPRESSED 1
 RUN set -ex                                            ;\
     ls -lA                                             ;\
     v="$(cat version.txt)"                             ;\
-    echo "Use version: $v"                             ;\
     sed -e "s|^VITE_VERS=.*|VITE_VERS=$v|"    -i .env  ;\
     sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  ;\
     head .env                                          ;\
