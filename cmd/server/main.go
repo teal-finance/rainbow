@@ -103,6 +103,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 			r.HandleFunc("/{asset}/{expiry}/{provider}", h.Options)
 			r.HandleFunc("/{asset}/{expiry}/{provider}/", h.Options)
 			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}/", h.Options)
 		})
 
 		r.With(g.Checker.Chk).Get("/bff/cp", h.CallPut)
