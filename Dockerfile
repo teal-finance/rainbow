@@ -95,7 +95,7 @@ COPY frontend/index.html        \
 COPY frontend/public public
 COPY frontend/src    src
 
-COPY --from=version /code/version.txt ./
+COPY --from=go_builder /code/version.txt ./
 
 ARG addr
 ARG base
