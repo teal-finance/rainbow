@@ -18,7 +18,7 @@ import (
 const (
 	muteLevel            = 4         // above => mute the alerting
 	backToNormalDuration = time.Hour // after this time => resumes alerting
-	remindMuteState      = 100       // one notification every 100
+	remindMuteState      = 200       // one notification every 100
 )
 
 type alerter struct {
@@ -68,5 +68,5 @@ func (a *alerter) vet(options []rainbow.Option, err error) error {
 		return a.notifier.Notify(":question: no options")
 	}
 
-	return a.notifier.NotifyLowVerbosity()
+	return a.notifier.NoAlert()
 }

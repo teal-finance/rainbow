@@ -95,20 +95,22 @@ func (m *Muter) Notify(msg string) error {
 	return m.notify(msg + note)
 }
 
-func (m *Muter) NotifyLowVerbosity() error {
-	if m.counter == 0 {
-		return nil // Already OK, do nothing
+// NoAlert decrements the alert verbosity level (the counter)
+// and switches to un-muted state when counter reaches zero.
+func (m *Muter) NoAlert() error {
+	if !m.muted {
+		return nil // Already un-muted, do nothing
 	}
 
-	var d time.Duration
+	var sinceQuietTime time.Duration
 	if m.quietTime.IsZero() {
 		m.quietTime = time.Now()
 	} else {
-		d = time.Since(m.quietTime)
+		sinceQuietTime = time.Since(m.quietTime)
 	}
 
 	m.counter--
-	if (m.counter > 0) && (d < m.NoAlertDuration) {
+	if (m.counter > 0) && (sinceQuietTime < m.NoAlertDuration) {
 		log.Printf("DBG Muter %s: Not yet back to normal count=%d d=%s",
 			m.Prefix, m.counter, timex.DStr(time.Since(m.quietTime)))
 		return nil
@@ -117,11 +119,15 @@ func (m *Muter) NotifyLowVerbosity() error {
 	m.muted = false
 	m.counter = 0
 
-	msg := "✅ Back to low verbosity"
-	if d > 0 {
-		msg += fmt.Sprintf(" since %s (%s ago)", m.quietTime.Format("15:04"), timex.DStr(d))
+	msg := "✅ No alerts "
+	if sinceQuietTime > 0 {
+		msg += fmt.Sprintf("since %s (%s ago)", m.quietTime.Format("15:04"), timex.DStr(sinceQuietTime))
+	} else {
+		msg += "now"
 	}
-	msg += fmt.Sprintf(", dropped %d alerts", m.drops)
+	if m.drops > 1 {
+		msg += fmt.Sprintf(", dropped %d alerts", m.drops)
+	}
 	return m.notify(msg)
 }
 
