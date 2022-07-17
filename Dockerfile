@@ -30,15 +30,23 @@ ARG uid=5505
 # base = /rainbow/
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.18 AS version
+FROM docker.io/golang:1.18 AS go_builder
 
 WORKDIR /code
 
+COPY go.mod go.sum ./
+
+RUN set -ex          ;\
+    go version       ;\
+    go mod download  ;\
+    go mod verify
+
+COPY cmd cmd
+COPY pkg pkg
 COPY .git .git
 
-RUN set -ex     ;\
-    find .git
-
+# Go build flags: https://shibumi.dev/posts/hardening-executables/
+# "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
 RUN set -ex                                                                      ;\
     t="$(git describe --tags --abbrev=0 --always)"                               ;\
     b="$(git branch --show-current)"                                             ;\
@@ -46,8 +54,22 @@ RUN set -ex                                                                     
     n="$(git rev-list --count "$t"..)"                                           ;\
     [[ $n == 0 ]] && n="" || n="+$n"                                             ;\
     v="$t$b$n"                                                                   ;\
-    echo "Produce version from Git repo info: $v"                                ;\
-    echo -n "$v" > version.txt
+    echo "Compute version string: $v"                                            ;\
+    echo -n "$v" > version.txt                                                   ;\
+    export CGO_ENABLED=0                                                         ;\
+    export GOFLAGS="-trimpath -modcacherw"                                       ;\
+    export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
+    go build -v -ldflags="-X 'github.com/teal-finance/garcon.V=$v'" ./cmd/server ;\
+    ls -sh server                                                                ;\
+    ./server -version  # smoke test
+
+# To enable Go hardening (FIPS 140-2 certification) set:
+# GOFLAGS="-buildmode=pie -trimpath -modcacherw"
+# GOLDFLAGS="-linkmode=external -s -w"
+# https://www.linkedin.com/pulse/go-crypto-kubernetes-fips-140-2-fedramp-compliance-gokul-chandra
+# https://github.com/golang/go/blob/dev.boringcrypto/README.boringcrypto.md
+# https://hub.docker.com/r/goboring/golang/tags
+# https://github.com/rancher/image-build-base/blob/master/Dockerfile.amd64
 
 # --------------------------------------------------------------------
 FROM docker.io/node:18-alpine AS web_builder
@@ -92,44 +114,6 @@ RUN set -ex                                            ;\
     head .env                                          ;\
     yarn build --base "$base"                          ;\
     yarn compress
-
-# --------------------------------------------------------------------
-FROM docker.io/golang:1.18 AS go_builder
-
-WORKDIR /code
-
-COPY go.mod go.sum ./
-
-RUN set -ex          ;\
-    go version       ;\
-    go mod download  ;\
-    go mod verify
-
-COPY cmd cmd
-COPY pkg pkg
-
-COPY --from=version /code/version.txt ./
-
-# Go build flags: https://shibumi.dev/posts/hardening-executables/
-# "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
-RUN set -ex                                                                      ;\
-    v="$(cat version.txt)"                                                       ;\
-    echo "Use version: $v"                                                       ;\
-    ls -lA                                                                       ;\
-    export CGO_ENABLED=0                                                         ;\
-    export GOFLAGS="-trimpath -modcacherw"                                       ;\
-    export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
-    go build -v -ldflags="-X 'github.com/teal-finance/garcon.V=$v'" ./cmd/server ;\
-    ls -sh server                                                                ;\
-    ./server -version  # smoke test
-
-# To enable Go hardening (FIPS 140-2 certification) set:
-# GOFLAGS="-buildmode=pie -trimpath -modcacherw"
-# GOLDFLAGS="-linkmode=external -s -w"
-# https://www.linkedin.com/pulse/go-crypto-kubernetes-fips-140-2-fedramp-compliance-gokul-chandra
-# https://github.com/golang/go/blob/dev.boringcrypto/README.boringcrypto.md
-# https://hub.docker.com/r/goboring/golang/tags
-# https://github.com/rancher/image-build-base/blob/master/Dockerfile.amd64
 
 # --------------------------------------------------------------------
 FROM docker.io/golang:1.18 AS integrator
