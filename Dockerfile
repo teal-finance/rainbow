@@ -30,7 +30,35 @@ ARG uid=5505
 # base = /rainbow/
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.18 AS go_builder
+FROM docker.io/golang:1.18 AS version
+
+WORKDIR /code
+
+COPY go.mod go.sum ./
+
+RUN set -ex          ;\
+    go version       ;\
+    go mod download  ;\
+    go mod verify
+
+COPY cmd cmd
+COPY pkg pkg
+COPY .git .git
+
+# Go build flags: https://shibumi.dev/posts/hardening-executables/
+# "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
+RUN set -ex                                           ;\
+    t="$(git describe --tags --abbrev=0 --always)"    ;\
+    b="$(git branch --show-current)"                  ;\
+    [[ $b == main ]] && b="" || b="-$b"               ;\
+    n="$(git rev-list --count "$t"..)"                ;\
+    [[ $n == 0 ]] && n="" || n="+$n"                  ;\
+    v="$t$b$n"                                        ;\
+    echo "Compute version string: $v"                 ;\
+    echo -n "$v" > version.txt
+
+# --------------------------------------------------------------------
+FROM version AS go_builder
 
 WORKDIR /code
 
@@ -48,14 +76,6 @@ COPY .git .git
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
 RUN set -ex                                                                      ;\
-    t="$(git describe --tags --abbrev=0 --always)"                               ;\
-    b="$(git branch --show-current)"                                             ;\
-    [[ $b == main ]] && b="" || b="-$b"                                          ;\
-    n="$(git rev-list --count "$t"..)"                                           ;\
-    [[ $n == 0 ]] && n="" || n="+$n"                                             ;\
-    v="$t$b$n"                                                                   ;\
-    echo "Compute version string: $v"                                            ;\
-    echo -n "$v" > version.txt                                                   ;\
     export CGO_ENABLED=0                                                         ;\
     export GOFLAGS="-trimpath -modcacherw"                                       ;\
     export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
@@ -95,7 +115,7 @@ COPY frontend/index.html        \
 COPY frontend/public public
 COPY frontend/src    src
 
-COPY --from=go_builder /code/version.txt ./
+COPY --from=version /code/version.txt ./
 
 ARG addr
 ARG base
@@ -120,21 +140,19 @@ FROM docker.io/golang:1.18 AS integrator
 
 WORKDIR /target
 
-# HTTPS root certificates (adds about 200 KB)
-# Create user & group files
+# Copy HTTPS root certificates (200 KB) + Create user/group files 
 RUN set -ex                                                 ;\
     mkdir -p                                 etc/ssl/certs  ;\
     cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs  ;\
     echo "teal:x:$uid:$uid::/:" > etc/passwd                ;\
     echo "teal:x:$uid:"         > etc/group
 
-# Static website and back-end
+# Copy static website and back-end executable
 COPY --from=web_builder /code/dist   var/www
 COPY --from=go_builder  /code/server .
 
-# Go hardening is disabled for Rainbow
-# Copy possible dynamic libs because we use CGO_ENABLED=1
-# https://stackoverflow.com/q/62817082
+# The following commented code copies the dynamic libs
+# when Go build uses CGO_ENABLED=1 https://stackoverflow.com/q/62817082
 # RUN mkdir lib           &&\
 #     ldd server           |\
 #     while read f rest    ;\
