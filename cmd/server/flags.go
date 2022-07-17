@@ -10,6 +10,8 @@ import (
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/teal-finance/garcon"
 )
 
 const (
@@ -33,6 +35,7 @@ var (
 )
 
 func parseFlags() {
+	garcon.SetVersionFlag()
 	flag.Parse()
 
 	listenAddr = ":" + strconv.Itoa(*mainPort)
@@ -42,6 +45,7 @@ func parseFlags() {
 		log.Print("Enable -dev mode because -addr and -port flags are not used")
 	}
 
+	garcon.LogVersion()
 	log.Print("Dev. mode      -dev   = ", *dev)
 	log.Print("MAIN_ADDR      -addr  = ", *mainAddr)
 	log.Print("MAIN_PORT      -port  = ", *mainPort)

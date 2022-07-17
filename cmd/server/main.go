@@ -35,7 +35,7 @@ func main() {
 	g, err := garcon.New(
 		garcon.WithURLs(*mainAddr),
 		garcon.WithDocURL("/doc"),
-		garcon.WithServerHeader("Rainbow-v0"),
+		garcon.WithServerHeader("Rainbow"),
 		tokenOption,
 		garcon.WithLimiter(*reqBurst, *reqPerMinute),
 		garcon.WithProm(*expPort, *mainAddr),
@@ -76,6 +76,8 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
 	r.With(c.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
 	r.With(c.Chk).Get("/assets/*", ws.ServeAssets())
+	r.With(c.Chk).Get("/version", g.ServeVersion())
+	r.With(c.Chk).Get("/version/", g.ServeVersion())
 
 	// NotFound catches index.html and other Vue sub-folders
 	r.With(c.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))
@@ -101,6 +103,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 			r.HandleFunc("/{asset}/{expiry}/{provider}", h.Options)
 			r.HandleFunc("/{asset}/{expiry}/{provider}/", h.Options)
 			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}", h.Options)
+			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}/", h.Options)
 		})
 
 		r.With(g.Checker.Chk).Get("/bff/cp", h.CallPut)

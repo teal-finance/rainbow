@@ -15,14 +15,14 @@ require (
 	github.com/gookit/color v1.5.1
 	github.com/graphql-go/graphql v0.8.0
 	github.com/graphql-go/handler v0.2.3
-	github.com/jedib0t/go-pretty/v6 v6.3.3
+	github.com/jedib0t/go-pretty/v6 v6.3.4
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/segmentio/golines v0.10.0
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1
 	github.com/stretchr/testify v1.8.0
-	github.com/teal-finance/garcon v0.20.2
+	github.com/teal-finance/garcon v0.20.3
 	github.com/teal-finance/notifier v1.1.0
 	mvdan.cc/gofumpt v0.3.1
 )
@@ -50,7 +50,7 @@ require (
 	github.com/dave/dst v0.27.0 // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
-	github.com/dfuse-io/logging v0.0.0-20210109005628-b97a57253f70 // indirect
+	github.com/dfuse-io/logging v0.0.0-20210518215502-2d920b2ad1f2 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect

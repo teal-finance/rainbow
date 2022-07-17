@@ -30,46 +30,7 @@ ARG uid=5505
 # base = /rainbow/
 
 # --------------------------------------------------------------------
-FROM docker.io/node:18-alpine AS web_builder
-
-WORKDIR /code
-
-COPY frontend/package.json \
-     frontend/yarn.lock   ./
-
-RUN set -ex                         ;\
-    node --version                  ;\
-    yarn versions                   ;\
-    yarn install --frozen-lockfile  ;\
-    yarn cache clean
-
-COPY frontend/index.html         \
-     frontend/postcss.config.js  \
-     frontend/tailwind.config.js \
-     frontend/tsconfig.json      \
-     frontend/vite.config.ts     \
-     frontend/.env              ./
-
-COPY frontend/public public
-COPY frontend/src    src
-
-ARG addr
-ARG base
-
-# No cache folder "/.gzipper" enabled by "gzipper compress --incremental"
-ENV GZIPPER_INCREMENTAL     0
-ENV GZIPPER_VERBOSE         0
-ENV GZIPPER_SKIP_COMPRESSED 1
-
-RUN set -ex                                            ;\
-    ls -lA                                             ;\
-    sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  ;\
-    head .env                                          ;\
-    yarn build --base "$base"                          ;\
-    yarn compress
-
-# --------------------------------------------------------------------
-FROM docker.io/golang:1.18-alpine AS go_builder
+FROM docker.io/golang:1.18 AS version
 
 WORKDIR /code
 
@@ -82,52 +43,123 @@ RUN set -ex          ;\
 
 COPY cmd cmd
 COPY pkg pkg
+COPY .git .git
 
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
-RUN set -ex                                               ;\
-    ls -lA                                                ;\
-    export GOOS=linux                                     ;\
-    export CGO_ENABLED=0                                  ;\
-    export GOFLAGS="-buildmode=pie -trimpath -modcacherw" ;\
-    export GOLDFLAGS="-linkmode=external -s -w"           ;\
-    go build ./cmd/server                                 ;\
-    ls -sh server                                         ;\
-    ldd server                                            ;\
-    ./server -help  # smoke test
+RUN set -ex                                           ;\
+    t="$(git describe --tags --abbrev=0 --always)"    ;\
+    b="$(git branch --show-current)"                  ;\
+    [[ $b == main ]] && b="" || b="-$b"               ;\
+    n="$(git rev-list --count "$t"..)"                ;\
+    [[ $n == 0 ]] && n="" || n="+$n"                  ;\
+    v="$t$b$n"                                        ;\
+    echo "Compute version string: $v"                 ;\
+    echo -n "$v" > version.txt
 
-# To go further in Go hardening and FIPS 140-2 certification:
+# --------------------------------------------------------------------
+FROM version AS go_builder
+
+WORKDIR /code
+
+COPY go.mod go.sum ./
+
+RUN set -ex          ;\
+    go version       ;\
+    go mod download  ;\
+    go mod verify
+
+COPY cmd cmd
+COPY pkg pkg
+COPY .git .git
+
+# Go build flags: https://shibumi.dev/posts/hardening-executables/
+# "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
+RUN set -ex                                                                      ;\
+    v="$(cat version.txt)"                                                       ;\
+    export CGO_ENABLED=0                                                         ;\
+    export GOFLAGS="-trimpath -modcacherw"                                       ;\
+    export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
+    go build -v -ldflags="-X 'github.com/teal-finance/garcon.V=$v'" ./cmd/server ;\
+    ls -sh server                                                                ;\
+    ./server -version  # smoke test
+
+# To enable Go hardening (FIPS 140-2 certification) set:
+# GOFLAGS="-buildmode=pie -trimpath -modcacherw"
+# GOLDFLAGS="-linkmode=external -s -w"
 # https://www.linkedin.com/pulse/go-crypto-kubernetes-fips-140-2-fedramp-compliance-gokul-chandra
 # https://github.com/golang/go/blob/dev.boringcrypto/README.boringcrypto.md
 # https://hub.docker.com/r/goboring/golang/tags
 # https://github.com/rancher/image-build-base/blob/master/Dockerfile.amd64
 
+# --------------------------------------------------------------------
+FROM docker.io/node:18-alpine AS web_builder
+
+WORKDIR /code
+
+COPY frontend/package.json \
+    frontend/yarn.lock    ./
+
+RUN set -ex                         ;\
+    node --version                  ;\
+    yarn versions                   ;\
+    yarn install --frozen-lockfile  ;\
+    yarn cache clean
+
+COPY frontend/index.html        \
+    frontend/postcss.config.js  \
+    frontend/tailwind.config.js \
+    frontend/tsconfig.json      \
+    frontend/vite.config.ts     \
+    frontend/.env              ./
+
+COPY frontend/public public
+COPY frontend/src    src
+
+COPY --from=version /code/version.txt ./
+
+ARG addr
+ARG base
+
+# No cache folder "/.gzipper" enabled by "gzipper compress --incremental"
+ENV GZIPPER_INCREMENTAL     0
+ENV GZIPPER_VERBOSE         0
+ENV GZIPPER_SKIP_COMPRESSED 1
+
+RUN set -ex                                            ;\
+    ls -lA                                             ;\
+    v="$(cat version.txt)"                             ;\
+    sed -e "s|^VITE_VERS=.*|VITE_VERS=$v|"    -i .env  ;\
+    sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  ;\
+    sed -e "s|^VITE_BASE=.*|VITE_BASE=$base|" -i .env  ;\
+    head .env                                          ;\
+    yarn build --base "$base"                          ;\
+    yarn compress
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.18-alpine AS integrator
+FROM docker.io/golang:1.18 AS integrator
 
 WORKDIR /target
 
-# HTTPS root certificates (adds about 200 KB)
-# Create user & group files
+# Copy HTTPS root certificates (200 KB) + Create user/group files 
 RUN set -ex                                                 ;\
     mkdir -p                                 etc/ssl/certs  ;\
     cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs  ;\
     echo "teal:x:$uid:$uid::/:" > etc/passwd                ;\
     echo "teal:x:$uid:"         > etc/group
 
-# Static website and back-end
+# Copy static website and back-end executable
 COPY --from=web_builder /code/dist   var/www
 COPY --from=go_builder  /code/server .
 
-# Copy possible dynamic libs because we use CGO_ENABLED=1
-# https://stackoverflow.com/q/62817082
-RUN mkdir lib        &&\
-    ldd server        |\
-    while read f rest ;\
-    do cp -v "$f" lib ;\
-    done             &&\
-    ls -lA
+# The following commented code copies the dynamic libs
+# when Go build uses CGO_ENABLED=1 https://stackoverflow.com/q/62817082
+# RUN mkdir lib           &&\
+#     ldd server           |\
+#     while read f rest    ;\
+#     do cp -v "$f" lib    ;\
+#     done                &&\
+#     ls -lA
 
 # --------------------------------------------------------------------
 FROM scratch AS final
