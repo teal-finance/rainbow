@@ -23,7 +23,7 @@ func (h Handler) CallPut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cp := buildCallPut(options)
+	cp := h.align.buildCallPut(options)
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -79,7 +79,7 @@ func (row *Row) less(other *Row) bool {
 	return row.Provider < other.Provider
 }
 
-func buildCallPut(options []rainbow.Option) []Row {
+func (a *Align) buildCallPut(options []rainbow.Option) []Row {
 	rows := make([]Row, 0, len(options)/2)
 
 	for asset, optionsSameAsset := range groupByAsset(options) {
@@ -96,9 +96,9 @@ func buildCallPut(options []rainbow.Option) []Row {
 					for i := range optionsSameProvider {
 						o := &optionsSameProvider[i]
 						if o.Type == "PUT" {
-							put = newLimit(o)
+							put = a.newLimit(o)
 						} else {
-							call = newLimit(o)
+							call = a.newLimit(o)
 						}
 					}
 
@@ -178,8 +178,8 @@ func groupByProvider(options []rainbow.Option) (providerToOptions map[string][]r
 	return providerToOptions
 }
 
-func newLimit(o *rainbow.Option) Limit {
-	bPx, bSz, aPx, aSz := rainbow.BestLimitHTML(o)
+func (a *Align) newLimit(o *rainbow.Option) Limit {
+	bPx, bSz, aPx, aSz := a.BestLimitHTML(o)
 	return Limit{
 		Bid: StrOrder{Price: bPx, Size: bSz},
 		Ask: StrOrder{Price: aPx, Size: aSz},

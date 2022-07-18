@@ -21,6 +21,14 @@ import (
 
 type Handler struct {
 	Service *rainbow.Service
+	align   Align
+}
+
+func NewHandler(s *rainbow.Service) Handler {
+	return Handler{
+		Service: s,
+		align:   NewAlign(),
+	}
 }
 
 func (h Handler) Options(w http.ResponseWriter, r *http.Request) {
