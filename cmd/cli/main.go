@@ -15,6 +15,7 @@ import (
 
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+	"github.com/teal-finance/rainbow/pkg/rainbow/api"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
@@ -43,9 +44,10 @@ func printTable(options []rainbow.Option) {
 		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", red(" Ask"), "Size", "Instrument",
 	})
 
+	align := api.NewAlign()
 	for i := range options {
 		o := &options[i]
-		bestBidPx, bestBidQty, bestAskPx, bestAskQty := rainbow.BestLimitStr(o)
+		bestBidPx, bestBidQty, bestAskPx, bestAskQty := align.BestLimitStr(o)
 		t.AppendRows([]table.Row{{
 			highlight(o.Provider), o.Asset, o.Type,
 			bestBidQty, green(bestBidPx), math.Round(o.Strike*100) / 100,

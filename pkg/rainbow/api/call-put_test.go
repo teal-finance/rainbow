@@ -25,10 +25,12 @@ func BenchmarkAlign_buildCallPut(b *testing.B) {
 		{"Deribit", deribitOptions},
 	}
 
+	align := NewAlign()
+
 	for _, c := range cases {
 		b.Run(c.name, func(b *testing.B) {
 			for i := 1; i < b.N; i++ {
-				_ = buildCallPut(c.options)
+				_ = align.buildCallPut(c.options)
 			}
 		})
 	}
@@ -54,7 +56,8 @@ func TestAlign_buildCallPut(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			t.Parallel()
 
-			got := buildCallPut(c.options)
+			align := NewAlign()
+			got := align.buildCallPut(c.options)
 
 			sort.Slice(c.want, lessRows(c.want))
 			sort.Slice(got, lessRows(got))

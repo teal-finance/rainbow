@@ -91,7 +91,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 
 	// API routes
 	r.Route("/v0", func(r chi.Router) {
-		h := api.Handler{Service: s}
+		h := api.NewHandler(s)
 
 		// HTTP API
 		r.With(g.Checker.Vet).Route("/options", func(r chi.Router) {

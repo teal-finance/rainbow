@@ -107,7 +107,7 @@ func (h Handler) fieldsCallPut() *graphql.Field {
 				return nil, err
 			}
 
-			rows := buildCallPut(options)
+			rows := h.align.buildCallPut(options)
 			return rows, nil
 		},
 	}
