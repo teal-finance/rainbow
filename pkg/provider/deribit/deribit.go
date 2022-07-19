@@ -134,7 +134,30 @@ func filterTooFar(instruments []instrument) []instrument {
 // TODO change this quick and dirty way of filtering strikes from deribit.
 func isStrikeAvailable(i instrument) bool {
 	ethStrike := []float64{1800, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3800}
-	btcStrike := []float64{20000, 25000, 29000, 30000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 50000}
+	btcStrike := []float64{
+		20000,
+		25000,
+		29000,
+		30000,
+		32000,
+		33000,
+		34000,
+		35000,
+		36000,
+		37000,
+		38000,
+		39000,
+		40000,
+		41000,
+		42000,
+		43000,
+		44000,
+		45000,
+		46000,
+		47000,
+		48000,
+		50000,
+	}
 	solStrike := []float64{50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120}
 	strikes := ethStrike
 

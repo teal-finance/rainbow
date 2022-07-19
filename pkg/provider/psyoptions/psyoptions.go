@@ -79,7 +79,14 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 // I don't really need the totalSize but I am keeping it since it was in the original func:
 //     - ASK on the top so desc=true
 //     - BID down so desc=false
-func normalizeOrders(ctx context.Context, market *serum.MarketMeta, cli *rpc.Client, address solana.PublicKey, desc bool, contractSize float64) ([]rainbow.Order, error) {
+func normalizeOrders(
+	ctx context.Context,
+	market *serum.MarketMeta,
+	cli *rpc.Client,
+	address solana.PublicKey,
+	desc bool,
+	contractSize float64,
+) ([]rainbow.Order, error) {
 	// quick & dirty extra rate limit
 	time.Sleep(300 * time.Microsecond)
 
