@@ -57,6 +57,28 @@ type StrOrder struct {
 	Size string `json:"size"`
 }
 
+func (row *Row) less(other *Row) bool {
+	if row.Strike < other.Strike {
+		return true
+	}
+	if row.Strike > other.Strike {
+		return false
+	}
+	if row.Asset < other.Asset {
+		return true
+	}
+	if row.Asset > other.Asset {
+		return false
+	}
+	if row.Expiry < other.Expiry {
+		return true
+	}
+	if row.Expiry > other.Expiry {
+		return false
+	}
+	return row.Provider < other.Provider
+}
+
 func buildCallPut(options []rainbow.Option) []Row {
 	rows := make([]Row, 0, len(options)/2)
 
