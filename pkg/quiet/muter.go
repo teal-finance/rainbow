@@ -125,5 +125,5 @@ func (m *Muter) NoAlert() error {
 }
 
 func (m *Muter) notify(msg string) error {
-	return m.Notifier.Notify(m.Prefix + " " + msg)
+	return m.Notifier.Notify(m.Prefix + msg)
 }

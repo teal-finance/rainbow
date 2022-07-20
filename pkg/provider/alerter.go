@@ -27,7 +27,7 @@ type alerter struct {
 }
 
 func newAlerter(namespace string, p rainbow.Provider, n notifier.Notifier) *alerter {
-	prefix := namespace + ".**" + p.Name() + "**" // Markdown format
+	prefix := namespace + ".**" + p.Name() + "** " // "**" = markdown; space = separator
 	return &alerter{
 		provider: p,
 		notifier: quiet.Muter{
