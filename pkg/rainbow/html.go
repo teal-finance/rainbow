@@ -103,8 +103,7 @@ func leftAlignFloatOnDecimalPoint(f float64) []byte {
 }
 
 func RightAlign(f float64, addMissingDot bool) []byte {
-	buf := make([]byte, 0, 16)
-	buf = strconv.AppendFloat(boldTag, f, 'f', -1, 64)
+	buf := strconv.AppendFloat(boldTag, f, 'f', -1, 64)
 
 	// i is the position of the '.'
 	for i := 1 + len(boldTag); i < len(buf); i++ {
