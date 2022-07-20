@@ -78,18 +78,16 @@ func (m *Muter) Notify(msg string) error {
 		}
 	}
 
-	note := ""
 	if m.muted {
-		note = fmt.Sprintf("\n"+"⛔ Still muted, "+
-			"already dropped %d alerts", m.drops)
+		msg += fmt.Sprintf("\n"+"⛔ Still muted, already dropped %d alerts", m.drops)
 	} else if m.counter > m.Threshold {
 		m.muted = true
 		m.drops = 0
 		m.quietTime = time.Time{}
-		note = "\n" + "⛔ Mute alerts"
+		msg += "\n" + "⛔ Mute alerts"
 	}
 
-	return m.notify(msg + note)
+	return m.notify(msg)
 }
 
 // NoAlert decrements the alert verbosity level (the counter)
