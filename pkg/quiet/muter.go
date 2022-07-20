@@ -74,9 +74,6 @@ func (m *Muter) Notify(msg string) error {
 	if m.muted {
 		m.drops++
 		if (m.drops % m.RemindMuteState) > 0 {
-			log.Printf("DEBUG Muter %s dropped %d alerts since %s (%s ago) count=%d",
-				m.Prefix, m.drops, m.quietTime.Format("15:04"),
-				timex.DStr(time.Since(m.quietTime)), m.counter)
 			return nil
 		}
 	}
@@ -111,8 +108,6 @@ func (m *Muter) NoAlert() error {
 
 	m.counter--
 	if (m.counter > 0) && (sinceQuietTime < m.NoAlertDuration) {
-		log.Printf("DBG Muter %s: Not yet back to normal count=%d d=%s",
-			m.Prefix, m.counter, timex.DStr(time.Since(m.quietTime)))
 		return nil
 	}
 
