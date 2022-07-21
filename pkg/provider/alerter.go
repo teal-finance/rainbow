@@ -8,22 +8,33 @@ package provider
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
+	"github.com/teal-finance/garcon/timex"
 	"github.com/teal-finance/notifier"
-	"github.com/teal-finance/rainbow/pkg/quiet"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 const (
-	muteLevel            = 4         // above => mute the alerting
-	backToNormalDuration = time.Hour // after this time => resumes alerting
-	remindMuteState      = 200       // one notification every 100
+	// threshold is the level disabling the alerts (counter above mutes the alerting).
+	// The counter must return to zero to consider the situation is back to normal.
+	threshold = 4
+
+	// noAlertDuration allows to consider the verbosity is back to normal.
+	// After one hour without any alert => resumes alerting.
+	noAlertDuration = time.Hour
+
+	// remindMuteState allows to still send one alert to remind
+	// the alerting is muted since a while.
+	// Set value 100 to send this reminder every 100 dropped alerts.
+	// Set to zero to disable this feature.
+	remindMuteState = 200
 )
 
 type alerter struct {
 	provider rainbow.Provider
-	muter    quiet.Muter
+	muter    muter
 	notifier notifier.Notifier
 
 	// prefix is inserted in all alerts, and can be in Markdown format.
@@ -35,10 +46,11 @@ func newAlerter(namespace string, p rainbow.Provider, n notifier.Notifier) *aler
 		provider: p, // "**" = bold in markdown ; trailing space = separator
 		prefix:   namespace + ".**" + p.Name() + "** ",
 		notifier: n,
-		muter: quiet.Muter{
-			Threshold:       muteLevel,
-			NoAlertDuration: backToNormalDuration,
-			RemindMuteState: remindMuteState,
+		muter: muter{
+			counter:   0,
+			muted:     false,
+			quietTime: time.Time{},
+			drops:     0,
 		},
 	}
 }
@@ -88,4 +100,90 @@ func (a *alerter) vet(options []rainbow.Option, err error) error {
 	}
 
 	return a.notifier.Notify(a.prefix + msg)
+}
+
+// muter inhibits alerts when too much.
+// muter counts the successive alerts, and decrements its counter in absence of alerts.
+// When the counter is over the Threshold, new incoming alerts are dropped.
+// Once the counter returns to zero, or after NoAlertDuration,
+// muter resumes the alerting. muter uses the Hysteresis principle:
+// https://wikiless.org/wiki/Hysteresis
+// Similar wording: quieter, limiter, reducer, mouth-closer, inhibitor.
+type muter struct {
+	// counter is incremented/decremented depending on alerting activity.
+	// counter represents the alerting verbosity.
+	// counter is always positive.
+	counter int
+
+	// muted becomes true when Muter starts inhibiting the alerting,
+	// (when counter > Threshold) and returns false when counter=0
+	// or d>NoAlertDuration.
+	muted bool
+
+	// quietTime is the first call of successive Decrement()
+	// without any Increment(). quietTime is used to
+	// inform the time since no alert has been notified.
+	quietTime time.Time
+
+	// drops is the number of dropped alerts
+	// (the unsent alerts to the Notifier).
+	drops int
+}
+
+func (m *muter) Increment() (bool, string) {
+	m.counter++
+
+	if m.muted {
+		m.drops++
+		if (remindMuteState == 0) || (m.drops%remindMuteState) > 0 {
+			return false, ""
+		}
+	}
+
+	if m.muted {
+		return true, "\n" + "⛔ Still muted, already dropped " + strconv.Itoa(m.drops) + " alerts"
+	}
+
+	if m.counter > threshold {
+		m.muted = true
+		m.drops = 0
+		m.quietTime = time.Time{}
+		return true, "\n" + "⛔ Mute alerts"
+	}
+
+	return true, ""
+}
+
+// Decrement decrements the alert verbosity level (the counter)
+// and switches to un-muted state when counter reaches zero.
+func (m *muter) Decrement() (bool, string) {
+	if !m.muted {
+		return false, "" // Already un-muted, do nothing
+	}
+
+	var sinceQuietTime time.Duration
+	if m.quietTime.IsZero() {
+		m.quietTime = time.Now()
+	} else {
+		sinceQuietTime = time.Since(m.quietTime)
+	}
+
+	m.counter--
+	if (m.counter > 0) && (sinceQuietTime < noAlertDuration) {
+		return false, ""
+	}
+
+	m.muted = false
+	m.counter = 0
+
+	msg := "✅ No alerts "
+	if sinceQuietTime > 0 {
+		msg += fmt.Sprintf("since %s (%s ago)", m.quietTime.Format("15:04"), timex.DStr(sinceQuietTime))
+	} else {
+		msg += "now"
+	}
+	if m.drops > 1 {
+		msg += fmt.Sprintf(", dropped %d alerts", m.drops)
+	}
+	return true, msg
 }
