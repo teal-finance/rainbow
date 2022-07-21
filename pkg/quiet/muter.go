@@ -9,91 +9,79 @@ package quiet
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/teal-finance/garcon/timex"
-	"github.com/teal-finance/notifier"
 )
 
-// Muter drops alerts when it is forwarding too much.
 // Muter counts the successive alerts, and decrements its counter in absence of alerts.
 // When the counter is over the Threshold, new incoming alerts are dropped.
 // Once the counter returns to zero, or after NoAlertDuration,
 // Muter resumes the alerting. Muter uses the Hysteresis principle:
 // https://wikiless.org/wiki/Hysteresis
-// Muter implements the Notifier interface.
 type Muter struct {
-	// Prefix is inserted in all alerts.
-	// Thus Prefix can be in Markdown format.
-	Prefix string
-
-	Notifier notifier.Notifier
-
 	// Threshold is the level disabling the alerts.
-	// The counter must return to zero
-	// to consider the situation is back to normal.
+	// The counter must return to zero to consider the situation is back to normal.
 	Threshold int
 
-	// NoAlertDuration also allows to
-	// consider the verbosity is back to normal.
+	// NoAlertDuration also allows to consider the verbosity is back to normal.
 	NoAlertDuration time.Duration
 
-	// RemindMuteState, if non-zero, allows to
-	// still send a alerts to remind
-	// the alerts are muted since a while.
-	// Set value 100 to send this reminder
-	// every 100 dropped alerts.
+	// RemindMuteState, if non-zero, allows to still send one alert to remind
+	// the alerting is muted since a while.
+	// Set value 100 to send this reminder every 100 dropped alerts.
 	RemindMuteState int
 
-	// counter is incremented for each alerts
-	// (when Notify() is called), and decremented
-	// when NotifyLowVerbosity() is called.
+	// counter is incremented/decremented depending on alerting activity.
+	// counter represents the alerting verbosity.
 	// counter is always positive.
-	// The value counter=0 indicates the verbosity is low
-	// thus Muter enable again the alerts.
 	counter int
 
 	// muted becomes true when Muter starts inhibiting the alerting,
-	// (when counter > Threshold) and returns false when counter=0.
+	// (when counter > Threshold) and returns false when counter=0
+	// or d>NoAlertDuration.
 	muted bool
 
-	// quietTime is the first call to NotifyLowVerbosity()
-	// after Notify() had been called. quietTime is used to
-	// inform the time since Notify() has not been called.
+	// quietTime is the first call of successive Decrement()
+	// without any Increment(). quietTime is used to
+	// inform the time since no alert has been notified.
 	quietTime time.Time
 
 	// drops is the number of dropped alerts
-	// (the unsent alerts to Notifier).
+	// (the unsent alerts to the Notifier).
 	drops int
 }
 
-func (m *Muter) Notify(msg string) error {
+func (m *Muter) Increment() (bool, string) {
 	m.counter++
 
 	if m.muted {
 		m.drops++
 		if (m.drops % m.RemindMuteState) > 0 {
-			return nil
+			return false, ""
 		}
 	}
 
 	if m.muted {
-		msg += fmt.Sprintf("\n"+"⛔ Still muted, already dropped %d alerts", m.drops)
-	} else if m.counter > m.Threshold {
+		return true, "\n" + "⛔ Still muted, already dropped " + strconv.Itoa(m.drops) + " alerts"
+	}
+
+	if m.counter > m.Threshold {
 		m.muted = true
 		m.drops = 0
 		m.quietTime = time.Time{}
-		msg += "\n" + "⛔ Mute alerts"
+		return true, "\n" + "⛔ Mute alerts"
 	}
 
-	return m.notify(msg)
+	return true, ""
 }
 
-// NoAlert decrements the alert verbosity level (the counter)
+// Decrement decrements the alert verbosity level (the counter)
 // and switches to un-muted state when counter reaches zero.
-func (m *Muter) NoAlert() error {
+func (m *Muter) Decrement() (bool, string) {
 	if !m.muted {
-		return nil // Already un-muted, do nothing
+		return false, "" // Already un-muted, do nothing
 	}
 
 	var sinceQuietTime time.Duration
@@ -105,7 +93,7 @@ func (m *Muter) NoAlert() error {
 
 	m.counter--
 	if (m.counter > 0) && (sinceQuietTime < m.NoAlertDuration) {
-		return nil
+		return false, ""
 	}
 
 	m.muted = false
@@ -120,9 +108,5 @@ func (m *Muter) NoAlert() error {
 	if m.drops > 1 {
 		msg += fmt.Sprintf(", dropped %d alerts", m.drops)
 	}
-	return m.notify(msg)
-}
-
-func (m *Muter) notify(msg string) error {
-	return m.Notifier.Notify(m.Prefix + msg)
+	return true, msg
 }

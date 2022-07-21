@@ -23,16 +23,19 @@ const (
 
 type alerter struct {
 	provider rainbow.Provider
-	notifier quiet.Muter
+	muter    quiet.Muter
+	notifier notifier.Notifier
+
+	// prefix is inserted in all alerts, and can be in Markdown format.
+	prefix string
 }
 
 func newAlerter(namespace string, p rainbow.Provider, n notifier.Notifier) *alerter {
-	prefix := namespace + ".**" + p.Name() + "** " // "**" = markdown; space = separator
 	return &alerter{
-		provider: p,
-		notifier: quiet.Muter{
-			Prefix:          prefix,
-			Notifier:        n,
+		provider: p, // "**" = bold in markdown ; trailing space = separator
+		prefix:   namespace + ".**" + p.Name() + "** ",
+		notifier: n,
+		muter: quiet.Muter{
 			Threshold:       muteLevel,
 			NoAlertDuration: backToNormalDuration,
 			RemindMuteState: remindMuteState,
@@ -60,13 +63,29 @@ func (a *alerter) Options() ([]rainbow.Option, error) {
 }
 
 func (a *alerter) vet(options []rainbow.Option, err error) error {
-	if err != nil {
-		return a.notifier.Notify(fmt.Sprint(":alert: API error: ", err))
+	notifyError := (err != nil)
+	notifyEmpty := (len(options) == 0)
+
+	var ok bool
+	var msg string
+	if notifyError || notifyEmpty {
+		// => increment alerting verbosity
+		ok, msg = a.muter.Increment()
+	} else {
+		// no alert => decrement alerting verbosity
+		ok, msg = a.muter.Decrement()
 	}
 
-	if len(options) == 0 {
-		return a.notifier.Notify(":question: no options")
+	if !ok {
+		return nil // muted: do not notify
 	}
 
-	return a.notifier.NoAlert()
+	switch {
+	case notifyError:
+		msg = fmt.Sprint(":alert: API error: ", err) + msg
+	case notifyEmpty:
+		msg = ":question: no options" + msg
+	}
+
+	return a.notifier.Notify(a.prefix + msg)
 }
