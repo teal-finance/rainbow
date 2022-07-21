@@ -122,15 +122,15 @@ func (a *Align) buildCallPut(options []rainbow.Option) []Row {
 func groupByAsset(options []rainbow.Option) (assetToOptions map[string][]rainbow.Option) {
 	assetToOptions = map[string][]rainbow.Option{}
 
-	for _, o := range options {
+	for i := range options {
 		// Sanitize to properly group assets
-		asset := sanitizeAsset(o.Asset)
+		asset := sanitizeAsset(options[i].Asset)
 
 		slice, ok := assetToOptions[asset]
 		if ok {
-			assetToOptions[asset] = append(slice, o)
+			assetToOptions[asset] = append(slice, options[i])
 		} else {
-			assetToOptions[asset] = []rainbow.Option{o}
+			assetToOptions[asset] = []rainbow.Option{options[i]}
 		}
 	}
 
@@ -140,12 +140,12 @@ func groupByAsset(options []rainbow.Option) (assetToOptions map[string][]rainbow
 func groupByExpiry(options []rainbow.Option) (expiryToOptions map[string][]rainbow.Option) {
 	expiryToOptions = map[string][]rainbow.Option{}
 
-	for _, o := range options {
-		slice, ok := expiryToOptions[o.Expiry]
+	for i := range options {
+		slice, ok := expiryToOptions[options[i].Expiry]
 		if ok {
-			expiryToOptions[o.Expiry] = append(slice, o)
+			expiryToOptions[options[i].Expiry] = append(slice, options[i])
 		} else {
-			expiryToOptions[o.Expiry] = []rainbow.Option{o}
+			expiryToOptions[options[i].Expiry] = []rainbow.Option{options[i]}
 		}
 	}
 
@@ -154,12 +154,12 @@ func groupByExpiry(options []rainbow.Option) (expiryToOptions map[string][]rainb
 
 func groupByStrike(options []rainbow.Option) (strikeToOptions map[float64][]rainbow.Option) {
 	strikeToOptions = map[float64][]rainbow.Option{}
-	for _, o := range options {
-		slice, ok := strikeToOptions[o.Strike]
+	for i := range options {
+		slice, ok := strikeToOptions[options[i].Strike]
 		if ok {
-			strikeToOptions[o.Strike] = append(slice, o)
+			strikeToOptions[options[i].Strike] = append(slice, options[i])
 		} else {
-			strikeToOptions[o.Strike] = []rainbow.Option{o}
+			strikeToOptions[options[i].Strike] = []rainbow.Option{options[i]}
 		}
 	}
 	return strikeToOptions
