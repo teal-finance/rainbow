@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/notifier"
 	"github.com/teal-finance/notifier/logger"
 	"github.com/teal-finance/notifier/mattermost"
@@ -74,7 +75,7 @@ func AllProviders(endpoint, namespace string) []rainbow.Provider {
 
 // notifyStartup is called only once to notify when Rainbow is started.
 func notifyStartup(n notifier.Notifier, namespace, list string) error {
-	msg := ":wave: Rainbow **" + namespace + "** just started"
+	msg := ":wave: Rainbow **" + namespace + "** " + garcon.Version("") + " has just started"
 
 	host, err := os.Hostname()
 	if err == nil {

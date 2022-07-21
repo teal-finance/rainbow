@@ -74,25 +74,20 @@ func (m *Muter) Notify(msg string) error {
 	if m.muted {
 		m.drops++
 		if (m.drops % m.RemindMuteState) > 0 {
-			log.Printf("DEBUG Muter %s dropped %d alerts since %s (%s ago) count=%d",
-				m.Prefix, m.drops, m.quietTime.Format("15:04"),
-				timex.DStr(time.Since(m.quietTime)), m.counter)
 			return nil
 		}
 	}
 
-	note := ""
 	if m.muted {
-		note = fmt.Sprintf("\n"+"⛔ Still muted, "+
-			"already dropped %d alerts", m.drops)
+		msg += fmt.Sprintf("\n"+"⛔ Still muted, already dropped %d alerts", m.drops)
 	} else if m.counter > m.Threshold {
 		m.muted = true
 		m.drops = 0
 		m.quietTime = time.Time{}
-		note = "\n" + "⛔ Mute alerts"
+		msg += "\n" + "⛔ Mute alerts"
 	}
 
-	return m.notify(msg + note)
+	return m.notify(msg)
 }
 
 // NoAlert decrements the alert verbosity level (the counter)
@@ -111,8 +106,6 @@ func (m *Muter) NoAlert() error {
 
 	m.counter--
 	if (m.counter > 0) && (sinceQuietTime < m.NoAlertDuration) {
-		log.Printf("DBG Muter %s: Not yet back to normal count=%d d=%s",
-			m.Prefix, m.counter, timex.DStr(time.Since(m.quietTime)))
 		return nil
 	}
 
@@ -132,5 +125,5 @@ func (m *Muter) NoAlert() error {
 }
 
 func (m *Muter) notify(msg string) error {
-	return m.Notifier.Notify(m.Prefix + " " + msg)
+	return m.Notifier.Notify(m.Prefix + msg)
 }
