@@ -9,7 +9,6 @@ package quiet
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/teal-finance/garcon/timex"
