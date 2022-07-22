@@ -17,16 +17,13 @@ import (
 )
 
 const (
-	// threshold is the level disabling the alerts (counter above mutes the alerting).
-	// The counter must return to zero to consider the situation is back to normal.
+	// threshold is the verbosity level disabling the alerting.
 	threshold = 4
 
-	// noAlertDuration allows to consider the verbosity is back to normal.
-	// After one hour without any alert => resumes alerting.
+	// noAlertDuration is the time after the verbosity is considered back to normal.
 	noAlertDuration = time.Hour
 
-	// remindMuteState allows to still send one alert to remind
-	// the alerting is muted since a while.
+	// remindMuteState allows to still send one alert to remind the alerting is muted since a while.
 	// Set value 100 to send this reminder every 100 dropped alerts.
 	// Set to zero to disable this feature.
 	remindMuteState = 200
@@ -37,7 +34,7 @@ type alerter struct {
 	muter    muter
 	notifier notifier.Notifier
 
-	// prefix is inserted in all alerts, and can be in Markdown format.
+	// prefix (in Markdown format) is inserted in all notifications.
 	prefix string
 }
 
@@ -50,7 +47,7 @@ func newAlerter(namespace string, p rainbow.Provider, n notifier.Notifier) *aler
 			counter:   0,
 			muted:     false,
 			quietTime: time.Time{},
-			drops:     0,
+			dropped:   0,
 		},
 	}
 }
@@ -102,51 +99,46 @@ func (a *alerter) vet(options []rainbow.Option, err error) error {
 	return a.notifier.Notify(a.prefix + msg)
 }
 
-// muter inhibits alerts when too much.
+// muter inhibits alerting when too verbose.
 // muter counts the successive alerts, and decrements its counter in absence of alerts.
 // When the counter is over the Threshold, new incoming alerts are dropped.
 // Once the counter returns to zero, or after NoAlertDuration,
-// muter resumes the alerting. muter uses the Hysteresis principle:
+// muter resumes the alerting. This is the Hysteresis principle:
 // https://wikiless.org/wiki/Hysteresis
-// Similar wording: quieter, limiter, reducer, mouth-closer, inhibitor.
 type muter struct {
-	// counter is incremented/decremented depending on alerting activity.
-	// counter represents the alerting verbosity.
-	// counter is always positive.
+	// counter is incremented/decremented depending on alerting activity, but is never negative.
 	counter int
 
 	// muted becomes true when Muter starts inhibiting the alerting,
-	// (when counter > Threshold) and returns false when counter=0
-	// or d>NoAlertDuration.
 	muted bool
 
-	// quietTime is the first call of successive Decrement()
-	// without any Increment(). quietTime is used to
-	// inform the time since no alert has been notified.
+	// quietTime is the first call of Decrement() after Increment().
+	// quietTime is used to inform the time since the situation is back to normal.
 	quietTime time.Time
 
-	// drops is the number of dropped alerts
-	// (the unsent alerts to the Notifier).
-	drops int
+	// dropped is the number of dropped alerts (the unsent alerts to the Notifier).
+	dropped int
 }
 
+// increment increments the internal counter and returns false when in muted state.
+// Every remindMuteState calls, Increment also returns a message to remind the muted state.
 func (m *muter) Increment() (bool, string) {
 	m.counter++
 
 	if m.muted {
-		m.drops++
-		if (remindMuteState == 0) || (m.drops%remindMuteState) > 0 {
+		m.dropped++
+		if (remindMuteState == 0) || (m.dropped%remindMuteState) > 0 {
 			return false, ""
 		}
 	}
 
 	if m.muted {
-		return true, "\n" + "⛔ Still muted, already dropped " + strconv.Itoa(m.drops) + " alerts"
+		return true, "\n" + "⛔ Still muted, already dropped " + strconv.Itoa(m.dropped) + " alerts"
 	}
 
 	if m.counter > threshold {
 		m.muted = true
-		m.drops = 0
+		m.dropped = 0
 		m.quietTime = time.Time{}
 		return true, "\n" + "⛔ Mute alerts"
 	}
@@ -182,8 +174,8 @@ func (m *muter) Decrement() (bool, string) {
 	} else {
 		msg += "now"
 	}
-	if m.drops > 1 {
-		msg += fmt.Sprintf(", dropped %d alerts", m.drops)
+	if m.dropped > 1 {
+		msg += fmt.Sprintf(", dropped %d alerts", m.dropped)
 	}
 	return true, msg
 }
