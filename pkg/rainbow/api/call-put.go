@@ -108,9 +108,10 @@ func (a *Align) buildCallPut(options []rainbow.Option) []Row {
 				for provider, optionsSameProvider := range groupByProvider(optionsSameStrike) {
 					call := Limit{}
 					put := Limit{}
-					if IsRowEmpty(optionsSameProvider) {
+					// TODO activate this filter for next wersion
+					/*if IsRowEmpty(optionsSameProvider) {
 						continue
-					}
+					}*/
 					for i := range optionsSameProvider {
 						o := &optionsSameProvider[i]
 						if o.Type == "PUT" {
