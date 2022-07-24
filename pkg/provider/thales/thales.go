@@ -50,7 +50,7 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	layer := []string{"Polygon"} //"Optimism", "Polygon"}
+	layer := []string{"Optimism", "Polygon"}
 	var o []rainbow.Option
 	for _, l := range layer {
 

@@ -68,9 +68,10 @@ func main() {
 	spew.Dump(amount)
 
 	fmt.Println("quote buy UP")
-
+	Mistake := fmt.Errorf("execution reverted: uint overflow from multiplication")
 	quote, err := instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), UP, amount)
-	if err != nil {
+	if err == Mistake {
+		spew.Dump(err)
 		log.Fatal(err)
 
 	}
