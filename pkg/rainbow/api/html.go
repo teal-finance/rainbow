@@ -41,14 +41,14 @@ type Align struct {
 
 // BestLimitHTML is used by the web/API server to align numbers with HTML <tags>.
 func (a *Align) BestLimitHTML(option *rainbow.Option) (bidPx, bidSz, askPx, askSz string) {
-	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
+	if len(option.Bid) > 0 && option.Bid[0].Size != 0 && option.Bid[0].Price != 0 {
 		bidPx = a.rightAlignOnDecimalPointHTML(option.Bid[0].Price, true)
 		bidSz = a.leftAlignOnDecimalPointHTML(option.Bid[0].Size)
 	} else {
 		bidPx, bidSz = dashRightAlignHTML, dashLeftAlignHTML
 	}
 
-	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
+	if len(option.Ask) > 0 && option.Ask[0].Size != 0 && option.Ask[0].Price != 0 {
 		askPx = a.rightAlignOnDecimalPointHTML(option.Ask[0].Price, true)
 		askSz = a.leftAlignOnDecimalPointHTML(option.Ask[0].Size)
 	} else {
@@ -60,14 +60,14 @@ func (a *Align) BestLimitHTML(option *rainbow.Option) (bidPx, bidSz, askPx, askS
 
 // BestLimitStr is used by the CLI to align numbers with whitespaces.
 func (a *Align) BestLimitStr(option *rainbow.Option) (bidPx, bidSz, askPx, askSz string) {
-	if len(option.Bid) > 0 && option.Bid[0].Size != 0 {
+	if len(option.Bid) > 0 && option.Bid[0].Size != 0 && option.Bid[0].Price != 0 {
 		bidPx = a.leftAlignOnDecimalPoint(option.Bid[0].Price)
 		bidSz = a.leftAlignOnDecimalPoint(option.Bid[0].Size)
 	} else {
 		bidPx, bidSz = dashLeftAlign, dashLeftAlign
 	}
 
-	if len(option.Ask) > 0 && option.Ask[0].Size != 0 {
+	if len(option.Ask) > 0 && option.Ask[0].Size != 0 && option.Ask[0].Price != 0 {
 		askPx = a.leftAlignOnDecimalPoint(option.Ask[0].Price)
 		askSz = a.leftAlignOnDecimalPoint(option.Ask[0].Size)
 	} else {

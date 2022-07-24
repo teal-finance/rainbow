@@ -28,7 +28,7 @@ type Item {
 
 ## Step 2: Write your GraphQL query
 
-Put it in `pkg/provider/generated/<provider-name>/queries.graphql`.
+Put it in `pkg/provider/generated/<provider-name>/query.graphql`.
 Format = standard [GraphQL syntax](https://graphql.org/learn/queries/)
 (supports queries and mutations).
 

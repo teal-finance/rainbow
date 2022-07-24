@@ -9,8 +9,8 @@ generated: generated.go
 
 bindings:
   BigInt:
-    type: int64
+    type: string
   BigDecimal:
     type: float64
   Bytes:
-    type: "[]byte"
+    type: string

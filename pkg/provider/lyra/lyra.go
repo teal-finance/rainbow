@@ -6,7 +6,6 @@
 package lyra
 
 import (
-	"fmt"
 	"log"
 	"math/big"
 	"time"
@@ -88,9 +87,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 
 func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketViewerTradePremiumView, error) {
 	ammOrder := []OptionMarketViewerTradePremiumView{}
-	a := big.NewInt(10)
-	a.Exp(big.NewInt(10), big.NewInt(18), nil)
-	a.Mul(a, big.NewInt(int64(amount)))
+	a := rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals)
 
 	// Call BID
 	trade, err := v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 1, a)
@@ -140,7 +137,7 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
-		Strike:        ToFloat(listing.Strike),
+		Strike:        rainbow.ToFloat(listing.Strike, rainbow.DefaultEthereumDecimals),
 	}
 	put := rainbow.Option{
 		Name:          "",
@@ -154,29 +151,29 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
-		Strike:        ToFloat(listing.Strike),
+		Strike:        rainbow.ToFloat(listing.Strike, rainbow.DefaultEthereumDecimals),
 	}
 
-	call.Name = optionName(call)
-	put.Name = optionName(put)
+	call.Name = call.OptionName()
+	put.Name = put.OptionName()
 
 	call.Bid = append(call.Bid, rainbow.Order{
-		Price: ToFloat(ammOrder[0].Premium),
+		Price: rainbow.ToFloat(ammOrder[0].Premium, rainbow.DefaultEthereumDecimals),
 		Size:  float64(amount),
 	})
 
 	call.Ask = append(call.Ask, rainbow.Order{
-		Price: ToFloat(ammOrder[1].Premium),
+		Price: rainbow.ToFloat(ammOrder[1].Premium, rainbow.DefaultEthereumDecimals),
 		Size:  float64(amount),
 	})
 
 	put.Bid = append(put.Bid, rainbow.Order{
-		Price: ToFloat(ammOrder[2].Premium),
+		Price: rainbow.ToFloat(ammOrder[2].Premium, rainbow.DefaultEthereumDecimals),
 		Size:  float64(amount),
 	})
 
 	put.Ask = append(put.Ask, rainbow.Order{
-		Price: ToFloat(ammOrder[3].Premium),
+		Price: rainbow.ToFloat(ammOrder[3].Premium, rainbow.DefaultEthereumDecimals),
 		Size:  float64(amount),
 	})
 
@@ -184,23 +181,8 @@ func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarke
 	return options
 }
 
-func optionName(o rainbow.Option) string {
-	return o.Asset + "-" + o.Expiry + "-" +
-		fmt.Sprintf("%.2f", o.Strike) + "-" + o.Type
-}
-
 func expiration(e *big.Int) string {
 	seconds := e.Int64()
 	expiryTime := time.Unix(seconds, 0).UTC()
 	return expiryTime.Format("2006-01-02 15:04:05")
-}
-
-// because Ethereum use 10^18 to represent 1
-// what we do is that we cut 10^13 to keep 5 decimals
-// (because IV is a percentage an we want to be accurate)
-// then convert the remainder to float64 and divide by 1000.
-func ToFloat(n *big.Int) float64 {
-	q := common.Big0
-	q.Quo(n, big.NewInt(10000000000000)) // divided by 10^13
-	return float64(q.Int64()) / 100000.0
 }
