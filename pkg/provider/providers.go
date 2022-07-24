@@ -13,7 +13,12 @@ import (
 	"github.com/teal-finance/notifier"
 	"github.com/teal-finance/notifier/logger"
 	"github.com/teal-finance/notifier/mattermost"
-	"github.com/teal-finance/rainbow/pkg/provider/thales"
+	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
+	"github.com/teal-finance/rainbow/pkg/provider/deribit"
+	"github.com/teal-finance/rainbow/pkg/provider/lyra"
+	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
+	"github.com/teal-finance/rainbow/pkg/provider/zerox"
+	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -25,13 +30,13 @@ const (
 // AllProvidersNoAlerter returns all active providers without alerter.
 func AllProvidersNoAlerter() []rainbow.Provider {
 	return []rainbow.Provider{
-		//psyoptions.Provider{},    // separate psy and zeta to not
-		//deribit.Provider{}, //                  |
-		//lyra.Provider{},          //                  |
-		//zerox.Provider{},       //                  |
-		//zetamarkets.Provider{}, // <----------------` exhaust solana/serum rpc quota
-		thales.Provider{}, //
-		//deltaexchange.Provider{}, // last because slow (rate limit)
+		psyoptions.Provider{},  // separate psy and zeta to not
+		deribit.Provider{},     //                  |
+		lyra.Provider{},        //                  |
+		zerox.Provider{},       //                  |
+		zetamarkets.Provider{}, // <----------------` exhaust solana/serum rpc quota
+		//thales.Provider{},    // exotic market only live on /exotic
+		deltaexchange.Provider{}, // last because slow (rate limit)
 	}
 }
 
