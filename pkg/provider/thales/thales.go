@@ -50,7 +50,7 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	layer := []string{"Optimism", "Polygon"}
+	layer := []string{"Polygon"} //"Optimism", "Polygon"}
 	var o []rainbow.Option
 	for _, l := range layer {
 
@@ -81,12 +81,14 @@ func ProcessMarkets(markets []thales.AllMarketsMarketsMarket, layer string) ([]r
 	for count, m := range markets {
 		up, err := getOption(m, UP, layer)
 		if err != nil {
-			log.Print("ERR: ", err)
+			log.Print(count, " ERR: getOption: ", m.Id, " UP: ", err)
+			spew.Dump(m)
 			return nil, err
 		}
 		down, err := getOption(m, DOWN, layer)
 		if err != nil {
-			log.Print("ERR: ", err)
+			log.Print(count, " ERR: getOption: ", m.Id, " DOWN: ", err)
+			spew.Dump(m)
 			return nil, err
 		}
 		r = append(r, up, down)

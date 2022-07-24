@@ -21,11 +21,11 @@ import (
 func main() {
 	options := zerox.QueryTheGraph()
 	spew.Dump(len(options))
-	const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
-	id := "0x8cb6c58a63a568f8155dc3242f3b830c57dba5eb"
+	//const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
+	//id := "0x8cb6c58a63a568f8155dc3242f3b830c57dba5eb"
 
-	//const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
-	//id := "0xe8dd2d01bc36babe1eecbbe863ad294bbc5c15df"
+	const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
+	id := "0xb349f4f62c92b7deb4ee7fadc6022c0830612aa4" //"0xe8dd2d01bc36babe1eecbbe863ad294bbc5c15df"
 	opt := thales.QueryMarket(id, url)
 	spew.Dump(opt)
 
@@ -36,7 +36,7 @@ func main() {
 	fmt.Println("test")
 	spew.Dump(len(markets))*/
 	fmt.Println(thales.Underlying(opt.CurrencyKey))
-	rpc, _, amm, decimals := thales.LayerInfo("Optimism") // "Polygon") //"Optimism")
+	rpc, _, amm, decimals := thales.LayerInfo("Polygon") // "Polygon") //"Optimism")
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
 		log.Fatal(err)
@@ -59,11 +59,15 @@ func main() {
 		log.Fatal(err)
 
 	}
+	fmt.Println("Testing setup")
+
 	spew.Dump(k)
 	spew.Dump(rainbow.ToFloat(k, rainbow.DefaultEthereumDecimals))
 	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
 	spew.Dump(decimals)
 	spew.Dump(amount)
+
+	fmt.Println("quote buy UP")
 
 	quote, err := instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), UP, amount)
 	if err != nil {
@@ -74,6 +78,7 @@ func main() {
 	spew.Dump(rainbow.ToFloat(quote, decimals))
 	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
 
+	fmt.Println("quote sell UP")
 	quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), UP, amount)
 	if err != nil {
 		log.Fatal(err)
@@ -84,6 +89,8 @@ func main() {
 	spew.Dump(rainbow.ToFloat(quote, decimals))
 	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
 
+	fmt.Println("quote buy DOWN")
+
 	quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), DOWN, amount)
 	if err != nil {
 		log.Fatal(err)
@@ -93,6 +100,8 @@ func main() {
 
 	spew.Dump(rainbow.ToFloat(quote, decimals))
 	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
+
+	fmt.Println("quote sell DOWN")
 
 	quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), DOWN, amount)
 	if err != nil {
