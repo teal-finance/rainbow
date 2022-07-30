@@ -35,6 +35,7 @@
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
+          <button class="border-none btn" @click="exotic()">Exotic</button>
           <button class="border-none btn" @click="$router.push('/about')">About</button>
           <button class="border-none btn" @click="openSourceCode()">
             Source code
@@ -117,6 +118,10 @@ export default defineComponent({
       window.location.href = 'https://github.com/teal-finance/rainbow'
     }
 
+    function exotic(){
+      location.href= 'https://teal.finance/exotic'
+    }
+
     return {
       isMenuVisible,
       closeMenu,
@@ -125,6 +130,7 @@ export default defineComponent({
       openView,
       mobilePageTitle,
       openSourceCode,
+      exotic,
     }
   }
 });
