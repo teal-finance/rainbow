@@ -8,6 +8,7 @@ package anchor
 import (
 	"context"
 	"fmt"
+	"log"
 	"math"
 	"strings"
 	"time"
@@ -20,11 +21,8 @@ import (
 )
 
 const (
-	ZetaID       = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
-	USDCAddress  = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-	USDCDecimals = 6
-	SOLAddress   = "So11111111111111111111111111111111111111112"
-	endpoint     = "https://api.mainnet-beta.solana.com" // rpc.MainNetBeta_RPC
+	ZetaID   = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
+	endpoint = "https://api.mainnet-beta.solana.com" // rpc.MainNetBeta_RPC
 )
 
 func Query() ([]Option, error) {
@@ -106,8 +104,13 @@ func (o Option) Asset() string {
 	switch {
 	case o.ZG.UnderlyingMint == solana.MustPublicKeyFromBase58(SOLAddress):
 		return "SOL"
+	case o.ZG.UnderlyingMint == solana.MustPublicKeyFromBase58(ETHAddress):
+		return "ETH"
+	case o.ZG.UnderlyingMint == solana.MustPublicKeyFromBase58(BTCAddress):
+		return "BTC"
 	default:
-		return "?"
+		log.Print("Unknown token: ", o.ZG.UnderlyingMint)
+		return "ZZZZ"
 	}
 }
 

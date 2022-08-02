@@ -3,6 +3,7 @@ package anchor
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	bin "github.com/gagliardetto/binary"
@@ -116,8 +117,11 @@ func (o Option) Asset() string {
 		return "SOL"
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(MSOLAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(MSOLAddress):
 		return "mSOL"
+	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(ARBAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(ARBAddress):
+		return "ARB"
 	default:
-		return "ZZZZ"
+		log.Print("Unknown token: ", o.opt.QuoteAssetMint, "/", o.opt.UnderlyingAssetMint)
+		return "PPPP"
 	}
 }
 

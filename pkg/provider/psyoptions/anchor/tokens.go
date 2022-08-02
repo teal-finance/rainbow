@@ -24,23 +24,7 @@ const (
 
 	PAIAddress  = "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS"
 	PAIDecimals = 6
-)
 
-/*
-3GvpbKeoYo2CUzF9h2tpaeHt8VfmSeR6pcUmB7Z7tWiw
-MangoCzJ36AjZyKwVj3VnYU4GTonjfVEnJmvvWaxLac
-4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R
-5oVNBeEEQvYi1cX3ir8Dx5n1P7pdxydbGF2X4TxVusJm,
-7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj,
-9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E,
-AGFEad2et2ZJif9jaGpdMixQqvW5i81aBdvKe7PHNfz3,
-EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v,
-Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS,
-F6v4wfAdJB8D8p77bMXZgYt8TDKsYxLYxH5AFhUkYx9W,
-Hgtvu9gsDTzUpBn69WjrhMyzaQhrAM9piTsezmZVQP6Z,
-MangoCzJ36AjZyKwVj3VnYU4GTonjfVEnJmvvWaxLac,
-SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt,
-Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1,
-WytxcRxm7KMdZLAh535ez5RXngJHWqcXV1N4gWbsfU3,
-mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So,
-*/
+	ARBAddress  = "9tzZzEHsKnwFL1A3DyFJwj36KnZj3gZ7g4srWp9YTEoh"
+	ARBDecimals = 8
+)
