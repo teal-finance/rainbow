@@ -28,8 +28,7 @@ func main() {
 	} else {
 		tokenOption = garcon.WithJWT(*hmac, "FreePlan", 10, "PremiumPlan", 100)
 	}
-	// secrets no longer required => erase them
-	aes = nil
+	aes = nil // secrets are no longer required
 	hmac = nil
 
 	g, err := garcon.New(
@@ -70,7 +69,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	c := g.Checker
 
 	// Static website: set the cookie only when visiting index.html
-	ws := garcon.NewStaticWebServer(*wwwDir, g.ErrWriter)
+	ws := garcon.NewStaticWebServer(*wwwDir, g.Writer)
 	r.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
 	r.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))
 	r.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
@@ -85,7 +84,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	// Disable the contact-form endpoint until it is well protected (CSRF).
 	if false {
 		// Forward submitted contact-form to Mattermost, and redirect browser to "/about".
-		cf := garcon.NewContactForm("/about", *form, g.ErrWriter)
+		cf := garcon.NewContactForm("/about", *form, g.Writer)
 		r.With(c.Chk).Post("/submit", cf.NotifyWebForm())
 	}
 
