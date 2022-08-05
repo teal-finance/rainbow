@@ -1,4 +1,15 @@
-# Small tricks
+# Avalon version 
+
+```
+abigen --abi=./ABI/OptionMarket.abi --pkg=lyra --out=OptionMarket.go
+abigen --abi=./ABI/OptionMarketViewer.abi --pkg=lyrap --out=OptionMarketViewer.go
+```
+Then correct the package of `OptionMarketViewer` from `lyrap`to `lyra`.
+And then change `OptionMarketOptionMarketParameters` to `OptionMarketOptionMarketParam` because it becomes duplicates.
+
+# Old version (pre-avalon)
+
+## Small tricks
 
 The ABIs were taken from Etherscan because I couldn't make `solc` compile properly the solidity files and the file(lyra.json) on Lyra source code is not up to date (TODO: open an issue).
 `OptionMarket.sol` and `OptionMarketViewer.sol` (smart contracts) have very similar  functions so I used:
