@@ -54,7 +54,7 @@ func main() {
 		Handler:           g.Middlewares.Then(handler(&service, g)),
 		ReadTimeout:       time.Second,
 		ReadHeaderTimeout: time.Second,
-		WriteTimeout:      time.Minute, // Garcon.Limiter postpones response, attacker should wait long time.
+		WriteTimeout:      time.Minute, // Garcon.Limiter delays responses, so people (attackers) who click frequently will wait longer.
 		IdleTimeout:       time.Second,
 		ConnState:         g.ConnState,
 		ErrorLog:          log.Default(),
