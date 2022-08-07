@@ -22,51 +22,59 @@ import (
 func main() {
 	parseFlags()
 
-	var tokenOption garcon.Option
+	var tokenCheckerOption garcon.Option
 	if len(*aes) > 0 {
-		tokenOption = garcon.WithIncorruptible(*aes, 0, true)
+		tokenCheckerOption = garcon.WithIncorruptible(*aes, 0, true)
 	} else {
-		tokenOption = garcon.WithJWT(*hmac, "FreePlan", 10, "PremiumPlan", 100)
+		tokenCheckerOption = garcon.WithJWT(*hmac, "FreePlan", 10, "PremiumPlan", 100)
 	}
-	aes = nil // secrets are no longer required
-	hmac = nil
 
-	g, err := garcon.New(
+	g := garcon.New(
 		garcon.WithURLs(*mainAddr),
 		garcon.WithDocURL("/doc"),
 		garcon.WithServerHeader("Rainbow"),
-		tokenOption,
+		tokenCheckerOption,
 		garcon.WithLimiter(*reqBurst, *reqPerMinute),
 		garcon.WithProm(*expPort, *mainAddr),
 		garcon.WithDev(*dev))
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	providers := provider.AllProviders(*alert, g.Namespace.String())
-
-	// Start the service in background
 	service := rainbow.NewService(providers, dbram.NewDB())
+
+	// start the service in background
 	go service.Run()
 
-	server := http.Server{
-		Addr:              listenAddr,
-		Handler:           g.Middlewares.Then(handler(&service, g)),
-		ReadTimeout:       time.Second,
-		ReadHeaderTimeout: time.Second,
-		WriteTimeout:      time.Minute, // Garcon.Limiter delays responses, so people (attackers) who click frequently will wait longer.
-		IdleTimeout:       time.Second,
-		ConnState:         g.ConnState,
-		ErrorLog:          log.Default(),
-	}
+	server := server(&service, g)
+
+	// delete secrets (no longer required)
+	g.EraseSecretKey()
+	aes = nil
+	hmac = nil
 
 	log.Print("Server listening on http://localhost", server.Addr)
 	log.Fatal(server.ListenAndServe())
 }
 
+func server(service *rainbow.Service, g *garcon.Garcon) http.Server {
+	middleware, connState := g.ChainMiddleware()
+	h := handler(service, g)
+	h = middleware.Then(h)
+
+	return http.Server{
+		Addr:              listenAddr,
+		Handler:           h,
+		ReadTimeout:       time.Second,
+		ReadHeaderTimeout: time.Second,
+		WriteTimeout:      time.Minute, // Garcon.Limiter delays responses, so people (attackers) who click frequently will wait longer.
+		IdleTimeout:       time.Second,
+		ConnState:         connState,
+		ErrorLog:          log.Default(),
+	}
+}
+
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
-	c := g.Checker
+	c := g.TokenChecker()
 
 	// Static website: set the cookie only when visiting index.html
 	ws := garcon.NewStaticWebServer(*wwwDir, g.Writer)
@@ -75,8 +83,8 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
 	r.With(c.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
 	r.With(c.Chk).Get("/assets/*", ws.ServeAssets())
-	r.With(c.Chk).Get("/version", g.ServeVersion())
-	r.With(c.Chk).Get("/version/", g.ServeVersion())
+	r.With(c.Chk).Get("/version", garcon.ServeVersion())
+	r.With(c.Chk).Get("/version/", garcon.ServeVersion())
 
 	// NotFound catches index.html and other Vue sub-folders
 	r.With(c.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))
@@ -93,7 +101,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 		h := api.NewHandler(s)
 
 		// HTTP API
-		r.With(g.Checker.Vet).Route("/options", func(r chi.Router) {
+		r.With(c.Vet).Route("/options", func(r chi.Router) {
 			r.HandleFunc("/", h.Options)
 			r.HandleFunc("/{asset}", h.Options)
 			r.HandleFunc("/{asset}/", h.Options)
@@ -105,10 +113,10 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}/", h.Options)
 		})
 
-		r.With(g.Checker.Chk).Get("/bff/cp", h.CallPut)
+		r.With(c.Chk).Get("/bff/cp", h.CallPut)
 
 		// GraphQL API (and interactive API in developer mode)
-		r.With(g.Checker.Chk).Mount("/graphql", h.GraphQLHandler())
+		r.With(c.Chk).Mount("/graphql", h.GraphQLHandler())
 		if *dev {
 			r.Mount("/graphiql", api.InteractiveGQLHandler("/v0/graphql"))
 		}
