@@ -80,18 +80,15 @@ func (row *Row) less(other *Row) bool {
 }
 
 func IsRowEmpty(row []rainbow.Option) bool {
-	//fmt.Println(len(row))
 	for _, o := range row {
 		if !IsOffersEmpty(o.Ask) || !IsOffersEmpty(o.Bid) {
 			return false
 		}
 	}
-	//fmt.Println(row[0].Name, " ", row[1].Name)
 	return true
 }
 
 func IsOffersEmpty(order []rainbow.Order) bool {
-
 	return len(order) == 0 || order[0].Size == 0 || order[0].Price < 0.001
 }
 

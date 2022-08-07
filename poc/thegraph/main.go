@@ -21,8 +21,8 @@ import (
 func main() {
 	options := zerox.QueryTheGraph()
 	spew.Dump(len(options))
-	//const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
-	//id := "0x8cb6c58a63a568f8155dc3242f3b830c57dba5eb"
+	// const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
+	// id := "0x8cb6c58a63a568f8155dc3242f3b830c57dba5eb"
 
 	const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
 	id := "0xb349f4f62c92b7deb4ee7fadc6022c0830612aa4" //"0xe8dd2d01bc36babe1eecbbe863ad294bbc5c15df"
@@ -42,7 +42,7 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(amm, "\t", rpc, "\t", decimals)
-	//AMM := "0x5ae7454827D83526261F3871C1029792644Ef1B1"
+	// AMM := "0x5ae7454827D83526261F3871C1029792644Ef1B1"
 
 	address := common.HexToAddress(amm)
 	instance, err := thales.NewThales(address, client)
@@ -57,7 +57,6 @@ func main() {
 	k, err := instance.CapPerMarket(&bind.CallOpts{})
 	if err != nil {
 		log.Fatal(err)
-
 	}
 	fmt.Println("Testing setup")
 
@@ -83,7 +82,6 @@ func main() {
 	quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), UP, amount)
 	if err != nil {
 		log.Fatal(err)
-
 	}
 	spew.Dump(quote)
 
@@ -95,7 +93,6 @@ func main() {
 	quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), DOWN, amount)
 	if err != nil {
 		log.Fatal(err)
-
 	}
 	spew.Dump(quote)
 
@@ -107,7 +104,6 @@ func main() {
 	quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(id), DOWN, amount)
 	if err != nil {
 		log.Fatal(err)
-
 	}
 	spew.Dump(quote)
 

@@ -83,8 +83,8 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 }
 
 // I don't really need the totalSize but I am keeping it since it was in the original func:
-//     - ASK on the top so desc=true
-//     - BID down so desc=false
+//   - ASK on the top so desc=true
+//   - BID down so desc=false
 func normalizeOrders(
 	ctx context.Context,
 	market *serum.MarketMeta,

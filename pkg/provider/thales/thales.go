@@ -25,16 +25,19 @@ import (
 )
 
 const (
-	//thegraph urls
+	// thegraph urls.
 	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
 	urlPolygon  = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
-	//rpc
+
+	// rpc.
 	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
-	//amm
+
+	// amm.
 	ammPolygon  = "0x9b6d76B1C6140FbB0ABc9C4a348BFf4e4e8a1213"
 	ammOptimism = "0x5ae7454827D83526261F3871C1029792644Ef1B1"
-	// other
+
+	// other.
 	name         = "Thales"
 	skip         = 0
 	first        = 500
@@ -53,7 +56,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	layer := []string{"Optimism", "Polygon"}
 	var o []rainbow.Option
 	for _, l := range layer {
-
 		_, url, _, _ := LayerInfo(l)
 		markets, err := QueryAllMarkets(url)
 		if err != nil {
@@ -64,10 +66,8 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		if errmione != nil {
 			log.Print("ERR: ", err)
 			return nil, err
-
 		}
 		o = append(o, options...)
-
 	}
 
 	return o, nil
@@ -95,20 +95,19 @@ func ProcessMarkets(markets []thales.AllMarketsMarketsMarket, layer string) ([]r
 		if count%10 == 0 {
 			time.Sleep(1 * time.Second)
 		}
-
 	}
 	spew.Dump(len(r))
 	return r, nil
-
 }
+
 func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
 	// TODO change front to take care of UP/DOWN properly
 	// here we do a hack where
 	// DOWN == PUT
 	// UP   == CALL
-	binaryType := "CALL" //"DOWN"
+	binaryType := "CALL" // "DOWN"
 	if side != 0 {
-		binaryType = "PUT" //"UP"
+		binaryType = "PUT" // "UP"
 	}
 
 	expiry, err := rainbow.TimeStringConvert(m.MaturityDate)
@@ -135,7 +134,7 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 		LayerName:     layer,
 		Provider:      name + "::" + layer,
 		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon
-		//TODO add underlying quote currency to be able to specify the token
+		// TODO add underlying quote currency to be able to specify the token
 		Bid:    nil,
 		Ask:    nil,
 		Strike: rainbow.ToFloat(strikeInt, rainbow.DefaultEthereumDecimals),
@@ -161,9 +160,10 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 		Price: buy,
 		Size:  float64(amount),
 	})
-	//spew.Dump(binary)
+
 	return binary, nil
 }
+
 func LayerInfo(s string) (rpc, thegraphURL, amm string, decimals int64) {
 	if s == "Optimism" {
 		rpc = rpcOptimism
@@ -200,7 +200,6 @@ func getQuote(m thales.AllMarketsMarketsMarket, side uint8, action, layer string
 		if err != nil {
 			log.Print("ERR: ", err)
 			return 0, err
-
 		}
 	} else if action == "SELL" {
 		quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
@@ -212,8 +211,8 @@ func getQuote(m thales.AllMarketsMarketsMarket, side uint8, action, layer string
 
 	return rainbow.ToFloat(quote, decimals), nil
 }
-func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 
+func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.AllLive(context.TODO(), graphqlClient)
 	if err != nil {
@@ -228,7 +227,7 @@ func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 	return resp.Markets, err
 }
 
-//TODO add err
+// TODO add err.
 func QueryAllMarkets(url string) ([]thales.AllMarketsMarketsMarket, error) {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)

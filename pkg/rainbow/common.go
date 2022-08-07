@@ -8,12 +8,12 @@ import (
 	"time"
 )
 
-// DefaultEthereumDecimals is the default decimals that most token uses, starting with ETH
+// DefaultEthereumDecimals is the default decimals that most token uses, starting with ETH.
 const DefaultEthereumDecimals int64 = 18
 
 // IntToEthereumUint256 convert an int to the Ethereum format.
 // Ethereum use 18 decimals in their VM.
-// To quote 1 option, you thus need to send 1000000000000000000
+// To quote 1 option, you thus need to send 1000000000000000000.
 func IntToEthereumUint256(i int, decimals int64) *big.Int {
 	a := big.NewInt(10)
 	a.Exp(big.NewInt(10), big.NewInt(decimals), nil)
@@ -32,7 +32,7 @@ func ToFloat(n *big.Int, decimals int64) float64 {
 	return float64(q.Int64()) / 100000.0
 }
 
-// TimeStringConvert convert a Unix string to a UTC one
+// TimeStringConvert convert a Unix string to a UTC one.
 func TimeStringConvert(s string) (expiry string, err error) {
 	seconds, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {

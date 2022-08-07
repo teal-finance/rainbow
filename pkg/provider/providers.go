@@ -35,7 +35,7 @@ func AllProvidersNoAlerter() []rainbow.Provider {
 		lyra.Provider{},        //                  |
 		zerox.Provider{},       //                  |
 		zetamarkets.Provider{}, // <----------------` exhaust solana/serum rpc quota
-		//thales.Provider{},    // exotic market only live on /exotic
+		// thales.Provider{},    // exotic market only live on /exotic
 		deltaexchange.Provider{}, // last because slow (rate limit)
 	}
 }
