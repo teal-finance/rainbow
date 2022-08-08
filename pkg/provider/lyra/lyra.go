@@ -6,14 +6,6 @@
 package lyra
 
 import (
-	"log"
-	"math/big"
-	"time"
-
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/ethclient"
-
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -31,7 +23,7 @@ func (Provider) Name() string {
 func (Provider) Options() ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 
-	client, err := ethclient.Dial(optimismrpc)
+	/*client, err := ethclient.Dial(optimismrpc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,9 +74,11 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	}
 
 	log.Print("INF Lyra total markets ", sum)
+	*/
 	return options, nil
 }
 
+/*
 func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketViewerTradePremiumView, error) {
 	ammOrder := []OptionMarketViewerTradePremiumView{}
 	a := rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals)
@@ -186,3 +180,4 @@ func expiration(e *big.Int) string {
 	expiryTime := time.Unix(seconds, 0).UTC()
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
+*/

@@ -3,9 +3,13 @@
 ```
 abigen --abi=./ABI/OptionMarket.abi --pkg=lyra --out=OptionMarket.go
 abigen --abi=./ABI/OptionMarketViewer.abi --pkg=lyrap --out=OptionMarketViewer.go
+abigen --abi=./ABI/LyraRegistry.abi --pkg=lyrar --out=LyraRegistry.go
 ```
 Then correct the package of `OptionMarketViewer` from `lyrap`to `lyra`.
-And then change `OptionMarketOptionMarketParameters` to `OptionMarketOptionMarketParam` because it becomes duplicates.
+And then, in the same file, change `OptionMarketOptionMarketParameters` to `OptionMarketOptionMarketParam` because it becomes duplicates.
+
+Then correct the package of `LyraRegistry` from `lyrar`to `lyra`.
+
 
 # Old version (pre-avalon)
 
