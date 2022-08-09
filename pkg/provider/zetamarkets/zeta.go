@@ -41,21 +41,19 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	for _, i := range rawOptions {
 		pubKey := solana.PublicKey(i.SerumAddress())
 
-		ctx := context.TODO()
-
-		out, err := serum.FetchMarket(ctx, client, pubKey)
+		out, err := serum.FetchMarket(context.Background(), client, pubKey)
 		if err != nil {
 			// for now because error in serumAddress generated
 			continue
 		}
 
 		// inverting the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
-		bids, err := normalizeOrders(ctx, out, client, out.Market.GetBids(), true, anchor.ContractSize)
+		bids, err := normalizeOrders(out, client, out.Market.GetBids(), true, anchor.ContractSize)
 		if err != nil {
 			return nil, err
 		}
 
-		asks, err := normalizeOrders(ctx, out, client, out.Market.GetAsks(), false, anchor.ContractSize)
+		asks, err := normalizeOrders(out, client, out.Market.GetAsks(), false, anchor.ContractSize)
 		if err != nil {
 			return nil, err
 		}
@@ -86,7 +84,6 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 //   - ASK on the top so desc=true
 //   - BID down so desc=false
 func normalizeOrders(
-	ctx context.Context,
 	market *serum.MarketMeta,
 	cli *rpc.Client,
 	address solana.PublicKey,
@@ -97,7 +94,7 @@ func normalizeOrders(
 	time.Sleep(300 * time.Microsecond)
 
 	var book serum.Orderbook
-	if err := cli.GetAccountDataIn(ctx, address, &book); err != nil {
+	if err := cli.GetAccountDataIn(address, &book); err != nil {
 		return nil, fmt.Errorf("cli.GetAccountDataIn: %w", err)
 	}
 

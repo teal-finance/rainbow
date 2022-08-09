@@ -94,7 +94,7 @@ func getOrderBook(
 	desc bool,
 ) (out []*orderBookEntry, totalSize *big.Float, _ error) {
 	var o serum.Orderbook
-	if err := cli.GetAccountDataIn(ctx, address, &o); err != nil {
+	if err := cli.GetAccountDataIn(address, &o); err != nil {
 		return nil, nil, fmt.Errorf("getting orderbook: %w", err)
 	}
 
