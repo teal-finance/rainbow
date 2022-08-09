@@ -31,7 +31,6 @@ func main() {
 
 	g := garcon.New(
 		garcon.WithURLs(*mainAddr),
-		garcon.WithDocURL("/doc"),
 		garcon.WithServerHeader("Rainbow"),
 		tokenCheckerOption,
 		garcon.WithLimiter(*reqBurst, *reqPerMinute),
@@ -74,26 +73,26 @@ func server(service *rainbow.Service, g *garcon.Garcon) http.Server {
 
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	r := chi.NewRouter()
-	c := g.TokenChecker()
+	ck := g.TokenChecker()
 
 	// Static website: set the cookie only when visiting index.html
 	ws := garcon.NewStaticWebServer(*wwwDir, g.Writer)
 	r.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
 	r.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))
 	r.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
-	r.With(c.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
-	r.With(c.Chk).Get("/assets/*", ws.ServeAssets())
-	r.With(c.Chk).Get("/version", garcon.ServeVersion())
-	r.With(c.Chk).Get("/version/", garcon.ServeVersion())
+	r.With(ck.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
+	r.With(ck.Chk).Get("/assets/*", ws.ServeAssets())
+	r.With(ck.Chk).Get("/version", garcon.ServeVersion())
+	r.With(ck.Chk).Get("/version/", garcon.ServeVersion())
 
 	// NotFound catches index.html and other Vue sub-folders
-	r.With(c.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))
+	r.With(ck.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))
 
 	// Disable the contact-form endpoint until it is well protected (CSRF).
 	if false {
 		// Forward submitted contact-form to Mattermost, and redirect browser to "/about".
 		cf := garcon.NewContactForm("/about", *form, g.Writer)
-		r.With(c.Chk).Post("/submit", cf.NotifyWebForm())
+		r.With(ck.Chk).Post("/submit", cf.NotifyWebForm())
 	}
 
 	// API routes
@@ -101,7 +100,7 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 		h := api.NewHandler(s)
 
 		// HTTP API
-		r.With(c.Vet).Route("/options", func(r chi.Router) {
+		r.With(ck.Vet).Route("/options", func(r chi.Router) {
 			r.HandleFunc("/", h.Options)
 			r.HandleFunc("/{asset}", h.Options)
 			r.HandleFunc("/{asset}/", h.Options)
@@ -113,10 +112,10 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}/", h.Options)
 		})
 
-		r.With(c.Chk).Get("/bff/cp", h.CallPut)
+		r.With(ck.Chk).Get("/bff/cp", h.CallPut)
 
 		// GraphQL API (and interactive API in developer mode)
-		r.With(c.Chk).Mount("/graphql", h.GraphQLHandler())
+		r.With(ck.Chk).Mount("/graphql", h.GraphQLHandler())
 		if *dev {
 			r.Mount("/graphiql", api.InteractiveGQLHandler("/v0/graphql"))
 		}
