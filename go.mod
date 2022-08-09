@@ -21,7 +21,7 @@ require (
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/segmentio/golines v0.11.0
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
-	github.com/streamingfast/solana-go v0.5.1
+	github.com/streamingfast/solana-go v0.5.1-0.20220502224452-432fbe84aee8
 	github.com/stretchr/testify v1.8.0
 	github.com/teal-finance/garcon v0.22.1
 	github.com/teal-finance/notifier v1.1.0
@@ -55,6 +55,7 @@ require (
 	github.com/edsrzf/mmap-go v1.1.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
+	github.com/frankban/quicktest v1.14.3 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
@@ -100,7 +101,7 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 // indirect
-	github.com/streamingfast/logging v0.0.0-20210908162127-bdc5856d5341 // indirect
+	github.com/streamingfast/logging v0.0.0-20220511154537-ce373d264338 // indirect
 	github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a // indirect
 	github.com/teal-finance/incorruptible v0.0.0-20220809194607-79ce521a9834 // indirect
 	github.com/teal-finance/quid v0.0.0-20220807070037-39d45221e797 // indirect
