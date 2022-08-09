@@ -3,6 +3,7 @@
 *.ignore.*
 *.log
 /.golangci.yml
+/cli
 /dev
 /doc/ignore
 /go.work*
