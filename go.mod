@@ -23,7 +23,7 @@ require (
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1
 	github.com/stretchr/testify v1.8.0
-	github.com/teal-finance/garcon v0.22.0
+	github.com/teal-finance/garcon v0.22.1
 	github.com/teal-finance/notifier v1.1.0
 	mvdan.cc/gofumpt v0.3.1
 )
@@ -102,7 +102,7 @@ require (
 	github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 // indirect
 	github.com/streamingfast/logging v0.0.0-20210908162127-bdc5856d5341 // indirect
 	github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a // indirect
-	github.com/teal-finance/incorruptible v0.0.0-20220806121243-4fc82a6d6a6f // indirect
+	github.com/teal-finance/incorruptible v0.0.0-20220809194607-79ce521a9834 // indirect
 	github.com/teal-finance/quid v0.0.0-20220807070037-39d45221e797 // indirect
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569 // indirect
 	github.com/tidwall/gjson v1.14.2 // indirect
@@ -123,11 +123,11 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect
-	go.uber.org/zap v1.21.0 // indirect
+	go.uber.org/zap v1.22.0 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
-	golang.org/x/sys v0.0.0-20220804214406-8e32c043e418 // indirect
+	golang.org/x/sys v0.0.0-20220808155132-1c4a2a72c664 // indirect
 	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
 	golang.org/x/tools v0.1.12 // indirect
