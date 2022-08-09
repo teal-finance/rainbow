@@ -65,7 +65,7 @@ func server(service *rainbow.Service, g *garcon.Garcon) http.Server {
 		Handler:           h,
 		ReadTimeout:       time.Second,
 		ReadHeaderTimeout: time.Second,
-		WriteTimeout:      time.Minute, // Garcon.Limiter delays responses, so people (attackers) who click frequently will wait longer.
+		WriteTimeout:      time.Minute, // Garcon.RateLimiter() delays responses, so people (attackers) who click frequently will wait longer.
 		IdleTimeout:       time.Second,
 		ConnState:         connState,
 		ErrorLog:          log.Default(),
