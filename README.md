@@ -17,11 +17,13 @@ Rainbow [CLI](#run-the-cli)
 and [web-server](#makefile-for-server--web)
 are not yet Go-1.19 ready.
 
-The crash with Go-1.19:
+### 😵 Crash it using Go-1.19
 
-  cd rainbow           # go to the Rainbow source code
-  go build ./cmd/cli   # build the CLI
-  ./cli                # crash at startup
+    cd rainbow           # go to the source code
+    go build ./cmd/cli   # build the CLI
+    ./cli                # crash at startup
+
+### 💩 Origin of the bug
 
 The bug is in an indirect dependency
 used by Solana libraries that Rainbow use.  
@@ -34,14 +36,16 @@ and <https://github.com/42wim/go.rice>.
 But Rainbow cannot currently use this fix,
 since it is an indirect dependency of a dependency of a dependency of…
 
-If you need to run the CLI with Go-1.19 you use the following:
+### 🏗️ Workaround
 
-  go run github.com/teal-finance/rainbow/cmd/cli@latest
+If you need to run the CLI with Go-1.19, use the following:
 
-or
+    go run github.com/teal-finance/rainbow/cmd/cli@latest
 
-  cd rainbow           # go to the Rainbow source code
-  go run ./cmd/cli     # build and run the CLI
+or replace "`go build`" by "`go run`":
+
+    cd rainbow
+    go run ./cmd/cli
 
 For the web server, we recommend using
 our [`Dockerfile`](./Dockerfile),
@@ -96,8 +100,8 @@ More info on our motivations:
 
 ## 🏎️ Run it from source code
 
-Rainbow can be used as a [CLI](#run-the-cli)
-or with a [front-end](#makefile-for-server--web)
+Rainbow can be used as a [CLI](#🪃-run-the-cli)
+or with a [front-end](#⚒️-makefile-for-server--web)
 as our official instance:
 <https://teal.finance/rainbow>.
 
@@ -109,9 +113,10 @@ as our official instance:
 - Docker v20 (optional)
 - Podman v3 (optional)
 
-Rainbow can be used in the [CLI](#run-the-cli), not using Node, Yarn, Docker…
+Rainbow can be used in the [CLI](#🪃-run-the-cli),
+without requiring Node, Yarn, Docker…
 
-[Snap](https://en.wikipedia.org/wiki/Snap_(package_manager)) provides a simple way to install these requirements on many Linux distributions:
+[Snap](<https://en.wikipedia.org/wiki/Snap_(package_manager)>) provides a simple way to install these requirements on many Linux distributions:
 
     snap install go   --classic
     snap install node --classic  # installs yarn too
@@ -127,7 +132,7 @@ To install a more recent Go version, you may try:
     sudo apt purge   golang
     sudo apt install golang-1.18
 
-The [Dockerfile](#container) can be used equally with Docker or Podman.
+The [Dockerfile](#🐋-container) can be used equally with Docker or Podman.
 
 ### 📥 Clone the Rainbow Git repo
 
@@ -272,7 +277,7 @@ Usage of ./server:
         Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
 
-### Join the team
+## 🦆 Join the team
 
 Interested on what we build. Please contact us:
 
@@ -280,7 +285,7 @@ Interested on what we build. Please contact us:
 - Teal.Finance@pm.me
 - Twitter [@TealFinance](https://twitter.com/TealFinance)
 
-## 🛤️ API
+## 🛣️ API
 
 To test the API endpoints, run the back-end:
 
@@ -331,7 +336,7 @@ Moreover, the parameters can also be passed using the query string:
 - [/v0/options?asset=BTC&asset=ETH](http://localhost:8090/v0/options?asset=BTC&asset=ETH) (multiple underlying assets)
 - [/v0/options?asset=BTC&expiry=2022&provider=Deribit&format=csv](http://localhost:8090/v0/options?asset=BTC&expiry=2022&provider=Deribit&format=csv)
 
-#### Web form
+#### POST method
 
 The API also supports the POST [form](https://wikiless.org/wiki/Application/x-www-form-urlencoded#The_application/x-www-form-urlencoded_type "application/x-www-form-urlencoded"):
 
@@ -339,7 +344,8 @@ The API also supports the POST [form](https://wikiless.org/wiki/Application/x-ww
 
     curl localhost:8090/v0/options -d asset=BTC -d expiry=2022 -d provider=Deribit -d format=csv
 
-The POST [form](https://wikiless.org/wiki/Application/x-www-form-urlencoded#The_application/x-www-form-urlencoded_type "application/x-www-form-urlencoded") hides your query within the encrypted request body when using HTTPS.
+The POST [form](https://wikiless.org/wiki/Application/x-www-form-urlencoded#The_application/x-www-form-urlencoded_type "application/x-www-form-urlencoded")
+is recommended for privacy reasons since it hides your query within the encrypted request body when using HTTPS.
 
 #### Awesome expiry filtering
 
@@ -487,7 +493,7 @@ This endpoint should not yet used by API users because we may drop it in a furth
 
 ## 🗣️ Need something else?
 
-Please share your thoughts, suggest ideas, request feature,
+Please share your thoughts, suggest ideas, request features,
 contact us and join our efforts to build awesome tools:
 
 - GitHub [issue](https://github.com/teal-finance/rainbow/issues)
