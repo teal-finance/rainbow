@@ -1,4 +1,4 @@
-# ![Rainbow](doc/rainbow-chancery.png)
+# 🌈 ![Rainbow](doc/rainbow-chancery.png)
 
 | ![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With the Rainbow screener, users can scan CEX/DEX markets to fetch available options data. Empowered by the [Teal.Finance](https://teal.finance/) [team](https://teal.finance/#team). <br><br> [![Go Report Card](https://goreportcard.com/badge/github.com/teal-finance/rainbow)](https://goreportcard.com/report/github.com/teal-finance/rainbow)
 | --- | ---
@@ -11,7 +11,43 @@ Please share any feedback:
 - Email at Teal.Finance@pm.me or
 - Twitter [@TealFinance](https://twitter.com/TealFinance).
 
-## Motivations
+## ⚠️ Warning Go-1.19 🚨
+
+Rainbow [CLI](#run-the-cli)
+and [web-server](#makefile-for-server--web)
+are not yet Go-1.19 ready.
+
+The crash with Go-1.19:
+
+  cd rainbow           # go to the Rainbow source code
+  go build ./cmd/cli   # build the CLI
+  ./cli                # crash at startup
+
+The bug is in an indirect dependency
+used by Solana libraries that Rainbow use.  
+The problem has been discussed by Golang developers:
+<https://github.com/golang/go/issues/54227>
+
+A fix has been implemented in
+<https://github.com/42wim/go.zipexe>
+and <https://github.com/42wim/go.rice>.  
+But Rainbow cannot currently use this fix,
+since it is an indirect dependency of a dependency of a dependency of…
+
+If you need to run the CLI with Go-1.19 you use the following:
+
+  go run github.com/teal-finance/rainbow/cmd/cli@latest
+
+or
+
+  cd rainbow           # go to the Rainbow source code
+  go run ./cmd/cli     # build and run the CLI
+
+For the web server, we recommend using
+our [`Dockerfile`](./Dockerfile),
+which still uses Go-1.18.
+
+## 🎯 Motivations
 
 **Rainbow** is inspired by the following trends:
 
@@ -35,7 +71,7 @@ and [Encode Club's Hack DeFi](https://www.encode.club/hack-defi).
 More info on our motivations:
 [cryptonuage.com/posts/internet-of-decentralized-options](https://cryptonuage.com/posts/internet-of-decentralized-options/)
 
-## Currently supported options exchanges
+## 🏛️ Currently supported options exchanges
 
 - [Deribit](https://www.deribit.com):
   Centralized exchange.
@@ -58,14 +94,14 @@ More info on our motivations:
 - [Zeta](https://zeta.markets/) (Solana):
   DeFi options protocol built using Serum order books.
 
-## Run it from source code
+## 🏎️ Run it from source code
 
 Rainbow can be used as a [CLI](#run-the-cli)
 or with a [front-end](#makefile-for-server--web)
 as our official instance:
 <https://teal.finance/rainbow>.
 
-### Requirements
+### 📑 Requirements
 
 - Go v1.18+ (single requirement for the CLI)
 - Node v14+
@@ -93,12 +129,12 @@ To install a more recent Go version, you may try:
 
 The [Dockerfile](#container) can be used equally with Docker or Podman.
 
-### Clone the Rainbow Git repo
+### 📥 Clone the Rainbow Git repo
 
     git clone https://github.com/teal-finance/rainbow
     cd rainbow
 
-### Run the CLI
+### 🪃 Run the CLI
 
 The Rainbow project provides a Command Line Interface (CLI) to let users play from their terminal. The command `./cli` retrieves (few minutes) and prints a pretty nice table of all options.
 
@@ -106,18 +142,18 @@ The Rainbow project provides a Command Line Interface (CLI) to let users play fr
 
 ![CLI screenshot](doc/cli.jpg)
 
-### Makefile for server & web
+### ⚒️ Makefile for server & web
 
 See the `make help` [output](Makefile).
 
-#### Build
+#### 🔧 Build
 
     make all     # Build both backend and frontend
     make server  # Build the backend only
     make front   # Build the frontend only
     make clean   # Clean all
 
-#### Run
+#### 🚀 Run
 
 The _run_ targets do not depend on the above _build_ targets.
 You do not need to _make build_ before _make run_.
@@ -129,7 +165,7 @@ To serve the static website using the Rainbow backend only, as in production:
 
     make clean -j && make all -j && make run
 
-#### Container
+#### 🐋 Container
 
     make container-run  # Build and run backend + frontend
     make container-rm   # Stop and remove all
@@ -151,7 +187,7 @@ The _container_ parameters can be customized: :slightly_smiling_face:
 
     make container-run expose=80 port=80 base=/rainbow/
 
-### Manual build & run
+### 🖐️ Manual build & run
 
 #### Back-end
 
@@ -181,7 +217,7 @@ Same as `make frontend/dist`:
 
 Finally open <http://localhost:8090>
 
-### Manual build/run of the container
+### 🐳 Manual build/run of the container
 
 This Git repo provides a [Dockerfile](Dockerfile) for a secured and light all-in-one container image: 30 MB.
 
@@ -203,7 +239,7 @@ The above manual commands can be obtained using the [Makefile](Makefile):
 
     make container-run addr=http://localhost:1111 expose=1111 port=2222
 
-### Server command line flags
+### 🚩 Server command line flags
 
 Rainbow embeds a complete HTTP server,
 including a rate limiter, an export port (Prometheus monitoring),
@@ -244,7 +280,7 @@ Interested on what we build. Please contact us:
 - Teal.Finance@pm.me
 - Twitter [@TealFinance](https://twitter.com/TealFinance)
 
-## API
+## 🛤️ API
 
 To test the API endpoints, run the back-end:
 
@@ -441,14 +477,18 @@ This endpoint should not used by API users because we may drop it in a further r
 This endpoint is currently designed to meet the requirements of the frontend.
 This endpoint should not yet used by API users because we may drop it in a further release.
 
-### /v0/graphiql
+However, other websites can display the Rainbow screener using this GraphQL API.
+Please contact us. 😉
+
+### /v0/graphiql (with an "i")
 
 This interactive GraphQL endpoint is currently used in developer mode to test the front-end queries.
 This endpoint should not yet used by API users because we may drop it in a further release.
 
-### Need something else?
+## 🗣️ Need something else?
 
-Please contact us and join our efforts to build awesome tools:
+Please share your thoughts, suggest ideas, request feature,
+contact us and join our efforts to build awesome tools:
 
 - GitHub [issue](https://github.com/teal-finance/rainbow/issues)
 - Teal.Finance@pm.me
