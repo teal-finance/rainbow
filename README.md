@@ -488,8 +488,7 @@ Please contact us. 😉
 
 ### /v0/graphiql (with an "i")
 
-This interactive GraphQL endpoint is currently used in developer mode to test the front-end queries.
-This endpoint should not yet used by API users because we may drop it in a further release.
+This interactive GraphQL endpoint is used in developer mode to tune the front-end GraphQL queries.
 
 ## 🗣️ Need something else?
 
