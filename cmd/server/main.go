@@ -22,22 +22,11 @@ import (
 func main() {
 	parseFlags()
 
-	var tokenCheckerOption garcon.Option
-	if len(*aes) > 0 {
-		tokenCheckerOption = garcon.WithIncorruptible(*aes, 0, true)
-	} else {
-		tokenCheckerOption = garcon.WithJWT(*hmac, "FreePlan", 10, "PremiumPlan", 100)
-	}
-
 	g := garcon.New(
 		garcon.WithURLs(*mainAddr),
-		garcon.WithServerHeader("Rainbow"),
-		tokenCheckerOption,
-		garcon.WithLimiter(*reqBurst, *reqPerMinute),
-		garcon.WithProm(*expPort, *mainAddr),
 		garcon.WithDev(*dev))
 
-	providers := provider.AllProviders(*alert, g.Namespace.String())
+	providers := provider.AllProviders(*alert, g.ServerName.String())
 	service := rainbow.NewService(providers, dbram.NewDB())
 
 	// start the service in background
@@ -46,7 +35,6 @@ func main() {
 	server := server(&service, g)
 
 	// delete secrets (no longer required)
-	g.EraseSecretKey()
 	aes = nil
 	hmac = nil
 
@@ -55,16 +43,22 @@ func main() {
 }
 
 func server(service *rainbow.Service, g *garcon.Garcon) http.Server {
-	middleware, connState := g.ChainMiddleware()
-	h := handler(service, g)
-	h = middleware.Then(h)
+	chain, connState := g.StartMetricsServer(*expPort)
+	chain = chain.Append(g.MiddlewareRejectUnprintableURI())
+	chain = chain.Append(g.MiddlewareLogRequest())
+	chain = chain.Append(g.MiddlewareRateLimiter(*reqBurst, *reqPerMinute))
+	chain = chain.Append(g.MiddlewareServerHeader("Rainbow"))
+	chain = chain.Append(g.MiddlewareCORS())
+
+	r := handler(service, g)
+	h := chain.Then(r)
 
 	return http.Server{
 		Addr:              listenAddr,
 		Handler:           h,
 		ReadTimeout:       time.Second,
 		ReadHeaderTimeout: time.Second,
-		WriteTimeout:      time.Minute, // Garcon.RateLimiter() delays responses, so people (attackers) who click frequently will wait longer.
+		WriteTimeout:      time.Minute, // Garcon.MiddlewareRateLimiter() delays responses, so people (attackers) who click frequently will wait longer.
 		IdleTimeout:       time.Second,
 		ConnState:         connState,
 		ErrorLog:          log.Default(),
@@ -72,11 +66,17 @@ func server(service *rainbow.Service, g *garcon.Garcon) http.Server {
 }
 
 func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
+	var ck garcon.TokenChecker
+	if len(*aes) > 0 {
+		ck = g.IncorruptibleChecker(*aes, 0, true)
+	} else {
+		ck = g.JWTChecker(*hmac, "FreePlan", 10, "PremiumPlan", 100)
+	}
+
 	r := chi.NewRouter()
-	ck := g.TokenChecker()
 
 	// Static website: set the cookie only when visiting index.html
-	ws := garcon.NewStaticWebServer(*wwwDir, g.Writer)
+	ws := g.NewStaticWebServer(*wwwDir)
 	r.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
 	r.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))
 	r.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
@@ -91,8 +91,8 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 	// Disable the contact-form endpoint until it is well protected (CSRF).
 	if false {
 		// Forward submitted contact-form to Mattermost, and redirect browser to "/about".
-		cf := garcon.NewContactForm("/about", *form, g.Writer)
-		r.With(ck.Chk).Post("/submit", cf.NotifyWebForm())
+		cf := g.NewContactForm("/about")
+		r.With(ck.Chk).Post("/submit", cf.Notify(*form))
 	}
 
 	// API routes

@@ -23,8 +23,8 @@ require (
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1-0.20220502224452-432fbe84aee8
 	github.com/stretchr/testify v1.8.0
-	github.com/teal-finance/garcon v0.22.1
-	github.com/teal-finance/notifier v1.1.0
+	github.com/teal-finance/garcon v0.23.0
+	github.com/teal-finance/notifier v1.1.1
 	mvdan.cc/gofumpt v0.3.1
 )
 
@@ -103,8 +103,8 @@ require (
 	github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 // indirect
 	github.com/streamingfast/logging v0.0.0-20220511154537-ce373d264338 // indirect
 	github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a // indirect
-	github.com/teal-finance/incorruptible v0.0.0-20220809194607-79ce521a9834 // indirect
-	github.com/teal-finance/quid v0.0.0-20220807070037-39d45221e797 // indirect
+	github.com/teal-finance/incorruptible v0.0.0-20220814074809-65ea447c49d6 // indirect
+	github.com/teal-finance/quid v0.0.0-20220812051911-c2c51729165a // indirect
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569 // indirect
 	github.com/tidwall/gjson v1.14.2 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
@@ -119,7 +119,6 @@ require (
 	github.com/yashtewari/glob-intersection v0.1.0 // indirect
 	github.com/ybbus/jsonrpc v2.1.2+incompatible // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
-	github.com/zhangyunhao116/fastrand v0.3.0 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
@@ -128,7 +127,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
-	golang.org/x/sys v0.0.0-20220808155132-1c4a2a72c664 // indirect
+	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
 	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
 	golang.org/x/tools v0.1.12 // indirect
