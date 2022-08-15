@@ -26,46 +26,20 @@ func main() {
 		garcon.WithURLs(*mainAddr),
 		garcon.WithDev(*dev))
 
+	// start the service in background
 	providers := provider.AllProviders(*alert, g.ServerName.String())
 	service := rainbow.NewService(providers, dbram.NewDB())
-
-	// start the service in background
 	go service.Run()
 
-	server := server(&service, g)
+	// chain middleware
+	middleware, connState := g.StartMetricsServer(*expPort)
+	middleware = middleware.Append(g.MiddlewareRejectUnprintableURI(),
+		g.MiddlewareLogRequest(),
+		g.MiddlewareRateLimiter(*reqBurst, *reqPerMinute),
+		g.MiddlewareServerHeader("Rainbow"),
+		g.MiddlewareCORS())
 
-	// delete secrets (no longer required)
-	aes = nil
-	hmac = nil
-
-	log.Print("Server listening on http://localhost", server.Addr)
-	log.Fatal(server.ListenAndServe())
-}
-
-func server(service *rainbow.Service, g *garcon.Garcon) http.Server {
-	chain, connState := g.StartMetricsServer(*expPort)
-	chain = chain.Append(g.MiddlewareRejectUnprintableURI())
-	chain = chain.Append(g.MiddlewareLogRequest())
-	chain = chain.Append(g.MiddlewareRateLimiter(*reqBurst, *reqPerMinute))
-	chain = chain.Append(g.MiddlewareServerHeader("Rainbow"))
-	chain = chain.Append(g.MiddlewareCORS())
-
-	r := handler(service, g)
-	h := chain.Then(r)
-
-	return http.Server{
-		Addr:              listenAddr,
-		Handler:           h,
-		ReadTimeout:       time.Second,
-		ReadHeaderTimeout: time.Second,
-		WriteTimeout:      time.Minute, // Garcon.MiddlewareRateLimiter() delays responses, so people (attackers) who click frequently will wait longer.
-		IdleTimeout:       time.Second,
-		ConnState:         connState,
-		ErrorLog:          log.Default(),
-	}
-}
-
-func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
+	// middleware to set/check cookies
 	var ck garcon.TokenChecker
 	if len(*aes) > 0 {
 		ck = g.IncorruptibleChecker(*aes, 0, true)
@@ -73,33 +47,36 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 		ck = g.JWTChecker(*hmac, "FreePlan", 10, "PremiumPlan", 100)
 	}
 
-	r := chi.NewRouter()
+	// delete secrets (no longer required)
+	aes = nil
+	hmac = nil
 
-	// Static website: set the cookie only when visiting index.html
+	router := chi.NewRouter()
+
+	// Static website
 	ws := g.NewStaticWebServer(*wwwDir)
-	r.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
-	r.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))
-	r.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
-	r.With(ck.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
-	r.With(ck.Chk).Get("/assets/*", ws.ServeAssets())
-	r.With(ck.Chk).Get("/version", garcon.ServeVersion())
-	r.With(ck.Chk).Get("/version/", garcon.ServeVersion())
+	// set the cookie when visiting index.html (NotFound = catches index.html and other Vue sub-folders)
+	router.With(ck.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))
+	// protect web files: reject invalid cookie
+	router.With(ck.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
+	router.With(ck.Chk).Get("/assets/*", ws.ServeAssets())
+	router.With(ck.Chk).Get("/version", garcon.ServeVersion())
+	// do not protect favicon and preview.jpg
+	router.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
+	router.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))
+	router.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
 
-	// NotFound catches index.html and other Vue sub-folders
-	r.With(ck.Set).NotFound(ws.ServeFile("index.html", "text/html; charset=utf-8"))
-
-	// Disable the contact-form endpoint until it is well protected (CSRF).
+	// Disable the contact-form endpoint until we protect it against DoS
 	if false {
-		// Forward submitted contact-form to Mattermost, and redirect browser to "/about".
-		cf := g.NewContactForm("/about")
-		r.With(ck.Chk).Post("/submit", cf.Notify(*form))
+		cf := g.NewContactForm("/about")                      // submitted contact-form redirects to "/about"
+		router.With(ck.Chk).Post("/submit", cf.Notify(*form)) // forward contact-form to Mattermost
 	}
 
 	// API routes
-	r.Route("/v0", func(r chi.Router) {
-		h := api.NewHandler(s)
+	router.Route("/v0", func(r chi.Router) {
+		h := api.NewHandler(&service)
 
-		// HTTP API
+		// HTTP API for Jupyter notebooks
 		r.With(ck.Vet).Route("/options", func(r chi.Router) {
 			r.HandleFunc("/", h.Options)
 			r.HandleFunc("/{asset}", h.Options)
@@ -112,14 +89,27 @@ func handler(s *rainbow.Service, g *garcon.Garcon) http.Handler {
 			r.HandleFunc("/{asset}/{expiry}/{provider}/{format}/", h.Options)
 		})
 
-		r.With(ck.Chk).Get("/bff/cp", h.CallPut)
+		// HTTP API using the Backend-For-Frontend pattern
+		r.With(ck.Vet).Get("/bff/cp", h.CallPut)
 
-		// GraphQL API (and interactive API in developer mode)
-		r.With(ck.Chk).Mount("/graphql", h.GraphQLHandler())
-		if *dev {
+		// GraphQL API to display the screener on a web page
+		r.With(ck.Vet).Mount("/graphql", h.GraphQLHandler())
+		if *dev { // interactive GraphQL API in dev. mode only
 			r.Mount("/graphiql", api.InteractiveGQLHandler("/v0/graphql"))
 		}
 	})
 
-	return r
+	server := http.Server{
+		Addr:              listenAddr,
+		Handler:           middleware.Then(router),
+		ReadTimeout:       time.Second,
+		ReadHeaderTimeout: time.Second,
+		WriteTimeout:      time.Minute, // Garcon.MiddlewareRateLimiter() delays responses, so people (attackers) who click frequently will wait longer.
+		IdleTimeout:       time.Second,
+		ConnState:         connState,
+		ErrorLog:          log.Default(),
+	}
+
+	log.Print("Server listening on http://localhost", server.Addr)
+	log.Fatal(server.ListenAndServe())
 }

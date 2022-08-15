@@ -117,32 +117,8 @@ var psyOptions = []rainbow.Option{
 	},
 }
 
-var psyRow = []Row{
-	{
-		Put: Limit{
-			Bid: StrOrder{Price: "&mdash;&numsp;&numsp;", Size: "&numsp;&numsp;&mdash;"},
-			Ask: StrOrder{Price: "&mdash;&numsp;&numsp;", Size: "&numsp;&numsp;&mdash;"},
-		},
-		Call:     Limit{Bid: StrOrder{Price: "", Size: ""}, Ask: StrOrder{Price: "", Size: ""}},
-		Date:     "2023-06-01 08:00:00",
-		Expiry:   "Jun  1",
-		Provider: "PsyOptions",
-		Asset:    "SOL",
-		Strike:   100,
-	},
-	{
-		Put: Limit{Bid: StrOrder{Price: "", Size: ""}, Ask: StrOrder{Price: "", Size: ""}},
-		Call: Limit{
-			Bid: StrOrder{Price: "&mdash;&numsp;&numsp;", Size: "&numsp;&numsp;&mdash;"},
-			Ask: StrOrder{Price: "&mdash;&numsp;&numsp;", Size: "&numsp;&numsp;&mdash;"},
-		},
-		Date:     "2022-09-23 08:00:00",
-		Expiry:   "Sep 23",
-		Provider: "PsyOptions",
-		Asset:    "ZZZZ",
-		Strike:   0.01,
-	},
-}
+// psyRow content is removed by isRowEmpty().
+var psyRow = []Row{}
 
 var deribitOptions = []rainbow.Option{
 	{
