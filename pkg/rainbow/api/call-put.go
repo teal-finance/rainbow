@@ -79,17 +79,18 @@ func (row *Row) less(other *Row) bool {
 	return row.Provider < other.Provider
 }
 
-func IsRowEmpty(row []rainbow.Option) bool {
+func isRowEmpty(row []rainbow.Option) bool {
 	for _, o := range row {
-		if !IsOffersEmpty(o.Ask) || !IsOffersEmpty(o.Bid) {
+		allEmpty := isSideEmpty(o.Ask) && isSideEmpty(o.Bid)
+		if !allEmpty {
 			return false
 		}
 	}
 	return true
 }
 
-func IsOffersEmpty(order []rainbow.Order) bool {
-	return len(order) == 0 || order[0].Size == 0 || order[0].Price < 0.001
+func isSideEmpty(orders []rainbow.Order) bool {
+	return len(orders) == 0 || orders[0].Size == 0 || orders[0].Price < 0.001
 }
 
 func (a *Align) buildCallPut(options []rainbow.Option) []Row {
@@ -103,12 +104,12 @@ func (a *Align) buildCallPut(options []rainbow.Option) []Row {
 
 			for strike, optionsSameStrike := range groupByStrike(optionsSameExpiry) {
 				for provider, optionsSameProvider := range groupByProvider(optionsSameStrike) {
-					call := Limit{}
-					put := Limit{}
-					// TODO activate this filter for next wersion
-					if IsRowEmpty(optionsSameProvider) {
+					if isRowEmpty(optionsSameProvider) {
 						continue
 					}
+
+					call := Limit{}
+					put := Limit{}
 					for i := range optionsSameProvider {
 						o := &optionsSameProvider[i]
 						if o.Type == "PUT" {
