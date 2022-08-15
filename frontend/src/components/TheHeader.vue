@@ -14,7 +14,7 @@
           </div>
           <div class="inline-block text-xl tracking-widest">
             <!-- img alt="Rainbow" src="./assets/rainbow-chancery.png" height="49" width="185" / -->
-            Rainbow
+            Exotic
           </div>
         </div>
       </template>
@@ -35,7 +35,7 @@
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
-          <button class="border-none btn" @click="exotic()">Exotic</button>
+          <button class="border-none btn" @click="exotic()">Rainbow</button>
           <button class="border-none btn" @click="$router.push('/about')">About</button>
           <button class="border-none btn" @click="openSourceCode()">
             Source code
@@ -119,7 +119,7 @@ export default defineComponent({
     }
 
     function exotic(){
-      location.href= 'https://teal.finance/exotic'
+      location.href= 'https://teal.finance/rainbow'
     }
 
     return {
