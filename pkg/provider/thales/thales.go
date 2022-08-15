@@ -79,7 +79,12 @@ func ProcessMarkets(markets []thales.AllMarketsMarketsMarket, layer string) ([]r
 	r := make([]rainbow.Option, 0, 2*len(markets))
 
 	for count, m := range markets {
-		if m.Id == "0xa0692fa1040200ac4e4818b460055753855fd623" {
+		// HOTFIX for bug on Polygon
+		// 3 markets for BTC with very low strike
+		// TODO properly understand this "ERR: execution reverted: uint overflow from multiplication"
+		if m.Id == "0xa0692fa1040200ac4e4818b460055753855fd623" ||
+			m.Id == "0x419bf5bfaf543c1a6d9db5fbd8da8fe24a05c31c" ||
+			m.Id == "0x08baf8b8791bb39c4f677eb4b2023665f0a46df8" {
 			continue
 		}
 		up, err := getOption(m, UP, layer)
