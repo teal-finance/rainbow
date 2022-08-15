@@ -79,6 +79,9 @@ func ProcessMarkets(markets []thales.AllMarketsMarketsMarket, layer string) ([]r
 	r := make([]rainbow.Option, 0, 2*len(markets))
 
 	for count, m := range markets {
+		if m.Id == "0xa0692fa1040200ac4e4818b460055753855fd623" {
+			continue
+		}
 		up, err := getOption(m, UP, layer)
 		if err != nil {
 			log.Print(count, " ERR: getOption: ", m.Id, " UP: ", err)
