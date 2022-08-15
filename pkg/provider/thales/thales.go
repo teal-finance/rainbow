@@ -86,7 +86,9 @@ func ProcessMarkets(markets []thales.AllMarketsMarketsMarket, layer string) ([]r
 		if m.Id == "0xa0692fa1040200ac4e4818b460055753855fd623" ||
 			m.Id == "0x419bf5bfaf543c1a6d9db5fbd8da8fe24a05c31c" ||
 			m.Id == "0x08baf8b8791bb39c4f677eb4b2023665f0a46df8" ||
-			m.Id == "0x5a14ad0a5b9108a8c557fa68cab4c2f44005f6ac" {
+			m.Id == "0x5a14ad0a5b9108a8c557fa68cab4c2f44005f6ac" ||
+			m.Id == "0xbef5d8d4e8f0e86b7c24b1b6f224020c55b65af1" ||
+			m.Id == "0xd0792be5111fd1ac4da4da106db53a82d967a41b" {
 			continue
 		}
 		up, err := getOption(m, UP, layer)
