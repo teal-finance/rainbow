@@ -112,7 +112,7 @@ func (sr *stubbornRequester) success(n int) {
 		}
 
 		if n > 0 {
-			log.Printf("Success #%v n=%v bad=%v sleep=%v (%+v)",
+			log.Printf("INF Success #%v n=%v bad=%v sleep=%v (%+v)",
 				sr.ok, n, sr.maxBad, newSleep, newSleep-sr.sleep)
 		}
 
@@ -152,7 +152,7 @@ func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount f
 }
 
 func (sr *stubbornRequester) logStats() {
-	log.Printf("stats: bad=%v sleep=%v ok=%v ko=%v",
+	log.Printf("INF stats: bad=%v sleep=%v ok=%v ko=%v",
 		sr.maxBad, sr.sleep, sr.ok, sr.ko)
 }
 

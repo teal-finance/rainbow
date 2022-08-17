@@ -30,37 +30,37 @@ const Hour = 8
 func (Provider) Options() ([]rainbow.Option, error) {
 	instruments, err := query("BTC")
 	if err != nil {
-		log.Print(err)
+		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	optionsBTC, err := fillOptions(instruments, 5)
 	if err != nil {
-		log.Print(err)
+		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	instruments, err = query("ETH")
 	if err != nil {
-		log.Print(err)
+		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	optionsETH, err := fillOptions(instruments, 5)
 	if err != nil {
-		log.Print(err)
+		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	instruments, err = query("SOL")
 	if err != nil {
-		log.Print(err)
+		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	optionsSOL, err := fillOptions(instruments, 5)
 	if err != nil {
-		log.Print(err)
+		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
@@ -73,7 +73,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 func query(coin string) ([]instrument, error) {
 	baseURL := "https://deribit.com/api/v2/public/get_instruments?currency="
 	opts := "&expired=false&kind=option"
-	log.Print(baseURL + coin + opts)
+	log.Print("INF " + baseURL + coin + opts)
 
 	resp, err := http.Get(baseURL + coin + opts)
 	if err != nil {

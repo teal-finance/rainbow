@@ -50,7 +50,7 @@ func (s *Service) FetchOptionsFromProviders() {
 			continue
 		}
 
-		log.Printf("Fetched %v=%v", p.Name(), len(o))
+		log.Printf("INF Fetched %v=%v", p.Name(), len(o))
 	}
 }
 

@@ -58,7 +58,7 @@ func QueryTheGraph() []opyn.OptionsOtokensOToken {
 		return nil
 	}
 
-	log.Printf("Query Opyn: minExpiry=%v => %v options", minExpiry, len(resp.Otokens))
+	log.Printf("INF Query Opyn: minExpiry=%v => %v options", minExpiry, len(resp.Otokens))
 
 	return resp.Otokens
 }

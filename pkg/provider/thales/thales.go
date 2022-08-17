@@ -93,13 +93,13 @@ func ProcessMarkets(markets []thales.AllMarketsMarketsMarket, layer string) ([]r
 		}
 		up, err := getOption(m, UP, layer)
 		if err != nil {
-			log.Print(count, " ERR: getOption: ", m.Id, " UP: ", err)
+			log.Print("ERR #", count, " getOption: ", m.Id, " UP: ", err)
 			spew.Dump(m)
 			return nil, err
 		}
 		down, err := getOption(m, DOWN, layer)
 		if err != nil {
-			log.Print(count, " ERR: getOption: ", m.Id, " DOWN: ", err)
+			log.Print("ERR #", count, " getOption: ", m.Id, " DOWN: ", err)
 			spew.Dump(m)
 			return nil, err
 		}

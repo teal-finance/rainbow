@@ -89,7 +89,7 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 }
 
 func queryProducts() (ProductResult, error) {
-	log.Print(deltaProducts)
+	log.Print("INF " + deltaProducts)
 	resp, err := http.Get(deltaProducts)
 	if err != nil {
 		return nil, fmt.Errorf("queryProducts: %w", err)
