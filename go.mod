@@ -11,6 +11,7 @@ require (
 	github.com/gagliardetto/gofuzz v1.2.2
 	github.com/gagliardetto/solana-go v1.4.0
 	github.com/gagliardetto/treeout v0.1.4
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/google/go-cmp v0.5.8
 	github.com/gookit/color v1.5.1
 	github.com/graphql-go/graphql v0.8.0
@@ -57,7 +58,6 @@ require (
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
-	github.com/go-chi/chi/v5 v5.0.7 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
