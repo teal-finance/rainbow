@@ -7,4 +7,4 @@ rpc:
   optimism: url+apikey
   polygon: url+apikey
   solana: url+apikey
-  serum: url+apikey
+  serum: https://solana-api.projectserum.com
