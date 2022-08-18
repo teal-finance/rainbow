@@ -21,6 +21,7 @@ const (
 
 var (
 	dev          = flag.Bool("dev", false, "Enable the developer mode (enabled by default if -addr and -port are not used)")
+	configFile   = flag.String("config", "", "Path to the config file")
 	mainAddr     = flag.String("addr", envStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
 	mainPort     = flag.Int("port", envInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
 	expPort      = flag.Int("exp", envInt("EXP_PORT", 0), "Export port for Prometheus, has precedence over EXP_PORT")
@@ -96,4 +97,20 @@ func envInt(key string, fallback int) int {
 		return v
 	}
 	return fallback
+}
+
+// Config is the main configuration of the server.
+type Config struct {
+	AmmQuote  int `yaml:"ammQuote"`
+	Referrals struct {
+		Deribit string `yaml:"deribit"`
+		Thales  string `yaml:"thales"`
+	} `yaml:"referrals"`
+	RPC struct {
+		Ethereum string `yaml:"ethereum"`
+		Optimism string `yaml:"optimism"`
+		Polygon  string `yaml:"polygon"`
+		Solana   string `yaml:"solana"`
+		Serum    string `yaml:"serum"`
+	} `yaml:"rpc"`
 }
