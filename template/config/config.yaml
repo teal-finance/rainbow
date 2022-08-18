@@ -1,0 +1,10 @@
+ammQuote: 1
+referrals:
+  deribit: lienparrainage
+  thales: lienparrainage
+rpc:
+  ethereum: url+apikey
+  optimism: url+apikey
+  polygon: url+apikey
+  solana: url+apikey
+  serum: url+apikey

@@ -20,9 +20,11 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const serumMainnet = "https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
+// const serumMainnet = "https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
 
-type Provider struct{}
+type Provider struct {
+	Endpoint string
+}
 
 func (Provider) Name() string {
 	return "Zeta"
@@ -34,7 +36,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
 
-	client := rpc.NewClient(serumMainnet)
+	client := rpc.NewClient(p.Endpoint)
 
 	options := make([]rainbow.Option, 0, len(rawOptions))
 

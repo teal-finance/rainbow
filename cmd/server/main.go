@@ -11,9 +11,15 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-
+	"github.com/spf13/viper"
 	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/rainbow/pkg/provider"
+	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
+	"github.com/teal-finance/rainbow/pkg/provider/deribit"
+	"github.com/teal-finance/rainbow/pkg/provider/lyra"
+	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
+	"github.com/teal-finance/rainbow/pkg/provider/thales"
+	"github.com/teal-finance/rainbow/pkg/provider/zerox"
+	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
@@ -22,12 +28,32 @@ import (
 func main() {
 	parseFlags()
 
+	// parse configuration file
+	conf := Config{}
+	viper.SetConfigFile(*configFile)
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("reading configuration file : %v", err)
+	}
+	if err := viper.Unmarshal(&conf); err != nil {
+		log.Fatalf("decoding configuration : %v", err)
+	}
+
+	// garcon config
 	g := garcon.New(
 		garcon.WithURLs(*mainAddr),
-		garcon.WithDev(*dev))
+		garcon.WithDev(*dev),
+	)
 
 	// start the service in background
-	providers := provider.AllProviders(*alert, g.ServerName.String())
+	providers := []rainbow.Provider{
+		psyoptions.Provider{},
+		deribit.Provider{},
+		lyra.Provider{},
+		zerox.Provider{},
+		zetamarkets.Provider{Endpoint: conf.RPC.Serum},
+		thales.Provider{},
+		deltaexchange.Provider{},
+	}
 	service := rainbow.NewService(providers, dbram.NewDB())
 	go service.Run()
 
