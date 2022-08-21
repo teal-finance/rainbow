@@ -6,6 +6,8 @@
 package api
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/friendsofgo/graphiql"
@@ -78,26 +80,26 @@ func (h Handler) fieldsCallPut() *graphql.Field {
 			args := rainbow.StoreArgs{}
 
 			if v, ok := params.Args["assets"]; ok {
-				assets := v.([]any)
-				args.Assets = make([]string, len(assets))
-				for i, a := range assets {
-					args.Assets[i] = a.(string)
+				args.Assets, ok = v.([]string)
+				if !ok {
+					log.Print("ERR API.GraphQL convert Args[assets] into []string, got: ", v)
+					return nil, fmt.Errorf("convert Args[assets] into []string, got: %+v", v)
 				}
 			}
 
 			if v, ok := params.Args["expiries"]; ok {
-				expiries := v.([]any)
-				args.Expiries = make([]string, len(expiries))
-				for i, e := range expiries {
-					args.Expiries[i] = e.(string)
+				args.Expiries, ok = v.([]string)
+				if !ok {
+					log.Print("ERR API.GraphQL convert Args[expiries] into []string, got: ", v)
+					return nil, fmt.Errorf("convert Args[expiries] into []string, got: %+v", v)
 				}
 			}
 
 			if v, ok := params.Args["providers"]; ok {
-				providers := v.([]any)
-				args.Providers = make([]string, len(providers))
-				for i, p := range providers {
-					args.Providers[i] = p.(string)
+				args.Providers, ok = v.([]string)
+				if !ok {
+					log.Print("ERR API.GraphQL convert Args[providers] into []string, got: ", v)
+					return nil, fmt.Errorf("convert Args[providers] into []string, got: %+v", v)
 				}
 			}
 
