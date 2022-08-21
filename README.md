@@ -95,6 +95,9 @@ More info on our motivations:
 - [Opyn](https://www.opyn.co/) (Ethereum):
   DeFi options protocol using TheGraph & 0x.
 
+- [Thales](https://thalesmarket.io/) Optimism and Polygon,
+  DeFi protocol for [binary options](https://wikiless.org/wiki/Binary_option) (exotic options).
+
 - [Zeta](https://zeta.markets/) (Solana):
   DeFi options protocol built using Serum order books.
 
