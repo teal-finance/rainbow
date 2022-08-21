@@ -28,13 +28,7 @@ func (Provider) Name() string {
 func (Provider) Options() ([]rainbow.Option, error) {
 	instruments := QueryTheGraph()
 
-	options, err := normalize(instruments, "Opyn", 10.0)
-	if err != nil {
-		log.Print("ERR Opyn: ", err)
-		return nil, err
-	}
-
-	return options, err
+	return normalize(instruments, "Opyn", 10.0)
 }
 
 func QueryTheGraph() []opyn.OptionsOtokensOToken {

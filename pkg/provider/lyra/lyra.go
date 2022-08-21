@@ -81,7 +81,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		}
 	}
 
-	log.Print("total markets ", sum)
+	log.Print("INF Lyra total markets ", sum)
 	return options, nil
 }
 

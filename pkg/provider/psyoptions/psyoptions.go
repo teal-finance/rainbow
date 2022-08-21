@@ -107,7 +107,7 @@ func normalizeOrders(
 		return nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("cli.GetAccountDataIn: %w", err)
+		return nil, fmt.Errorf("book.Items: %w", err)
 	}
 
 	orders := make([]rainbow.Order, 0, len(levels))

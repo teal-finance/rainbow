@@ -110,6 +110,6 @@ func main() {
 		ErrorLog:          log.Default(),
 	}
 
-	log.Print("Server listening on http://localhost", server.Addr)
+	log.Print("INF Server listening on http://localhost", server.Addr)
 	log.Fatal(server.ListenAndServe())
 }
