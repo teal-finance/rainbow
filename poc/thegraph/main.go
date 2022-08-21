@@ -26,8 +26,11 @@ func main() {
 
 	const url = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
 	id := "0xb349f4f62c92b7deb4ee7fadc6022c0830612aa4" //"0xe8dd2d01bc36babe1eecbbe863ad294bbc5c15df"
-	opt := thales.QueryMarket(id, url)
-	spew.Dump(opt)
+	m, err := thales.QueryMarket(id, url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	spew.Dump(m)
 
 	/*allLive, _ := thales.QueryAllLiveMarkets(url)
 	spew.Dump(len(allLive))
@@ -35,7 +38,7 @@ func main() {
 	markets, _ := thales.QueryAllMarkets(url)
 	fmt.Println("test")
 	spew.Dump(len(markets))*/
-	fmt.Println(thales.Underlying(opt.CurrencyKey))
+	fmt.Println(thales.Underlying(m.CurrencyKey))
 	rpc, _, amm, decimals := thales.LayerInfo("Polygon") // "Polygon") //"Optimism")
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
@@ -110,7 +113,7 @@ func main() {
 	spew.Dump(rainbow.ToFloat(quote, decimals))
 	spew.Dump(rainbow.ToFloat(amount, rainbow.DefaultEthereumDecimals))
 
-	t, _ := rainbow.TimeStringConvert(opt.MaturityDate)
+	t, _ := rainbow.TimeStringConvert(m.MaturityDate)
 	fmt.Println("expiration ", t)
 	/*
 		var t int64 = 1654041600 //01-JUN-2022

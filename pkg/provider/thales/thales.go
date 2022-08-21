@@ -53,30 +53,26 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	layer := []string{"Optimism", "Polygon"}
-	var o []rainbow.Option
-	for _, l := range layer {
-		_, url, _, _ := LayerInfo(l)
-		markets, err := QueryAllMarkets(url)
-		if err != nil {
-			log.Print("ERR: ", err)
-			return nil, err
-		}
-		options, errmione := ProcessMarkets(markets, l)
-		if errmione != nil {
-			log.Print("ERR: ", err)
-			return nil, err
-		}
-		o = append(o, options...)
+	markets1, err1 := QueryAllMarkets(LayerURL("Optimism"))
+	markets2, err2 := QueryAllMarkets(LayerURL("Polygon"))
+
+	options := make([]rainbow.Option, 0, 2*len(markets1)+2*len(markets2))
+	if err1 != nil {
+		err1 = ProcessMarkets(options, markets1, "Optimism")
+	}
+	if err2 != nil {
+		err2 = ProcessMarkets(options, markets2, "Polygon")
 	}
 
-	return o, nil
+	if err1 != nil {
+		err2 = err1 // return err1 if any, else err2
+	}
+
+	return options, err2
 }
 
-func ProcessMarkets(markets []thales.AllMarketsMarketsMarket, layer string) ([]rainbow.Option, error) {
+func ProcessMarkets(options []rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
 	spew.Dump(len(markets))
-
-	r := make([]rainbow.Option, 0, 2*len(markets))
 
 	for count, m := range markets {
 		// HOTFIX for bug on Polygon
@@ -95,21 +91,21 @@ func ProcessMarkets(markets []thales.AllMarketsMarketsMarket, layer string) ([]r
 		if err != nil {
 			log.Print("ERR #", count, " getOption: ", m.Id, " UP: ", err)
 			spew.Dump(m)
-			return nil, err
+			return err
 		}
 		down, err := getOption(m, DOWN, layer)
 		if err != nil {
 			log.Print("ERR #", count, " getOption: ", m.Id, " DOWN: ", err)
 			spew.Dump(m)
-			return nil, err
+			return err
 		}
-		r = append(r, up, down)
+		options = append(options, up, down)
 		if count%10 == 0 {
 			time.Sleep(1 * time.Second)
 		}
 	}
-	spew.Dump(len(r))
-	return r, nil
+	spew.Dump(len(options))
+	return nil
 }
 
 func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
@@ -124,14 +120,14 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 
 	expiry, err := rainbow.TimeStringConvert(m.MaturityDate)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR Thales ", err)
 		return rainbow.Option{}, err
 	}
 
 	strikeInt := new(big.Int)
 	_, err = fmt.Sscan(m.StrikePrice, strikeInt)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR Thales ", err)
 		return rainbow.Option{}, err
 	}
 
@@ -154,13 +150,13 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 	binary.Name = binary.OptionName()
 	buy, err := getQuote(m, side, "BUY", layer)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR Thales ", err)
 		return rainbow.Option{}, err
 	}
 
 	sell, err := getQuote(m, side, "SELL", layer)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR Thales ", err)
 		return rainbow.Option{}, err
 	}
 	binary.Bid = append(binary.Bid, rainbow.Order{
@@ -176,13 +172,13 @@ func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rain
 	return binary, nil
 }
 
-func LayerInfo(s string) (rpc, thegraphURL, amm string, decimals int64) {
-	if s == "Optimism" {
+func LayerInfo(layer string) (rpc, thegraphURL, amm string, decimals int64) {
+	if layer == "Optimism" {
 		rpc = rpcOptimism
 		thegraphURL = urlOptimism
 		amm = ammOptimism
 		decimals = rainbow.DefaultEthereumDecimals
-	} else if s == "Polygon" {
+	} else if layer == "Polygon" {
 		rpc = rpcPolygon
 		thegraphURL = urlPolygon
 		amm = ammPolygon
@@ -191,18 +187,23 @@ func LayerInfo(s string) (rpc, thegraphURL, amm string, decimals int64) {
 	return rpc, thegraphURL, amm, decimals
 }
 
+func LayerURL(layer string) string {
+	_, thegraphURL, _, _ := LayerInfo(layer)
+	return thegraphURL
+}
+
 func getQuote(m thales.AllMarketsMarketsMarket, side uint8, action, layer string) (float64, error) {
 	rpc, _, amm, decimals := LayerInfo(layer)
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR Thales ", err)
 		return 0, err
 	}
 
 	address := common.HexToAddress(amm)
 	instance, err := NewThales(address, client)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR Thales ", err)
 		return 0, err
 	}
 	amountToQuote := rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals)
@@ -210,13 +211,13 @@ func getQuote(m thales.AllMarketsMarketsMarket, side uint8, action, layer string
 	if action == "BUY" {
 		quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
-			log.Print("ERR: ", err)
+			log.Print("ERR Thales ", err)
 			return 0, err
 		}
 	} else if action == "SELL" {
 		quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
-			log.Print("ERR: ", err)
+			log.Print("ERR Thales ", err)
 			return 0, err
 		}
 	}
@@ -228,12 +229,12 @@ func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.AllLive(context.TODO(), graphqlClient)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR Thales ", err)
 		return nil, err
 	}
 
 	if resp == nil {
-		log.Print("ERR: resp=nil")
+		log.Print("ERR Thales resp=nil")
 		return nil, err
 	}
 	return resp.Markets, err
@@ -244,43 +245,37 @@ func QueryAllMarkets(url string) ([]thales.AllMarketsMarketsMarket, error) {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)
 	if err != nil {
-		log.Print("ERR thales.AllMarkets: ", err)
-		return nil, err
+		return nil, fmt.Errorf("AllMarkets: %w", err)
 	}
 	if resp == nil {
-		log.Print("ERR thales.AllMarkets: resp=nil")
-		return nil, err
+		return nil, fmt.Errorf("AllMarkets resp=nil")
 	}
 	return resp.Markets, nil
 }
 
-func QueryMarkets(url string) []thales.MarketsMarketsMarket {
+func QueryMarkets(url string) ([]thales.MarketsMarketsMarket, error) {
 	graphqlClient := graphql.NewClient(url, nil)
 	minExpiry := rainbow.TwoWeeksInThePast()
 	resp, err := thales.Markets(context.TODO(), graphqlClient, skip, first, minExpiry)
 	if err != nil {
-		log.Print("ERR thales.Markets: ", err)
-		return nil
+		return nil, fmt.Errorf("Markets: %w", err)
 	}
 	if resp == nil {
-		log.Print("ERR thales.Markets: resp=nil")
-		return nil
+		return nil, fmt.Errorf("Markets: resp=nil")
 	}
-	return resp.Markets
+	return resp.Markets, nil
 }
 
-func QueryMarket(id, url string) *thales.MarketMarket {
+func QueryMarket(id, url string) (*thales.MarketMarket, error) {
 	graphqlClient := graphql.NewClient(url, nil)
 	resp, err := thales.Market(context.TODO(), graphqlClient, id)
 	if err != nil {
-		log.Print("ERR thales.Market: ", err)
-		return nil
+		return nil, fmt.Errorf("Market: %w", err)
 	}
 	if resp == nil {
-		log.Print("ERR thales.Market: resp=nil")
-		return nil
+		return nil, fmt.Errorf("Market: resp=nil")
 	}
-	return &resp.Market
+	return &resp.Market, nil
 }
 
 func QueryAllRangedMarkets(url string) []thales.AllRangedMarketsRangedMarketsRangedMarket {
