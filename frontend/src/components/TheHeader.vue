@@ -11,10 +11,11 @@
         >
           <div class="inline-block mx-3">
             <img alt="logo" src="@/assets/logo-transparent.png" height="68" width="68" />
+            <img alt="logo" src="@/assets/exotic-transparent.png" height="68" width="68" />
           </div>
           <div class="inline-block text-xl tracking-widest">
             <!-- img alt="Rainbow" src="./assets/rainbow-chancery.png" height="49" width="185" / -->
-            Exotic
+            Rainbow ou Exotic
           </div>
         </div>
       </template>
@@ -35,7 +36,7 @@
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
-          <button class="border-none btn" @click="exotic()">Rainbow</button>
+          <button class="border-none btn" @click="exotic()">Classic ou Exotic</button>
           <button class="border-none btn" @click="$router.push('/about')">About</button>
           <button class="border-none btn" @click="openSourceCode()">
             Source code
@@ -119,7 +120,20 @@ export default defineComponent({
     }
 
     function exotic(){
-      location.href= 'https://teal.finance/rainbow'
+      let href = import.meta.env.BASE_URL + '/exotic'
+      if (window) {
+        console.log("window = ", window)
+        if ("location" in window) {
+          console.log("window.location = ", window.location)
+          if ("pathname" in window.location) {
+            console.log("window.location.pathname = ", window.location.pathname)
+            if (window.location.pathname == import.meta.env.BASE_URL + '/exotic') {
+                href = import.meta.env.BASE_URL + '/options'
+            }
+          }
+        }
+      }
+      location.href = href
     }
 
     return {
