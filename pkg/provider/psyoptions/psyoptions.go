@@ -33,8 +33,8 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 
 	options := make([]rainbow.Option, 0, len(rawOptions))
 
-	for _, i := range rawOptions {
-		pubKey := solana.PublicKey(i.SerumMarketAddress())
+	for i := range rawOptions {
+		pubKey := solana.PublicKey(rawOptions[i].SerumMarketAddress())
 
 		out, err := serum.FetchMarket(context.Background(), client, pubKey)
 		if err != nil {
@@ -42,27 +42,27 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			continue
 		}
 		// inverting the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
-		bids, err := normalizeOrders(out, client, out.Market.GetBids(), true, i.ContractSize())
+		bids, err := normalizeOrders(out, client, out.Market.GetBids(), true, rawOptions[i].ContractSize())
 		if err != nil {
 			return nil, err
 		}
 
-		asks, err := normalizeOrders(out, client, out.Market.GetAsks(), false, i.ContractSize())
+		asks, err := normalizeOrders(out, client, out.Market.GetAsks(), false, rawOptions[i].ContractSize())
 		if err != nil {
 			return nil, err
 		}
 
 		options = append(options, rainbow.Option{
-			Name:          i.Name(),
-			Type:          i.OptionType(),
-			Asset:         i.Asset(),
-			Expiry:        i.Expiration(),
-			Strike:        i.Strike(),
+			Name:          rawOptions[i].Name(),
+			Type:          rawOptions[i].OptionType(),
+			Asset:         rawOptions[i].Asset(),
+			Expiry:        rawOptions[i].Expiration(),
+			Strike:        rawOptions[i].Strike(),
 			ExchangeType:  "DEX",
 			Chain:         "Solana",
 			Layer:         "L1",
 			Provider:      p.Name(),
-			QuoteCurrency: i.Quote(),
+			QuoteCurrency: rawOptions[i].Quote(),
 			Bid:           bids,
 			Ask:           asks,
 		})

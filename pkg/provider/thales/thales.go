@@ -74,33 +74,33 @@ func (Provider) Options() ([]rainbow.Option, error) {
 func ProcessMarkets(options []rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
 	spew.Dump(len(markets))
 
-	for count, m := range markets {
+	for i := range markets {
 		// HOTFIX for bug on Polygon
 		// 3 markets for BTC with very low strike
 		// TODO properly understand this "ERR: execution reverted: uint overflow from multiplication"
 		// remove annoying market
-		if m.Id == "0xa0692fa1040200ac4e4818b460055753855fd623" ||
-			m.Id == "0x419bf5bfaf543c1a6d9db5fbd8da8fe24a05c31c" ||
-			m.Id == "0x08baf8b8791bb39c4f677eb4b2023665f0a46df8" ||
-			m.Id == "0x5a14ad0a5b9108a8c557fa68cab4c2f44005f6ac" ||
-			m.Id == "0xbef5d8d4e8f0e86b7c24b1b6f224020c55b65af1" ||
-			m.Id == "0xd0792be5111fd1ac4da4da106db53a82d967a41b" {
+		if markets[i].Id == "0xa0692fa1040200ac4e4818b460055753855fd623" ||
+			markets[i].Id == "0x419bf5bfaf543c1a6d9db5fbd8da8fe24a05c31c" ||
+			markets[i].Id == "0x08baf8b8791bb39c4f677eb4b2023665f0a46df8" ||
+			markets[i].Id == "0x5a14ad0a5b9108a8c557fa68cab4c2f44005f6ac" ||
+			markets[i].Id == "0xbef5d8d4e8f0e86b7c24b1b6f224020c55b65af1" ||
+			markets[i].Id == "0xd0792be5111fd1ac4da4da106db53a82d967a41b" {
 			continue
 		}
-		up, err := getOption(m, UP, layer)
+		up, err := getOption(&markets[i], UP, layer)
 		if err != nil {
-			log.Print("ERR #", count, " getOption: ", m.Id, " UP: ", err)
-			spew.Dump(m)
+			log.Print("ERR #", i, " getOption: ", markets[i].Id, " UP: ", err)
+			spew.Dump(markets[i])
 			return err
 		}
-		down, err := getOption(m, DOWN, layer)
+		down, err := getOption(&markets[i], DOWN, layer)
 		if err != nil {
-			log.Print("ERR #", count, " getOption: ", m.Id, " DOWN: ", err)
-			spew.Dump(m)
+			log.Print("ERR #", i, " getOption: ", markets[i].Id, " DOWN: ", err)
+			spew.Dump(markets[i])
 			return err
 		}
 		options = append(options, up, down)
-		if count%10 == 0 {
+		if i%10 == 0 {
 			time.Sleep(1 * time.Second)
 		}
 	}
@@ -108,7 +108,7 @@ func ProcessMarkets(options []rainbow.Option, markets []thales.AllMarketsMarkets
 	return nil
 }
 
-func getOption(m thales.AllMarketsMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
+func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
 	// TODO change front to take care of UP/DOWN properly
 	// here we do a hack where
 	// DOWN == PUT
@@ -192,7 +192,7 @@ func LayerURL(layer string) string {
 	return thegraphURL
 }
 
-func getQuote(m thales.AllMarketsMarketsMarket, side uint8, action, layer string) (float64, error) {
+func getQuote(m *thales.AllMarketsMarketsMarket, side uint8, action, layer string) (float64, error) {
 	rpc, _, amm, decimals := LayerInfo(layer)
 	client, err := ethclient.Dial(rpc)
 	if err != nil {

@@ -80,8 +80,8 @@ func (row *Row) less(other *Row) bool {
 }
 
 func isRowEmpty(row []rainbow.Option) bool {
-	for _, o := range row {
-		allEmpty := isSideEmpty(o.Ask) && isSideEmpty(o.Bid)
+	for i := range row {
+		allEmpty := isSideEmpty(row[i].Ask) && isSideEmpty(row[i].Bid)
 		if !allEmpty {
 			return false
 		}
@@ -184,12 +184,12 @@ func groupByStrike(options []rainbow.Option) (strikeToOptions map[float64][]rain
 
 func groupByProvider(options []rainbow.Option) (providerToOptions map[string][]rainbow.Option) {
 	providerToOptions = map[string][]rainbow.Option{}
-	for _, o := range options {
-		slice, ok := providerToOptions[o.Provider]
+	for i := range options {
+		slice, ok := providerToOptions[options[i].Provider]
 		if ok {
-			providerToOptions[o.Provider] = append(slice, o)
+			providerToOptions[options[i].Provider] = append(slice, options[i])
 		} else {
-			providerToOptions[o.Provider] = []rainbow.Option{o}
+			providerToOptions[options[i].Provider] = []rainbow.Option{options[i]}
 		}
 	}
 	return providerToOptions
