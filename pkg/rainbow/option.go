@@ -24,7 +24,7 @@ type Option struct {
 }
 
 // TODO put standard name here.
-func (o Option) OptionName() string {
+func (o *Option) OptionName() string {
 	if o.Name != "" {
 		return o.Name
 	}

@@ -70,18 +70,18 @@ type Option struct {
 	serumMarketAddress  solana.PublicKey
 }
 
-func (o Option) OptionMarketAddress() solana.PublicKey {
+func (o *Option) OptionMarketAddress() solana.PublicKey {
 	return o.optionMarketAddress
 }
 
 // Expiration will be used in .Name() when fixed.
-func (o Option) Expiration() string {
+func (o *Option) Expiration() string {
 	seconds := o.opt.ExpirationUnixTimestamp
 	expiryTime := time.Unix(seconds, 0).UTC()
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
 
-func (o Option) SerumMarketAddress() solana.PublicKey {
+func (o *Option) SerumMarketAddress() solana.PublicKey {
 	return o.serumMarketAddress
 }
 
@@ -101,13 +101,13 @@ func deriveSerumMarketAddress(optionMarketAddress, priceCurrencyAddress, program
 // we keep an option even 2 days after expiry
 // mainly because not all protocol stop at expiry or right before
 // TODO re-check later.
-func (o Option) IsExpired() bool {
+func (o *Option) IsExpired() bool {
 	seconds := o.opt.ExpirationUnixTimestamp
 	expiryTime := time.Unix(seconds, 0).UTC()
 	return expiryTime.Before(time.Now().Add(-time.Hour * 48))
 }
 
-func (o Option) Asset() string {
+func (o *Option) Asset() string {
 	switch {
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(ETHAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(ETHAddress):
 		return "ETH"
@@ -125,7 +125,7 @@ func (o Option) Asset() string {
 	}
 }
 
-func (o Option) Quote() string {
+func (o *Option) Quote() string {
 	switch {
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(USDCAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(USDCAddress):
 		return "USDC"
@@ -136,7 +136,7 @@ func (o Option) Quote() string {
 	}
 }
 
-func (o Option) QuotePublicKey() solana.PublicKey {
+func (o *Option) QuotePublicKey() solana.PublicKey {
 	switch o.Quote() {
 	case "USDC":
 		return solana.MustPublicKeyFromBase58(USDCAddress)
@@ -147,7 +147,7 @@ func (o Option) QuotePublicKey() solana.PublicKey {
 	}
 }
 
-func (o Option) ContractSize() float64 {
+func (o *Option) ContractSize() float64 {
 	switch {
 	case o.Asset() == "ETH":
 		return 0.1
@@ -158,26 +158,26 @@ func (o Option) ContractSize() float64 {
 	}
 }
 
-func (o Option) UnderlyingPerContract() float64 {
+func (o *Option) UnderlyingPerContract() float64 {
 	return float64(o.opt.UnderlyingAmountPerContract)
 }
 
-func (o Option) QuotePerContract() float64 {
+func (o *Option) QuotePerContract() float64 {
 	return float64(o.opt.QuoteAmountPerContract)
 }
 
-func (o Option) OptionType() string {
+func (o *Option) OptionType() string {
 	if o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(USDCAddress) {
 		return "CALL"
 	}
 	return "PUT"
 }
 
-func (o Option) IsCall() bool {
+func (o *Option) IsCall() bool {
 	return o.OptionType() == "CALL"
 }
 
-func (o Option) Strike() float64 {
+func (o *Option) Strike() float64 {
 	if o.Asset() == "SOL" {
 		var s float64
 		if o.OptionType() == "PUT" {
@@ -195,7 +195,7 @@ func (o Option) Strike() float64 {
 	return o.QuotePerContract() / o.UnderlyingPerContract()
 }
 
-func (o Option) Name() string {
+func (o *Option) Name() string {
 	return o.Asset() + "-" + o.Expiration() + "-" +
 		fmt.Sprintf("%.0f", o.Strike()) + "-" + o.OptionType()
 }

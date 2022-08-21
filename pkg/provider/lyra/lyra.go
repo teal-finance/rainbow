@@ -75,7 +75,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 					return nil, err
 				}
 
-				callPut := processOption(vlist, ammOrder, amount, Assets[i])
+				callPut := processOption(&vlist, ammOrder, amount, Assets[i])
 				options = append(options, callPut...)
 			}
 		}
@@ -123,7 +123,7 @@ func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketVi
 	return ammOrder, err
 }
 
-func processOption(listing OptionMarketViewerListingView, ammOrder []OptionMarketViewerTradePremiumView, amount int, asset string) []rainbow.Option {
+func processOption(listing *OptionMarketViewerListingView, ammOrder []OptionMarketViewerTradePremiumView, amount int, asset string) []rainbow.Option {
 	options := []rainbow.Option{}
 	call := rainbow.Option{
 		Name:          "",
