@@ -17,10 +17,17 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("./views/pages/AboutView.vue")
   },
   {
+    path: "/exotic",
+    component: () => import("./views/ExoticView.vue"),
+    meta: {
+      title: "Exotic Options"
+    }
+  },
+  {
     path: "/options",
     component: () => import("./views/OptionsView.vue"),
     meta: {
-      title: "Options"
+      title: "Classic Options"
     }
   }
 ]

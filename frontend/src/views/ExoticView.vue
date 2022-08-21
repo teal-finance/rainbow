@@ -5,7 +5,7 @@
         <options-datatable :model="datatable"></options-datatable>
       </div>
       <div class="pl-5 pr-3 w-1/5">
-        <presets-select v-if="isReady" @changepreset="mutatePreset($event)"></presets-select>
+        <!-- presets-select v-if="isReady" @changepreset="mutatePreset($event)"></presets-select -->
         <div>
           <div class="text-xl mt-3">Asset</div>
           <hr class="my-3" />
@@ -42,10 +42,10 @@ import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
 import OptionsDatatable from '@/components/OptionsDatatable.vue';
 import LoadingIndicator from '@/components/widgets/LoadingIndicator.vue';
 import { isMobile, user } from '@/state';
-import { classicQuery } from '@/api/graphql';
+import { exoticQuery } from '@/api/graphql';
 //import ValuesFilterBadgeRender from '@/packages/datatable/filters/ValuesFilterBadgeRender.vue';
-import filterPresets from "@/const/filter_presets";
-import PresetsSelect from "@/components/PresetsSelect.vue";
+//exotic import filterPresets from "@/const/filter_presets";
+//exotic import PresetsSelect from "@/components/PresetsSelect.vue";
 
 const datatable = ref(new SwDataTableModel<OptionsTable>());
 const isReady = ref(false);
@@ -79,18 +79,18 @@ function loadData(dataset: OptionsJsonDataset) {
   datatable.value = new SwDataTableModel<OptionsTable>({ columns: columns, rows: Array.from(options) });
 }
 
-function mutatePreset(presetname: string) {
-  const preset = filterPresets[presetname];
-  filterConf.assets = preset.assets;
-  filterConf.providers = preset.providers;
-  user.currentPreset.value = presetname;
-  //console.log("Filterconf mutation", JSON.stringify(filterConf, null, "  "))
-}
+//exotic function mutatePreset(presetname: string) {
+//exotic   const preset = filterPresets[presetname];
+//exotic   filterConf.assets = preset.assets;
+//exotic   filterConf.providers = preset.providers;
+//exotic   user.currentPreset.value = presetname;
+//exotic   //console.log("Filterconf mutation", JSON.stringify(filterConf, null, "  "))
+//exotic }
 
 onMounted(() => {
   //console.log("FConf", JSON.stringify(filterConf.assets))
-  classicQuery().then((d) => {
-    mutatePreset(user.currentPreset.value)
+  exoticQuery().then((d) => {
+    //exotic mutatePreset(user.currentPreset.value)
     loadData(d);
     isReady.value = true;
   });

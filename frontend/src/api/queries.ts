@@ -3,8 +3,8 @@
 // a screener for DeFi options under the MIT License.
 // SPDX-License-Identifier: MIT
 
-const allQuery = `{
-  rows {
+const classicOptionsQuery = `{
+  rows(providers: ["Delta Exchange", "Deribit", "Lyra", "Opyn", "PsyOptions", "Zeta"]) {
     date
     expiry
     provider
@@ -33,4 +33,34 @@ const allQuery = `{
   }
 }`;
 
-export { allQuery }
+const exoticOptionsQuery = `{
+  rows(providers: ["Thales::Optimism", "Thales::Polygon"]) {
+    date
+    expiry
+    provider
+    asset
+    strike
+    call {
+      bid {
+        px
+        size
+      }
+      ask {
+        px
+        size
+      }
+    }
+    put {
+      bid {
+        px
+        size
+      }
+      ask {
+        px
+        size
+      }
+    }
+  }
+}`;
+
+export { classicOptionsQuery, exoticOptionsQuery }
