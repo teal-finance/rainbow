@@ -6,16 +6,14 @@
 package zerox
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"math"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
+	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/opyn"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
@@ -38,14 +36,14 @@ func extract(o *opyn.OptionsOtokensOToken) (optionType, expiry string, strike fl
 
 	expiry, err := rainbow.TimeStringConvert(o.ExpiryTimestamp)
 	if err != nil {
-		log.Printf("ERR Opyn ExpiryTimestamp: %v from %+v", err, o)
+		log.Printf("WRN Opyn ExpiryTimestamp: %v from %+v", err, o)
 		expiry = ""
 	}
 
 	// thought the USDCdecimals were correct but apparently not (whatever)
 	strike, err = convertFromSolidity(o.StrikePrice, OTokensDecimals)
 	if err != nil {
-		log.Printf("ERR Strike: %v from %+v", err, o)
+		log.Printf("WRN Opyn Strike: %v from %+v", err, o)
 		strike = 0
 	}
 
@@ -70,17 +68,11 @@ func getQuote(side, sellToken, buyToken string, amount float64, decimals int) (Q
 	if err != nil {
 		return Quote{}, err
 	}
-
-	j, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
-
-	if err != nil {
-		return Quote{}, fmt.Errorf("cannot ReadAll quote from Ox: %w", err)
-	}
+	defer resp.Body.Close()
 
 	var result Quote
-	if err = json.Unmarshal(j, &result); err != nil {
-		return Quote{}, fmt.Errorf("cannot json.Unmarshal quote from Ox: %w in: %v", err, string(j))
+	if err = garcon.DecodeJSONResponse(resp, &result); err != nil {
+		return Quote{}, fmt.Errorf("quote from Ox: %w", err)
 	}
 
 	return result, nil
@@ -112,7 +104,7 @@ func (sr *stubbornRequester) success(n int) {
 		}
 
 		if n > 0 {
-			log.Printf("INF Success #%v n=%v bad=%v sleep=%v (%+v)",
+			log.Printf("INF Opyn success #%v n=%v bad=%v sleep=%v (%+v)",
 				sr.ok, n, sr.maxBad, newSleep, newSleep-sr.sleep)
 		}
 
@@ -125,9 +117,8 @@ func (sr *stubbornRequester) failure(err error) {
 	newSleep := sr.maxBad / 2
 	sr.ko++
 
-	log.Printf("Failure #%v bad=%v sleep=%v + %v %v",
-		sr.ko, sr.maxBad, sr.sleep, newSleep,
-		strings.ReplaceAll(strings.ReplaceAll(err.Error(), "\n", ""), "\r", ""))
+	log.Printf("WRN Opyn failure #%v bad=%v sleep=%v + %v %v",
+		sr.ko, sr.maxBad, sr.sleep, newSleep, garcon.Sanitize(err.Error()))
 
 	sr.maxBad = sr.sleep + newSleep
 	sr.sleep = newSleep
@@ -152,7 +143,7 @@ func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount f
 }
 
 func (sr *stubbornRequester) logStats() {
-	log.Printf("INF stats: bad=%v sleep=%v ok=%v ko=%v",
+	log.Printf("INF Opyn stats: bad=%v sleep=%v ok=%v ko=%v",
 		sr.maxBad, sr.sleep, sr.ok, sr.ko)
 }
 
@@ -231,14 +222,14 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 
 		bid, err := requester.getQuote("BUY", instr.Id, USDC, amount, decimals)
 		if err != nil {
-			log.Print("getQuote BUY ", err)
+			log.Print("WRN Opyn getQuote BUY ", err)
 			return nil, err
 		}
 
 		if bid.Price != "" {
-			price, err := strconv.ParseFloat(bid.Price, 64)
-			if err != nil {
-				log.Print("WRN price ", err)
+			price, e := strconv.ParseFloat(bid.Price, 64)
+			if e != nil {
+				log.Print("WRN Opyn price ", e)
 				continue
 			}
 
@@ -255,7 +246,7 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 
 		ask, err := requester.getQuote("SELL", USDC, instr.Id, amount, decimals)
 		if err != nil {
-			log.Print("getQuote SELL ", err)
+			log.Print("INF Opyn getQuote SELL ", err)
 			return nil, err
 		}
 

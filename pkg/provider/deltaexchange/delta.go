@@ -6,19 +6,20 @@
 package deltaexchange
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 const (
-	deltaProducts = "https://api.delta.exchange/v2/products?states=live&contract_types=put_options,call_options"
-	deltaOrders   = "https://api.delta.exchange/v2/l2orderbook/"
+	deltaProducts  = "https://api.delta.exchange/v2/products?states=live&contract_types=put_options,call_options"
+	deltaOrders    = "https://api.delta.exchange/v2/l2orderbook/"
+	maxBytesToRead = 20_000_000 // Prevent wasting memory/CPU when receiving an abnormally huge response from Delta API
 )
 
 type Provider struct{}
@@ -35,7 +36,7 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 	products, err := queryProducts()
 	if err != nil {
-		return nil, fmt.Errorf("delta options collect : %w", err)
+		return nil, err
 	}
 
 	expiries := rainbow.Expiries(time.Now(), Hour)
@@ -50,7 +51,7 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 
 		strike, err := strconv.ParseFloat(p.StrikePrice, 64)
 		if err != nil {
-			return nil, fmt.Errorf(" strike ParseFloat: %w", err)
+			return nil, fmt.Errorf("strike ParseFloat: %w", err)
 		}
 
 		// Ugly fix for front, the 100K strike is too long number so I will filter it out
@@ -66,7 +67,7 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 
 		bids, asks, err := p.orderbook()
 		if err != nil {
-			return nil, fmt.Errorf(" p.Orderbook: %w", err)
+			return nil, err
 		}
 
 		options = append(options, rainbow.Option{
@@ -92,15 +93,16 @@ func queryProducts() (ProductResult, error) {
 	log.Print("INF " + deltaProducts)
 	resp, err := http.Get(deltaProducts)
 	if err != nil {
-		return nil, fmt.Errorf("queryProducts: %w", err)
+		return nil, fmt.Errorf("queryProducts GET: %w", err)
 	}
 	defer resp.Body.Close()
 
 	var result struct {
 		Result ProductResult `json:"result"`
 	}
-	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, fmt.Errorf("decode json ProductResult: %w", err)
+	// this DeltaExchange response can be more than 100 KB, thus we accept much more
+	if err = garcon.DecodeJSONResponse(resp, &result, maxBytesToRead); err != nil {
+		return nil, fmt.Errorf("queryProducts decode: %w", err)
 	}
 
 	return result.Result, nil
@@ -281,20 +283,20 @@ type Orders []struct {
 func (p *Product) orderbook() (bid, ask []rainbow.Order, err error) {
 	resp, err := http.Get(deltaOrders + p.Symbol)
 	if err != nil {
-		return nil, nil, fmt.Errorf(" Fetch order book : %w", err)
+		return nil, nil, fmt.Errorf("book GET: %w", err)
 	}
 	defer resp.Body.Close()
 
 	var orders struct {
 		Orders OrderBookResult `json:"result"`
 	}
-	if err = json.NewDecoder(resp.Body).Decode(&orders); err != nil {
-		return nil, nil, fmt.Errorf(" fetch  order book json issue : %w", err)
+	if err = garcon.DecodeJSONResponse(resp, &orders); err != nil {
+		return nil, nil, fmt.Errorf("book decode response: %w", err)
 	}
 
 	contractSize, err := strconv.ParseFloat(p.ContractValue, 64)
 	if err != nil {
-		return nil, nil, fmt.Errorf(" contract value conversion: %w", err)
+		return nil, nil, fmt.Errorf("book ParseFloat: %w", err)
 	}
 
 	bid, err = orderConversion(orders.Orders.Buy, contractSize)

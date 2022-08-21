@@ -6,7 +6,6 @@
 package deribit
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -27,40 +27,37 @@ func (Provider) Name() string {
 // Hour at which the options expires = 8:00 UTC.
 const Hour = 8
 
+// maxBytesToRead prevents wasting memory/CPU when receiving an abnormally huge response from Deribit API.
+const maxBytesToRead = 2_000_000
+
 func (Provider) Options() ([]rainbow.Option, error) {
 	instruments, err := query("BTC")
 	if err != nil {
-		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	optionsBTC, err := fillOptions(instruments, 5)
 	if err != nil {
-		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	instruments, err = query("ETH")
 	if err != nil {
-		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	optionsETH, err := fillOptions(instruments, 5)
 	if err != nil {
-		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	instruments, err = query("SOL")
 	if err != nil {
-		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
 	optionsSOL, err := fillOptions(instruments, 5)
 	if err != nil {
-		log.Print("ERR Deribit: ", err)
 		return nil, err
 	}
 
@@ -77,17 +74,15 @@ func query(coin string) ([]instrument, error) {
 
 	resp, err := http.Get(baseURL + coin + opts)
 	if err != nil {
-		return []instrument{}, err
+		return nil, fmt.Errorf("GET coin %s: %w", coin, err)
 	}
-
 	defer resp.Body.Close()
 
-	result := struct {
+	var result struct {
 		Result []instrument `json:"result"`
-	}{}
-
-	if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return []instrument{}, fmt.Errorf("deribit options collect : %w", err)
+	}
+	if err = garcon.DecodeJSONResponse(resp, &result, maxBytesToRead); err != nil {
+		return nil, fmt.Errorf("decode coin %s: %w", coin, err)
 	}
 
 	return filterTooFar(result.Result), nil
@@ -155,29 +150,27 @@ func isStrikeAvailable(i instrument) bool {
 }
 
 func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
+	options := make([]rainbow.Option, 0, len(instruments))
 	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
 
-	for _, i := range instruments {
-		resp, err := http.Get(baseURL + i.InstrumentName)
+	for i := range instruments {
+		resp, err := http.Get(baseURL + instruments[i].InstrumentName)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("GET book %s: %w", instruments[i].InstrumentName, err)
 		}
-
 		defer resp.Body.Close()
 
-		result := struct {
+		var result struct {
 			Result OrderBook `json:"result"`
-		}{}
-
-		if err = json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			return nil, fmt.Errorf(" order book : %w", err)
+		}
+		if err = garcon.DecodeJSONResponse(resp, &result); err != nil {
+			return nil, fmt.Errorf("decode book %s: %w", instruments[i].InstrumentName, err)
 		}
 
 		// API doc: https://docs.deribit.com/#public-get_index_price_names
 		// ExpirationTimestamp = The time when the instrument will expire (milliseconds since the UNIX epoch)
-		seconds := i.ExpirationTimestamp / 1000
-		ns := (i.ExpirationTimestamp % 1000) * 1000_000
+		seconds := instruments[i].ExpirationTimestamp / 1000
+		ns := (instruments[i].ExpirationTimestamp % 1000) * 1000_000
 		expiryTime := time.Unix(seconds, ns).UTC()
 		expiryStr := expiryTime.Format("2006-01-02 15:04:05")
 
@@ -192,16 +185,16 @@ func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, erro
 		})
 
 		options = append(options, rainbow.Option{
-			Name:          i.InstrumentName,
-			Type:          strings.ToUpper(i.OptionType),
-			Asset:         i.BaseCurrency,
+			Name:          instruments[i].InstrumentName,
+			Type:          strings.ToUpper(instruments[i].OptionType),
+			Asset:         instruments[i].BaseCurrency,
 			Expiry:        expiryStr,
-			Strike:        i.Strike,
+			Strike:        instruments[i].Strike,
 			ExchangeType:  "CEX",
 			Chain:         "–",
 			Layer:         "–",
 			Provider:      "Deribit",
-			QuoteCurrency: i.QuoteCurrency,
+			QuoteCurrency: instruments[i].QuoteCurrency,
 			Bid:           bids,
 			Ask:           asks,
 		})
