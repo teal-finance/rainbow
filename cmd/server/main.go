@@ -29,7 +29,7 @@ func main() {
 	// start the service in background
 	providers := provider.AllProviders(*alert, g.ServerName.String())
 	service := rainbow.NewService(providers, dbram.NewDB())
-	go service.Run()
+	go service.Run(*period)
 
 	// chain middleware
 	middleware, connState := g.StartMetricsServer(*expPort)

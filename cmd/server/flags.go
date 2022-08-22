@@ -10,8 +10,10 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/timex"
 )
 
 const (
@@ -20,6 +22,7 @@ const (
 )
 
 var (
+	period       = flag.Duration("period", 10*time.Minute, "Period to fetch market data from providers")
 	dev          = flag.Bool("dev", false, "Enable the developer mode (enabled by default if -addr and -port are not used)")
 	mainAddr     = flag.String("addr", envStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
 	mainPort     = flag.Int("port", envInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
@@ -46,6 +49,7 @@ func parseFlags() {
 	}
 
 	garcon.LogVersion()
+	log.Print("Data fetch  -period   = ", timex.DStr(*period))
 	log.Print("Dev. mode      -dev   = ", *dev)
 	log.Print("MAIN_ADDR      -addr  = ", *mainAddr)
 	log.Print("MAIN_PORT      -port  = ", *mainPort)

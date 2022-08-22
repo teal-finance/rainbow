@@ -28,8 +28,8 @@ func NewService(p []Provider, s Store) Service {
 }
 
 // Run periodically fetch data from providers API and stores it in DB.
-func (s *Service) Run() {
-	ticker := time.NewTicker(10 * time.Minute)
+func (s *Service) Run(loopTime time.Duration) {
+	ticker := time.NewTicker(loopTime)
 
 	for ; true; <-ticker.C {
 		s.FetchOptionsFromProviders()
