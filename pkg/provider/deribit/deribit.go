@@ -128,9 +128,9 @@ func filterTooFar(instruments []instrument) []instrument {
 
 // TODO change this quick and dirty way of filtering strikes from deribit.
 func isStrikeAvailable(i *instrument) bool {
-	ethStrike := []float64{500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100}
-	btcStrike := []float64{9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 29000, 30000}
-	solStrike := []float64{10, 15, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 44, 45}
+	ethStrike := []float64{500, 4000}
+	btcStrike := []float64{9000, 40000}
+	solStrike := []float64{10, 60}
 	strikes := ethStrike
 
 	if i.BaseCurrency == "BTC" {
@@ -139,14 +139,8 @@ func isStrikeAvailable(i *instrument) bool {
 		strikes = solStrike
 	}
 
-	for _, s := range strikes {
-		// if strike on deribit around strike anywhere else, keep it
-		if i.Strike >= s*0.98 && i.Strike <= s*1.02 {
-			return true
-		}
-	}
+	return i.Strike >= strikes[0] && i.Strike <= strikes[1]
 
-	return false
 }
 
 func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
@@ -198,6 +192,12 @@ func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, erro
 			Bid:           bids,
 			Ask:           asks,
 		})
+
+		//https://www.deribit.com/kb/deribit-rate-limits
+		// "Each sub-account has a rate limit of 100 in a burst or 20 requests per second"
+		if i%50 == 0 {
+			time.Sleep(1 * time.Second)
+		}
 	}
 
 	return options, nil
