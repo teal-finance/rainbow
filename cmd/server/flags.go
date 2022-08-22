@@ -58,7 +58,7 @@ func parseFlags() {
 	log.Print("Data fetch     -period    = ", timex.DStr(*period))
 	log.Print("Centralized Ex -cex       =", *cex)
 	log.Print("Decentralized  -dex       =", *dex)
-	log.Print("Binary opt. Ex -exotic    =", *exotic)
+	log.Print("Binary options -exotic    =", *exotic)
 	log.Print("PROVIDERS      -providers =", *providers)
 	log.Print("MAIN_ADDR      -addr      = ", *mainAddr)
 	log.Print("MAIN_PORT      -port      = ", *mainPort)
