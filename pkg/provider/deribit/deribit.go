@@ -6,6 +6,7 @@
 package deribit
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -18,7 +19,9 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-type Provider struct{}
+type Provider struct {
+	ar AdaptiveRate
+}
 
 func (Provider) Name() string {
 	return "Deribit"
@@ -30,62 +33,67 @@ const Hour = 8
 // maxBytesToRead prevents wasting memory/CPU when receiving an abnormally huge response from Deribit API.
 const maxBytesToRead = 2_000_000
 
-func (Provider) Options() ([]rainbow.Option, error) {
-	instruments, err := query("BTC")
+func (p *Provider) Options() ([]rainbow.Option, error) {
+	if p.ar.Name == "" {
+		p.ar = NewAdaptiveRate("Deribit", theoreticalMinSleepTime)
+	}
+
+	instruments, err := p.query("BTC")
 	if err != nil {
 		return nil, err
 	}
 
-	optionsBTC, err := fillOptions(instruments, 5)
+	optionsBTC, err := p.fillOptions(instruments, 5)
 	if err != nil {
 		return nil, err
 	}
 
-	instruments, err = query("ETH")
+	instruments, err = p.query("ETH")
 	if err != nil {
 		return nil, err
 	}
 
-	optionsETH, err := fillOptions(instruments, 5)
+	optionsETH, err := p.fillOptions(instruments, 5)
 	if err != nil {
 		return nil, err
 	}
 
-	instruments, err = query("SOL")
+	instruments, err = p.query("SOL")
 	if err != nil {
 		return nil, err
 	}
 
-	optionsSOL, err := fillOptions(instruments, 5)
+	optionsSOL, err := p.fillOptions(instruments, 5)
 	if err != nil {
 		return nil, err
 	}
 
-	options := optionsBTC
+	p.ar.LogStats()
+
+	var options []rainbow.Option
+	options = append(options, optionsBTC...)
 	options = append(options, optionsETH...)
 	options = append(options, optionsSOL...)
 	return options, nil
 }
 
-func query(coin string) ([]instrument, error) {
-	baseURL := "https://deribit.com/api/v2/public/get_instruments?currency="
-	opts := "&expired=false&kind=option"
-	log.Print("INF " + baseURL + coin + opts)
+func (p *Provider) query(coin string) ([]instrument, error) {
+	const baseURL = "https://deribit.com/api/v2/public/get_instruments?currency="
+	const opts = "&expired=false&kind=option"
+	url := baseURL + coin + opts
+	log.Print("INF Deribit " + url)
 
-	resp, err := http.Get(baseURL + coin + opts)
+	var result instrumentsResult
+	err := p.ar.Get(coin, url, &result, maxBytesToRead)
 	if err != nil {
-		return nil, fmt.Errorf("GET coin %s: %w", coin, err)
-	}
-	defer resp.Body.Close()
-
-	var result struct {
-		Result []instrument `json:"result"`
-	}
-	if err = garcon.DecodeJSONResponse(resp, &result, maxBytesToRead); err != nil {
-		return nil, fmt.Errorf("decode coin %s: %w", coin, err)
+		return nil, err
 	}
 
 	return filterTooFar(result.Result), nil
+}
+
+type instrumentsResult struct {
+	Result []instrument `json:"result"`
 }
 
 type instrument struct {
@@ -143,22 +151,18 @@ func isStrikeAvailable(i *instrument) bool {
 
 }
 
-func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
+func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
 	options := make([]rainbow.Option, 0, len(instruments))
+	var lastError error
+
 	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
 
 	for i := range instruments {
-		resp, err := http.Get(baseURL + instruments[i].InstrumentName)
-		if err != nil {
-			return nil, fmt.Errorf("GET book %s: %w", instruments[i].InstrumentName, err)
-		}
-		defer resp.Body.Close()
-
-		var result struct {
-			Result OrderBook `json:"result"`
-		}
-		if err = garcon.DecodeJSONResponse(resp, &result); err != nil {
-			return nil, fmt.Errorf("decode book %s: %w", instruments[i].InstrumentName, err)
+		var result orderBookResult
+		url := baseURL + instruments[i].InstrumentName
+		if err := p.ar.Get(instruments[i].InstrumentName, url, &result); err != nil {
+			lastError = err
+			log.Print("WRN Deribit book " + err.Error())
 		}
 
 		// API doc: https://docs.deribit.com/#public-get_index_price_names
@@ -200,7 +204,14 @@ func fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, erro
 		}
 	}
 
+	if len(options) == 0 {
+		return nil, lastError
+	}
 	return options, nil
+}
+
+type orderBookResult struct {
+	Result OrderBook `json:"result"`
 }
 
 type OrderBook struct {
@@ -258,4 +269,106 @@ func normalizeOrders(orders [][]float64, assetPrice float64) []rainbow.Order {
 	}
 
 	return offers
+}
+
+type AdaptiveRate struct {
+	Name      string
+	NextSleep time.Duration
+	MinSleep  time.Duration
+}
+
+func NewAdaptiveRate(name string, d time.Duration) AdaptiveRate {
+	ar := AdaptiveRate{
+		Name:      name,
+		NextSleep: d * factorInitialNextSleep,
+		MinSleep:  d,
+	}
+
+	ar.LogStats()
+
+	return ar
+}
+
+// theoreticalMinSleepTime is to limit the request rate to the Deribit API.
+const theoreticalMinSleepTime = 1 * time.Millisecond
+
+const (
+	factorInitialNextSleep  = 2
+	factorIncreaseMinSleep  = 32  // higher, the change is slower
+	factorDecreaseMinSleep  = 512 // higher, the change is slower
+	factorIncreaseNextSleep = 2   // higher, the change is faster
+	factorDecreaseNextSleep = 8   // higher, the change is slower
+	maxAlpha                = 16
+)
+
+func (ar *AdaptiveRate) adjust(d time.Duration) {
+	const fim = factorIncreaseMinSleep - 1
+	const fin = factorIncreaseNextSleep - 1
+	const fdn = factorDecreaseNextSleep - 1
+
+	if d > ar.NextSleep {
+		prevNext := ar.NextSleep
+		prevMin := ar.MinSleep
+		ar.NextSleep = (ar.NextSleep + fin*d) / factorIncreaseNextSleep
+		ar.MinSleep = (d + fim*ar.MinSleep) / factorIncreaseMinSleep
+		log.Printf("DBG %s Increase MinSleep=%s (+%s) next=%s (+%s)",
+			ar.Name, ar.MinSleep, ar.MinSleep-prevMin, ar.NextSleep, ar.NextSleep-prevNext)
+		return
+	}
+
+	// gap is used to detect stabilized sleep duration
+	gap := ar.NextSleep - ar.MinSleep
+
+	ar.NextSleep = (ar.MinSleep + fdn*ar.NextSleep) / factorDecreaseNextSleep
+
+	// try to reduce slowly the "min sleep time"
+	if reduce := ar.MinSleep / factorDecreaseMinSleep; gap < reduce {
+		ar.MinSleep -= reduce
+		log.Printf("DBG %s Decrease MinSleep=%s (-%s) next=%s",
+			ar.Name, ar.MinSleep, reduce, ar.NextSleep)
+	}
+}
+
+func (ar *AdaptiveRate) LogStats() {
+	log.Printf("INF %s Adjusted sleep durations: min=%s next=%s",
+		ar.Name, ar.MinSleep, ar.NextSleep)
+}
+
+func (ar *AdaptiveRate) Get(name, url string, msg any, maxBytes ...int) error {
+	var err error
+	d := ar.NextSleep
+	for try, status := 1, http.StatusTooManyRequests; (try < 88) && (status == http.StatusTooManyRequests); try++ {
+		if try > 1 {
+			previous := d
+			alpha := int64(maxAlpha * ar.MinSleep / d)
+			d *= time.Duration(try)
+			d += time.Duration(alpha) * ar.MinSleep
+			log.Printf("INF %s Get #%d sleep=%s (+%s) alpha=%d n=%s min=%s",
+				name, try, d, d-previous, alpha, ar.NextSleep, ar.MinSleep)
+		}
+		time.Sleep(d)
+		status, err = ar.get(name, url, msg, maxBytes...)
+	}
+
+	ar.adjust(d)
+
+	return err
+}
+
+func (ar *AdaptiveRate) get(symbol, url string, msg any, maxBytes ...int) (int, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return resp.StatusCode, fmt.Errorf("GET %s %s: %w", ar.Name, symbol, err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusTooManyRequests {
+		return resp.StatusCode, errors.New("Too Many Requests " + symbol)
+	}
+
+	if err = garcon.DecodeJSONResponse(resp, msg, maxBytes...); err != nil {
+		return resp.StatusCode, fmt.Errorf("decode book %s: %w", symbol, err)
+	}
+
+	return resp.StatusCode, nil
 }

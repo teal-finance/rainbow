@@ -32,7 +32,7 @@ const (
 func AllProvidersNoAlerter() []rainbow.Provider {
 	return []rainbow.Provider{
 		psyoptions.Provider{},    // separate psy and zeta to not
-		deribit.Provider{},       //                  |
+		&deribit.Provider{},      //                  |
 		lyra.Provider{},          //                  |
 		zerox.Provider{},         //                  |
 		zetamarkets.Provider{},   // <----------------` exhaust solana/serum rpc quota
