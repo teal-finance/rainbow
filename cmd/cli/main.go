@@ -64,20 +64,28 @@ func printTable(options []rainbow.Option) {
 }
 
 func highlight(p string) string {
+	lightMagenta := color.FgLightMagenta.Render
+	magenta := color.FgMagenta.Render
+	lightGreen := color.FgLightGreen.Render
+	blue := color.FgCyan.Render
+	darkGray := color.FgDarkGray.Render
+	darkGreen := color.FgGreen.Render
+	darkBlue := color.FgBlue.Render
+
 	switch p {
 	case "Opyn":
-		return color.FgCyan.Render(p)
+		return blue(p)
 	case "Deribit":
-		return color.FgLightGreen.Render(p)
+		return lightGreen(p)
 	case "PsyOptions":
-		return color.FgMagenta.Render(p)
+		return magenta(p)
 	case "Zeta":
-		return color.FgDarkGray.Render(p)
+		return darkGray(p)
 	case "Lyra":
-		return color.FgGreen.Render(p)
+		return darkGreen(p)
 	case "Delta Exchange":
-		return color.FgBlue.Render(p)
+		return darkBlue(p)
 	default:
-		return color.FgLightMagenta.Render(p)
+		return lightMagenta(p)
 	}
 }
