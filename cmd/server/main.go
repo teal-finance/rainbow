@@ -22,12 +22,15 @@ import (
 func main() {
 	parseFlags()
 
+	names := listProviderNames()
+	log.Print("Providers: ", names)
+
 	g := garcon.New(
 		garcon.WithURLs(*mainAddr),
 		garcon.WithDev(*dev))
 
 	// start the service in background
-	providers := provider.AllProviders(*alert, g.ServerName.String())
+	providers := provider.Select(names, *alert, g.ServerName.String())
 	service := rainbow.NewService(providers, dbram.NewDB())
 	go service.Run(*period)
 

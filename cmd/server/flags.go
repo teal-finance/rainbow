@@ -10,15 +10,18 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/garcon/timex"
+	"github.com/teal-finance/rainbow/pkg/provider"
 )
 
 const (
-	defaultAddr = "http://localhost"
-	defaultPort = 8090
+	defaultAddr      = "http://localhost"
+	defaultPort      = 8090
+	defaultProviders = "deribit,delta,lyra,opyn,psy,zeta"
 )
 
 var (
@@ -30,6 +33,10 @@ var (
 	reqPerMinute = flag.Int("rate", envInt("REQ_PER_MINUTE", 88), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	reqBurst     = flag.Int("burst", envInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
 	wwwDir       = flag.String("www", envStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
+	providers    = flag.String("providers", envStr("PROVIDERS", defaultProviders), "Coma-separated list of provider names to enable")
+	cex          = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
+	dex          = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Opyn, PsyOptions and Zeta")
+	exotic       = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
 	alert        = flag.String("alert", envStr("ALERT_URL", ""), "Webhook endpoint to notify anomalies, has precedence over ALERT_URL")
 	form         = flag.String("form", envStr("WEBFORM_URL", ""), "Webhook endpoint to notify filled contact form, has precedence over WEBFORM_URL")
 	aes          = flag.String("aes", envStr("AES128", ""), " 128-bit AES key (32 hex digits) for the session cookies, has precedence over AES128")
@@ -49,18 +56,22 @@ func parseFlags() {
 	}
 
 	garcon.LogVersion()
-	log.Print("Data fetch  -period   = ", timex.DStr(*period))
-	log.Print("Dev. mode      -dev   = ", *dev)
-	log.Print("MAIN_ADDR      -addr  = ", *mainAddr)
-	log.Print("MAIN_PORT      -port  = ", *mainPort)
-	log.Print("EXP_PORT       -exp   = ", *expPort)
-	log.Print("REQ_PER_MINUTE -rate  = ", *reqPerMinute)
-	log.Print("REQ_BURST      -burst = ", *reqBurst)
-	log.Print("WWW_DIR        -www   = ", *wwwDir)
-	log.Print("ALERT_URL      -alert len=", len(*alert))
-	log.Print("WEBFORM_URL    -form  len=", len(*form))
-	log.Print("AES128         -aes   len=", len(*aes), " (need 32 hexadecimal digits)")
-	log.Print("HMAC_SHA256    -hmac  len=", len(*hmac), " (need 64 hexadecimal digits)")
+	log.Print("Data fetch     -period    = ", timex.DStr(*period))
+	log.Print("Dev. mode      -dev       = ", *dev)
+	log.Print("MAIN_ADDR      -addr      = ", *mainAddr)
+	log.Print("MAIN_PORT      -port      = ", *mainPort)
+	log.Print("EXP_PORT       -exp       = ", *expPort)
+	log.Print("REQ_PER_MINUTE -rate      = ", *reqPerMinute)
+	log.Print("REQ_BURST      -burst     = ", *reqBurst)
+	log.Print("WWW_DIR        -www       = ", *wwwDir)
+	log.Print("PROVIDERS      -providers =", *providers)
+	log.Print("Centralized Ex -cex       =", *cex)
+	log.Print("Decentralized  -dex       =", *dex)
+	log.Print("Binary opt. Ex -exotic    =", *exotic)
+	log.Print("ALERT_URL      -alert  len=", len(*alert))
+	log.Print("WEBFORM_URL    -form   len=", len(*form))
+	log.Print("AES128         -aes    len=", len(*aes), " (need 32 hexadecimal digits)")
+	log.Print("HMAC_SHA256    -hmac   len=", len(*hmac), " (need 64 hexadecimal digits)")
 
 	// mandatory: -aes or -hmac
 	if *aes == "" && *hmac == "" {
@@ -75,6 +86,46 @@ func parseFlags() {
 	if len(*aes) > 0 && len(*hmac) > 0 {
 		log.Print("WRN: Should use -aes or -hmac, not both in the same time")
 	}
+}
+
+func listProviderNames() []string {
+	if *cex || *dex || *exotic {
+		if *providers == defaultProviders {
+			*providers = ""
+		}
+		if *cex {
+			*providers = "deribit,delta"
+		}
+		if *dex {
+			*providers += ",lyra,opyn,psy,zeta"
+		}
+		if *exotic {
+			*providers += ",thales"
+		}
+	}
+
+	raw := strings.Split(*providers, ",")
+	supported := provider.Names()
+	duplicated := make([]string, 0, len(raw))
+	for _, r := range raw {
+		r = strings.ToLower(r)
+		for _, name := range supported {
+			if len(r) <= len(name) && r == strings.ToLower(name[:len(r)]) {
+				duplicated = append(duplicated, name)
+			}
+		}
+	}
+
+	unique := make(map[string]struct{}, len(duplicated))
+	result := make([]string, 0, len(duplicated))
+	for _, name := range duplicated {
+		if _, ok := unique[name]; !ok {
+			unique[name] = struct{}{}
+			result = append(result, name)
+		}
+	}
+
+	return result
 }
 
 // envStr looks up the given key from the environment,

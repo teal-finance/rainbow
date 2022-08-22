@@ -28,8 +28,8 @@ const (
 	useLoggerNotifier = true
 )
 
-// AllProvidersNoAlerter returns all active providers without alerter.
-func AllProvidersNoAlerter() []rainbow.Provider {
+// AllProviders returns all supported providers.
+func AllProviders() []rainbow.Provider {
 	return []rainbow.Provider{
 		psyoptions.Provider{},    // separate psy and zeta to not
 		&deribit.Provider{},      //                  |
@@ -41,11 +41,50 @@ func AllProvidersNoAlerter() []rainbow.Provider {
 	}
 }
 
-// AllProvidersWithAlert returns all active providers with an alerter on anomalies.
+// Names lists the names of all supported providers.
+func Names() []string {
+	providers := AllProviders()
+	names := make([]string, 0, len(providers))
+	for _, p := range providers {
+		names = append(names, p.Name())
+	}
+	return names
+}
+
+func selectProviders(names []string) []rainbow.Provider {
+	selected := make([]rainbow.Provider, 0, len(names))
+	for _, n := range names {
+		for _, p := range AllProviders() {
+			if n == p.Name() {
+				selected = append(selected, p)
+			}
+		}
+	}
+	return selected
+}
+
+// Select returns all active providers with or without alerter
+// depending on endpoint emptiness and on onlyMattermost.
+func Select(names []string, endpoint, namespace string) []rainbow.Provider {
+	var n notifier.Notifier
+	if endpoint != "" {
+		n = mattermost.NewNotifier(endpoint)
+	} else if useLoggerNotifier {
+		n = logger.NewNotifier()
+	}
+
+	providers := selectProviders(names)
+
+	if n == nil {
+		return providers
+	}
+	return AddAlert(providers, n, namespace)
+}
+
+// AddAlert returns the providers with an alerter on anomalies.
 // Do not panic if alerter endpoint is not reachable.
-func AllProvidersWithAlert(n notifier.Notifier, namespace string) []rainbow.Provider {
+func AddAlert(providers []rainbow.Provider, n notifier.Notifier, namespace string) []rainbow.Provider {
 	list := ""
-	providers := AllProvidersNoAlerter()
 	for i, p := range providers {
 		list += "\n" + "1. " + p.Name()
 		providers[i] = newAlerter(namespace, p, n)
@@ -57,22 +96,6 @@ func AllProvidersWithAlert(n notifier.Notifier, namespace string) []rainbow.Prov
 	}
 
 	return providers
-}
-
-// AllProviders returns all active providers with or without alerter
-// depending on endpoint emptiness and on onlyMattermost.
-func AllProviders(endpoint, namespace string) []rainbow.Provider {
-	var n notifier.Notifier
-	if endpoint != "" {
-		n = mattermost.NewNotifier(endpoint)
-	} else if useLoggerNotifier {
-		n = logger.NewNotifier()
-	}
-
-	if n == nil {
-		return AllProvidersNoAlerter()
-	}
-	return AllProvidersWithAlert(n, namespace)
 }
 
 // notifyStartup is called only once to notify when Rainbow is started.
