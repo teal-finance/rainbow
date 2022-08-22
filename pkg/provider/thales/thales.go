@@ -53,40 +53,44 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	markets1, err1 := QueryAllMarkets(LayerURL("Optimism"))
-	markets2, err2 := QueryAllMarkets(LayerURL("Polygon"))
-
-	options := make([]rainbow.Option, 0, 2*len(markets1)+2*len(markets2))
-	if err1 != nil {
-		err1 = ProcessMarkets(options, markets1, "Optimism")
+	marketsOptimism, err := QueryAllMarkets(LayerURL("Optimism"))
+	if err != nil {
+		return nil, err
 	}
-	if err2 != nil {
-		err2 = ProcessMarkets(options, markets2, "Polygon")
+	marketsPolygon, err := QueryAllMarkets(LayerURL("Polygon"))
+	if err != nil {
+		return nil, err
 	}
 
-	if err1 != nil {
-		err2 = err1 // return err1 if any, else err2
+	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon))
+	err = ProcessMarkets(&options, marketsOptimism, "Optimism")
+	if err != nil {
+		return nil, err
+	}
+	err = ProcessMarkets(&options, marketsPolygon, "Polygon")
+
+	if err != nil {
+		return nil, err
 	}
 
-	return options, err2
+	return options, err
 }
 
-func ProcessMarkets(options []rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
+func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
 	spew.Dump(len(markets))
-
 	for i := range markets {
 		// HOTFIX for bug on Polygon
 		// 3 markets for BTC with very low strike
 		// TODO properly understand this "ERR: execution reverted: uint overflow from multiplication"
 		// remove annoying market
-		if markets[i].Id == "0xa0692fa1040200ac4e4818b460055753855fd623" ||
+		/*if markets[i].Id == "0xa0692fa1040200ac4e4818b460055753855fd623" ||
 			markets[i].Id == "0x419bf5bfaf543c1a6d9db5fbd8da8fe24a05c31c" ||
 			markets[i].Id == "0x08baf8b8791bb39c4f677eb4b2023665f0a46df8" ||
 			markets[i].Id == "0x5a14ad0a5b9108a8c557fa68cab4c2f44005f6ac" ||
 			markets[i].Id == "0xbef5d8d4e8f0e86b7c24b1b6f224020c55b65af1" ||
 			markets[i].Id == "0xd0792be5111fd1ac4da4da106db53a82d967a41b" {
 			continue
-		}
+		}*/
 		up, err := getOption(&markets[i], UP, layer)
 		if err != nil {
 			log.Print("ERR #", i, " getOption: ", markets[i].Id, " UP: ", err)
@@ -99,12 +103,11 @@ func ProcessMarkets(options []rainbow.Option, markets []thales.AllMarketsMarkets
 			spew.Dump(markets[i])
 			return err
 		}
-		options = append(options, up, down)
+		*options = append(*options, up, down)
 		if i%10 == 0 {
 			time.Sleep(1 * time.Second)
 		}
 	}
-	spew.Dump(len(options))
 	return nil
 }
 
@@ -163,7 +166,6 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		Price: sell,
 		Size:  float64(amount),
 	})
-
 	binary.Ask = append(binary.Ask, rainbow.Order{
 		Price: buy,
 		Size:  float64(amount),
