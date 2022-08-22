@@ -23,11 +23,6 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const (
-	// useLoggerNotifier when no Mattermost endpoint.
-	useLoggerNotifier = true
-)
-
 // AllProviders returns all supported providers.
 func AllProviders() []rainbow.Provider {
 	return []rainbow.Provider{
@@ -65,12 +60,18 @@ func selectProviders(names []string) []rainbow.Provider {
 
 // Select returns all active providers with or without alerter
 // depending on endpoint emptiness and on onlyMattermost.
-func Select(names []string, endpoint, namespace string) []rainbow.Provider {
+func Select(names []string, alerterOptions ...string) []rainbow.Provider {
 	var n notifier.Notifier
-	if endpoint != "" {
-		n = mattermost.NewNotifier(endpoint)
-	} else if useLoggerNotifier {
-		n = logger.NewNotifier()
+	var namespace string
+
+	if len(alerterOptions) > 0 {
+		namespace = alerterOptions[0]
+		if len(alerterOptions) > 1 && alerterOptions[1] != "" {
+			endpoint := alerterOptions[1]
+			n = mattermost.NewNotifier(endpoint)
+		} else {
+			n = logger.NewNotifier()
+		}
 	}
 
 	providers := selectProviders(names)
