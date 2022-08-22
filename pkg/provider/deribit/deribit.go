@@ -27,6 +27,17 @@ func (Provider) Name() string {
 	return "Deribit"
 }
 
+// adaptiveMinSleepTime is to limit the request rate to the Deribit API.
+const adaptiveMinSleepTime = 1 * time.Millisecond
+
+// https://www.deribit.com/kb/deribit-rate-limits
+// "Each sub-account has a rate limit of 100 in a burst or 20 requests per second".
+func sleep(i int) {
+	if i%50 == 0 {
+		time.Sleep(1 * time.Second)
+	}
+}
+
 // Hour at which the options expires = 8:00 UTC.
 const Hour = 8
 
@@ -35,7 +46,7 @@ const maxBytesToRead = 2_000_000
 
 func (p *Provider) Options() ([]rainbow.Option, error) {
 	if p.ar.Name == "" {
-		p.ar = NewAdaptiveRate("Deribit", theoreticalMinSleepTime)
+		p.ar = NewAdaptiveRate("Deribit", adaptiveMinSleepTime)
 	}
 
 	instruments, err := p.query("BTC")
@@ -148,7 +159,6 @@ func isStrikeAvailable(i *instrument) bool {
 	}
 
 	return i.Strike >= strikes[0] && i.Strike <= strikes[1]
-
 }
 
 func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbow.Option, error) {
@@ -197,11 +207,7 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 			Ask:           asks,
 		})
 
-		//https://www.deribit.com/kb/deribit-rate-limits
-		// "Each sub-account has a rate limit of 100 in a burst or 20 requests per second"
-		if i%50 == 0 {
-			time.Sleep(1 * time.Second)
-		}
+		sleep(i) // rate limit the Deribit API
 	}
 
 	if len(options) == 0 {
@@ -289,9 +295,6 @@ func NewAdaptiveRate(name string, d time.Duration) AdaptiveRate {
 	return ar
 }
 
-// theoreticalMinSleepTime is to limit the request rate to the Deribit API.
-const theoreticalMinSleepTime = 1 * time.Millisecond
-
 const (
 	factorInitialNextSleep  = 2
 	factorIncreaseMinSleep  = 32  // higher, the change is slower
@@ -299,6 +302,7 @@ const (
 	factorIncreaseNextSleep = 2   // higher, the change is faster
 	factorDecreaseNextSleep = 8   // higher, the change is slower
 	maxAlpha                = 16
+	printDebug              = false
 )
 
 func (ar *AdaptiveRate) adjust(d time.Duration) {
@@ -311,8 +315,7 @@ func (ar *AdaptiveRate) adjust(d time.Duration) {
 		prevMin := ar.MinSleep
 		ar.NextSleep = (ar.NextSleep + fin*d) / factorIncreaseNextSleep
 		ar.MinSleep = (d + fim*ar.MinSleep) / factorIncreaseMinSleep
-		log.Printf("DBG %s Increase MinSleep=%s (+%s) next=%s (+%s)",
-			ar.Name, ar.MinSleep, ar.MinSleep-prevMin, ar.NextSleep, ar.NextSleep-prevNext)
+		ar.logIncrease(prevMin, prevNext)
 		return
 	}
 
@@ -324,17 +327,11 @@ func (ar *AdaptiveRate) adjust(d time.Duration) {
 	// try to reduce slowly the "min sleep time"
 	if reduce := ar.MinSleep / factorDecreaseMinSleep; gap < reduce {
 		ar.MinSleep -= reduce
-		log.Printf("DBG %s Decrease MinSleep=%s (-%s) next=%s",
-			ar.Name, ar.MinSleep, reduce, ar.NextSleep)
+		ar.logDecrease(reduce)
 	}
 }
 
-func (ar *AdaptiveRate) LogStats() {
-	log.Printf("INF %s Adjusted sleep durations: min=%s next=%s",
-		ar.Name, ar.MinSleep, ar.NextSleep)
-}
-
-func (ar *AdaptiveRate) Get(name, url string, msg any, maxBytes ...int) error {
+func (ar *AdaptiveRate) Get(symbol, url string, msg any, maxBytes ...int) error {
 	var err error
 	d := ar.NextSleep
 	for try, status := 1, http.StatusTooManyRequests; (try < 88) && (status == http.StatusTooManyRequests); try++ {
@@ -343,11 +340,11 @@ func (ar *AdaptiveRate) Get(name, url string, msg any, maxBytes ...int) error {
 			alpha := int64(maxAlpha * ar.MinSleep / d)
 			d *= time.Duration(try)
 			d += time.Duration(alpha) * ar.MinSleep
-			log.Printf("INF %s Get #%d sleep=%s (+%s) alpha=%d n=%s min=%s",
-				name, try, d, d-previous, alpha, ar.NextSleep, ar.MinSleep)
+			log.Printf("INF %s Get %s #%d sleep=%s (+%s) alpha=%d n=%s min=%s",
+				ar.Name, symbol, try, d, d-previous, alpha, ar.NextSleep, ar.MinSleep)
 		}
 		time.Sleep(d)
-		status, err = ar.get(name, url, msg, maxBytes...)
+		status, err = ar.get(symbol, url, msg, maxBytes...)
 	}
 
 	ar.adjust(d)
@@ -371,4 +368,23 @@ func (ar *AdaptiveRate) get(symbol, url string, msg any, maxBytes ...int) (int, 
 	}
 
 	return resp.StatusCode, nil
+}
+
+func (ar *AdaptiveRate) LogStats() {
+	log.Printf("INF %s Adjusted sleep durations: min=%s next=%s",
+		ar.Name, ar.MinSleep, ar.NextSleep)
+}
+
+func (ar *AdaptiveRate) logIncrease(prevMin, prevNext time.Duration) {
+	if printDebug {
+		log.Printf("DBG %s Increase MinSleep=%s (+%s) next=%s (+%s)",
+			ar.Name, ar.MinSleep, ar.MinSleep-prevMin, ar.NextSleep, ar.NextSleep-prevNext)
+	}
+}
+
+func (ar *AdaptiveRate) logDecrease(reduce time.Duration) {
+	if printDebug {
+		log.Printf("DBG %s Decrease MinSleep=%s (-%s) next=%s",
+			ar.Name, ar.MinSleep, reduce, ar.NextSleep)
+	}
 }
