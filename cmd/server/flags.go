@@ -82,7 +82,7 @@ func parseFlags() {
 		}
 	}
 	if len(*aes) > 0 && len(*hmac) > 0 {
-		log.Print("WRN: Should use -aes or -hmac, not both in the same time")
+		log.Print("WRN Should use -aes or -hmac, not both in the same time")
 	}
 }
 

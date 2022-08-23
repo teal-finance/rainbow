@@ -119,11 +119,11 @@ func main() {
 		var t int64 = 1654041600 //01-JUN-2022
 		response, err := thales.Markets(context.TODO(), graphqlClient, 0, 0, t)
 		if err != nil {
-			log.Print("ERR: ", err)
+			log.Print("ERR ", err)
 		}
 
 		if resp == nil {
-			log.Print("ERR: resp=nil")
+			log.Print("ERR resp=nil")
 			return
 		}
 		spew.Dump(len(response.Markets))
