@@ -12,7 +12,7 @@
           <div class="inline-block mx-3">
             <img
               alt="logo representing a pixelized cloud over a rainbow"
-              :src="`@/assets/${logoName}-transparent.png`"
+              :src="@/assets/`${logoName}-transparent.png`"
               height="68" width="68"
             />
           </div>
@@ -30,7 +30,7 @@
         <img
           v-else
           alt="logo representing a pixelized cloud over a rainbow"
-          :src="`@/assets/${logoName}-transparent.png`"
+          :src="@/assets/`${logoName}-transparent.png`"
           height="68"
           width="68"
           class="ml-3"
