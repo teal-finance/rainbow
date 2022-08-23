@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/options",
+    path: "/classic",
     component: () => import("./views/OptionsView.vue"),
     meta: {
       title: "Classic Options"

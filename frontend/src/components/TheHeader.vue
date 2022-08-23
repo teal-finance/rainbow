@@ -7,7 +7,7 @@
       <template #branding>
         <div
           class="flex flex-row items-center ml-5 text-lg cursor-pointer"
-          @click="$router.push('/')"
+          @click="$router.push(titleLink)"
         >
           <div class="inline-block mx-3">
             <img
@@ -35,7 +35,7 @@
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
-          <button class="border-none btn" @click="exoticClassicURL()">{{ linkText }}</button>
+          <button class="border-none btn" @click="$router.push(linkURL)">{{ linkText }}</button>
           <button class="border-none btn" @click="$router.push('/about')">About</button>
           <button class="border-none btn" @click="openSourceCode()">
             Source code
@@ -118,24 +118,6 @@ export default defineComponent({
       window.location.href = 'https://github.com/teal-finance/rainbow'
     }
 
-    // à l'ancienne:
-    function exoticClassicURL() {
-      const exotic_url = import.meta.env.BASE_URL + 'exotic'
-      const options_url = import.meta.env.BASE_URL + 'options'
-      let href = exotic_url
-      if (window) {
-        if ("location" in window) {
-          if ("pathname" in window.location) {
-            if (window.location.pathname == exotic_url) {
-                href = options_url
-            }
-          }
-        }
-      }
-      location.href = href
-    }
-
-    // moderne:
     const logoURL = computed<string>(() => {
       const logo = import.meta.env.BASE_URL + "img/logo-transparent.png"
       const exotic = import.meta.env.BASE_URL + "img/exotic-transparent.png"
@@ -146,11 +128,15 @@ export default defineComponent({
       return router.currentRoute.value.path.startsWith("/exotic") ? "Exotic" : "Rainbow"
     })
 
+    const titleLink = computed<"/exotic"|"/">(() => {
+      return router.currentRoute.value.path.startsWith("/exotic") ? "/exotic" : "/"
+    })
+
     const linkText = computed<"Exotic"|"Classic">(() => {
       if (router.currentRoute.value.path.startsWith("/exotic")) {
         return "Classic"
       }
-      if (router.currentRoute.value.path.startsWith("/options")) {
+      if (router.currentRoute.value.path.startsWith("/classic")) {
         return "Exotic"
       }
       if (router.currentRoute.value.path === "/") {
@@ -159,6 +145,9 @@ export default defineComponent({
       return ""
     })
 
+    const linkURL = computed<"Exotic"|"Classic">(() => {
+      return router.currentRoute.value.path.startsWith("/exotic") ? "/classic" : "/exotic"
+    })
 
     return {
       isMenuVisible,
@@ -168,10 +157,11 @@ export default defineComponent({
       openView,
       mobilePageTitle,
       openSourceCode,
-      exoticClassicURL,
       logoURL,
       titleText,
-      linkText
+      titleLink,
+      linkText,
+      linkURL
     }
   }
 });
