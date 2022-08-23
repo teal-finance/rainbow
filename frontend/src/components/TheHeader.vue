@@ -12,13 +12,12 @@
           <div class="inline-block mx-3">
             <img
               alt="logo representing a pixelized cloud over a rainbow"
-              :src="`/img/${logoName}-transparent.png`"
-              height="68" width="68"
+              :src="`${logoURL}`" height="68" width="68"
             />
           </div>
           <div class="inline-block text-xl tracking-widest">
             <!-- img alt="Rainbow" src="./assets/rainbow-chancery.png" height="49" width="185" / -->
-            Rainbow ou Exotic
+            {{ titleText }}
           </div>
         </div>
       </template>
@@ -30,16 +29,13 @@
         <img
           v-else
           alt="logo representing a pixelized cloud over a rainbow"
-          :src="`/img/${logoName}-transparent.png`"
-          height="68"
-          width="68"
-          class="ml-3"
+          :src="`${logoURL}`" height="68" width="68" class="ml-3"
         />
       </template>
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
-          <button class="border-none btn" @click="exoticClassicURL()">Classic ou Exotic</button>
+          <button class="border-none btn" @click="exoticClassicURL()">{{ linkText }}</button>
           <button class="border-none btn" @click="$router.push('/about')">About</button>
           <button class="border-none btn" @click="openSourceCode()">
             Source code
@@ -140,9 +136,27 @@ export default defineComponent({
     }
 
     // moderne:
-    const logoName = computed<"exotic"|"logo">(() => {
-      console.log("router.currentRoute.value.path=", router.currentRoute.value.path)
-      return router.currentRoute.value.path.startsWith("/exotic") ? "exotic" : "logo"
+    const logoURL = computed<string>(() => {
+      const logo = import.meta.env.BASE_URL + "img/logo-transparent.png"
+      const exotic = import.meta.env.BASE_URL + "img/exotic-transparent.png"
+      return router.currentRoute.value.path.startsWith("/exotic") ? exotic : logo
+    })
+
+    const titleText = computed<"Exotic"|"Rainbow">(() => {
+      return router.currentRoute.value.path.startsWith("/exotic") ? "Exotic" : "Rainbow"
+    })
+
+    const linkText = computed<"Exotic"|"Classic">(() => {
+      if (router.currentRoute.value.path.startsWith("/exotic")) {
+        return "Classic"
+      }
+      if (router.currentRoute.value.path.startsWith("/options")) {
+        return "Exotic"
+      }
+      if (router.currentRoute.value.path === "/") {
+        return "Exotic"
+      }
+      return ""
     })
 
 
@@ -155,7 +169,9 @@ export default defineComponent({
       mobilePageTitle,
       openSourceCode,
       exoticClassicURL,
-      logoName
+      logoURL,
+      titleText,
+      linkText
     }
   }
 });
