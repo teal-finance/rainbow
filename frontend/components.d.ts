@@ -4,6 +4,8 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    ExoticDatatable: typeof import('./src/components/ExoticDatatable.vue')['default']
+    ExoticHeader: typeof import('./src/components/widgets/ExoticHeader.vue')['default']
     ExtraHeader: typeof import('./src/components/widgets/ExtraHeader.vue')['default']
     IAkarIconsArrowRight: typeof import('~icons/akar-icons/arrow-right')['default']
     IAkarIconsGithubFill: typeof import('~icons/akar-icons/github-fill')['default']
