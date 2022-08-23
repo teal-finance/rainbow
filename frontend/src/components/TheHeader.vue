@@ -10,8 +10,7 @@
           @click="$router.push('/')"
         >
           <div class="inline-block mx-3">
-            <img alt="logo" src="@/assets/logo-transparent.png" height="68" width="68" />
-            <img alt="logo" src="@/assets/exotic-transparent.png" height="68" width="68" />
+            <img alt="logo representing a pixelized cloud over a rainbow" src="@/assets/${logoName}-transparent.png" height="68" width="68" />
           </div>
           <div class="inline-block text-xl tracking-widest">
             <!-- img alt="Rainbow" src="./assets/rainbow-chancery.png" height="49" width="185" / -->
@@ -26,8 +25,8 @@
         <i-ion-arrow-back-outline v-if="!isHome" class="inline-flex ml-2 text-3xl"></i-ion-arrow-back-outline>
         <img
           v-else
-          alt="logo"
-          src="@/assets/logo-transparent.png"
+          alt="logo representing a pixelized cloud over a rainbow"
+          src="@/assets/${logoName}-transparent.png"
           height="68"
           width="68"
           class="ml-3"
@@ -36,7 +35,7 @@
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
-          <button class="border-none btn" @click="exotic()">Classic ou Exotic</button>
+          <button class="border-none btn" @click="exoticClassicURL()">Classic ou Exotic</button>
           <button class="border-none btn" @click="$router.push('/about')">About</button>
           <button class="border-none btn" @click="openSourceCode()">
             Source code
@@ -119,17 +118,14 @@ export default defineComponent({
       window.location.href = 'https://github.com/teal-finance/rainbow'
     }
 
-    function exotic(){
+    // à l'ancienne:
+    function exoticClassicURL() {
       const exotic_url = import.meta.env.BASE_URL + 'exotic'
       const options_url = import.meta.env.BASE_URL + 'options'
-      console.log("window = ", window)
       let href = exotic_url
       if (window) {
-        console.log("window = ", window)
         if ("location" in window) {
-          console.log("window.location = ", window.location)
           if ("pathname" in window.location) {
-            console.log("window.location.pathname = ", window.location.pathname)
             if (window.location.pathname == exotic_url) {
                 href = options_url
             }
@@ -139,6 +135,13 @@ export default defineComponent({
       location.href = href
     }
 
+    // moderne:
+    const logoName = computed<"exotic"|"logo">(() => {
+      console.log("router.currentRoute.value.path=", router.currentRoute.value.path)
+      return router.currentRoute.value.path.startsWith("/exotic") ? "exotic" : "logo"
+    })
+
+
     return {
       isMenuVisible,
       closeMenu,
@@ -147,7 +150,8 @@ export default defineComponent({
       openView,
       mobilePageTitle,
       openSourceCode,
-      exotic,
+      exoticClassicURL,
+      logoName
     }
   }
 });
