@@ -40,7 +40,7 @@ func (s *Service) FetchOptionsFromProviders() {
 	for _, p := range s.providers {
 		o, err := p.Options()
 		if err != nil {
-			log.Print("ERR " + p.Name() + ": " + err.Error())
+			log.Print("ERR " + p.Name() + " " + err.Error())
 			continue
 		}
 
@@ -48,7 +48,7 @@ func (s *Service) FetchOptionsFromProviders() {
 
 		err = s.store.InsertOptions(o)
 		if err != nil {
-			log.Print("ERR " + p.Name() + ": cannot store data: " + err.Error())
+			log.Print("ERR " + p.Name() + " cannot store data: " + err.Error())
 			continue
 		}
 	}

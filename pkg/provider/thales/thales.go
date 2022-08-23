@@ -81,7 +81,7 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 	for i := range markets {
 		// HOTFIX for bug on Polygon
 		// 3 markets for BTC with very low strike
-		// TODO properly understand this "ERR: execution reverted: uint overflow from multiplication"
+		// TODO properly understand this "ERR execution reverted: uint overflow from multiplication"
 		// remove annoying market
 		/*if markets[i].Id == "0xa0692fa1040200ac4e4818b460055753855fd623" ||
 			markets[i].Id == "0x419bf5bfaf543c1a6d9db5fbd8da8fe24a05c31c" ||

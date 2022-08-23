@@ -7,6 +7,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"os"
 
@@ -20,7 +21,12 @@ import (
 )
 
 func main() {
-	service := rainbow.NewService(provider.AllProviders(), dbram.NewDB())
+	parseFlags()
+
+	names := listProviderNames()
+	log.Print("Providers: ", names)
+
+	service := rainbow.NewService(provider.Select(names), dbram.NewDB())
 	service.FetchOptionsFromProviders()
 
 	options, err := service.Options(rainbow.StoreArgs{})

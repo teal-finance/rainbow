@@ -30,7 +30,7 @@ func main() {
 		garcon.WithDev(*dev))
 
 	// start the service in background
-	providers := provider.Select(names, *alert, g.ServerName.String())
+	providers := provider.Select(names, g.ServerName.String(), *alert)
 	service := rainbow.NewService(providers, dbram.NewDB())
 	go service.Run(*period)
 
