@@ -64,10 +64,10 @@ func main() {
 	router.With(ck.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
 	router.With(ck.Chk).Get("/assets/*", ws.ServeAssets())
 	router.With(ck.Chk).Get("/version", garcon.ServeVersion())
-	// do not protect favicon and preview.jpg
+	// do not protect favicon and other public images
 	router.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
 	router.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))
-	router.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
+	router.Get("/img/*", ws.ServeImages())
 
 	// Disable the contact-form endpoint until we protect it against DoS
 	if false {
