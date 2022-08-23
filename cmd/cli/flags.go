@@ -21,7 +21,7 @@ var (
 	cex       = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
 	dex       = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Opyn, PsyOptions and Zeta")
 	exotic    = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
-	providers = flag.String("providers", garcon.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of provider names to enable")
+	providers = flag.String("providers", garcon.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, same as the PROVIDERS env. var.")
 )
 
 func parseFlags() {

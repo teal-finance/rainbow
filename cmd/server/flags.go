@@ -28,7 +28,7 @@ var (
 	cex          = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
 	dex          = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Opyn, PsyOptions and Zeta")
 	exotic       = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
-	providers    = flag.String("providers", garcon.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of provider names to enable")
+	providers    = flag.String("providers", garcon.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, has precedence over PROVIDERS")
 	mainAddr     = flag.String("addr", garcon.EnvStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
 	mainPort     = flag.Int("port", garcon.EnvInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
 	expPort      = flag.Int("exp", garcon.EnvInt("EXP_PORT"), "Export port for Prometheus, has precedence over EXP_PORT")
