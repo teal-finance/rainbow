@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/Khan/genqlient v0.5.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/ethereum/go-ethereum v1.10.21
+	github.com/ethereum/go-ethereum v1.10.22
 	github.com/friendsofgo/graphiql v0.2.2
 	github.com/gagliardetto/binary v0.6.1
 	github.com/gagliardetto/gofuzz v1.2.2
@@ -16,14 +16,14 @@ require (
 	github.com/gookit/color v1.5.1
 	github.com/graphql-go/graphql v0.8.0
 	github.com/graphql-go/handler v0.2.3
-	github.com/jedib0t/go-pretty/v6 v6.3.6
+	github.com/jedib0t/go-pretty/v6 v6.3.7
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/segmentio/golines v0.11.0
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1-0.20220502224452-432fbe84aee8
 	github.com/stretchr/testify v1.8.0
-	github.com/teal-finance/garcon v0.23.8
+	github.com/teal-finance/garcon v0.24.0
 	github.com/teal-finance/notifier v1.1.1
 	mvdan.cc/gofumpt v0.3.1
 )
@@ -129,7 +129,7 @@ require (
 	go.uber.org/zap v1.22.0 // indirect
 	golang.org/x/crypto v0.0.0-20220817201139-bc19a97f63c8 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.0.0-20220812174116-3211cb980234 // indirect
+	golang.org/x/net v0.0.0-20220822230855-b0a4917ee28c // indirect
 	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde // indirect
 	golang.org/x/sys v0.0.0-20220818161305-2296e01440c6 // indirect
 	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
