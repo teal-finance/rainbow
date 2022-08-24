@@ -6,8 +6,10 @@
 package lyra
 
 import (
+	"fmt"
 	"log"
 	"math/big"
+	"strings"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -143,6 +145,8 @@ func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asse
 	call.Name = call.OptionName()
 	put.Name = put.OptionName()
 
+	call.URL = url(call)
+	put.URL = url(put)
 	options = append(options, call, put)
 	return options
 }
@@ -163,6 +167,16 @@ func Asset(address common.Address) string {
 		log.Print("WRN Lyra Unknown token: ", address.String())
 		return "LLLL"
 	}
+}
+
+// TODO check function on their frontend
+func url(o rainbow.Option) string {
+	base := "https://app.lyra.finance/trade"
+	asset := strings.ToLower(o.Asset[1:])
+	strike := fmt.Sprintf("%f", o.Strike)
+	t := strings.ToLower(o.Type)
+
+	return base + "/" + asset + "/" + strike + "/" + t
 }
 
 /*

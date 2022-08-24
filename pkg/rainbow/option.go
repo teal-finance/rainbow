@@ -18,6 +18,7 @@ type Option struct {
 	LayerName     string  `json:"layername"` // name of the layer 1/2. "-" for CEX
 	Provider      string  `json:"provider"`  // Opyn, Lyra, Thales, Deribit, Psyoptions
 	QuoteCurrency string  `json:"currency"`  // ETH, BTC, USDT...
+	URL           string  `json:"url"`       // link to market @ provider.
 	Bid           []Order `json:"bid"`
 	Ask           []Order `json:"ask"`
 	Strike        float64 `json:"strike"`
