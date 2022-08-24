@@ -6,12 +6,21 @@
 package lyra
 
 import (
+	"log"
+	"math/big"
+
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/spewerspew/spew"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 const (
-	optimismrpc = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
-	name        = "Lyra"
+	optimismrpc        = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
+	name               = "Lyra"
+	lyraRegistry       = "0xF5A0442D4753cA1Ea36427ec071aa5E786dA5916"
+	optionMarketViewer = "0xEAf788AD8abd9C98bA05F6802a62B8DbC673D76B"
 )
 
 type Provider struct{}
@@ -23,15 +32,51 @@ func (Provider) Name() string {
 func (Provider) Options() ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 
-	/*client, err := ethclient.Dial(optimismrpc)
+	client, err := ethclient.Dial(optimismrpc)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	sum := 0
+	address := common.HexToAddress(lyraRegistry)
+	log.Print(address)
+	registry, err := NewLyrar(address, client)
+	if err != nil {
+		log.Print("ERR: ", err)
+		return options, err
+	}
 
-	for i := 0; i < len(OptionMarkets); i++ {
-		market, err := NewLyra(common.HexToAddress(OptionMarkets[i]), client)
+	// DO NOT use make() here!
+	// we don't want to have 0x00...0 initialize here.
+	// and we don't know how many market there will be.
+	markets := []common.Address{}
+	spew.Dump(markets)
+	var i int64
+	var market common.Address
+	err = nil
+	for ; err == nil; i++ {
+		market, err = registry.OptionMarkets(&bind.CallOpts{}, big.NewInt(i))
+		if err == nil {
+			markets = append(markets, market)
+			log.Println(market, err)
+
+		} else {
+			log.Println("escaped ERR:", err)
+		}
+	}
+	spew.Dump(markets)
+	if len(markets) == 0 {
+		log.Print("ERR: registry.OptionMarkets return empty array")
+	}
+
+	sum := 0
+	viewer, err := NewLyrap(common.HexToAddress(optionMarketViewer), client)
+	if err != nil {
+		log.Print("ERR: ", err)
+		return options, err
+	}
+
+	for i := 0; i < len(markets); i++ {
+		/*market, err := NewLyra(common.HexToAddress(OptionMarkets[i]), client)
 		if err != nil {
 			return nil, err
 		}
@@ -39,43 +84,33 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		viewer, err := NewLyrap(common.HexToAddress(OptionMarketViewers[i]), client)
 		if err != nil {
 			return nil, err
-		}
+		}*/
 
-		boards, err := market.GetLiveBoards(&bind.CallOpts{})
+		boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, markets[i])
 		if err != nil {
+			log.Print("ERR: GetLiveBoards ", err)
+
 			return nil, err
 		}
 
-		for _, j := range boards {
-			boardListings, err := market.GetBoardListings(&bind.CallOpts{}, j)
-			if err != nil {
-				return nil, err
-			}
+		for _, b := range boards {
 
-			sum += len(boardListings)
+			sum += len(b.Strikes)
 
-			for _, k := range boardListings {
-				vlist, err := viewer.GetListingView(&bind.CallOpts{}, k)
-				if err != nil {
-					return nil, err
-				}
-
-				amount := 1
-
-				ammOrder, err := viewer.getBidsAsks(k, amount)
-				if err != nil {
-					return nil, err
-				}
-
-				callPut := processOption(&vlist, ammOrder, amount, Assets[i])
+			for _, s := range b.Strikes {
+				callPut := process(s)
 				options = append(options, callPut...)
 			}
 		}
 	}
 
 	log.Print("INF Lyra total markets ", sum)
-	*/
+
 	return options, nil
+}
+func process(s OptionMarketViewerStrikeView) []rainbow.Option {
+
+	return nil
 }
 
 /*
