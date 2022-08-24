@@ -117,6 +117,7 @@ func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asse
 		ExchangeType:  "DEX",
 		Chain:         "Ethereum",
 		Layer:         "L2",
+		LayerName:     "Optimism",
 		Provider:      name,
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
@@ -131,11 +132,12 @@ func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asse
 		ExchangeType:  "DEX",
 		Chain:         "Ethereum",
 		Layer:         "L2",
+		LayerName:     "Optimism",
 		Provider:      name,
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
-		Strike:        rainbow.ToFloat(s.StrikeId, rainbow.DefaultEthereumDecimals),
+		Strike:        rainbow.ToFloat(s.StrikePrice, rainbow.DefaultEthereumDecimals),
 	}
 
 	call.Name = call.OptionName()
