@@ -7,7 +7,6 @@ package main
 
 import (
 	"flag"
-	"log"
 
 	"github.com/teal-finance/garcon"
 )
@@ -20,6 +19,12 @@ var (
 		"The JWT environment variable can also be used.")
 	hmac = flag.String("hmac", garcon.EnvStr("HMAC_SHA256"), "HMAC-SHA256 key (64 hex digits) to generate JWT tokens. "+
 		"The HMAC_SHA256 environment variable can also be used.")
+	ns = flag.String("ns", garcon.EnvStr("JWT_NS", "FreePlan"), "Namespace to set when generating a new JWT "+
+		"from the HMAC-SHA256 key provided by the -hmac flag. "+
+		"The JWT_NS environment variable can also be used.")
+	user = flag.String("user", garcon.EnvStr("JWT_USER", "client"), "User name to set when generating a new JWT "+
+		"from the HMAC-SHA256 key provided by the -hmac flag. "+
+		"The JWT_USER environment variable can also be used.")
 )
 
 func parseFlags() {
@@ -34,9 +39,11 @@ func parseFlags() {
 	}
 
 	garcon.LogVersion()
-	log.Print("-btc    = ", *btc)
-	log.Print("-eth    = ", *eth)
-	log.Print("-asset  = ", *asset)
-	log.Print("-jwt  len=", len(*jwt))
-	log.Print("-hmac len=", len(*hmac), " (need 64 hexadecimal digits) env. var. HMAC_SHA256")
+	log.Param("-btc    = ", *btc)
+	log.Param("-eth    = ", *eth)
+	log.Param("-asset  = ", *asset)
+	log.Param("-ns     = ", *user, " (env. var. JWT_NS)")
+	log.Param("-user   = ", *user, " (env. var. JWT_USER)")
+	log.Param("-jwt  len=", len(*jwt))
+	log.Param("-hmac len=", len(*hmac), " (need 64 hexadecimal digits) env. var. HMAC_SHA256")
 }
