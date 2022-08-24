@@ -20,6 +20,7 @@ import (
 var log = emo.NewZone("client")
 
 func main() {
+	garcon.LogVersion()
 	log.Print = true
 
 	parseFlags()
@@ -37,11 +38,11 @@ func main() {
 	}
 
 	if *hmac != "" {
-		*jwtRefresh = newJWT(*hmac, *ns, *user)
-		log.RefreshToken(*jwtRefresh)
+		*access = newAccessJWT(*hmac, *ttl, *usr, groups, orgs)
+		log.AccessToken(*access)
 	}
 
-	req.Header.Set("Authorization", "Bearer "+*jwtRefresh)
+	req.Header.Set("Authorization", "Bearer "+*access)
 
 	resp, err := (&http.Client{}).Do(req)
 	if err != nil {
@@ -64,7 +65,7 @@ func main() {
 	log.Ok("Fetched " + garcon.ConvertSize(len(buf)) + " from " + url)
 }
 
-func newJWT(hexKey, namespace, username string) string {
+func newAccessJWT(hexKey, maxTTL, user string, groups, orgs []string) string {
 	if len(hexKey) != 64 {
 		log.Error("Want HMAC-SHA256 key composed by 64 hexadecimal digits, but got ", len(hexKey))
 		os.Exit(20)
@@ -76,7 +77,7 @@ func newJWT(hexKey, namespace, username string) string {
 		os.Exit(21)
 	}
 
-	token, err := tokens.GenRefreshToken("1y", "1y", namespace, username, binKey)
+	token, err := tokens.GenAccessToken(maxTTL, maxTTL, user, groups, orgs, binKey)
 	if err != nil || token == "" {
 		log.Error("Cannot create JWT: ", err)
 		os.Exit(22)

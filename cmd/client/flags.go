@@ -16,9 +16,12 @@ const (
 	quidURL     = "https://teal.finance/quid"
 	defaultUser = "client"
 	defaultNs   = "FreePlan"
+	defaultTTL  = "1y"
 )
 
 var (
+	verbose = flag.Bool("v", false, "Verbose: print the fetch data from Rainbow API")
+
 	rURL = flag.String("rainbow", garcon.EnvStr("RAINBOW_URL", rainbowURL), "URL of the Rainbow website. The RAINBOW_URL environment variable can also be used.")
 	qURL = flag.String("quid", garcon.EnvStr("QUID_URL", quidURL), "URL of the Quid website. The QUID_URL environment variable can also be used.")
 
@@ -26,18 +29,16 @@ var (
 	eth   = flag.Bool("eth", false, "Fetch options having underlying=ETH, same as -asset ETH")
 	asset = flag.String("asset", "ALL", "underlying asset of the options to query")
 
-	jwtRefresh = flag.String("jwt", garcon.EnvStr("JWT"), "Refresh JSON-Web-Token to authenticate to the Rainbow API. "+
-		"The JWT environment variable can also be used.")
-	hmac = flag.String("hmac", garcon.EnvStr("HMAC_SHA256"), "HMAC-SHA256 key (64 hex digits) to generate JWT tokens. "+
-		"The HMAC_SHA256 environment variable can also be used.")
-	ns = flag.String("ns", garcon.EnvStr("JWT_NS", defaultNs), "Namespace to set when generating a new JWT "+
-		"from the HMAC-SHA256 key provided by the -hmac flag. "+
-		"The JWT_NS environment variable can also be used.")
-	user = flag.String("user", garcon.EnvStr("JWT_USER", defaultUser), "User name to set when generating a new JWT "+
-		"from the HMAC-SHA256 key provided by the -hmac flag. "+
-		"The JWT_USER environment variable can also be used.")
+	access  = flag.String("access", garcon.EnvStr("JWT_ACCESS"), "Access Token (JWT) to be access to the Rainbow API. The JWT_ACCESS environment variable can also be used.")
+	refresh = flag.String("refresh", garcon.EnvStr("JWT_REFRESH"), "Refresh Token (JWT) to get a temporary Access Token from Quid API. The JWT_REFRESH environment variable can also be used.")
+	hmac    = flag.String("hmac", garcon.EnvStr("HMAC_SHA256"), "HMAC-SHA256 key (64 hex digits) required to generate a JWT. The HMAC_SHA256 environment variable can also be used.")
+	ttl     = flag.String("ttl", garcon.EnvStr("JWT_TTL", defaultTTL), "Max TTL (Time To Live) to set when generating a new JWT (similar to the cookie Max-Age). The JWT_TTL environment variable can also be used.")
+	ns      = flag.String("ns", garcon.EnvStr("JWT_NS", defaultNs), "Namespace to set when generating a new Refresh JWT. The JWT_NS environment variable can also be used.")
+	usr     = flag.String("usr", garcon.EnvStr("JWT_USR", defaultUser), "User name to set when generating a new JWT. The JWT_USR environment variable can also be used.")
+	grp     = flag.String("grp", garcon.EnvStr("JWT_GRP"), "List of groups (separated by coma) to set when generating a new Access JWT. The JWT_GRP environment variable can also be used.")
+	org     = flag.String("orgs", garcon.EnvStr("JWT_ORG"), "List of organizations (separated by coma) to set when generating a new Access JWT. The JWT_ORG environment variable can also be used.")
 
-	verbose = flag.Bool("v", false, "Verbose: print the fetch data from Rainbow API")
+	groups, orgs []string
 )
 
 func parseFlags() {
@@ -51,16 +52,21 @@ func parseFlags() {
 		*asset = "ETH"
 	}
 
-	garcon.LogVersion()
+	groups = garcon.SplitClean(*grp)
+	orgs = garcon.SplitClean(*org)
 
+	log.Param("-v                   =", *verbose)
 	log.Param("-rainbow RAINBOW_URL =", *rURL)
 	log.Param("-quid    QUID_URL    =", *qURL)
 	log.Param("-btc                 =", *btc)
 	log.Param("-eth                 =", *eth)
 	log.Param("-asset               =", *asset)
-	log.Param("-ns      JWT_NS      =", *user)
-	log.Param("-user    JWT_USER    =", *user)
-	log.Param("-jwt     JWT         len=", len(*jwtRefresh))
+	log.Param("-ttl     JWT_TTL     =", *ttl)
+	log.Param("-ns      JWT_NS      =", *ns)
+	log.Param("-usr     JWT_USR     =", *usr)
+	log.Param("-grp     JWT_GRP     =", groups)
+	log.Param("-org     JWT_ORG     =", orgs)
+	log.Param("-access  JWT_ACCESS  len=", len(*access))
+	log.Param("-refresh JWT_REFRESH len=", len(*refresh))
 	log.Param("-hmac    HMAC_SHA256 len=", len(*hmac), "(need 64 hexadecimal digits)")
-	log.Param("-v                   =", *verbose)
 }
