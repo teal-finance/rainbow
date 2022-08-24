@@ -8,6 +8,7 @@ package lyra
 import (
 	"log"
 	"math/big"
+	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -76,15 +77,13 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	}
 
 	for i := 0; i < len(markets); i++ {
-		/*market, err := NewLyra(common.HexToAddress(OptionMarkets[i]), client)
+		marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, markets[i])
 		if err != nil {
+			log.Print("ERR: MarketAddresses ", err)
+
 			return nil, err
 		}
-
-		viewer, err := NewLyrap(common.HexToAddress(OptionMarketViewers[i]), client)
-		if err != nil {
-			return nil, err
-		}*/
+		baseAsset := Asset(marketAddresses.BaseAsset)
 
 		boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, markets[i])
 		if err != nil {
@@ -98,7 +97,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 			sum += len(b.Strikes)
 
 			for _, s := range b.Strikes {
-				callPut := process(s)
+				callPut := process(s, b, baseAsset)
 				options = append(options, callPut...)
 			}
 		}
@@ -108,9 +107,60 @@ func (Provider) Options() ([]rainbow.Option, error) {
 
 	return options, nil
 }
-func process(s OptionMarketViewerStrikeView) []rainbow.Option {
+func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asset string) []rainbow.Option {
+	options := []rainbow.Option{}
+	call := rainbow.Option{
+		Name:          "",
+		Type:          "CALL",
+		Asset:         asset,
+		Expiry:        expiration(b.Expiry),
+		ExchangeType:  "DEX",
+		Chain:         "Ethereum",
+		Layer:         "L2",
+		Provider:      name,
+		QuoteCurrency: "USD", // sUSD but anyway
+		Bid:           nil,
+		Ask:           nil,
+		Strike:        rainbow.ToFloat(s.StrikePrice, rainbow.DefaultEthereumDecimals),
+	}
+	put := rainbow.Option{
+		Name:          "",
+		Type:          "PUT",
+		Asset:         asset,
+		Expiry:        expiration(b.Expiry),
+		ExchangeType:  "DEX",
+		Chain:         "Ethereum",
+		Layer:         "L2",
+		Provider:      name,
+		QuoteCurrency: "USD", // sUSD but anyway
+		Bid:           nil,
+		Ask:           nil,
+		Strike:        rainbow.ToFloat(s.StrikeId, rainbow.DefaultEthereumDecimals),
+	}
 
-	return nil
+	call.Name = call.OptionName()
+	put.Name = put.OptionName()
+
+	options = append(options, call, put)
+	return options
+}
+func Asset(address common.Address) string {
+	// those asset are part of Synthetix so if it's not recognized
+	// it is an unknwow synthetic asset.
+
+	switch {
+	case address.String() == sETH:
+		return "sETH"
+	case address.String() == sBTC:
+		return "sBTC"
+	case address.String() == sSOL:
+		return "sSOL"
+	case address.String() == sLINK:
+		return "sLINK"
+	default:
+		log.Print("WRN Lyra Unknown token: ", address.String())
+		return "LLLL"
+	}
 }
 
 /*
@@ -209,10 +259,10 @@ func processOption(listing *OptionMarketViewerListingView, ammOrder []OptionMark
 	options = append(options, call, put)
 	return options
 }
+*/
 
 func expiration(e *big.Int) string {
 	seconds := e.Int64()
 	expiryTime := time.Unix(seconds, 0).UTC()
 	return expiryTime.Format("2006-01-02 15:04:05")
 }
-*/
