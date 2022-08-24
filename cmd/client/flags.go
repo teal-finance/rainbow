@@ -12,16 +12,14 @@ import (
 	"github.com/teal-finance/garcon"
 )
 
-const (
-	defaultProviders = "deribit" // ,delta,lyra,opyn,psy,zeta"
-)
-
 var (
 	btc   = flag.Bool("btc", false, "Fetch options having underlying=BTC, same as -asset BTC")
 	eth   = flag.Bool("eth", false, "Fetch options having underlying=ETH, same as -asset ETH")
 	asset = flag.String("asset", "ALL", "underlying asset of the options to query")
 	jwt   = flag.String("jwt", garcon.EnvStr("JWT"), "JSON-Web-Token to authenticate to the Rainbow API. "+
 		"The JWT environment variable can also be used.")
+	hmac = flag.String("hmac", garcon.EnvStr("HMAC_SHA256"), "HMAC-SHA256 key (64 hex digits) to generate JWT tokens. "+
+		"The HMAC_SHA256 environment variable can also be used.")
 )
 
 func parseFlags() {
@@ -39,5 +37,6 @@ func parseFlags() {
 	log.Print("-btc    = ", *btc)
 	log.Print("-eth    = ", *eth)
 	log.Print("-asset  = ", *asset)
-	log.Print("-jwt len= ", len(*jwt))
+	log.Print("-jwt  len=", len(*jwt))
+	log.Print("-hmac len=", len(*hmac), " (need 64 hexadecimal digits) env. var. HMAC_SHA256")
 }

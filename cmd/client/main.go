@@ -7,10 +7,12 @@ package main
 
 import (
 	"context"
+	"encoding/hex"
 	"log"
 	"net/http"
 
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/quid/quidlib/tokens"
 )
 
 func main() {
@@ -25,6 +27,10 @@ func main() {
 	req, err := http.NewRequestWithContext(context.Background(), "GET", url, http.NoBody)
 	if err != nil {
 		log.Panic(err)
+	}
+
+	if *hmac != "" {
+		*jwt = newJWT(*hmac)
 	}
 
 	req.Header.Set("Authorization", "Bearer "+*jwt)
@@ -42,4 +48,21 @@ func main() {
 	}
 
 	log.Print(string(buf))
+}
+
+func newJWT(hexKey string) string {
+	if len(hexKey) != 64 {
+		log.Panic("Want HMAC-SHA256 key composed by 64 hexadecimal digits, but got ", len(hexKey))
+	}
+
+	binKey, err := hex.DecodeString(hexKey)
+	if err != nil {
+		log.Panic("Cannot decode the HMAC-SHA256 key, please provide 64 hexadecimal digits: ", err)
+	}
+
+	token, err := tokens.GenRefreshToken("1y", "1y", "FreePlan", "client", binKey)
+	if err != nil || token == "" {
+		log.Panic("Cannot create JWT: ", err)
+	}
+	return token
 }
