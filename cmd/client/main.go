@@ -10,6 +10,7 @@ import (
 	"encoding/hex"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
@@ -26,54 +27,59 @@ func main() {
 	if *asset != "" {
 		*asset += "/"
 	}
-	url := "https://teal.finance/rainbow/v0/options/" + *asset + "tsv"
+	*rURL = strings.Trim(*rURL, "/")
+	url := *rURL + "/v0/options/" + *asset + "tsv"
 
 	req, err := http.NewRequestWithContext(context.Background(), "GET", url, http.NoBody)
 	if err != nil {
 		log.Error(err)
-		return
+		os.Exit(10)
 	}
 
 	if *hmac != "" {
-		*jwt = newJWT(*hmac, *ns, *user)
-		log.RefreshToken(*jwt)
+		*jwtRefresh = newJWT(*hmac, *ns, *user)
+		log.RefreshToken(*jwtRefresh)
 	}
 
-	req.Header.Set("Authorization", "Bearer "+*jwt)
+	req.Header.Set("Authorization", "Bearer "+*jwtRefresh)
 
 	resp, err := (&http.Client{}).Do(req)
 	if err != nil {
 		log.Error(err)
-		return
+		os.Exit(11)
 	}
-	defer resp.Body.Close()
 
 	maxBytes := 1_000_000
 	buf, err := garcon.ReadResponse(resp, maxBytes)
+	resp.Body.Close()
 	if err != nil {
 		log.Error(err)
-		return
+		os.Exit(1)
 	}
 
-	log.Result(string(buf))
+	if *verbose {
+		log.Result(string(buf))
+	}
+
+	log.Ok("Fetched " + garcon.ConvertSize(len(buf)) + " from " + url)
 }
 
 func newJWT(hexKey, namespace, username string) string {
 	if len(hexKey) != 64 {
 		log.Error("Want HMAC-SHA256 key composed by 64 hexadecimal digits, but got ", len(hexKey))
-		os.Exit(1)
+		os.Exit(20)
 	}
 
 	binKey, err := hex.DecodeString(hexKey)
 	if err != nil {
 		log.Error("Cannot decode the HMAC-SHA256 key, please provide 64 hexadecimal digits: ", err)
-		os.Exit(2)
+		os.Exit(21)
 	}
 
 	token, err := tokens.GenRefreshToken("1y", "1y", namespace, username, binKey)
 	if err != nil || token == "" {
 		log.Error("Cannot create JWT: ", err)
-		os.Exit(3)
+		os.Exit(22)
 	}
 
 	return token
