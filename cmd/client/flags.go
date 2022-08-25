@@ -7,6 +7,7 @@ package main
 
 import (
 	"flag"
+	"strings"
 
 	"github.com/teal-finance/garcon"
 )
@@ -55,8 +56,8 @@ func parseFlags() {
 		*asset = "ETH"
 	}
 
-	groups = garcon.SplitClean(*grp)
-	orgs = garcon.SplitClean(*org)
+	groups = strings.Split(*grp, ",")
+	orgs = strings.Split(*org, ",")
 
 	if *access == "" && *hmac == "" && *rURL == rainbowURL {
 		log.Param("neither -access nor -hmac nor -rainbow flags used: use dev. mode HMAC-SHA256 key and localhost for rainbow API")
