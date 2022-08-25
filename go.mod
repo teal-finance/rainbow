@@ -24,7 +24,7 @@ require (
 	github.com/streamingfast/solana-go v0.5.1-0.20220502224452-432fbe84aee8
 	github.com/stretchr/testify v1.8.0
 	github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a
-	github.com/teal-finance/garcon v0.26.0
+	github.com/teal-finance/garcon v0.26.1
 	github.com/teal-finance/notifier v1.1.1
 	mvdan.cc/gofumpt v0.3.1
 )
