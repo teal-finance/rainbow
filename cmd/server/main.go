@@ -26,7 +26,7 @@ func main() {
 	log.Print("Providers: ", names)
 
 	g := garcon.New(
-		garcon.WithURLs(*mainAddr),
+		garcon.WithURLs(garcon.SplitClean(*mainAddr)...),
 		garcon.WithDev(*dev))
 
 	// start the service in background
@@ -36,11 +36,12 @@ func main() {
 
 	// chain middleware
 	middleware, connState := g.StartMetricsServer(*expPort)
-	middleware = middleware.Append(g.MiddlewareRejectUnprintableURI(),
+	middleware = middleware.Append(
+		g.MiddlewareRejectUnprintableURI(),
 		g.MiddlewareLogRequest(),
 		g.MiddlewareRateLimiter(*reqBurst, *reqPerMinute),
-		g.MiddlewareServerHeader("Rainbow"),
-		g.MiddlewareCORS())
+		g.MiddlewareCORS(),
+		g.MiddlewareServerHeader("Rainbow"))
 
 	// middleware to set/check cookies
 	var ck garcon.TokenChecker
