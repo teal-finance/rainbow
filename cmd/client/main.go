@@ -7,14 +7,12 @@ package main
 
 import (
 	"context"
-	"encoding/hex"
 	"net/http"
 	"os"
 	"strings"
 
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/quid/quidlib/tokens"
 )
 
 var log = emo.NewZone("client")
@@ -38,7 +36,7 @@ func main() {
 	}
 
 	if *hmac != "" {
-		*access = newAccessJWT(*hmac, *ttl, *usr, groups, orgs)
+		*access = garcon.NewAccessToken(*ttl, *usr, groups, orgs, *hmac)
 		log.AccessToken(*access)
 	}
 
@@ -63,25 +61,4 @@ func main() {
 	}
 
 	log.Ok("Fetched " + garcon.ConvertSize(len(buf)) + " from " + url)
-}
-
-func newAccessJWT(hexKey, maxTTL, user string, groups, orgs []string) string {
-	if len(hexKey) != 64 {
-		log.Error("Want HMAC-SHA256 key composed by 64 hexadecimal digits, but got ", len(hexKey))
-		os.Exit(20)
-	}
-
-	binKey, err := hex.DecodeString(hexKey)
-	if err != nil {
-		log.Error("Cannot decode the HMAC-SHA256 key, please provide 64 hexadecimal digits: ", err)
-		os.Exit(21)
-	}
-
-	token, err := tokens.GenAccessToken(maxTTL, maxTTL, user, groups, orgs, binKey)
-	if err != nil || token == "" {
-		log.Error("Cannot create JWT: ", err)
-		os.Exit(22)
-	}
-
-	return token
 }

@@ -12,11 +12,14 @@ import (
 )
 
 const (
-	rainbowURL  = "https://teal.finance/rainbow"
-	quidURL     = "https://teal.finance/quid"
-	defaultUser = "client"
-	defaultNs   = "FreePlan"
-	defaultTTL  = "1y"
+	hmacSHA256DevMod = "9d2e0a02121179a3c3de1b035ae1355b1548781c8ce8538a1dc0853a12dfb13d"
+	rainbowURL       = "https://teal.finance/rainbow"
+	rainbowLocal     = "http://localhost:8090"
+	quidURL          = "https://teal.finance/quid"
+	defaultUser      = "client"
+	defaultNs        = "FreePlan"
+	defaultGrp       = "FreePlan"
+	defaultTTL       = "1y"
 )
 
 var (
@@ -35,7 +38,7 @@ var (
 	ttl     = flag.String("ttl", garcon.EnvStr("JWT_TTL", defaultTTL), "Max TTL (Time To Live) to set when generating a new JWT (similar to the cookie Max-Age). The JWT_TTL environment variable can also be used.")
 	ns      = flag.String("ns", garcon.EnvStr("JWT_NS", defaultNs), "Namespace to set when generating a new Refresh JWT. The JWT_NS environment variable can also be used.")
 	usr     = flag.String("usr", garcon.EnvStr("JWT_USR", defaultUser), "User name to set when generating a new JWT. The JWT_USR environment variable can also be used.")
-	grp     = flag.String("grp", garcon.EnvStr("JWT_GRP"), "List of groups (separated by coma) to set when generating a new Access JWT. The JWT_GRP environment variable can also be used.")
+	grp     = flag.String("grp", garcon.EnvStr("JWT_GRP", defaultGrp), "List of groups (separated by coma) to set when generating a new Access JWT. The JWT_GRP environment variable can also be used.")
 	org     = flag.String("orgs", garcon.EnvStr("JWT_ORG"), "List of organizations (separated by coma) to set when generating a new Access JWT. The JWT_ORG environment variable can also be used.")
 
 	groups, orgs []string
@@ -54,6 +57,12 @@ func parseFlags() {
 
 	groups = garcon.SplitClean(*grp)
 	orgs = garcon.SplitClean(*org)
+
+	if *access == "" && *hmac == "" && *rURL == rainbowURL {
+		log.Param("neither -access nor -hmac nor -rainbow flags used: use dev. mode HMAC-SHA256 key and localhost for rainbow API")
+		*hmac = hmacSHA256DevMod
+		*rURL = rainbowLocal
+	}
 
 	log.Param("-v                   =", *verbose)
 	log.Param("-rainbow RAINBOW_URL =", *rURL)

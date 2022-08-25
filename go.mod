@@ -23,7 +23,8 @@ require (
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1-0.20220502224452-432fbe84aee8
 	github.com/stretchr/testify v1.8.0
-	github.com/teal-finance/garcon v0.25.0
+	github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a
+	github.com/teal-finance/garcon v0.26.0
 	github.com/teal-finance/notifier v1.1.1
 	mvdan.cc/gofumpt v0.3.1
 )
@@ -102,7 +103,6 @@ require (
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 // indirect
 	github.com/streamingfast/logging v0.0.0-20220813175024-b4fbb0e893df // indirect
-	github.com/teal-finance/emo v0.0.0-20220602102724-3ed209263d5a // indirect
 	github.com/teal-finance/incorruptible v0.0.0-20220821130051-6c77707fc5fe // indirect
 	github.com/teal-finance/quid v0.0.0-20220818083443-a5aad2e17145 // indirect
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569 // indirect
