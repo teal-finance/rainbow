@@ -7,6 +7,7 @@ declare module 'vue' {
     ExoticDatatable: typeof import('./src/components/ExoticDatatable.vue')['default']
     ExoticHeader: typeof import('./src/components/widgets/ExoticHeader.vue')['default']
     ExtraHeader: typeof import('./src/components/widgets/ExtraHeader.vue')['default']
+    GenericDatatable: typeof import('./src/components/GenericDatatable.vue')['default']
     IAkarIconsArrowRight: typeof import('~icons/akar-icons/arrow-right')['default']
     IAkarIconsGithubFill: typeof import('~icons/akar-icons/github-fill')['default']
     IAntDesignGithubFilled: typeof import('~icons/ant-design/github-filled')['default']

@@ -1,45 +1,29 @@
 <template>
-  <sw-datatable
-    :model="model"
-    :sortable-cols="['expiry', 'strike']"
-    :extra-header="ExtraHeader"
-    :mobile-renderer="MobileRenderer"
-    :tablet-renderer="MobileRenderer"
-    :default-renderer="HtmlCellRenderer"
-    tablet-breakpoint="xl"
-    class="w-full border border-collapse table-auto dark:border-neutral border-light"
-    id="rtable"
-  ></sw-datatable>
+  <sw-datatable :model="model" :sortable-cols="['expiry', 'strike']" :extra-header="ExtraHeader"
+    :mobile-renderer="MobileRenderer" :tablet-renderer="MobileRenderer" :default-renderer="HtmlCellRenderer"
+    tablet-breakpoint="xl" class="w-full border border-collapse table-auto dark:border-neutral border-light"
+    id="rtable"></sw-datatable>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import SwDatatableModel from '@/packages/datatable/models/datatable'
 import SwDatatable from '@/packages/datatable/SwDatatable.vue'
 import HtmlCellRenderer from '@/packages/datatable/renderers/HtmlCellRenderer.vue';
 import { OptionsTable } from '@/models/options/types';
 import ExtraHeader from './widgets/ExtraHeader.vue';
 import MobileRenderer from './widgets/MobileRenderer.vue';
+import { OptionType } from "@/interfaces";
 
-export default defineComponent({
-  components: {
-    SwDatatable,
-    MobileRenderer,
+defineProps({
+  model: {
+    type: Object as () => SwDatatableModel<OptionsTable>,
+    required: true
   },
-  props: {
-    model: {
-      type: Object as () => SwDatatableModel<OptionsTable>,
-      required: true
-    },
-  },
-  setup: () => {
-    return {
-      ExtraHeader,
-      MobileRenderer,
-      HtmlCellRenderer,
-    }
-  },
-})
+  type: {
+    type: String as () => OptionType,
+    required: true
+  }
+});
 </script>
 
 <style lang="sass">
