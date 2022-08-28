@@ -95,9 +95,9 @@ function mutatePreset(presetname: string) {
   user.currentPreset.value = presetname;
 }
 
-async function init() {
+async function init(t: OptionType) {
   let d: OptionsJsonDataset;
-  if (props.type == "classic") {
+  if (t == "classic") {
     d = await classicQuery()
     mutatePreset(user.currentPreset.value)
   } else {
@@ -109,15 +109,16 @@ async function init() {
 
 onBeforeMount(() => {
   console.log("Mount table", props.type)
-  init()
+  init("classic")
 })
 
 onBeforeRouteLeave((to, from) => {
   //console.log("Update table", props.type)
-  if (to.path.replace("/", "") != props.type.toString()) {
+  const t = props.type;
+  if (to.path.replace("/", "") != t.toString()) {
     //console.log("Route change")
     isReady.value = false;
-    init().then(() => isReady.value = true)
+    init(t).then(() => isReady.value = true)
   }
 })
 </script>
