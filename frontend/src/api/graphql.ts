@@ -9,7 +9,7 @@ import { GraphQLClient, gql } from 'graphql-request'
 import { classicOptionsQuery, exoticOptionsQuery } from './queries';
 
 const graphQLClient = new GraphQLClient(serverUrl + "v0/graphql", {
-  //credentials: 'include',
+  credentials: 'include',
   mode: 'cors',
 });
 
