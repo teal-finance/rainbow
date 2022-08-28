@@ -10,7 +10,11 @@ const baseTitle = "Rainbow"
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    component: () => import("./views/OptionsView.vue")
+    component: () => import("./views/DatatableView.vue"),
+    meta: {
+      title: "Classic Options"
+    },
+    props: { type: "classic" }
   },
   {
     path: "/about",
@@ -18,17 +22,19 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/exotic",
-    component: () => import("./views/ExoticView.vue"),
+    component: () => import("./views/DatatableView.vue"),
     meta: {
       title: "Exotic Options"
-    }
+    },
+    props: { type: "exotic" }
   },
   {
     path: "/classic",
-    component: () => import("./views/OptionsView.vue"),
+    component: () => import("./views/DatatableView.vue"),
     meta: {
       title: "Classic Options"
-    }
+    },
+    props: { type: "classic" }
   }
 ]
 
