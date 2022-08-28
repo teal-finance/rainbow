@@ -12,19 +12,22 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     component: () => import("./views/DatatableView.vue"),
     meta: {
-      title: "Classic Options"
+      title: "DeFi options comparator for trading opportunities"
     },
     props: { type: "classic" }
   },
   {
     path: "/about",
-    component: () => import("./views/pages/AboutView.vue")
+    component: () => import("./views/pages/AboutView.vue"),
+    meta: {
+      title: "DeFi options comparator for trading opportunities"
+    }
   },
   {
     path: "/exotic",
     component: () => import("./views/DatatableView.vue"),
     meta: {
-      title: "Exotic Options"
+      title: "Exotic options comparator for trading opportunities"
     },
     props: { type: "exotic" }
   },
@@ -32,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/classic",
     component: () => import("./views/DatatableView.vue"),
     meta: {
-      title: "Classic Options"
+      title: "Classic options comparator for trading opportunities"
     },
     props: { type: "classic" }
   }
