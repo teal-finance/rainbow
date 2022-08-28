@@ -33,11 +33,12 @@ func (Provider) Name() string {
 const Hour = 12 // 12:00 UTC
 
 func (pro Provider) Options() ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
 	products, err := queryProducts()
 	if err != nil {
 		return nil, err
 	}
+
+	options := make([]rainbow.Option, 0, len(products))
 
 	expiries := rainbow.Expiries(time.Now(), Hour)
 	for i := range products {
