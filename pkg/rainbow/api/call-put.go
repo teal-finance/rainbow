@@ -108,8 +108,7 @@ func (a *Align) buildCallPut(options []rainbow.Option) []Row {
 						continue
 					}
 
-					call := Limit{}
-					put := Limit{}
+					var call, put Limit
 					for i := range optionsSameProvider {
 						o := &optionsSameProvider[i]
 						if o.Type == "PUT" {

@@ -25,7 +25,7 @@ type Arb struct {
 type Arbs []Arb
 
 func buylowsellhigh(blocks Blocks, limit float64) Arbs {
-	arbs := Arbs{}
+	var arbs Arbs
 	for _, block := range blocks {
 		if len(block.Options) == 1 { // normally shouldn't be empty but weird error I can't fix
 			continue

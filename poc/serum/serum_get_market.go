@@ -99,7 +99,7 @@ func getOrderBook(
 	}
 
 	limit := 20
-	levels := [][]*big.Int{}
+	var levels [][]*big.Int
 
 	o.Items(desc, func(node *serum.SlabLeafNode) error {
 		quantity := big.NewInt(int64(node.Quantity))

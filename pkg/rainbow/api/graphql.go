@@ -75,7 +75,7 @@ func (h Handler) fieldsCallPut() *graphql.Field {
 		},
 		Resolve: func(params graphql.ResolveParams) (any, error) {
 			// parse args
-			args := rainbow.StoreArgs{}
+			var args rainbow.StoreArgs
 
 			if v, ok := params.Args["assets"]; ok {
 				assets := v.([]any)

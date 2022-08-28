@@ -24,7 +24,7 @@ type (
 )
 
 func buildCallPut(options []rainbow.Option) Blocks {
-	blocks := Blocks{}
+	var blocks Blocks
 	for asset, optionsSameAsset := range groupByAsset(options) {
 		asset = sanitizeAsset(asset)
 
