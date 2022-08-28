@@ -29,14 +29,14 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
-
 	client, err := ethclient.Dial(optimismrpc)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	sum := 0
+
+	var options []rainbow.Option
 
 	for i := 0; i < len(OptionMarkets); i++ {
 		market, err := NewLyra(common.HexToAddress(OptionMarkets[i]), client)
@@ -86,7 +86,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 }
 
 func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketViewerTradePremiumView, error) {
-	ammOrder := []OptionMarketViewerTradePremiumView{}
+	var ammOrder []OptionMarketViewerTradePremiumView
 	a := rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals)
 
 	// Call BID
@@ -124,7 +124,6 @@ func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketVi
 }
 
 func processOption(listing *OptionMarketViewerListingView, ammOrder []OptionMarketViewerTradePremiumView, amount int, asset string) []rainbow.Option {
-	options := []rainbow.Option{}
 	call := rainbow.Option{
 		Name:          "",
 		Type:          "CALL",
@@ -177,8 +176,7 @@ func processOption(listing *OptionMarketViewerListingView, ammOrder []OptionMark
 		Size:  float64(amount),
 	})
 
-	options = append(options, call, put)
-	return options
+	return []rainbow.Option{call, put}
 }
 
 func expiration(e *big.Int) string {
