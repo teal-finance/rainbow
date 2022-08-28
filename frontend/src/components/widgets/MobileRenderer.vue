@@ -4,15 +4,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, toRef } from "vue";
-
-export default defineComponent({
-  props: {
-    row: {
-      type: Object,
-      required: true,
-    },
+<script setup lang="ts">
+defineProps({
+  row: {
+    type: Object,
+    required: true,
   },
 });
 </script>
