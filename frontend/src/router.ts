@@ -10,11 +10,10 @@ const baseTitle = "Rainbow"
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    component: () => import("./views/DatatableView.vue"),
+    component: () => import("./views/ClassicView.vue"),
     meta: {
       title: "DeFi options comparator for trading opportunities"
-    },
-    props: { type: "classic" }
+    }
   },
   {
     path: "/about",
@@ -25,19 +24,17 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/exotic",
-    component: () => import("./views/DatatableView.vue"),
+    component: () => import("./views/ExoticView.vue"),
     meta: {
       title: "Exotic options comparator for trading opportunities"
-    },
-    props: { type: "exotic" }
+    }
   },
   {
     path: "/classic",
-    component: () => import("./views/DatatableView.vue"),
+    component: () => import("./views/ClassicView.vue"),
     meta: {
       title: "Classic options comparator for trading opportunities"
-    },
-    props: { type: "classic" }
+    }
   }
 ]
 
