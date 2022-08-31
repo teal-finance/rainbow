@@ -6,18 +6,20 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
+
+var log = emo.NewZone("rainbow")
 
 func main() {
 	parseFlags()
@@ -114,6 +116,6 @@ func main() {
 		ErrorLog:          log.Default(),
 	}
 
-	log.Print("INF Server listening on http://localhost", server.Addr)
+	log.Print("INF Server listening on http://localhost" + server.Addr)
 	log.Fatal(server.ListenAndServe())
 }

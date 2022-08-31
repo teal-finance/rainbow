@@ -7,7 +7,6 @@ package provider
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 

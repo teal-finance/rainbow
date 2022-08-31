@@ -1,7 +1,6 @@
 package rainbow
 
 import (
-	"log"
 	"math"
 	"math/big"
 	"strconv"

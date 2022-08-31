@@ -7,7 +7,6 @@ package zerox
 
 import (
 	"context"
-	"log"
 	"strconv"
 	"time"
 

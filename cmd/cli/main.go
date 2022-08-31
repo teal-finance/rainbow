@@ -7,18 +7,20 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math"
 	"os"
 
 	"github.com/gookit/color"
 	"github.com/jedib0t/go-pretty/v6/table"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
+
+var log = emo.NewZone("cli")
 
 func main() {
 	parseFlags()

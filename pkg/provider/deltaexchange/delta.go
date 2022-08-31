@@ -7,14 +7,16 @@ package deltaexchange
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+var log = emo.NewZone("Delta")
 
 const (
 	deltaProducts  = "https://api.delta.exchange/v2/products?states=live&contract_types=put_options,call_options"

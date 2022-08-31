@@ -6,9 +6,12 @@
 package rainbow
 
 import (
-	"log"
 	"time"
+
+	"github.com/teal-finance/emo"
 )
+
+var log = emo.NewZone("Service")
 
 type Provider interface {
 	Name() string

@@ -7,16 +7,18 @@ package zerox
 
 import (
 	"fmt"
-	"log"
 	"math"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/opyn"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+var log = emo.NewZone("0x")
 
 const (
 	USDC            = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"

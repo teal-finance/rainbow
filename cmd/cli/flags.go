@@ -7,7 +7,6 @@ package main
 
 import (
 	"flag"
-	"log"
 
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/provider"

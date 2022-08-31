@@ -7,7 +7,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"math"
 	"net/http"
 	"time"

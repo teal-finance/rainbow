@@ -7,7 +7,6 @@ package main
 
 import (
 	"flag"
-	"log"
 	"strconv"
 	"time"
 

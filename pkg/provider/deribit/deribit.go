@@ -6,15 +6,17 @@
 package deribit
 
 import (
-	"log"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+var log = emo.NewZone("Deribit")
 
 type Provider struct {
 	ar garcon.AdaptiveRate
