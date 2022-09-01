@@ -18,7 +18,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-var log = emo.NewZone("0x")
+var log = emo.NewZone("z0x")
 
 const (
 	USDC            = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
@@ -38,14 +38,14 @@ func extract(o *opyn.OptionsOtokensOToken) (optionType, expiry string, strike fl
 
 	expiry, err := rainbow.TimeStringConvert(o.ExpiryTimestamp)
 	if err != nil {
-		log.Printf("WRN Opyn ExpiryTimestamp: %v from %+v", err, o)
+		log.Warningf("Opyn ExpiryTimestamp: %v from %+v", err, o)
 		expiry = ""
 	}
 
 	// thought the USDCdecimals were correct but apparently not (whatever)
 	strike, err = convertFromSolidity(o.StrikePrice, OTokensDecimals)
 	if err != nil {
-		log.Printf("WRN Opyn Strike: %v from %+v", err, o)
+		log.Warningf("Opyn Strike: %v from %+v", err, o)
 		strike = 0
 	}
 
@@ -106,7 +106,7 @@ func (sr *stubbornRequester) success(n int) {
 		}
 
 		if n > 0 {
-			log.Printf("INF Opyn success #%v n=%v bad=%v sleep=%v (%+v)",
+			log.Infof("Opyn success #%v n=%v bad=%v sleep=%v (%+v)",
 				sr.ok, n, sr.maxBad, newSleep, newSleep-sr.sleep)
 		}
 
@@ -119,7 +119,7 @@ func (sr *stubbornRequester) failure(err error) {
 	newSleep := sr.maxBad / 2
 	sr.ko++
 
-	log.Printf("WRN Opyn failure #%v bad=%v sleep=%v + %v %v",
+	log.Warningf("Opyn failure #%v bad=%v sleep=%v + %v %v",
 		sr.ko, sr.maxBad, sr.sleep, newSleep, garcon.Sanitize(err.Error()))
 
 	sr.maxBad = sr.sleep + newSleep
@@ -145,7 +145,7 @@ func (sr *stubbornRequester) getQuote(side, sellToken, buyToken string, amount f
 }
 
 func (sr *stubbornRequester) logStats() {
-	log.Printf("INF Opyn stats: bad=%v sleep=%v ok=%v ko=%v",
+	log.Infof("Opyn stats: bad=%v sleep=%v ok=%v ko=%v",
 		sr.maxBad, sr.sleep, sr.ok, sr.ko)
 }
 
@@ -224,14 +224,14 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 
 		bid, err := requester.getQuote("BUY", instr.Id, USDC, amount, decimals)
 		if err != nil {
-			log.Print("WRN Opyn getQuote BUY ", err)
+			log.Warning("Opyn getQuote BUY ", err)
 			return nil, err
 		}
 
 		if bid.Price != "" {
 			price, e := strconv.ParseFloat(bid.Price, 64)
 			if e != nil {
-				log.Print("WRN Opyn price ", e)
+				log.Warning("Opyn price ", e)
 				continue
 			}
 
@@ -248,7 +248,7 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 
 		ask, err := requester.getQuote("SELL", USDC, instr.Id, amount, decimals)
 		if err != nil {
-			log.Print("INF Opyn getQuote SELL ", err)
+			log.Info("Opyn getQuote SELL ", err)
 			return nil, err
 		}
 

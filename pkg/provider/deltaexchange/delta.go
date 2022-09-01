@@ -16,7 +16,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-var log = emo.NewZone("Delta")
+var log = emo.NewZone("dlt")
 
 const (
 	deltaProducts  = "https://api.delta.exchange/v2/products?states=live&contract_types=put_options,call_options"
@@ -93,7 +93,7 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 }
 
 func queryProducts() (ProductResult, error) {
-	log.Print("INF " + deltaProducts)
+	log.Info("" + deltaProducts)
 	resp, err := http.Get(deltaProducts)
 	if err != nil {
 		return nil, fmt.Errorf("queryProducts GET: %w", err)

@@ -26,7 +26,7 @@ func main() {
 	parseFlags()
 
 	names := listProviderNames()
-	log.Print("Providers: ", names)
+	log.Init("Providers: ", names)
 
 	service := rainbow.NewService(provider.Select(names), dbram.NewDB())
 	service.FetchOptionsFromProviders()

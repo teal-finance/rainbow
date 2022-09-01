@@ -17,7 +17,7 @@ import (
 func (h Handler) CallPut(w http.ResponseWriter, r *http.Request) {
 	options, err := h.Service.Options(rainbow.StoreArgs{})
 	if err != nil {
-		log.Print("ERR CallPut Options ", err)
+		log.Error("CallPut Options ", err)
 		http.Error(w, "No Content", http.StatusNoContent)
 		return
 	}
@@ -27,7 +27,7 @@ func (h Handler) CallPut(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewEncoder(w).Encode(cp); err != nil {
-		log.Print("ERR CallPut Encode ", err)
+		log.Error("CallPut Encode ", err)
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 		return
 	}
@@ -215,7 +215,7 @@ func sanitizeAsset(asset string) string {
 func sanitizeDate(date string) string {
 	t, err := time.Parse("2006-01-02 15:04:05", date)
 	if err != nil {
-		log.Printf("WRN prettyDate() cannot parse %q", date)
+		log.Warningf("prettyDate() cannot parse %q", date)
 		return date
 	}
 	return t.Format("Jan _2")

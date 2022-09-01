@@ -28,10 +28,10 @@ func parseFlags() {
 	flag.Parse()
 
 	garcon.LogVersion()
-	log.Print("Centralized exchanges     -cex       = ", *cex)
-	log.Print("Decentralized exchanges   -dex       = ", *dex)
-	log.Print("Binary options exchanges  -exotic    = ", *exotic)
-	log.Print("PROVIDERS                 -providers = ", *providers)
+	log.Init("Centralized exchanges     -cex       = ", *cex)
+	log.Init("Decentralized exchanges   -dex       = ", *dex)
+	log.Init("Binary options exchanges  -exotic    = ", *exotic)
+	log.Init("PROVIDERS                 -providers = ", *providers)
 }
 
 func listProviderNames() []string {

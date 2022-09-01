@@ -35,7 +35,7 @@ func ToFloat(n *big.Int, decimals int64) float64 {
 func TimeStringConvert(s string) (expiry string, err error) {
 	seconds, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
-		log.Printf("ERR TimeStringConvert: %v from %+v", err, s)
+		log.Errorf("TimeStringConvert: %v from %+v", err, s)
 	} else {
 		expiry = time.Unix(seconds, 0).UTC().Format("2006-01-02 15:04:05")
 	}

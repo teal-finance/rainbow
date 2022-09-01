@@ -63,7 +63,7 @@ func (a *alerter) Options() ([]rainbow.Option, error) {
 	go func() {
 		e := a.vet(options, err)
 		if e != nil {
-			log.Printf("ERR Alerter %s: %s", a.Name(), e)
+			log.Errorf("Alerter %s: %s", a.Name(), e)
 		}
 	}()
 

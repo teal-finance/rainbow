@@ -19,13 +19,14 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
-var log = emo.NewZone("rainbow")
+var log = emo.NewZone("srv")
 
 func main() {
+	emo.GlobalTimestamp()
 	parseFlags()
 
 	names := listProviderNames()
-	log.Print("Providers: ", names)
+	log.Init("Providers: ", names)
 
 	g := garcon.New(
 		garcon.WithURLs(garcon.SplitClean(*mainAddr)...),
@@ -116,6 +117,6 @@ func main() {
 		ErrorLog:          log.Default(),
 	}
 
-	log.Print("INF Server listening on http://localhost" + server.Addr)
+	log.Info("Server listening on http://localhost" + server.Addr)
 	log.Fatal(server.ListenAndServe())
 }
