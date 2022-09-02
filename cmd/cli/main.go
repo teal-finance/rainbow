@@ -6,7 +6,6 @@
 package main
 
 import (
-	"fmt"
 	"math"
 	"os"
 
@@ -26,7 +25,7 @@ func main() {
 	parseFlags()
 
 	names := listProviderNames()
-	log.Init("Providers: ", names)
+	log.Init("Providers:", names)
 
 	service := rainbow.NewService(provider.Select(names), dbram.NewDB())
 	service.FetchOptionsFromProviders()
@@ -46,7 +45,7 @@ func printTable(options []rainbow.Option) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.SetStyle(table.StyleLight)
-	t.SetTitle(fmt.Sprint(" Available options: ", len(options)))
+	t.SetTitle(" Available options: %d", len(options))
 
 	t.AppendHeader(table.Row{
 		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", red(" Ask"), "Size", "Instrument",
