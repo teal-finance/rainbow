@@ -6,9 +6,12 @@
 package rainbow
 
 import (
-	"log"
 	"time"
+
+	"github.com/teal-finance/emo"
 )
+
+var log = emo.NewZone("srv")
 
 type Provider interface {
 	Name() string
@@ -40,15 +43,15 @@ func (s *Service) FetchOptionsFromProviders() {
 	for _, p := range s.providers {
 		o, err := p.Options()
 		if err != nil {
-			log.Print("ERR " + p.Name() + " " + err.Error())
+			log.Error("" + p.Name() + " " + err.Error())
 			continue
 		}
 
-		log.Printf("INF "+p.Name()+": fetched %v options", len(o))
+		log.Infof(""+p.Name()+": fetched %v options", len(o))
 
 		err = s.store.InsertOptions(o)
 		if err != nil {
-			log.Print("ERR " + p.Name() + " cannot store data: " + err.Error())
+			log.Error("" + p.Name() + " cannot store data: " + err.Error())
 			continue
 		}
 	}

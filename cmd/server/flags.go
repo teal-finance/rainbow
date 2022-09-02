@@ -7,7 +7,6 @@ package main
 
 import (
 	"flag"
-	"log"
 	"strconv"
 	"time"
 
@@ -50,26 +49,26 @@ func parseFlags() {
 
 	if !*dev && *mainAddr == defaultAddr && *mainPort == defaultPort {
 		*dev = true
-		log.Print("Enable -dev mode because -addr and -port flags are not used")
+		log.Init("Enable -dev mode because -addr and -port flags are not used")
 	}
 
 	garcon.LogVersion()
-	log.Print("Dev. mode      -dev       = ", *dev)
-	log.Print("Data fetch     -period    = ", timex.DStr(*period))
-	log.Print("Centralized Ex -cex       = ", *cex)
-	log.Print("Decentralized  -dex       = ", *dex)
-	log.Print("Binary options -exotic    = ", *exotic)
-	log.Print("PROVIDERS      -providers = ", *providers)
-	log.Print("MAIN_ADDR      -addr      = ", *mainAddr)
-	log.Print("MAIN_PORT      -port      = ", *mainPort)
-	log.Print("EXP_PORT       -exp       = ", *expPort)
-	log.Print("REQ_PER_MINUTE -rate      = ", *reqPerMinute)
-	log.Print("REQ_BURST      -burst     = ", *reqBurst)
-	log.Print("WWW_DIR        -www       = ", *wwwDir)
-	log.Print("ALERT_URL      -alert  len=", len(*alert))
-	log.Print("WEBFORM_URL    -form   len=", len(*form))
-	log.Print("AES128         -aes    len=", len(*aes), " (need 32 hexadecimal digits)")
-	log.Print("HMAC_SHA256    -hmac   len=", len(*hmac), " (need 64 hexadecimal digits)")
+	log.Init("Dev. mode      -dev       =", *dev)
+	log.Init("Data fetch     -period    =", timex.DStr(*period))
+	log.Init("Centralized Ex -cex       =", *cex)
+	log.Init("Decentralized  -dex       =", *dex)
+	log.Init("Binary options -exotic    =", *exotic)
+	log.Init("PROVIDERS      -providers =", *providers)
+	log.Init("MAIN_ADDR      -addr      =", *mainAddr)
+	log.Init("MAIN_PORT      -port      =", *mainPort)
+	log.Init("EXP_PORT       -exp       =", *expPort)
+	log.Init("REQ_PER_MINUTE -rate      =", *reqPerMinute)
+	log.Init("REQ_BURST      -burst     =", *reqBurst)
+	log.Init("WWW_DIR        -www       =", *wwwDir)
+	log.Init("ALERT_URL      -alert  len=", len(*alert))
+	log.Init("WEBFORM_URL    -form   len=", len(*form))
+	log.Init("AES128         -aes    len=", len(*aes), "(need 32 hexadecimal digits)")
+	log.Init("HMAC_SHA256    -hmac   len=", len(*hmac), "(need 64 hexadecimal digits)")
 
 	// mandatory: -aes or -hmac
 	if *aes == "" && *hmac == "" {
@@ -82,7 +81,7 @@ func parseFlags() {
 		}
 	}
 	if len(*aes) > 0 && len(*hmac) > 0 {
-		log.Print("WRN Should use -aes or -hmac, not both in the same time")
+		log.Warning("Should use -aes or -hmac, not both in the same time")
 	}
 }
 

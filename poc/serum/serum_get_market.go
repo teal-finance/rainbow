@@ -64,8 +64,8 @@ func runE(ctx context.Context, args []string) error {
 
 	fmt.Println(market.Name)
 
-	fmt.Println("Request RequestQueue: ", market.Market.GetRequestQueue())
-	fmt.Println("Event RequestQueue: ", market.Market.GetEventQueue())
+	fmt.Println("Request RequestQueue:", market.Market.GetRequestQueue())
+	fmt.Println("Event RequestQueue:", market.Market.GetEventQueue())
 
 	fmt.Println("Base")
 	fmt.Println("base mint", market.Market.GetBaseMint().String())

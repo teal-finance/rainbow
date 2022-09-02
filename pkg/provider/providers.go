@@ -6,9 +6,9 @@
 package provider
 
 import (
-	"log"
 	"os"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/notifier"
 	"github.com/teal-finance/notifier/logger"
@@ -22,6 +22,8 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+var log = emo.NewZone("pro")
 
 // AllProviders returns all supported providers.
 func AllProviders() []rainbow.Provider {
@@ -93,7 +95,7 @@ func AddAlert(providers []rainbow.Provider, n notifier.Notifier, namespace strin
 
 	err := notifyStartup(n, namespace, list)
 	if err != nil {
-		log.Print("ERR Alerter: ", err)
+		log.Error("Alerter:", err)
 	}
 
 	return providers

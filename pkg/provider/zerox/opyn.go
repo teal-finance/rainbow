@@ -7,7 +7,6 @@ package zerox
 
 import (
 	"context"
-	"log"
 	"strconv"
 	"time"
 
@@ -44,15 +43,15 @@ func QueryTheGraph() []opyn.OptionsOtokensOToken {
 
 	resp, err := opyn.Options(context.TODO(), graphqlClient, skip, first, minExpiryStr)
 	if err != nil {
-		log.Print("ERR Opyn: ", err)
+		log.Error("Opyn:", err)
 		return nil
 	}
 	if resp == nil {
-		log.Print("ERR Opyn: resp=nil")
+		log.Error("Opyn: resp=nil")
 		return nil
 	}
 
-	log.Printf("INF Query Opyn: minExpiry=%v => %v options", minExpiry, len(resp.Otokens))
+	log.Infof("Query Opyn: minExpiry=%v => %v options", minExpiry, len(resp.Otokens))
 
 	return resp.Otokens
 }

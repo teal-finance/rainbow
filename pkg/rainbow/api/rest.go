@@ -9,15 +9,17 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
 	"github.com/mpvl/unique"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+var log = emo.NewZone("api")
 
 type Handler struct {
 	Service *rainbow.Service
@@ -34,7 +36,7 @@ func NewHandler(s *rainbow.Service) Handler {
 func (h Handler) Options(w http.ResponseWriter, r *http.Request) {
 	sa, format, err := query(r)
 	if err != nil {
-		log.Print("WRN Options ", err)
+		log.Warning("Options", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
@@ -47,7 +49,7 @@ func (h Handler) Options(w http.ResponseWriter, r *http.Request) {
 
 	err = h.writeOptions(w, options, sa, format)
 	if err != nil {
-		log.Printf("WRN Options options=%v sa=%v format=%v err=%v", len(options), sa, format, err)
+		log.Warningf("Options options=%v sa=%v format=%v err=%v", len(options), sa, format, err)
 	}
 }
 

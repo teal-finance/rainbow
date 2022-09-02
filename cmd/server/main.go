@@ -6,12 +6,12 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -19,11 +19,14 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
+var log = emo.NewZone("srv")
+
 func main() {
+	emo.GlobalTimestamp()
 	parseFlags()
 
 	names := listProviderNames()
-	log.Print("Providers: ", names)
+	log.Init("Providers:", names)
 
 	g := garcon.New(
 		garcon.WithURLs(garcon.SplitClean(*mainAddr)...),
@@ -114,6 +117,6 @@ func main() {
 		ErrorLog:          log.Default(),
 	}
 
-	log.Print("INF Server listening on http://localhost", server.Addr)
+	log.Info("Server listening on http://localhost" + server.Addr)
 	log.Fatal(server.ListenAndServe())
 }

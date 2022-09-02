@@ -6,15 +6,17 @@
 package deribit
 
 import (
-	"log"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+var log = emo.NewZone("drb")
 
 type Provider struct {
 	ar garcon.AdaptiveRate
@@ -83,7 +85,7 @@ func (p *Provider) query(coin string) ([]instrument, error) {
 	const baseURL = "https://deribit.com/api/v2/public/get_instruments?currency="
 	const opts = "&expired=false&kind=option"
 	url := baseURL + coin + opts
-	log.Print("INF Deribit " + url)
+	log.Info("Deribit " + url)
 
 	var result instrumentsResult
 	err := p.ar.Get(coin, url, &result, maxBytesToRead)
@@ -163,7 +165,7 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 		url := baseURL + instruments[i].InstrumentName
 		if err := p.ar.Get(instruments[i].InstrumentName, url, &result); err != nil {
 			lastError = err
-			log.Print("WRN Deribit book " + err.Error())
+			log.Warning("Deribit book " + err.Error())
 		}
 
 		// API doc: https://docs.deribit.com/#public-get_index_price_names

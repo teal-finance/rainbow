@@ -15,11 +15,10 @@ import (
 	"github.com/teal-finance/garcon"
 )
 
-var log = emo.NewZone("client")
+var log = emo.NewZone("cli")
 
 func main() {
 	garcon.LogVersion()
-	log.Print = true
 
 	parseFlags()
 

@@ -6,7 +6,6 @@
 package lyra
 
 import (
-	"log"
 	"math/big"
 	"time"
 
@@ -14,8 +13,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+var log = emo.NewZone("lyr")
 
 const (
 	optimismrpc = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
@@ -81,7 +83,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		}
 	}
 
-	log.Print("INF Lyra total markets ", sum)
+	log.Info("Lyra total markets:", sum)
 	return options, nil
 }
 
