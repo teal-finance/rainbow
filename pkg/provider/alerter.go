@@ -90,7 +90,7 @@ func (a *alerter) vet(options []rainbow.Option, err error) error {
 
 	switch {
 	case notifyError:
-		msg = fmt.Sprint(":alert: API error: ", err) + msg
+		msg = ":alert: API error: " + err.Error() + msg
 	case notifyEmpty:
 		msg = ":question: no options" + msg
 	}
