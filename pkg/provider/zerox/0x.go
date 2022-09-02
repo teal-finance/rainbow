@@ -224,14 +224,14 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 
 		bid, err := requester.getQuote("BUY", instr.Id, USDC, amount, decimals)
 		if err != nil {
-			log.Warning("Opyn getQuote BUY ", err)
+			log.Warning("Opyn getQuote BUY", err)
 			return nil, err
 		}
 
 		if bid.Price != "" {
 			price, e := strconv.ParseFloat(bid.Price, 64)
 			if e != nil {
-				log.Warning("Opyn price ", e)
+				log.Warning("Opyn price", e)
 				continue
 			}
 
@@ -248,7 +248,7 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 
 		ask, err := requester.getQuote("SELL", USDC, instr.Id, amount, decimals)
 		if err != nil {
-			log.Info("Opyn getQuote SELL ", err)
+			log.Info("Opyn getQuote SELL", err)
 			return nil, err
 		}
 

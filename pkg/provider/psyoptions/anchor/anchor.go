@@ -120,7 +120,7 @@ func (o *Option) Asset() string {
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(ARBAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(ARBAddress):
 		return "ARB"
 	default:
-		log.Print("WARNING Lyra Unknown token: ", o.opt.QuoteAssetMint, "/", o.opt.UnderlyingAssetMint)
+		log.Print("WARNING Lyra Unknown token:", o.opt.QuoteAssetMint, "/", o.opt.UnderlyingAssetMint)
 		return "PPPP"
 	}
 }

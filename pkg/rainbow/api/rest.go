@@ -36,7 +36,7 @@ func NewHandler(s *rainbow.Service) Handler {
 func (h Handler) Options(w http.ResponseWriter, r *http.Request) {
 	sa, format, err := query(r)
 	if err != nil {
-		log.Warning("Options ", err)
+		log.Warning("Options", err)
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}

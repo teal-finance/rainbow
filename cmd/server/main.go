@@ -26,7 +26,7 @@ func main() {
 	parseFlags()
 
 	names := listProviderNames()
-	log.Init("Providers: ", names)
+	log.Init("Providers:", names)
 
 	g := garcon.New(
 		garcon.WithURLs(garcon.SplitClean(*mainAddr)...),

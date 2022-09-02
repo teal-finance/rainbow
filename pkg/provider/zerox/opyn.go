@@ -43,7 +43,7 @@ func QueryTheGraph() []opyn.OptionsOtokensOToken {
 
 	resp, err := opyn.Options(context.TODO(), graphqlClient, skip, first, minExpiryStr)
 	if err != nil {
-		log.Error("Opyn: ", err)
+		log.Error("Opyn:", err)
 		return nil
 	}
 	if resp == nil {

@@ -17,7 +17,7 @@ import (
 func (h Handler) CallPut(w http.ResponseWriter, r *http.Request) {
 	options, err := h.Service.Options(rainbow.StoreArgs{})
 	if err != nil {
-		log.Error("CallPut Options ", err)
+		log.Error("CallPut Options", err)
 		http.Error(w, "No Content", http.StatusNoContent)
 		return
 	}
@@ -27,7 +27,7 @@ func (h Handler) CallPut(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewEncoder(w).Encode(cp); err != nil {
-		log.Error("CallPut Encode ", err)
+		log.Error("CallPut Encode", err)
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 		return
 	}
