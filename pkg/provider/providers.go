@@ -10,9 +10,7 @@ import (
 
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/notifier"
-	"github.com/teal-finance/notifier/logger"
-	"github.com/teal-finance/notifier/mattermost"
+	"github.com/teal-finance/garcon/notifier"
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
@@ -63,25 +61,27 @@ func selectProviders(names []string) []rainbow.Provider {
 // Select returns all active providers with or without alerter
 // depending on endpoint emptiness and on onlyMattermost.
 func Select(names []string, alerterOptions ...string) []rainbow.Provider {
-	var n notifier.Notifier
-	var namespace string
-
-	if len(alerterOptions) > 0 {
-		namespace = alerterOptions[0]
-		if len(alerterOptions) > 1 && alerterOptions[1] != "" {
-			endpoint := alerterOptions[1]
-			n = mattermost.NewNotifier(endpoint)
-		} else {
-			n = logger.NewNotifier()
-		}
-	}
-
 	providers := selectProviders(names)
-
+	namespace, n := parseArgs(alerterOptions...)
 	if n == nil {
 		return providers
 	}
 	return AddAlert(providers, n, namespace)
+}
+
+func parseArgs(alerterOptions ...string) (namespace string, _ notifier.Notifier) {
+	if len(alerterOptions) == 0 {
+		return "", nil
+	}
+
+	namespace = alerterOptions[0]
+
+	endpoint := ""
+	if len(alerterOptions) > 1 {
+		endpoint = alerterOptions[1]
+	}
+
+	return namespace, notifier.New(endpoint)
 }
 
 // AddAlert returns the providers with an alerter on anomalies.

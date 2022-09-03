@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/teal-finance/garcon/notifier"
 	"github.com/teal-finance/garcon/timex"
-	"github.com/teal-finance/notifier"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 

@@ -537,8 +537,6 @@ github.com/teal-finance/garcon v0.28.1 h1:CxXmM6BLloYjz9gGoUkD2C1jwxFKLE2EjdxB2d
 github.com/teal-finance/garcon v0.28.1/go.mod h1:wX2vAS7fapixrhnpMEXPvdqv1tklzrzUEqXyUiHk6lY=
 github.com/teal-finance/incorruptible v0.0.0-20220902213136-fa2d591796b8 h1:7Pq2NjKEW70ZVCmcndAUI3Pu4Zf2hZ14FRe9zH9ZdiM=
 github.com/teal-finance/incorruptible v0.0.0-20220902213136-fa2d591796b8/go.mod h1:ZYNaAodPCVOTQTxkySBXgNaiBxXIxs3OG0F0ZmWuIyU=
-github.com/teal-finance/notifier v1.1.1 h1:MZdBjXoF7h6bFgQO06+AOvKTAbKmX9UdNvqO+bQZetg=
-github.com/teal-finance/notifier v1.1.1/go.mod h1:ARs60Js0UCD7wXvHqEUjcqxuw0FMgzodVDbdmIyOq8s=
 github.com/teal-finance/quid v0.0.0-20220902220341-9b05af161d7b h1:0KHcz9edn67ozPa34fTRINhfBloVXId2Kok6Sa07I9g=
 github.com/teal-finance/quid v0.0.0-20220902220341-9b05af161d7b/go.mod h1:FGR0oIoXWRnyElM6lTsq95aMlqH0pzl9luGobRvWzek=
 github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf/go.mod h1:M8agBzgqHIhgj7wEn9/0hJUZcrvt9VY+Ln+S1I5Mha0=

@@ -24,7 +24,6 @@ require (
 	github.com/stretchr/testify v1.8.0
 	github.com/teal-finance/emo v0.0.0-20220902211252-daf94c52658a
 	github.com/teal-finance/garcon v0.28.1
-	github.com/teal-finance/notifier v1.1.1
 )
 
 require (
