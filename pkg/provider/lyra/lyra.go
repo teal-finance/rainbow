@@ -8,6 +8,7 @@ package lyra
 import (
 	"fmt"
 	"log"
+	"math"
 	"math/big"
 	"strings"
 	"time"
@@ -15,7 +16,6 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/spewerspew/spew"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -24,6 +24,8 @@ const (
 	name               = "Lyra"
 	lyraRegistry       = "0xF5A0442D4753cA1Ea36427ec071aa5E786dA5916"
 	optionMarketViewer = "0xEAf788AD8abd9C98bA05F6802a62B8DbC673D76B"
+	QuoterAddress      = "0xea83ee73eB397c5974CB6b5220AE0A32fbE48B2B"
+	oneOption          = 1
 )
 
 type Provider struct{}
@@ -41,10 +43,9 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	}
 
 	address := common.HexToAddress(lyraRegistry)
-	log.Print(address)
 	registry, err := NewLyrar(address, client)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR: Lyra registry", err)
 		return options, err
 	}
 
@@ -52,7 +53,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	// we don't want to have 0x00...0 initialize here.
 	// and we don't know how many market there will be.
 	markets := []common.Address{}
-	spew.Dump(markets)
 	var i int64
 	var market common.Address
 	err = nil
@@ -60,13 +60,9 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		market, err = registry.OptionMarkets(&bind.CallOpts{}, big.NewInt(i))
 		if err == nil {
 			markets = append(markets, market)
-			log.Println(market, err)
 
-		} else {
-			log.Println("escaped ERR:", err)
 		}
 	}
-	spew.Dump(markets)
 	if len(markets) == 0 {
 		log.Print("ERR: registry.OptionMarkets return empty array")
 	}
@@ -74,7 +70,12 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	sum := 0
 	viewer, err := NewLyrap(common.HexToAddress(optionMarketViewer), client)
 	if err != nil {
-		log.Print("ERR: ", err)
+		log.Print("ERR: optionMarketViewer ", err)
+		return options, err
+	}
+	quoter, err := NewLyraq(common.HexToAddress(QuoterAddress), client)
+	if err != nil {
+		log.Print("ERR: quoter contract", err)
 		return options, err
 	}
 
@@ -99,7 +100,11 @@ func (Provider) Options() ([]rainbow.Option, error) {
 			sum += len(b.Strikes)
 
 			for _, s := range b.Strikes {
-				callPut := process(s, b, baseAsset)
+				callPut, err := process(s, b, baseAsset, quoter)
+				if err != nil {
+					log.Print("ERR: process ", err)
+					return options, err
+				}
 				options = append(options, callPut...)
 			}
 		}
@@ -109,7 +114,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 
 	return options, nil
 }
-func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asset string) []rainbow.Option {
+func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asset string, quoter *Lyraq) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 	call := rainbow.Option{
 		Name:          "",
@@ -145,10 +150,55 @@ func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asse
 	call.Name = call.OptionName()
 	put.Name = put.OptionName()
 
-	call.URL = url(call)
-	put.URL = url(put)
+	call.URL = url(call, s.StrikeId)
+	put.URL = url(put, s.StrikeId)
+
+	// Market IV = board IV (baseIV) * Skew
+	call.MarketIV = rainbow.ToFloat(b.BaseIv, rainbow.DefaultEthereumDecimals) *
+		rainbow.ToFloat(s.Skew, rainbow.DefaultEthereumDecimals)
+	//keep only 5 decimals (IV is already a % so it can be shown as XX.XXX%)
+	call.MarketIV = math.Floor(call.MarketIV*100000) / 100000
+	put.MarketIV = call.MarketIV
+
+	bidasks, err := getBidsAsks(s.StrikeId, b.Market, oneOption, quoter)
+	if err != nil {
+		log.Print("ERR: getBidsAsks ", err)
+		return options, err
+	}
+
+	call.Bid = append(call.Bid, rainbow.Order{
+		Price: bidasks[3],
+		Size:  float64(oneOption),
+	})
+
+	call.Ask = append(call.Ask, rainbow.Order{
+		Price: bidasks[0],
+		Size:  float64(oneOption),
+	})
+	put.Bid = append(put.Bid, rainbow.Order{
+		Price: bidasks[4],
+		Size:  float64(oneOption),
+	})
+
+	put.Ask = append(put.Ask, rainbow.Order{
+		Price: bidasks[1],
+		Size:  float64(oneOption),
+	})
 	options = append(options, call, put)
-	return options
+
+	return options, err
+}
+
+func getBidsAsks(strikeId *big.Int, market common.Address, amount int, quoter *Lyraq) ([]float64, error) {
+	// TODO check what iteration really mean in Lyra
+	// I know they use 1 :-)
+	premium, _, err := quoter.FullQuotes(&bind.CallOpts{}, market, strikeId, common.Big1,
+		rainbow.IntToEthereumUint256(amount, 18))
+	if err != nil {
+		log.Print("ERR: FullQuotes market ", market, " strikeId ", strikeId, err)
+		return []float64{}, err
+	}
+	return rainbow.ToFLoat(premium, rainbow.DefaultEthereumDecimals), nil
 }
 func Asset(address common.Address) string {
 	// those asset are part of Synthetix so if it's not recognized
@@ -170,112 +220,16 @@ func Asset(address common.Address) string {
 }
 
 // TODO check function on their frontend
-func url(o rainbow.Option) string {
+func url(o rainbow.Option, strikeId *big.Int) string {
 	base := "https://app.lyra.finance/trade"
 	asset := strings.ToLower(o.Asset[1:])
-	strike := fmt.Sprintf("%f", o.Strike)
+	// TODO if they include asset with decimal, modify this
+	// most likely example: SOL, LINK
+	strike := fmt.Sprintf("%.f", rainbow.ToFloat(strikeId, 0))
 	t := strings.ToLower(o.Type)
 
 	return base + "/" + asset + "/" + strike + "/" + t
 }
-
-/*
-func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketViewerTradePremiumView, error) {
-	ammOrder := []OptionMarketViewerTradePremiumView{}
-	a := rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals)
-
-	// Call BID
-	trade, err := v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 1, a)
-	if err != nil {
-		return nil, err
-	}
-
-	ammOrder = append(ammOrder, trade)
-
-	// Call ASK
-	trade, err = v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 0, a)
-	if err != nil {
-		return nil, err
-	}
-
-	ammOrder = append(ammOrder, trade)
-
-	// Put BID
-	trade, err = v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 3, a)
-	if err != nil {
-		return nil, err
-	}
-
-	ammOrder = append(ammOrder, trade)
-
-	// Put ASK
-	trade, err = v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 2, a)
-	if err != nil {
-		return nil, err
-	}
-
-	ammOrder = append(ammOrder, trade)
-	return ammOrder, err
-}
-
-func processOption(listing *OptionMarketViewerListingView, ammOrder []OptionMarketViewerTradePremiumView, amount int, asset string) []rainbow.Option {
-	options := []rainbow.Option{}
-	call := rainbow.Option{
-		Name:          "",
-		Type:          "CALL",
-		Asset:         asset,
-		Expiry:        expiration(listing.Expiry),
-		ExchangeType:  "DEX",
-		Chain:         "Ethereum",
-		Layer:         "L2",
-		Provider:      name,
-		QuoteCurrency: "USD", // sUSD but anyway
-		Bid:           nil,
-		Ask:           nil,
-		Strike:        rainbow.ToFloat(listing.Strike, rainbow.DefaultEthereumDecimals),
-	}
-	put := rainbow.Option{
-		Name:          "",
-		Type:          "PUT",
-		Asset:         asset,
-		Expiry:        expiration(listing.Expiry),
-		ExchangeType:  "DEX",
-		Chain:         "Ethereum",
-		Layer:         "L2",
-		Provider:      name,
-		QuoteCurrency: "USD", // sUSD but anyway
-		Bid:           nil,
-		Ask:           nil,
-		Strike:        rainbow.ToFloat(listing.Strike, rainbow.DefaultEthereumDecimals),
-	}
-
-	call.Name = call.OptionName()
-	put.Name = put.OptionName()
-
-	call.Bid = append(call.Bid, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[0].Premium, rainbow.DefaultEthereumDecimals),
-		Size:  float64(amount),
-	})
-
-	call.Ask = append(call.Ask, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[1].Premium, rainbow.DefaultEthereumDecimals),
-		Size:  float64(amount),
-	})
-
-	put.Bid = append(put.Bid, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[2].Premium, rainbow.DefaultEthereumDecimals),
-		Size:  float64(amount),
-	})
-
-	put.Ask = append(put.Ask, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[3].Premium, rainbow.DefaultEthereumDecimals),
-		Size:  float64(amount),
-	})
-
-	options = append(options, call, put)
-	return options
-}
-*/
 
 func expiration(e *big.Int) string {
 	seconds := e.Int64()

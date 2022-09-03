@@ -10,7 +10,7 @@ import "fmt"
 type Option struct {
 	Name          string  `json:"name"`      // ASSET-DATE-Strike-OptionsType
 	Type          string  `json:"type"`      // CALL / PUT  // TODO add exotic like binary and perp(squeeth)
-	Asset         string  `json:"asset"`     // ETH, BTC, SOL, ...
+	Asset         string  `json:"asset"`     // ETH, BTC, SOL, ...  // TODO add the underlying asset so that we don't need conversion
 	Expiry        string  `json:"expiry"`    // Expiry date in format 2021-12-31
 	ExchangeType  string  `json:"exchange"`  // CEX / DEX
 	Chain         string  `json:"chain"`     // Ethereum, Solana and "–" for CEX (Deribit)
