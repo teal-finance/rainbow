@@ -117,6 +117,6 @@ func main() {
 		ErrorLog:          log.Default(),
 	}
 
-	log.Info("Server listening on http://localhost" + server.Addr)
+	log.Print("Server listening on http://localhost" + server.Addr)
 	log.Fatal(server.ListenAndServe())
 }
