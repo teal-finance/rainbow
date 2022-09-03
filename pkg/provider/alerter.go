@@ -7,12 +7,11 @@ package provider
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 
+	"github.com/teal-finance/garcon/notifier"
 	"github.com/teal-finance/garcon/timex"
-	"github.com/teal-finance/notifier"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -64,7 +63,7 @@ func (a *alerter) Options() ([]rainbow.Option, error) {
 	go func() {
 		e := a.vet(options, err)
 		if e != nil {
-			log.Printf("ERR Alerter %s: %s", a.Name(), e)
+			log.Errorf("Alerter %s: %s", a.Name(), e)
 		}
 	}()
 
@@ -91,7 +90,7 @@ func (a *alerter) vet(options []rainbow.Option, err error) error {
 
 	switch {
 	case notifyError:
-		msg = fmt.Sprint(":alert: API error: ", err) + msg
+		msg = ":alert: API error: " + err.Error() + msg
 	case notifyEmpty:
 		msg = ":question: no options" + msg
 	}

@@ -7,8 +7,8 @@ package lyra
 
 import (
 	"fmt"
-	"log"
 	"math"
+
 	"math/big"
 	"strings"
 	"time"
@@ -16,8 +16,11 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
+
+var log = emo.NewZone("lyr")
 
 const (
 	optimismrpc        = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
@@ -36,17 +39,17 @@ func (Provider) Name() string {
 
 func (Provider) Options() ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
-
 	client, err := ethclient.Dial(optimismrpc)
 	if err != nil {
-		log.Fatal(err)
+		log.Print("ERR: Lyra ethclient", err)
+		return nil, err
 	}
 
 	address := common.HexToAddress(lyraRegistry)
 	registry, err := NewLyrar(address, client)
 	if err != nil {
 		log.Print("ERR: Lyra registry", err)
-		return options, err
+		return nil, err
 	}
 
 	// DO NOT use make() here!
@@ -71,16 +74,17 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	viewer, err := NewLyrap(common.HexToAddress(optionMarketViewer), client)
 	if err != nil {
 		log.Print("ERR: optionMarketViewer ", err)
-		return options, err
+		return nil, err
 	}
 	quoter, err := NewLyraq(common.HexToAddress(QuoterAddress), client)
 	if err != nil {
 		log.Print("ERR: quoter contract", err)
-		return options, err
+		return nil, err
 	}
 
 	for i := 0; i < len(markets); i++ {
 		marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, markets[i])
+
 		if err != nil {
 			log.Print("ERR: MarketAddresses ", err)
 
@@ -103,7 +107,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 				callPut, err := process(s, b, baseAsset, quoter)
 				if err != nil {
 					log.Print("ERR: process ", err)
-					return options, err
+					return nil, err
 				}
 				options = append(options, callPut...)
 			}
@@ -116,6 +120,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 }
 func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asset string, quoter *Lyraq) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
+
 	call := rainbow.Option{
 		Name:          "",
 		Type:          "CALL",
@@ -229,6 +234,7 @@ func url(o rainbow.Option, strikeId *big.Int) string {
 	t := strings.ToLower(o.Type)
 
 	return base + "/" + asset + "/" + strike + "/" + t
+
 }
 
 func expiration(e *big.Int) string {

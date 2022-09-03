@@ -93,7 +93,7 @@ func normalizeOrders(
 	}
 
 	limit := 20
-	levels := [][]*big.Int{}
+	var levels [][]*big.Int
 
 	err := book.Items(desc, func(node *serum.SlabLeafNode) error {
 		quantity := big.NewInt(int64(node.Quantity))

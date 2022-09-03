@@ -4,7 +4,9 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    ExoticHeader: typeof import('./src/components/widgets/ExoticHeader.vue')['default']
     ExtraHeader: typeof import('./src/components/widgets/ExtraHeader.vue')['default']
+    GenericDatatable: typeof import('./src/components/GenericDatatable.vue')['default']
     IAkarIconsArrowRight: typeof import('~icons/akar-icons/arrow-right')['default']
     IAkarIconsGithubFill: typeof import('~icons/akar-icons/github-fill')['default']
     IAntDesignGithubFilled: typeof import('~icons/ant-design/github-filled')['default']
@@ -18,7 +20,6 @@ declare module 'vue' {
     IIonArrowBackOutline: typeof import('~icons/ion/arrow-back-outline')['default']
     LoadingIndicator: typeof import('./src/components/widgets/LoadingIndicator.vue')['default']
     MobileRenderer: typeof import('./src/components/widgets/MobileRenderer.vue')['default']
-    OptionsDatatable: typeof import('./src/components/OptionsDatatable.vue')['default']
     PresetsSelect: typeof import('./src/components/PresetsSelect.vue')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']
   }

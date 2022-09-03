@@ -255,9 +255,8 @@ and more. For more details see the underlying project
 [Teal.Finance/Garcon](https://github.com/teal-finance/garcon/).
 
 ```sh
-$ go build ./cmd/server
-$ ./server -help
-Usage of ./server:
+$ go run github.com/teal-finance/rainbow/cmd/server -h
+Usage of /tmp/go-build1548629542/b001/exe/server:
   -addr string
         Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR (default "http://localhost")
   -aes string
@@ -266,16 +265,30 @@ Usage of ./server:
         Webhook endpoint to notify anomalies, has precedence over ALERT_URL
   -burst int
         Max requests during a burst, has precedence over REQ_BURST (default 22)
+  -cex
+        Enable the centralized exchanges: Deribit and Delta Exchange
   -dev
         Enable the developer mode (enabled by default if -addr and -port are not used)
+  -dex
+        Enable the decentralized exchanges: Lyra, Opyn, PsyOptions and Zeta
+  -exotic
+        Enable the decentralized exchanges with binary options: Thales
   -exp int
         Export port for Prometheus, has precedence over EXP_PORT
+  -form string
+        Webhook endpoint to notify filled contact form, has precedence over WEBFORM_URL
   -hmac string
         HMAC-SHA256 key (64 hex digits) for the JWT tokens, has precedence over HMAC_SHA256
+  -period duration
+        Period to fetch market data from providers (default 10m0s)
   -port int
         API port, has precedence over MAIN_PORT (default 8090)
+  -providers string
+        Coma-separated list of providers, has precedence over PROVIDERS (default "deribit,delta,lyra,opyn,psy,zeta")
   -rate int
         Max requests per minute, has precedence over REQ_PER_MINUTE (default 88)
+  -version
+        Print version and exit
   -www string
         Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```

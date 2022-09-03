@@ -6,21 +6,28 @@
 package main
 
 import (
-	"fmt"
 	"math"
 	"os"
 
 	"github.com/gookit/color"
 	"github.com/jedib0t/go-pretty/v6/table"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
+var log = emo.NewZone("cli")
+
 func main() {
-	service := rainbow.NewService(provider.AllProviders(), dbram.NewDB())
+	parseFlags()
+
+	names := listProviderNames()
+	log.Init("Providers:", names)
+
+	service := rainbow.NewService(provider.Select(names), dbram.NewDB())
 	service.FetchOptionsFromProviders()
 
 	options, err := service.Options(rainbow.StoreArgs{})
@@ -38,7 +45,7 @@ func printTable(options []rainbow.Option) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.SetStyle(table.StyleLight)
-	t.SetTitle(fmt.Sprint(" Available options: ", len(options)))
+	t.SetTitle(" Fetched %d options", len(options))
 
 	t.AppendHeader(table.Row{
 		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", red(" Ask"), "Size", "Instrument",

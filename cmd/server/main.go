@@ -6,12 +6,12 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -19,28 +19,32 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
+var log = emo.NewZone("srv")
+
 func main() {
+	emo.GlobalTimestamp()
 	parseFlags()
 
 	names := listProviderNames()
-	log.Print("Providers: ", names)
+	log.Init("Providers:", names)
 
 	g := garcon.New(
-		garcon.WithURLs(*mainAddr),
+		garcon.WithURLs(garcon.SplitClean(*mainAddr)...),
 		garcon.WithDev(*dev))
 
 	// start the service in background
-	providers := provider.Select(names, *alert, g.ServerName.String())
+	providers := provider.Select(names, g.ServerName.String(), *alert)
 	service := rainbow.NewService(providers, dbram.NewDB())
 	go service.Run(*period)
 
 	// chain middleware
 	middleware, connState := g.StartMetricsServer(*expPort)
-	middleware = middleware.Append(g.MiddlewareRejectUnprintableURI(),
+	middleware = middleware.Append(
+		g.MiddlewareRejectUnprintableURI(),
 		g.MiddlewareLogRequest(),
 		g.MiddlewareRateLimiter(*reqBurst, *reqPerMinute),
-		g.MiddlewareServerHeader("Rainbow"),
-		g.MiddlewareCORS())
+		g.MiddlewareCORS(),
+		g.MiddlewareServerHeader("Rainbow"))
 
 	// middleware to set/check cookies
 	var ck garcon.TokenChecker
@@ -64,10 +68,10 @@ func main() {
 	router.With(ck.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
 	router.With(ck.Chk).Get("/assets/*", ws.ServeAssets())
 	router.With(ck.Chk).Get("/version", garcon.ServeVersion())
-	// do not protect favicon and preview.jpg
+	// do not protect favicon and other public images
 	router.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
 	router.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))
-	router.Get("/preview.jpg", ws.ServeFile("preview.jpg", "image/jpeg"))
+	router.Get("/img/*", ws.ServeImages())
 
 	// Disable the contact-form endpoint until we protect it against DoS
 	if false {
@@ -113,6 +117,6 @@ func main() {
 		ErrorLog:          log.Default(),
 	}
 
-	log.Print("INF Server listening on http://localhost", server.Addr)
+	log.Print("Server listening on http://localhost" + server.Addr)
 	log.Fatal(server.ListenAndServe())
 }

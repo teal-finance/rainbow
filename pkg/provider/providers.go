@@ -6,13 +6,11 @@
 package provider
 
 import (
-	"log"
 	"os"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/notifier"
-	"github.com/teal-finance/notifier/logger"
-	"github.com/teal-finance/notifier/mattermost"
+	"github.com/teal-finance/garcon/notifier"
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
@@ -23,10 +21,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const (
-	// useLoggerNotifier when no Mattermost endpoint.
-	useLoggerNotifier = true
-)
+var log = emo.NewZone("pro")
 
 // AllProviders returns all supported providers.
 func AllProviders() []rainbow.Provider {
@@ -65,20 +60,28 @@ func selectProviders(names []string) []rainbow.Provider {
 
 // Select returns all active providers with or without alerter
 // depending on endpoint emptiness and on onlyMattermost.
-func Select(names []string, endpoint, namespace string) []rainbow.Provider {
-	var n notifier.Notifier
-	if endpoint != "" {
-		n = mattermost.NewNotifier(endpoint)
-	} else if useLoggerNotifier {
-		n = logger.NewNotifier()
-	}
-
+func Select(names []string, alerterOptions ...string) []rainbow.Provider {
 	providers := selectProviders(names)
-
+	namespace, n := parseArgs(alerterOptions...)
 	if n == nil {
 		return providers
 	}
 	return AddAlert(providers, n, namespace)
+}
+
+func parseArgs(alerterOptions ...string) (namespace string, _ notifier.Notifier) {
+	if len(alerterOptions) == 0 {
+		return "", nil
+	}
+
+	namespace = alerterOptions[0]
+
+	endpoint := ""
+	if len(alerterOptions) > 1 {
+		endpoint = alerterOptions[1]
+	}
+
+	return namespace, notifier.New(endpoint)
 }
 
 // AddAlert returns the providers with an alerter on anomalies.
@@ -92,7 +95,7 @@ func AddAlert(providers []rainbow.Provider, n notifier.Notifier, namespace strin
 
 	err := notifyStartup(n, namespace, list)
 	if err != nil {
-		log.Print("ERR Alerter: ", err)
+		log.Error("Alerter:", err)
 	}
 
 	return providers

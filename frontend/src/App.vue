@@ -9,22 +9,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import { user } from "@/state";
 import TheHeader from './components/TheHeader.vue';
-
-export default defineComponent({
-  components: {
-    TheHeader,
-  },
-  setup() {
-
-    return {
-      user,
-    }
-  }
-})
 </script>
 
 <style lang="sass">

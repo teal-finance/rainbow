@@ -6,17 +6,23 @@
 import { serverUrl } from '@/const';
 import { OptionsJsonDataset } from '@/models/options/types';
 import { GraphQLClient, gql } from 'graphql-request'
-import { allQuery } from './queries';
+import { classicOptionsQuery, exoticOptionsQuery } from './queries';
 
 const graphQLClient = new GraphQLClient(serverUrl + "v0/graphql", {
-  //credentials: 'include',
+  credentials: 'include',
   mode: 'cors',
 });
 
-async function query(): Promise<OptionsJsonDataset> {
-  const data = await graphQLClient.request(gql`query ${allQuery}`);
+async function classicQuery(): Promise<OptionsJsonDataset> {
+  const data = await graphQLClient.request(gql`query ${classicOptionsQuery}`);
   //console.log("Q", JSON.stringify(data, undefined, 2))
   return data as OptionsJsonDataset
 }
 
-export { query }
+async function exoticQuery(): Promise<OptionsJsonDataset> {
+  const data = await graphQLClient.request(gql`query ${exoticOptionsQuery}`);
+  //console.log("Q", JSON.stringify(data, undefined, 2))
+  return data as OptionsJsonDataset
+}
+
+export { classicQuery, exoticQuery }

@@ -27,7 +27,7 @@ func main() {
 	}
 	fileB, err := os.OpenFile("raw.txt", os.O_CREATE|os.O_WRONLY, 0o600)
 	if err != nil {
-		log.Fatal("failed creating file: ", err)
+		log.Fatal("failed creating file:", err)
 	}
 
 	datawriterB := bufio.NewWriter(fileB)
@@ -38,7 +38,7 @@ func main() {
 	b := buildCallPut(options)
 	file, err := os.OpenFile("dump.txt", os.O_CREATE|os.O_WRONLY, 0o600)
 	if err != nil {
-		log.Fatal("failed creating file: ", err)
+		log.Fatal("failed creating file:", err)
 	}
 
 	datawriter := bufio.NewWriter(file)
@@ -49,7 +49,7 @@ func main() {
 	arbs := buylowsellhigh(b, 0.25)
 	fileA, err := os.OpenFile("arbs.txt", os.O_CREATE|os.O_WRONLY, 0o600)
 	if err != nil {
-		log.Fatal("failed creating file: ", err)
+		log.Fatal("failed creating file:", err)
 	}
 
 	datawriterA := bufio.NewWriter(fileA)

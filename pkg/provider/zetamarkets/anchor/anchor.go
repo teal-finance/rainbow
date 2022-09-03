@@ -110,6 +110,7 @@ func (o Option) Asset() string {
 		return "BTC"
 	default:
 		log.Print("WRN Zeta Unknown token: ", o.ZG.UnderlyingMint)
+
 		return "ZZZZ"
 	}
 }

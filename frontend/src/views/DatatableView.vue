@@ -2,12 +2,12 @@
   <div v-if="isReady">
     <div class="flex flex-row" v-if="!isMobile">
       <div class="w-4/5">
-        <options-datatable :model="datatable"></options-datatable>
+        <generic-datatable :model="datatable" :type="type"></generic-datatable>
       </div>
-      <div class="pl-5 pr-3 w-1/5">
-        <presets-select v-if="isReady" @changepreset="mutatePreset($event)"></presets-select>
+      <div class="w-1/5 pl-5 pr-3">
+        <presets-select v-if="isReady && type == 'classic'" @changepreset="mutatePreset($event)"></presets-select>
         <div>
-          <div class="text-xl mt-3">Asset</div>
+          <div class="mt-3 text-xl">Asset</div>
           <hr class="my-3" />
           <values-filter :model="datatable" col="asset" :filters-state="filterConf.assets"></values-filter>
         </div>
@@ -24,7 +24,7 @@
       </div>
     </div>
     <div v-else>
-      <options-datatable :model="datatable"></options-datatable>
+      <generic-datatable :model="datatable" :type="type"></generic-datatable>
     </div>
   </div>
   <div v-else>
@@ -34,18 +34,27 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue'
+import { ref, reactive, onBeforeMount } from 'vue'
 import Option from '@/models/options/option';
 import SwDataTableModel from "@/packages/datatable/models/datatable";
 import ValuesFilter from '@/packages/datatable/filters/ValuesFilter.vue'
 import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
-import OptionsDatatable from '@/components/OptionsDatatable.vue';
+import GenericDatatable from '@/components/GenericDatatable.vue';
 import LoadingIndicator from '@/components/widgets/LoadingIndicator.vue';
 import { isMobile, user } from '@/state';
-import { query } from '@/api/graphql';
-//import ValuesFilterBadgeRender from '@/packages/datatable/filters/ValuesFilterBadgeRender.vue';
+import { classicQuery, exoticQuery } from '@/api/graphql';
 import filterPresets from "@/const/filter_presets";
 import PresetsSelect from "@/components/PresetsSelect.vue";
+import { OptionType } from '@/interfaces';
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
+import router from "@/router";
+
+const props = defineProps({
+  type: {
+    type: String as () => OptionType,
+    required: true
+  }
+});
 
 const datatable = ref(new SwDataTableModel<OptionsTable>());
 const isReady = ref(false);
@@ -61,7 +70,7 @@ function loadData(dataset: OptionsJsonDataset) {
     const opt = new Option(line).toRow();
     options.add(opt)
   }
-  console.log("OPTIONS", options);
+  //console.log("OPTIONS", options);
   const columns = {
     "provider": "Provider",
     "asset": "Asset",
@@ -84,16 +93,22 @@ function mutatePreset(presetname: string) {
   filterConf.assets = preset.assets;
   filterConf.providers = preset.providers;
   user.currentPreset.value = presetname;
-  //console.log("Filterconf mutation", JSON.stringify(filterConf, null, "  "))
 }
 
-onMounted(() => {
-  //console.log("FConf", JSON.stringify(filterConf.assets))
-  query().then((d) => {
+async function init() {
+  let d: OptionsJsonDataset;
+  if (props.type == "classic") {
+    d = await classicQuery()
     mutatePreset(user.currentPreset.value)
-    loadData(d);
-    isReady.value = true;
-  });
+  } else {
+    d = await exoticQuery()
+  }
+  loadData(d);
+  isReady.value = true;
+}
+
+onBeforeMount(() => {
+  init()
 })
 </script>
 

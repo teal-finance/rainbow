@@ -121,6 +121,7 @@ func (o *Option) Asset() string {
 		return "ARB"
 	default:
 		log.Print("WRN PSY Unknown token: ", o.opt.QuoteAssetMint, "/", o.opt.UnderlyingAssetMint)
+
 		return "PPPP"
 	}
 }

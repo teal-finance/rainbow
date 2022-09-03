@@ -21,7 +21,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	log.Print("len = ", len(all))
+	log.Print("len =", len(all))
 	if len(all) > 0 {
 		spew.Dump(all[0])
 	}
@@ -32,7 +32,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	log.Print("len = ", len(markets))
+	log.Print("len =", len(markets))
 	if len(markets) > 0 {
 		spew.Dump(markets[0])
 	}

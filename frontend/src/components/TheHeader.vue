@@ -7,14 +7,17 @@
       <template #branding>
         <div
           class="flex flex-row items-center ml-5 text-lg cursor-pointer"
-          @click="$router.push('/')"
+          @click="$router.push(titleLink)"
         >
           <div class="inline-block mx-3">
-            <img alt="logo" src="@/assets/logo-transparent.png" height="68" width="68" />
+            <img
+              alt="logo representing a pixelized cloud over a rainbow"
+              :src="`${logoURL}`" height="68" width="68"
+            />
           </div>
           <div class="inline-block text-xl tracking-widest">
             <!-- img alt="Rainbow" src="./assets/rainbow-chancery.png" height="49" width="185" / -->
-            Exotic
+            {{ titleText }}
           </div>
         </div>
       </template>
@@ -25,17 +28,14 @@
         <i-ion-arrow-back-outline v-if="!isHome" class="inline-flex ml-2 text-3xl"></i-ion-arrow-back-outline>
         <img
           v-else
-          alt="logo"
-          src="@/assets/logo-transparent.png"
-          height="68"
-          width="68"
-          class="ml-3"
+          alt="logo representing a pixelized cloud over a rainbow"
+          :src="`${logoURL}`" height="68" width="68" class="ml-3"
         />
       </template>
       <template #menu>
         <div class="flex flex-row items-center justify-end h-full space-x-1">
           <!-- button class="border-none btn" @click="openView('/options')">Options</button -->
-          <button class="border-none btn" @click="exotic()">Rainbow</button>
+          <button class="border-none btn" @click="$router.push(linkURL)">{{ linkText }}</button>
           <button class="border-none btn" @click="$router.push('/about')">About</button>
           <button class="border-none btn" @click="openSourceCode()">
             Source code
@@ -118,9 +118,36 @@ export default defineComponent({
       window.location.href = 'https://github.com/teal-finance/rainbow'
     }
 
-    function exotic(){
-      location.href= 'https://teal.finance/rainbow'
-    }
+    const logoURL = computed<string>(() => {
+      const logo = import.meta.env.BASE_URL + "img/logo-transparent.png"
+      const exotic = import.meta.env.BASE_URL + "img/exotic-transparent.png"
+      return router.currentRoute.value.path.startsWith("/exotic") ? exotic : logo
+    })
+
+    const titleText = computed<"Exotic"|"Rainbow">(() => {
+      return router.currentRoute.value.path.startsWith("/exotic") ? "Exotic" : "Rainbow"
+    })
+
+    const titleLink = computed<"/exotic"|"/">(() => {
+      return router.currentRoute.value.path.startsWith("/exotic") ? "/exotic" : "/"
+    })
+
+    const linkText = computed<"Classic"|"Exotic">(() => {
+      if (router.currentRoute.value.path.startsWith("/exotic")) {
+        return "Classic"
+      }
+      if (router.currentRoute.value.path.startsWith("/classic")) {
+        return "Exotic"
+      }
+      if (router.currentRoute.value.path === "/") {
+        return "Exotic"
+      }
+      return ""
+    })
+
+    const linkURL = computed<"/classic"|"/exotic">(() => {
+      return router.currentRoute.value.path.startsWith("/exotic") ? "/classic" : "/exotic"
+    })
 
     return {
       isMenuVisible,
@@ -130,7 +157,11 @@ export default defineComponent({
       openView,
       mobilePageTitle,
       openSourceCode,
-      exotic,
+      logoURL,
+      titleText,
+      titleLink,
+      linkText,
+      linkURL
     }
   }
 });

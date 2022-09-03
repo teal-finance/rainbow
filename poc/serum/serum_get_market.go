@@ -64,8 +64,8 @@ func runE(ctx context.Context, args []string) error {
 
 	fmt.Println(market.Name)
 
-	fmt.Println("Request RequestQueue: ", market.Market.GetRequestQueue())
-	fmt.Println("Event RequestQueue: ", market.Market.GetEventQueue())
+	fmt.Println("Request RequestQueue:", market.Market.GetRequestQueue())
+	fmt.Println("Event RequestQueue:", market.Market.GetEventQueue())
 
 	fmt.Println("Base")
 	fmt.Println("base mint", market.Market.GetBaseMint().String())
@@ -99,7 +99,7 @@ func getOrderBook(
 	}
 
 	limit := 20
-	levels := [][]*big.Int{}
+	var levels [][]*big.Int
 
 	o.Items(desc, func(node *serum.SlabLeafNode) error {
 		quantity := big.NewInt(int64(node.Quantity))
