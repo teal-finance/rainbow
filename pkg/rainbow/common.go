@@ -20,8 +20,8 @@ func IntToEthereumUint256(i int, decimals int64) *big.Int {
 	return a
 }
 
-// ToFloat
-// because a token use 10^decimals to represent 1
+// ToFloat converts a big.Int{decimals} to float64.
+// Because a token use 10^decimals to represent 1
 // what we do is that we cut 10^(decimals-5) to keep 5 decimals
 // (because IV is a percentage an we want to be accurate)
 // then convert the remainder to float64 and divide by 1000.
@@ -34,9 +34,9 @@ func ToFloat(n *big.Int, decimals int64) float64 {
 	return float64(q.Int64()) / 100000.0
 }
 
-// ToFLoat
-// Slice version to apply the conversion to each *big.Int of the slice
-func ToFLoat(bigs []*big.Int, decimals int64) []float64 {
+// ToFloats converts multiple big.Int{decimals} to float64 values.
+// ToFloats is the slice version of ToFloat to apply the conversion to each *big.Int of the slice.
+func ToFloats(bigs []*big.Int, decimals int64) []float64 {
 	floats := make([]float64, len(bigs))
 	for i, b := range bigs {
 		floats[i] = ToFloat(b, decimals)

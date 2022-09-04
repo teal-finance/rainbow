@@ -190,7 +190,7 @@ func getBidsAsks(strikeId *big.Int, market common.Address, amount int, quoter *L
 	if err != nil {
 		return nil, log.Error("FullQuotes market=", market, "strikeId=", strikeId, err).Err()
 	}
-	return rainbow.ToFLoat(premium, rainbow.DefaultEthereumDecimals), nil
+	return rainbow.ToFloats(premium, rainbow.DefaultEthereumDecimals), nil
 }
 
 func Asset(address common.Address) string {
