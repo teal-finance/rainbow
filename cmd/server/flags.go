@@ -85,13 +85,14 @@ func parseFlags() {
 	}
 }
 
+// listProviderNames is duplicated https://github.com/teal-finance/rainbow/blob/main/cmd/cli/flags.go#L37
 func listProviderNames() []string {
 	if *cex || *dex || *exotic {
 		if *providers == defaultProviders {
 			*providers = ""
 		}
 		if *cex {
-			*providers = "deribit,delta"
+			*providers += ",deribit,delta"
 		}
 		if *dex {
 			*providers += ",lyra,opyn,psy,zeta"
