@@ -3,15 +3,17 @@ package anchor
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	bin "github.com/gagliardetto/binary"
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
 
+	"github.com/teal-finance/emo"
 	psy "github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor/generated/psy_american"
 )
+
+var log = emo.NewZone("psy")
 
 const (
 	PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"
@@ -120,7 +122,7 @@ func (o *Option) Asset() string {
 	case o.opt.QuoteAssetMint == solana.MustPublicKeyFromBase58(ARBAddress) || o.opt.UnderlyingAssetMint == solana.MustPublicKeyFromBase58(ARBAddress):
 		return "ARB"
 	default:
-		log.Print("WRN PSY Unknown token: ", o.opt.QuoteAssetMint, "/", o.opt.UnderlyingAssetMint)
+		log.Warn("PSY Unknown token:", o.opt.QuoteAssetMint, "/", o.opt.UnderlyingAssetMint)
 
 		return "PPPP"
 	}

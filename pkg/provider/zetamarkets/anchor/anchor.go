@@ -8,7 +8,6 @@ package anchor
 import (
 	"context"
 	"fmt"
-	"log"
 	"math"
 	"strings"
 	"time"
@@ -17,8 +16,11 @@ import (
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor/generated/zeta"
 )
+
+var log = emo.NewZone("zet")
 
 const (
 	ZetaID   = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
@@ -109,7 +111,7 @@ func (o Option) Asset() string {
 	case o.ZG.UnderlyingMint == solana.MustPublicKeyFromBase58(BTCAddress):
 		return "BTC"
 	default:
-		log.Print("WRN Zeta Unknown token: ", o.ZG.UnderlyingMint)
+		log.Warn("Zeta Unknown token:", o.ZG.UnderlyingMint)
 
 		return "ZZZZ"
 	}
