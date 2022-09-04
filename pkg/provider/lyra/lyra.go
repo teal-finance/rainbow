@@ -6,13 +6,16 @@
 package lyra
 
 import (
+	"fmt"
+	"math"
+
 	"math/big"
+	"strings"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
@@ -20,8 +23,12 @@ import (
 var log = emo.NewZone("lyr")
 
 const (
-	optimismrpc = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
-	name        = "Lyra"
+	optimismrpc        = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
+	name               = "Lyra"
+	lyraRegistry       = "0xF5A0442D4753cA1Ea36427ec071aa5E786dA5916"
+	optionMarketViewer = "0xEAf788AD8abd9C98bA05F6802a62B8DbC673D76B"
+	QuoterAddress      = "0xea83ee73eB397c5974CB6b5220AE0A32fbE48B2B"
+	oneOption          = 1
 )
 
 type Provider struct{}
@@ -31,154 +38,203 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
+	options := []rainbow.Option{}
 	client, err := ethclient.Dial(optimismrpc)
 	if err != nil {
-		log.Fatal(err)
+		log.Print("ERR: Lyra ethclient", err)
+		return nil, err
+	}
+
+	address := common.HexToAddress(lyraRegistry)
+	registry, err := NewLyrar(address, client)
+	if err != nil {
+		log.Print("ERR: Lyra registry", err)
+		return nil, err
+	}
+
+	// DO NOT use make() here!
+	// we don't want to have 0x00...0 initialize here.
+	// and we don't know how many market there will be.
+	markets := []common.Address{}
+	var i int64
+	var market common.Address
+	err = nil
+	for ; err == nil; i++ {
+		market, err = registry.OptionMarkets(&bind.CallOpts{}, big.NewInt(i))
+		if err == nil {
+			markets = append(markets, market)
+
+		}
+	}
+	if len(markets) == 0 {
+		log.Print("ERR: registry.OptionMarkets return empty array")
 	}
 
 	sum := 0
+	viewer, err := NewLyrap(common.HexToAddress(optionMarketViewer), client)
+	if err != nil {
+		log.Print("ERR: optionMarketViewer ", err)
+		return nil, err
+	}
+	quoter, err := NewLyraq(common.HexToAddress(QuoterAddress), client)
+	if err != nil {
+		log.Print("ERR: quoter contract", err)
+		return nil, err
+	}
 
-	var options []rainbow.Option
+	for i := 0; i < len(markets); i++ {
+		marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, markets[i])
 
-	for i := 0; i < len(OptionMarkets); i++ {
-		market, err := NewLyra(common.HexToAddress(OptionMarkets[i]), client)
 		if err != nil {
+			log.Print("ERR: MarketAddresses ", err)
+
+			return nil, err
+		}
+		baseAsset := Asset(marketAddresses.BaseAsset)
+
+		boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, markets[i])
+		if err != nil {
+			log.Print("ERR: GetLiveBoards ", err)
+
 			return nil, err
 		}
 
-		viewer, err := NewLyrap(common.HexToAddress(OptionMarketViewers[i]), client)
-		if err != nil {
-			return nil, err
-		}
+		for _, b := range boards {
 
-		boards, err := market.GetLiveBoards(&bind.CallOpts{})
-		if err != nil {
-			return nil, err
-		}
+			sum += len(b.Strikes)
 
-		for _, j := range boards {
-			boardListings, err := market.GetBoardListings(&bind.CallOpts{}, j)
-			if err != nil {
-				return nil, err
-			}
-
-			sum += len(boardListings)
-
-			for _, k := range boardListings {
-				vlist, err := viewer.GetListingView(&bind.CallOpts{}, k)
+			for _, s := range b.Strikes {
+				callPut, err := process(s, b, baseAsset, quoter)
 				if err != nil {
+					log.Print("ERR: process ", err)
 					return nil, err
 				}
-
-				amount := 1
-
-				ammOrder, err := viewer.getBidsAsks(k, amount)
-				if err != nil {
-					return nil, err
-				}
-
-				callPut := processOption(&vlist, ammOrder, amount, Assets[i])
 				options = append(options, callPut...)
 			}
 		}
 	}
 
-	log.Info("Lyra total markets:", sum)
+	log.Print("INF Lyra total markets ", sum)
+
 	return options, nil
 }
+func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asset string, quoter *Lyraq) ([]rainbow.Option, error) {
+	options := []rainbow.Option{}
 
-func (v *Lyrap) getBidsAsks(boardListing *big.Int, amount int) ([]OptionMarketViewerTradePremiumView, error) {
-	var ammOrder []OptionMarketViewerTradePremiumView
-	a := rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals)
-
-	// Call BID
-	trade, err := v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 1, a)
-	if err != nil {
-		return nil, err
-	}
-
-	ammOrder = append(ammOrder, trade)
-
-	// Call ASK
-	trade, err = v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 0, a)
-	if err != nil {
-		return nil, err
-	}
-
-	ammOrder = append(ammOrder, trade)
-
-	// Put BID
-	trade, err = v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 3, a)
-	if err != nil {
-		return nil, err
-	}
-
-	ammOrder = append(ammOrder, trade)
-
-	// Put ASK
-	trade, err = v.GetPremiumForOpen(&bind.CallOpts{}, boardListing, 2, a)
-	if err != nil {
-		return nil, err
-	}
-
-	ammOrder = append(ammOrder, trade)
-	return ammOrder, err
-}
-
-func processOption(listing *OptionMarketViewerListingView, ammOrder []OptionMarketViewerTradePremiumView, amount int, asset string) []rainbow.Option {
 	call := rainbow.Option{
 		Name:          "",
 		Type:          "CALL",
 		Asset:         asset,
-		Expiry:        expiration(listing.Expiry),
+		Expiry:        expiration(b.Expiry),
 		ExchangeType:  "DEX",
 		Chain:         "Ethereum",
 		Layer:         "L2",
+		LayerName:     "Optimism",
 		Provider:      name,
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
-		Strike:        rainbow.ToFloat(listing.Strike, rainbow.DefaultEthereumDecimals),
+		Strike:        rainbow.ToFloat(s.StrikePrice, rainbow.DefaultEthereumDecimals),
 	}
 	put := rainbow.Option{
 		Name:          "",
 		Type:          "PUT",
 		Asset:         asset,
-		Expiry:        expiration(listing.Expiry),
+		Expiry:        expiration(b.Expiry),
 		ExchangeType:  "DEX",
 		Chain:         "Ethereum",
 		Layer:         "L2",
+		LayerName:     "Optimism",
 		Provider:      name,
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
-		Strike:        rainbow.ToFloat(listing.Strike, rainbow.DefaultEthereumDecimals),
+		Strike:        rainbow.ToFloat(s.StrikePrice, rainbow.DefaultEthereumDecimals),
 	}
 
 	call.Name = call.OptionName()
 	put.Name = put.OptionName()
 
+	call.URL = url(call, s.StrikeId)
+	put.URL = url(put, s.StrikeId)
+
+	// Market IV = board IV (baseIV) * Skew
+	call.MarketIV = rainbow.ToFloat(b.BaseIv, rainbow.DefaultEthereumDecimals) *
+		rainbow.ToFloat(s.Skew, rainbow.DefaultEthereumDecimals)
+	//keep only 5 decimals (IV is already a % so it can be shown as XX.XXX%)
+	call.MarketIV = math.Floor(call.MarketIV*100000) / 100000
+	put.MarketIV = call.MarketIV
+
+	bidasks, err := getBidsAsks(s.StrikeId, b.Market, oneOption, quoter)
+	if err != nil {
+		log.Print("ERR: getBidsAsks ", err)
+		return options, err
+	}
+
 	call.Bid = append(call.Bid, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[0].Premium, rainbow.DefaultEthereumDecimals),
-		Size:  float64(amount),
+		Price: bidasks[3],
+		Size:  float64(oneOption),
 	})
 
 	call.Ask = append(call.Ask, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[1].Premium, rainbow.DefaultEthereumDecimals),
-		Size:  float64(amount),
+		Price: bidasks[0],
+		Size:  float64(oneOption),
 	})
-
 	put.Bid = append(put.Bid, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[2].Premium, rainbow.DefaultEthereumDecimals),
-		Size:  float64(amount),
+		Price: bidasks[4],
+		Size:  float64(oneOption),
 	})
 
 	put.Ask = append(put.Ask, rainbow.Order{
-		Price: rainbow.ToFloat(ammOrder[3].Premium, rainbow.DefaultEthereumDecimals),
-		Size:  float64(amount),
+		Price: bidasks[1],
+		Size:  float64(oneOption),
 	})
+	options = append(options, call, put)
 
-	return []rainbow.Option{call, put}
+	return options, err
+}
+
+func getBidsAsks(strikeId *big.Int, market common.Address, amount int, quoter *Lyraq) ([]float64, error) {
+	// TODO check what iteration really mean in Lyra
+	// I know they use 1 :-)
+	premium, _, err := quoter.FullQuotes(&bind.CallOpts{}, market, strikeId, common.Big1,
+		rainbow.IntToEthereumUint256(amount, 18))
+	if err != nil {
+		log.Print("ERR: FullQuotes market ", market, " strikeId ", strikeId, err)
+		return []float64{}, err
+	}
+	return rainbow.ToFLoat(premium, rainbow.DefaultEthereumDecimals), nil
+}
+func Asset(address common.Address) string {
+	// those asset are part of Synthetix so if it's not recognized
+	// it is an unknwow synthetic asset.
+
+	switch {
+	case address.String() == sETH:
+		return "sETH"
+	case address.String() == sBTC:
+		return "sBTC"
+	case address.String() == sSOL:
+		return "sSOL"
+	case address.String() == sLINK:
+		return "sLINK"
+	default:
+		log.Print("WRN Lyra Unknown token: ", address.String())
+		return "LLLL"
+	}
+}
+
+// TODO check function on their frontend
+func url(o rainbow.Option, strikeId *big.Int) string {
+	base := "https://app.lyra.finance/trade"
+	asset := strings.ToLower(o.Asset[1:])
+	// TODO if they include asset with decimal, modify this
+	// most likely example: SOL, LINK
+	strike := fmt.Sprintf("%.f", rainbow.ToFloat(strikeId, 0))
+	t := strings.ToLower(o.Type)
+
+	return base + "/" + asset + "/" + strike + "/" + t
+
 }
 
 func expiration(e *big.Int) string {

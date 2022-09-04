@@ -26,9 +26,22 @@ func IntToEthereumUint256(i int, decimals int64) *big.Int {
 // (because IV is a percentage an we want to be accurate)
 // then convert the remainder to float64 and divide by 1000.
 func ToFloat(n *big.Int, decimals int64) float64 {
+	if decimals == 0 {
+		return float64(n.Int64())
+	}
 	q := big.NewInt(0)
 	q.Quo(n, big.NewInt(int64(math.Pow(10, float64(decimals-5))))) // divided by 10^(decimals-5)
 	return float64(q.Int64()) / 100000.0
+}
+
+// ToFLoat
+// Slice version to apply the conversion to each *big.Int of the slice
+func ToFLoat(bigs []*big.Int, decimals int64) []float64 {
+	floats := make([]float64, len(bigs))
+	for i, b := range bigs {
+		floats[i] = ToFloat(b, decimals)
+	}
+	return floats
 }
 
 // TimeStringConvert convert a Unix string to a UTC one.

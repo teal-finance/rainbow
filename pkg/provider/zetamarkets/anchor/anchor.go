@@ -109,7 +109,8 @@ func (o Option) Asset() string {
 	case o.ZG.UnderlyingMint == solana.MustPublicKeyFromBase58(BTCAddress):
 		return "BTC"
 	default:
-		log.Print("WARNING Thales Unknown token:", o.ZG.UnderlyingMint)
+		log.Print("WRN Zeta Unknown token: ", o.ZG.UnderlyingMint)
+
 		return "ZZZZ"
 	}
 }
