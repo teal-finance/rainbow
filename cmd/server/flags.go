@@ -18,7 +18,7 @@ import (
 const (
 	defaultAddr      = "http://localhost"
 	defaultPort      = 8090
-	defaultProviders = "deribit,delta,lyra,opyn,psy,zeta"
+	defaultProviders = "ALL"
 )
 
 var (
