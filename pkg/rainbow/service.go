@@ -43,15 +43,15 @@ func (s *Service) FetchOptionsFromProviders() {
 	for _, p := range s.providers {
 		o, err := p.Options()
 		if err != nil {
-			log.Error("" + p.Name() + " " + err.Error())
+			log.Error(p.Name(), err)
 			continue
 		}
 
-		log.Infof(""+p.Name()+": fetched %v options", len(o))
+		log.Printf(p.Name()+": fetched %v options", len(o))
 
 		err = s.store.InsertOptions(o)
 		if err != nil {
-			log.Error("" + p.Name() + " cannot store data: " + err.Error())
+			log.Error(p.Name(), "cannot store data:", err)
 			continue
 		}
 	}
