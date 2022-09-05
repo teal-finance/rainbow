@@ -13,7 +13,7 @@ import (
 	psy "github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor/generated/psy_american"
 )
 
-var log = emo.NewZone("psy")
+var log = emo.NewZone("Psy")
 
 const (
 	PsyOptionsProgramID = "R2y9ip6mxmWUj4pt54jP2hz2dgvMozy9VTSwMWE7evs"

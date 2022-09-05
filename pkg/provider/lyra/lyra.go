@@ -20,7 +20,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-var log = emo.NewZone("lyr")
+var log = emo.NewZone("Lyra")
 
 const (
 	optimismrpc        = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"

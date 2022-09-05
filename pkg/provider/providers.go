@@ -21,7 +21,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-var log = emo.NewZone("pro")
+var log = emo.NewZone("provider")
 
 // AllProviders returns all supported providers.
 func AllProviders() []rainbow.Provider {

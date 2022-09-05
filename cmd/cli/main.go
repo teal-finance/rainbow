@@ -19,7 +19,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
-var log = emo.NewZone("cli")
+var log = emo.NewZone("main")
 
 func main() {
 	parseFlags()

@@ -20,7 +20,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor/generated/zeta"
 )
 
-var log = emo.NewZone("zet")
+var log = emo.NewZone("Zeta")
 
 const (
 	ZetaID   = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"

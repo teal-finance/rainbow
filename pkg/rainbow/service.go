@@ -11,7 +11,7 @@ import (
 	"github.com/teal-finance/emo"
 )
 
-var log = emo.NewZone("srv")
+var log = emo.NewZone("service")
 
 type Provider interface {
 	Name() string

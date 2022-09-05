@@ -16,7 +16,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-var log = emo.NewZone("drb")
+var log = emo.NewZone("Deribit")
 
 type Provider struct {
 	ar garcon.AdaptiveRate

@@ -15,7 +15,7 @@ import (
 	"github.com/teal-finance/garcon"
 )
 
-var log = emo.NewZone("cli")
+var log = emo.NewZone("main")
 
 func main() {
 	garcon.LogVersion()
