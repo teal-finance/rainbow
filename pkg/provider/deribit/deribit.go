@@ -165,7 +165,7 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 		url := baseURL + instruments[i].InstrumentName
 		if err := p.ar.Get(instruments[i].InstrumentName, url, &result); err != nil {
 			lastError = err
-			log.Warning("Deribit book " + err.Error())
+			log.Warn("Deribit book " + err.Error())
 		}
 
 		// API doc: https://docs.deribit.com/#public-get_index_price_names

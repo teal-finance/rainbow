@@ -38,14 +38,14 @@ func extract(o *opyn.OptionsOtokensOToken) (optionType, expiry string, strike fl
 
 	expiry, err := rainbow.TimeStringConvert(o.ExpiryTimestamp)
 	if err != nil {
-		log.Warningf("Opyn ExpiryTimestamp: %v from %+v", err, o)
+		log.Warnf("Opyn ExpiryTimestamp: %v from %+v", err, o)
 		expiry = ""
 	}
 
 	// thought the USDCdecimals were correct but apparently not (whatever)
 	strike, err = convertFromSolidity(o.StrikePrice, OTokensDecimals)
 	if err != nil {
-		log.Warningf("Opyn Strike: %v from %+v", err, o)
+		log.Warnf("Opyn Strike: %v from %+v", err, o)
 		strike = 0
 	}
 
@@ -119,7 +119,7 @@ func (sr *stubbornRequester) failure(err error) {
 	newSleep := sr.maxBad / 2
 	sr.ko++
 
-	log.Warningf("Opyn failure #%v bad=%v sleep=%v + %v %v",
+	log.Warnf("Opyn failure #%v bad=%v sleep=%v + %v %v",
 		sr.ko, sr.maxBad, sr.sleep, newSleep, garcon.Sanitize(err.Error()))
 
 	sr.maxBad = sr.sleep + newSleep
@@ -224,14 +224,14 @@ func normalize(instruments []opyn.OptionsOtokensOToken, provider string, amount 
 
 		bid, err := requester.getQuote("BUY", instr.Id, USDC, amount, decimals)
 		if err != nil {
-			log.Warning("Opyn getQuote BUY", err)
+			log.Warn("Opyn getQuote BUY", err)
 			return nil, err
 		}
 
 		if bid.Price != "" {
 			price, e := strconv.ParseFloat(bid.Price, 64)
 			if e != nil {
-				log.Warning("Opyn price", e)
+				log.Warn("Opyn price", e)
 				continue
 			}
 

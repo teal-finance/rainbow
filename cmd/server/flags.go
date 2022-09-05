@@ -81,7 +81,7 @@ func parseFlags() {
 		}
 	}
 	if len(*aes) > 0 && len(*hmac) > 0 {
-		log.Warning("Should use -aes or -hmac, not both in the same time")
+		log.Warn("Should use -aes or -hmac, not both in the same time")
 	}
 }
 
