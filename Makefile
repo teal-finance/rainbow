@@ -1,7 +1,5 @@
 .PHONY: help
 help:
-	# Usage: 'make <target>' where <target> is one of:
-	#
 	# make all -j         Build both backend and frontend
 	# make server         Build the backend only
 	# make front          Build the frontend only
@@ -10,12 +8,18 @@ help:
 	# make run            Run the backend
 	# make run-front      Run the frontend in dev mode
 	#
+	# make test           (Go only) Test the backend
+	# make cov            (Go only) Test and visualize the code coverage
+	# make fmt            (Go only) Generate code, Format code, Check build
+	# make vet            (Go only) Generate, Format, Build, Test, Lint and Run commands
+	#
 	# make container-run  Build and run the container
 	# make container-rm   Stop and remove the container image
 	#
-	# Example:
+	# Examples:
 	#
 	# make clean all -j   Rebuild all in parallel
+	# make fmt test vet   Update/verify backend before commit
 
 # Allow using a different Go executable by running as
 # "GOEXE=xxx make ..." or as "make ... GOEXE=xxx ..."
@@ -23,10 +27,10 @@ GOEXE ?= go
 
 .PHONY: clean
 clean:
-	rm -fr server frontend/dist
+	rm -fr frontend/dist server code-coverage-of-tests.out
 
 .PHONY: all
-all: server frontend/dist
+all: frontend/dist server
 
 server: go.sum
 	${GOEXE} build -o $@ ./cmd/server
@@ -52,6 +56,30 @@ run: go.sum
 .PHONY: run-front
 run-front:
 	cd frontend && yarn dev
+
+##########  Backend only  ##########
+
+.PHONY: gen
+fmt:
+	go mod tidy
+	go generate ./...
+	go run mvdan.cc/gofumpt@latest -w -extra -l -lang 1.19 .
+	go build ./...
+
+.PHONY: test
+test:
+	go test -race -tags=rainbow -coverprofile=code-coverage-of-tests.out ./...
+
+.PHONY:
+cov: test
+	go tool cover -html code-coverage-of-tests.out
+
+.PHONY: vet
+vet:
+	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run --fix || true
+	go run ./cmd/client || true
+	go run ./cmd/cli
+	go run ./cmd/server
 
 ##########  Container targets  ##########
 
