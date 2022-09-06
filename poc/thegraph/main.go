@@ -39,18 +39,23 @@ func main() {
 	fmt.Println("test")
 	spew.Dump(len(markets))*/
 	fmt.Println(thales.Underlying(m.CurrencyKey))
-	rpc, _, amm, decimals := thales.LayerInfo("Polygon") // "Polygon") //"Optimism")
+
+	const layer = "Polygon" //"Optimism")
+	rpc := thales.LayerRPC(layer)
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Thales ethclient.Dial", err)
 	}
+
+	amm := thales.LayerAMM(layer)
+	decimals := thales.LayerDecimals(layer)
 	fmt.Println(amm, "\t", rpc, "\t", decimals)
 	// AMM := "0x5ae7454827D83526261F3871C1029792644Ef1B1"
 
 	address := common.HexToAddress(amm)
 	instance, err := thales.NewThales(address, client)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("NewThales", err)
 	}
 
 	fmt.Println("contract is loaded")

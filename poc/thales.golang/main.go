@@ -15,7 +15,7 @@ import (
 
 func main() {
 	log.Print("-------- thales.QueryAllMarkets --------")
-	_, url, _, _ := thales.LayerInfo("Optimism")
+	url := thales.LayerURL("Optimism")
 	all, err := thales.QueryAllMarkets(url)
 	if err != nil {
 		log.Fatal(err.Error())

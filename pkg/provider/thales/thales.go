@@ -48,6 +48,50 @@ const (
 	amount       = 1
 )
 
+func LayerRPC(layer string) string {
+	switch layer {
+	case "Optimism":
+		return rpcOptimism
+	case "Polygon":
+		return rpcPolygon
+	}
+	log.Panic("Unexpected layer", layer)
+	return ""
+}
+
+func LayerURL(layer string) string {
+	switch layer {
+	case "Optimism":
+		return urlOptimism
+	case "Polygon":
+		return urlPolygon
+	}
+	log.Panic("Unexpected layer", layer)
+	return ""
+}
+
+func LayerAMM(layer string) string {
+	switch layer {
+	case "Optimism":
+		return ammOptimism
+	case "Polygon":
+		return ammPolygon
+	}
+	log.Panic("Unexpected layer", layer)
+	return ""
+}
+
+func LayerDecimals(layer string) int64 {
+	switch layer {
+	case "Optimism":
+		return rainbow.DefaultEthereumDecimals
+	case "Polygon":
+		return zerox.USDCDecimals
+	}
+	log.Panic("Unexpected layer", layer)
+	return 0
+}
+
 type Provider struct{}
 
 func (Provider) Name() string {
@@ -176,34 +220,15 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 	return binary, nil
 }
 
-func LayerInfo(layer string) (rpc, thegraphURL, amm string, decimals int64) {
-	if layer == "Optimism" {
-		rpc = rpcOptimism
-		thegraphURL = urlOptimism
-		amm = ammOptimism
-		decimals = rainbow.DefaultEthereumDecimals
-	} else if layer == "Polygon" {
-		rpc = rpcPolygon
-		thegraphURL = urlPolygon
-		amm = ammPolygon
-		decimals = zerox.USDCDecimals
-	}
-	return rpc, thegraphURL, amm, decimals
-}
-
-func LayerURL(layer string) string {
-	_, thegraphURL, _, _ := LayerInfo(layer)
-	return thegraphURL
-}
-
 func getQuote(m *thales.AllMarketsMarketsMarket, side uint8, action, layer string) (float64, error) {
-	rpc, _, amm, decimals := LayerInfo(layer)
+	rpc := LayerRPC(layer)
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
 		log.Error("Thales ethclient.Dial", err)
 		return 0, err
 	}
 
+	amm := LayerAMM(layer)
 	address := common.HexToAddress(amm)
 	instance, err := NewThales(address, client)
 	if err != nil {
@@ -226,6 +251,7 @@ func getQuote(m *thales.AllMarketsMarketsMarket, side uint8, action, layer strin
 		}
 	}
 
+	decimals := LayerDecimals(layer)
 	return rainbow.ToFloat(quote, decimals), nil
 }
 
