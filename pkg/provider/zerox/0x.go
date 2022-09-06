@@ -27,7 +27,7 @@ const (
 	USDCDecimals    = 6
 	OTokensDecimals = 8
 	WETHDecimals    = 18
-	WBTCDEcimals    = 8
+	WBTCDecimals    = 8
 )
 
 func extract(o *opyn.OptionsOtokensOToken) (optionType, expiry string, strike float64) {

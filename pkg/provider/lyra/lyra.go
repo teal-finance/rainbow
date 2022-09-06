@@ -195,7 +195,7 @@ func getBidsAsks(strikeId *big.Int, market common.Address, amount int, quoter *L
 
 func Asset(address common.Address) string {
 	// those asset are part of Synthetix so if it's not recognized
-	// it is an unknwow synthetic asset.
+	// it is an unknown synthetic asset.
 
 	switch {
 	case address.String() == sETH:
