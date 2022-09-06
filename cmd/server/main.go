@@ -22,7 +22,7 @@ import (
 var log = emo.NewZone("main")
 
 func main() {
-	emo.GlobalTimestamp()
+	emo.GlobalTimestamp(true)
 	parseFlags()
 
 	names := listProviderNames()
