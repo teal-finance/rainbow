@@ -78,10 +78,10 @@ func (a *alerter) vet(options []rainbow.Option, err error) error {
 	var msg string
 	if notifyError || notifyEmpty {
 		// => increment alerting verbosity
-		ok, msg = a.muter.Increment()
+		ok, msg = a.muter.increment()
 	} else {
 		// no alert => decrement alerting verbosity
-		ok, msg = a.muter.Decrement()
+		ok, msg = a.muter.decrement()
 	}
 
 	if !ok {
@@ -120,8 +120,8 @@ type muter struct {
 }
 
 // increment increments the internal counter and returns false when in muted state.
-// Every remindMuteState calls, Increment also returns a message to remind the muted state.
-func (m *muter) Increment() (bool, string) {
+// Every remindMuteState calls, increment also returns a message to remind the muted state.
+func (m *muter) increment() (ok bool, msg string) {
 	m.counter++
 
 	if m.muted {
@@ -145,9 +145,9 @@ func (m *muter) Increment() (bool, string) {
 	return true, ""
 }
 
-// Decrement decrements the alert verbosity level (the counter)
+// decrement decrements the alert verbosity level (the counter)
 // and switches to un-muted state when counter reaches zero.
-func (m *muter) Decrement() (bool, string) {
+func (m *muter) decrement() (ok bool, msg string) {
 	if !m.muted {
 		return false, "" // Already un-muted, do nothing
 	}
@@ -167,7 +167,7 @@ func (m *muter) Decrement() (bool, string) {
 	m.muted = false
 	m.counter = 0
 
-	msg := "✅ No alerts "
+	msg = "✅ No alerts "
 	if sinceQuietTime > 0 {
 		msg += fmt.Sprintf("since %s (%s ago)", m.quietTime.Format("15:04"), timex.DStr(sinceQuietTime))
 	} else {
