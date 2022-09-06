@@ -8,7 +8,6 @@ package main
 import (
 	"context"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/teal-finance/emo"
@@ -30,8 +29,7 @@ func main() {
 
 	req, err := http.NewRequestWithContext(context.Background(), "GET", url, http.NoBody)
 	if err != nil {
-		log.Error(err)
-		os.Exit(10)
+		log.Fatal(err)
 	}
 
 	if *hmac != "" {
@@ -43,16 +41,14 @@ func main() {
 
 	resp, err := (&http.Client{}).Do(req)
 	if err != nil {
-		log.Error(err)
-		os.Exit(11)
+		log.Fatal(err)
 	}
 
 	maxBytes := 1_000_000
 	buf, err := garcon.ReadResponse(resp, maxBytes)
 	resp.Body.Close()
 	if err != nil {
-		log.Error(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	if *verbose {
