@@ -92,8 +92,8 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		for _, b := range boards {
 			sum += len(b.Strikes)
 
-			for _, s := range b.Strikes {
-				callPut, err := process(s, b, baseAsset, quoter)
+			for ii := range b.Strikes {
+				callPut, err := b.process(ii, baseAsset, quoter)
 				if err != nil {
 					return nil, log.Error("process", err).Err()
 				}
@@ -107,7 +107,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	return options, nil
 }
 
-func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asset string, quoter *Lyraq) ([]rainbow.Option, error) {
+func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 
 	call := rainbow.Option{
@@ -123,7 +123,7 @@ func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asse
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
-		Strike:        rainbow.ToFloat(s.StrikePrice, rainbow.DefaultEthereumDecimals),
+		Strike:        rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
 	}
 	put := rainbow.Option{
 		Name:          "",
@@ -138,23 +138,23 @@ func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asse
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
-		Strike:        rainbow.ToFloat(s.StrikePrice, rainbow.DefaultEthereumDecimals),
+		Strike:        rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
 	}
 
 	call.Name = call.OptionName()
 	put.Name = put.OptionName()
 
-	call.URL = url(call, s.StrikeId)
-	put.URL = url(put, s.StrikeId)
+	call.URL = url(&call, b.Strikes[i].StrikeId)
+	put.URL = url(&put, b.Strikes[i].StrikeId)
 
 	// Market IV = board IV (baseIV) * Skew
 	call.MarketIV = rainbow.ToFloat(b.BaseIv, rainbow.DefaultEthereumDecimals) *
-		rainbow.ToFloat(s.Skew, rainbow.DefaultEthereumDecimals)
+		rainbow.ToFloat(b.Strikes[i].Skew, rainbow.DefaultEthereumDecimals)
 	// keep only 5 decimals (IV is already a % so it can be shown as XX.XXX%)
 	call.MarketIV = math.Floor(call.MarketIV*100000) / 100000
 	put.MarketIV = call.MarketIV
 
-	bidasks, err := getBidsAsks(s.StrikeId, b.Market, oneOption, quoter)
+	bidasks, err := getBidsAsks(b.Strikes[i].StrikeId, b.Market, oneOption, quoter)
 	if err != nil {
 		return options, log.Error("getBidsAsks", err).Err()
 	}
@@ -182,13 +182,13 @@ func process(s OptionMarketViewerStrikeView, b OptionMarketViewerBoardView, asse
 	return options, err
 }
 
-func getBidsAsks(strikeId *big.Int, market common.Address, amount int, quoter *Lyraq) ([]float64, error) {
+func getBidsAsks(strikeID *big.Int, market common.Address, amount int, quoter *Lyraq) ([]float64, error) {
 	// TODO check what iteration really mean in Lyra
 	// I know they use 1 :-)
-	premium, _, err := quoter.FullQuotes(&bind.CallOpts{}, market, strikeId, common.Big1,
+	premium, _, err := quoter.FullQuotes(&bind.CallOpts{}, market, strikeID, common.Big1,
 		rainbow.IntToEthereumUint256(amount, 18))
 	if err != nil {
-		return nil, log.Error("FullQuotes market=", market, "strikeId=", strikeId, err).Err()
+		return nil, log.Error("FullQuotes market=", market, "strikeID=", strikeID, err).Err()
 	}
 	return rainbow.ToFloats(premium, rainbow.DefaultEthereumDecimals), nil
 }
@@ -213,12 +213,12 @@ func Asset(address common.Address) string {
 }
 
 // TODO check function on their frontend.
-func url(o rainbow.Option, strikeId *big.Int) string {
+func url(o *rainbow.Option, strikeID *big.Int) string {
 	base := "https://app.lyra.finance/trade"
 	asset := strings.ToLower(o.Asset[1:])
 	// TODO if they include asset with decimal, modify this
 	// most likely example: SOL, LINK
-	strike := fmt.Sprintf("%.f", rainbow.ToFloat(strikeId, 0))
+	strike := fmt.Sprintf("%.f", rainbow.ToFloat(strikeID, 0))
 	t := strings.ToLower(o.Type)
 
 	return base + "/" + asset + "/" + strike + "/" + t
