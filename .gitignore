@@ -4,7 +4,8 @@
 *.log
 /.golangci.yml
 /cli
+/client
+/code-coverage.out
 /dev
-/doc/ignore
 /go.work*
 /server

@@ -27,7 +27,7 @@ GOEXE ?= go
 
 .PHONY: clean
 clean:
-	rm -fr frontend/dist server code-coverage-of-tests.out
+	rm -fr frontend/dist server code-coverage.out
 
 .PHONY: all
 all: frontend/dist server
@@ -68,11 +68,11 @@ fmt:
 
 .PHONY: test
 test:
-	go test -race -tags=rainbow -coverprofile=code-coverage-of-tests.out ./...
+	go test -race -tags=rainbow -coverprofile=code-coverage.out ./...
 
 .PHONY:
 cov: test
-	go tool cover -html code-coverage-of-tests.out
+	go tool cover -html code-coverage.out
 
 .PHONY: vet
 vet:
