@@ -27,7 +27,7 @@ const (
 
 func main() {
 	z := solana.MustPublicKeyFromBase58(ZetaID)
-	endpoint := rpc.MainNetBeta_RPC
+	endpoint := "https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com" rpc.MainNetBeta_RPC
 	client := rpc.New(endpoint)
 
 	out, err := client.GetProgramAccounts(
@@ -50,26 +50,42 @@ func main() {
 	}
 	spew.Dump(out)*/
 	// spew.Dump(len(out[0:3]))
-	for _, i := range out {
-		// spew.Dump(i.Pubkey)
+	for _, account := range out {
+		// spew.Dump(account.Pubkey)
 		/*out, err := client.GetAccountInfo(
 			context.TODO(),
-			i.Pubkey,
+			account.Pubkey,
 		)
 		spew.Dump(out)
 		if err != nil {
 			panic(err)
 		}*/
 		zo := new(zeta.ZetaGroup)
-		err = bin.NewBinDecoder(i.Account.Data.GetBinary()).Decode(&zo)
+		err = bin.NewBinDecoder(account.Account.Data.GetBinary()).Decode(&zo)
 
 		// opt := new(OptionMarket)
-		// err = bin.NewBorshDecoder(i.Account.Data.GetBinary()).Decode(&opt)
+		// err = bin.NewBorshDecoder(account.Account.Data.GetBinary()).Decode(&opt)
 		if err != nil {
 			continue
 		}
 
-		spew.Dump(zo) // opt)
+		spew.Dump(zo.Products[11]) // opt)////TODO compute the right index
+		spew.Dump(zo.Greeks)       // opt)
+
+		ooo, err := client.GetAccountInfo(
+			context.TODO(),
+			zo.Greeks,
+		)
+		if err != nil {
+			panic(err)
+		}
+		//spew.Dump(ooo.Value)
+		gr := new(zeta.Greeks)
+		err = bin.NewBinDecoder(ooo.Value.Data.GetBinary()).Decode(&gr)
+		if err != nil {
+			continue
+		}
+		spew.Dump(gr.ProductGreeks[11]) //TODO compute the right index
 		/*
 			a, b, c := deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.QuoteAssetMint), pub)
 			spew.Dump(a, b, c)

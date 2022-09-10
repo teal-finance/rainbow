@@ -41,11 +41,13 @@ func Query() ([]Option, error) {
 
 	result := make([]Option, 0, 4*len(out))
 
-	for _, i := range out {
+	for _, account := range out {
 		z := new(zeta.ZetaGroup)
 
-		err = bin.NewBinDecoder(i.Account.Data.GetBinary()).Decode(&z)
+		err = bin.NewBinDecoder(account.Account.Data.GetBinary()).Decode(&z)
 		if err != nil {
+			// TODO make proper error since this is fixed
+
 			continue
 		}
 
@@ -80,7 +82,7 @@ type Option struct {
 	ZG      *zeta.ZetaGroup
 	Product zeta.Product
 	expiry  uint64
-	// in ZetaGroup the Product & ProductPaddings are by packet of 23.
+	// in ZetaGroup the Product & ProductPaddings are by packet of 23 = 11 calls + 11 puts + 1 future.
 	// To find the corresponding expiry(padding), we need its index in the array, and divide by 23
 	// the quotient is the index of the expiry of interest
 	// we also need to know if we are in the padding space or nah

@@ -43,6 +43,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 
 		out, err := serum.FetchMarket(context.Background(), client, pubKey)
 		if err != nil {
+			// TODO make proper error since this is fixed
 			// for now because error in serumAddress generated
 			continue
 		}
