@@ -9,7 +9,7 @@ help:
 	# make run-front      Run the frontend in dev mode
 	#
 	# make test           (Go only) Test the backend
-	# make cov            (Go only) Test and visualize the code coverage
+	# make cov            (Go only) Browse test coverage
 	# make fmt            (Go only) Generate code, Format code, Check build
 	# make vet            (Go only) Generate, Format, Build, Test, Lint and Run commands
 	#
