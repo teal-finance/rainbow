@@ -49,7 +49,7 @@ func main() {
 		panic(err)
 	}
 	spew.Dump(out)*/
-	// spew.Dump(len(out[0:3]))
+	spew.Dump(len(out))
 	for _, account := range out {
 		// spew.Dump(account.Pubkey)
 		/*out, err := client.GetAccountInfo(
@@ -69,7 +69,10 @@ func main() {
 			continue
 		}
 
-		spew.Dump(zo.Products[11]) // opt)////TODO compute the right index
+		spew.Dump(zo.Products[5])  // opt)////TODO compute the right index
+		spew.Dump(zo.Products[6])  // opt)////TODO compute the right index
+		spew.Dump(zo.Products[16]) // opt)////TODO compute the right index
+		spew.Dump(zo.Products[17]) // opt)////TODO compute the right index
 		spew.Dump(zo.Greeks)       // opt)
 
 		ooo, err := client.GetAccountInfo(
@@ -85,7 +88,8 @@ func main() {
 		if err != nil {
 			continue
 		}
-		spew.Dump(gr.ProductGreeks[11]) //TODO compute the right index
+		spew.Dump(gr.ProductGreeks[5]) //TODO compute the right index
+		spew.Dump(gr.ProductGreeks[6]) //TODO compute the right index
 		/*
 			a, b, c := deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.QuoteAssetMint), pub)
 			spew.Dump(a, b, c)
