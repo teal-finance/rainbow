@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/gg"
 )
 
 const (
@@ -26,21 +27,21 @@ const (
 var (
 	verbose = flag.Bool("v", false, "Verbose: print the fetch data from Rainbow API")
 
-	rURL = flag.String("rainbow", garcon.EnvStr("RAINBOW_URL", rainbowURL), "URL of the Rainbow website. The RAINBOW_URL environment variable can also be used.")
-	qURL = flag.String("quid", garcon.EnvStr("QUID_URL", quidURL), "URL of the Quid website. The QUID_URL environment variable can also be used.")
+	rURL = flag.String("rainbow", gg.EnvStr("RAINBOW_URL", rainbowURL), "URL of the Rainbow website. The RAINBOW_URL environment variable can also be used.")
+	qURL = flag.String("quid", gg.EnvStr("QUID_URL", quidURL), "URL of the Quid website. The QUID_URL environment variable can also be used.")
 
 	btc   = flag.Bool("btc", false, "Fetch options having underlying=BTC, same as -asset BTC")
 	eth   = flag.Bool("eth", false, "Fetch options having underlying=ETH, same as -asset ETH")
 	asset = flag.String("asset", "ALL", "underlying asset of the options to query")
 
-	access  = flag.String("access", garcon.EnvStr("JWT_ACCESS"), "Access Token (JWT) to be access to the Rainbow API. The JWT_ACCESS environment variable can also be used.")
-	refresh = flag.String("refresh", garcon.EnvStr("JWT_REFRESH"), "Refresh Token (JWT) to get a temporary Access Token from Quid API. The JWT_REFRESH environment variable can also be used.")
-	hmac    = flag.String("hmac", garcon.EnvStr("HMAC_SHA256"), "HMAC-SHA256 key (64 hex digits) required to generate a JWT. The HMAC_SHA256 environment variable can also be used.")
-	ttl     = flag.String("ttl", garcon.EnvStr("JWT_TTL", defaultTTL), "Max TTL (Time To Live) to set when generating a new JWT (similar to the cookie Max-Age). The JWT_TTL environment variable can also be used.")
-	ns      = flag.String("ns", garcon.EnvStr("JWT_NS", defaultNs), "Namespace to set when generating a new Refresh JWT. The JWT_NS environment variable can also be used.")
-	usr     = flag.String("usr", garcon.EnvStr("JWT_USR", defaultUser), "User name to set when generating a new JWT. The JWT_USR environment variable can also be used.")
-	grp     = flag.String("grp", garcon.EnvStr("JWT_GRP", defaultGrp), "List of groups (separated by coma) to set when generating a new Access JWT. The JWT_GRP environment variable can also be used.")
-	org     = flag.String("orgs", garcon.EnvStr("JWT_ORG"), "List of organizations (separated by coma) to set when generating a new Access JWT. The JWT_ORG environment variable can also be used.")
+	access  = flag.String("access", gg.EnvStr("JWT_ACCESS"), "Access Token (JWT) to be access to the Rainbow API. The JWT_ACCESS environment variable can also be used.")
+	refresh = flag.String("refresh", gg.EnvStr("JWT_REFRESH"), "Refresh Token (JWT) to get a temporary Access Token from Quid API. The JWT_REFRESH environment variable can also be used.")
+	hmac    = flag.String("hmac", gg.EnvStr("HMAC_SHA256"), "HMAC-SHA256 key (64 hex digits) required to generate a JWT. The HMAC_SHA256 environment variable can also be used.")
+	ttl     = flag.String("ttl", gg.EnvStr("JWT_TTL", defaultTTL), "Max TTL (Time To Live) to set when generating a new JWT (similar to the cookie Max-Age). The JWT_TTL environment variable can also be used.")
+	ns      = flag.String("ns", gg.EnvStr("JWT_NS", defaultNs), "Namespace to set when generating a new Refresh JWT. The JWT_NS environment variable can also be used.")
+	usr     = flag.String("usr", gg.EnvStr("JWT_USR", defaultUser), "User name to set when generating a new JWT. The JWT_USR environment variable can also be used.")
+	grp     = flag.String("grp", gg.EnvStr("JWT_GRP", defaultGrp), "List of groups (separated by coma) to set when generating a new Access JWT. The JWT_GRP environment variable can also be used.")
+	org     = flag.String("orgs", gg.EnvStr("JWT_ORG"), "List of organizations (separated by coma) to set when generating a new Access JWT. The JWT_ORG environment variable can also be used.")
 
 	groups, orgs []string
 )

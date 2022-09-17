@@ -9,6 +9,7 @@ import (
 	"flag"
 
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/rainbow/pkg/provider"
 )
 
@@ -20,7 +21,7 @@ var (
 	cex       = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
 	dex       = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Opyn, PsyOptions and Zeta")
 	exotic    = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
-	providers = flag.String("providers", garcon.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, same as the PROVIDERS env. var.")
+	providers = flag.String("providers", gg.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, same as the PROVIDERS env. var.")
 )
 
 func parseFlags() {
@@ -51,5 +52,5 @@ func listProviderNames() []string {
 		}
 	}
 
-	return garcon.ExtractWords(*providers, provider.Names())
+	return gg.ExtractWords(*providers, provider.Names())
 }

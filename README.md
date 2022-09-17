@@ -166,8 +166,8 @@ See the `make help` [output](Makefile).
 The _run_ targets do not depend on the above _build_ targets.
 You do not need to _make build_ before _make run_.
 
-    make run           # Run the backend
-    make run-front     # Run the frontend in dev mode
+    make run        # Run the backend in dev mode
+    make run-ui     # Run the frontend in dev mode
 
 To serve the static website using the Rainbow backend only, as in production:
 
@@ -210,7 +210,7 @@ The front-end requires the server API.
 #### Front-end
 
 To run the Vue3 front-end in dev mode.
-Similar to `make run-front`:
+Similar to `make run-ui`:
 
     cd frontend
     yarn

@@ -5,11 +5,11 @@ help:
 	# make front          Build the frontend only
 	# make clean          Clean all
 	#
-	# make run            Run the backend
-	# make run-front      Run the frontend in dev mode
+	# make run            Run the backend in dev mode
+	# make run-ui         Run the frontend in dev mode
 	#
 	# make test           (Go only) Test the backend
-	# make cov            (Go only) Test and visualize the code coverage
+	# make cov            (Go only) Browse test coverage
 	# make fmt            (Go only) Generate code, Format code, Check build
 	# make vet            (Go only) Generate, Format, Build, Test, Lint and Run commands
 	#
@@ -51,10 +51,10 @@ frontend/dist: frontend/src/*
 
 .PHONY: run
 run: go.sum
-	${GOEXE} run ./cmd/server
+	${GOEXE} run -race ./cmd/server -dev
 
-.PHONY: run-front
-run-front:
+.PHONY: run-ui
+run-ui:
 	cd frontend && yarn dev
 
 ##########  Backend only  ##########
@@ -77,9 +77,9 @@ cov: test
 .PHONY: vet
 vet:
 	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run --fix || true
-	go run ./cmd/client || true
-	go run ./cmd/cli
-	go run ./cmd/server
+	go run -race ./cmd/client || true
+	go run -race ./cmd/cli
+	go run -race ./cmd/server
 
 ##########  Container targets  ##########
 

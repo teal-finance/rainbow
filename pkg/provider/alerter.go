@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/teal-finance/garcon/notifier"
+	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/garcon/timex"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
@@ -31,13 +31,13 @@ const (
 type alerter struct {
 	provider rainbow.Provider
 	muter    muter
-	notifier notifier.Notifier
+	notifier gg.Notifier
 
 	// prefix (in Markdown format) is inserted in all notifications.
 	prefix string
 }
 
-func newAlerter(namespace string, p rainbow.Provider, n notifier.Notifier) *alerter {
+func newAlerter(namespace string, p rainbow.Provider, n gg.Notifier) *alerter {
 	return &alerter{
 		provider: p, // "**" = bold in markdown ; trailing space = separator
 		prefix:   namespace + ".**" + p.Name() + "** ",

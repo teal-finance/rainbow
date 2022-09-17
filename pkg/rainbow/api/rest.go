@@ -15,7 +15,7 @@ import (
 	"github.com/mpvl/unique"
 
 	"github.com/teal-finance/emo"
-	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -58,22 +58,22 @@ func query(r *http.Request) (sa rainbow.StoreArgs, format string, _ error) {
 		return sa, "", err
 	}
 
-	assets, err := garcon.Values(r, "asset")
+	assets, err := gg.Values(r, "asset")
 	if err != nil {
 		return sa, "", err
 	}
 
-	expiries, err := garcon.Values(r, "expiry")
+	expiries, err := gg.Values(r, "expiry")
 	if err != nil {
 		return sa, "", err
 	}
 
-	providers, err := garcon.Values(r, "provider")
+	providers, err := gg.Values(r, "provider")
 	if err != nil {
 		return sa, "", err
 	}
 
-	format, err = garcon.Value(r, "format", "Accept")
+	format, err = gg.Value(r, "format", "Accept")
 	if err != nil {
 		return sa, "", err
 	}

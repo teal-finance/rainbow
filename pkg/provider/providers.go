@@ -10,7 +10,7 @@ import (
 
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/garcon/notifier"
+	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
@@ -62,14 +62,14 @@ func selectProviders(names []string) []rainbow.Provider {
 // depending on endpoint emptiness and on onlyMattermost.
 func Select(names []string, alerterOptions ...string) []rainbow.Provider {
 	providers := selectProviders(names)
-	namespace, n := parseArgs(alerterOptions...)
-	if n == nil {
+	namespace, notifier := parseArgs(alerterOptions...)
+	if notifier == nil {
 		return providers
 	}
-	return AddAlert(providers, n, namespace)
+	return AddAlert(providers, notifier, namespace)
 }
 
-func parseArgs(alerterOptions ...string) (namespace string, _ notifier.Notifier) {
+func parseArgs(alerterOptions ...string) (namespace string, _ gg.Notifier) {
 	if len(alerterOptions) == 0 {
 		return "", nil
 	}
@@ -81,12 +81,12 @@ func parseArgs(alerterOptions ...string) (namespace string, _ notifier.Notifier)
 		endpoint = alerterOptions[1]
 	}
 
-	return namespace, notifier.New(endpoint)
+	return namespace, gg.NewNotifier(endpoint)
 }
 
 // AddAlert returns the providers with an alerter on anomalies.
 // Do not panic if alerter endpoint is not reachable.
-func AddAlert(providers []rainbow.Provider, n notifier.Notifier, namespace string) []rainbow.Provider {
+func AddAlert(providers []rainbow.Provider, n gg.Notifier, namespace string) []rainbow.Provider {
 	list := ""
 	for i, p := range providers {
 		list += "\n" + "1. " + p.Name()
@@ -102,7 +102,7 @@ func AddAlert(providers []rainbow.Provider, n notifier.Notifier, namespace strin
 }
 
 // notifyStartup is called only once to notify when Rainbow is started.
-func notifyStartup(n notifier.Notifier, namespace, list string) error {
+func notifyStartup(n gg.Notifier, namespace, list string) error {
 	msg := ":wave: Rainbow **" + namespace + "** " + garcon.Version("") + " has just started"
 
 	host, err := os.Hostname()

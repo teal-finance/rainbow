@@ -12,6 +12,7 @@ import (
 
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/gg"
 )
 
 var log = emo.NewZone("main")
@@ -45,7 +46,7 @@ func main() {
 	}
 
 	maxBytes := 1_000_000
-	buf, err := garcon.ReadResponse(resp, maxBytes)
+	buf, err := gg.ReadResponse(resp, maxBytes)
 	resp.Body.Close()
 	if err != nil {
 		log.Fatal(err)
@@ -55,5 +56,5 @@ func main() {
 		log.Result(string(buf))
 	}
 
-	log.Ok("Fetched " + garcon.ConvertSize(len(buf)) + " from " + url)
+	log.Ok("Fetched " + gg.ConvertSize(len(buf)) + " from " + url)
 }

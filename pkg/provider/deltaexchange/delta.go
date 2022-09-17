@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/teal-finance/emo"
-	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -104,7 +104,7 @@ func queryProducts() (ProductResult, error) {
 		Result ProductResult `json:"result"`
 	}
 	// this DeltaExchange response can be more than 100 KB, thus we accept much more
-	if err = garcon.DecodeJSONResponse(resp, &result, maxBytesToRead); err != nil {
+	if err = gg.DecodeJSONResponse(resp, &result, maxBytesToRead); err != nil {
 		return nil, fmt.Errorf("queryProducts decode: %w", err)
 	}
 
@@ -293,7 +293,7 @@ func (p *Product) orderbook() (bid, ask []rainbow.Order, err error) {
 	var orders struct {
 		Orders OrderBookResult `json:"result"`
 	}
-	if err = garcon.DecodeJSONResponse(resp, &orders); err != nil {
+	if err = gg.DecodeJSONResponse(resp, &orders); err != nil {
 		return nil, nil, fmt.Errorf("book decode response: %w", err)
 	}
 
