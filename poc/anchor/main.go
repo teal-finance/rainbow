@@ -79,13 +79,13 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		//spew.Dump(ooo.Value)
+		// spew.Dump(ooo.Value)
 		gr := new(zeta.Greeks)
 		err = bin.NewBinDecoder(ooo.Value.Data.GetBinary()).Decode(&gr)
 		if err != nil {
 			continue
 		}
-		spew.Dump(gr.ProductGreeks[11]) //TODO compute the right index
+		spew.Dump(gr.ProductGreeks[11]) // TODO compute the right index
 		/*
 			a, b, c := deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.QuoteAssetMint), pub)
 			spew.Dump(a, b, c)
