@@ -5,8 +5,8 @@ help:
 	# make front          Build the frontend only
 	# make clean          Clean all
 	#
-	# make run            Run the backend
-	# make run-front      Run the frontend in dev mode
+	# make run            Run the backend in dev mode
+	# make run-ui         Run the frontend in dev mode
 	#
 	# make test           (Go only) Test the backend
 	# make cov            (Go only) Browse test coverage
@@ -51,10 +51,10 @@ frontend/dist: frontend/src/*
 
 .PHONY: run
 run: go.sum
-	${GOEXE} run ./cmd/server
+	${GOEXE} run -race ./cmd/server -dev
 
-.PHONY: run-front
-run-front:
+.PHONY: run-ui
+run-ui:
 	cd frontend && yarn dev
 
 ##########  Backend only  ##########
