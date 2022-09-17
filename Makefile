@@ -77,9 +77,9 @@ cov: test
 .PHONY: vet
 vet:
 	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run --fix || true
-	go run ./cmd/client || true
-	go run ./cmd/cli
-	go run ./cmd/server
+	go run -race ./cmd/client || true
+	go run -race ./cmd/cli
+	go run -race ./cmd/server
 
 ##########  Container targets  ##########
 
