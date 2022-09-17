@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/teal-finance/emo"
-	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/opyn"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
@@ -73,7 +73,7 @@ func getQuote(side, sellToken, buyToken string, amount float64, decimals int) (Q
 	defer resp.Body.Close()
 
 	var result Quote
-	if err = garcon.DecodeJSONResponse(resp, &result); err != nil {
+	if err = gg.DecodeJSONResponse(resp, &result); err != nil {
 		return Quote{}, fmt.Errorf("quote from Ox: %w", err)
 	}
 
@@ -120,7 +120,7 @@ func (sr *stubbornRequester) failure(err error) {
 	sr.ko++
 
 	log.Warnf("Opyn failure #%v bad=%v sleep=%v + %v %v",
-		sr.ko, sr.maxBad, sr.sleep, newSleep, garcon.Sanitize(err.Error()))
+		sr.ko, sr.maxBad, sr.sleep, newSleep, gg.Sanitize(err.Error()))
 
 	sr.maxBad = sr.sleep + newSleep
 	sr.sleep = newSleep

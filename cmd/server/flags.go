@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/garcon/timex"
 	"github.com/teal-finance/rainbow/pkg/provider"
 )
@@ -27,17 +28,17 @@ var (
 	cex          = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
 	dex          = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Opyn, PsyOptions and Zeta")
 	exotic       = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
-	providers    = flag.String("providers", garcon.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, has precedence over PROVIDERS")
-	mainAddr     = flag.String("addr", garcon.EnvStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
-	mainPort     = flag.Int("port", garcon.EnvInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
-	expPort      = flag.Int("exp", garcon.EnvInt("EXP_PORT"), "Export port for Prometheus, has precedence over EXP_PORT")
-	reqPerMinute = flag.Int("rate", garcon.EnvInt("REQ_PER_MINUTE", 88), "Max requests per minute, has precedence over REQ_PER_MINUTE")
-	reqBurst     = flag.Int("burst", garcon.EnvInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
-	wwwDir       = flag.String("www", garcon.EnvStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
-	alert        = flag.String("alert", garcon.EnvStr("ALERT_URL"), "Webhook endpoint to notify anomalies, has precedence over ALERT_URL")
-	form         = flag.String("form", garcon.EnvStr("WEBFORM_URL"), "Webhook endpoint to notify filled contact form, has precedence over WEBFORM_URL")
-	aes          = flag.String("aes", garcon.EnvStr("AES128"), " 128-bit AES key (32 hex digits) for the session cookies, has precedence over AES128")
-	hmac         = flag.String("hmac", garcon.EnvStr("HMAC_SHA256"), "HMAC-SHA256 key (64 hex digits) for the JWT tokens, has precedence over HMAC_SHA256")
+	providers    = flag.String("providers", gg.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, has precedence over PROVIDERS")
+	mainAddr     = flag.String("addr", gg.EnvStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
+	mainPort     = flag.Int("port", gg.EnvInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
+	expPort      = flag.Int("exp", gg.EnvInt("EXP_PORT"), "Export port for Prometheus, has precedence over EXP_PORT")
+	reqPerMinute = flag.Int("rate", gg.EnvInt("REQ_PER_MINUTE", 88), "Max requests per minute, has precedence over REQ_PER_MINUTE")
+	reqBurst     = flag.Int("burst", gg.EnvInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
+	wwwDir       = flag.String("www", gg.EnvStr("WWW_DIR", "frontend/dist"), "Folder of the web static files, has precedence over WWW_DIR")
+	alert        = flag.String("alert", gg.EnvStr("ALERT_URL"), "Webhook endpoint to notify anomalies, has precedence over ALERT_URL")
+	form         = flag.String("form", gg.EnvStr("WEBFORM_URL"), "Webhook endpoint to notify filled contact form, has precedence over WEBFORM_URL")
+	aes          = flag.String("aes", gg.EnvStr("AES128"), " 128-bit AES key (32 hex digits) for the session cookies, has precedence over AES128")
+	hmac         = flag.String("hmac", gg.EnvStr("HMAC_SHA256"), "HMAC-SHA256 key (64 hex digits) for the JWT tokens, has precedence over HMAC_SHA256")
 	listenAddr   string
 )
 
@@ -102,5 +103,5 @@ func listProviderNames() []string {
 		}
 	}
 
-	return garcon.ExtractWords(*providers, provider.Names())
+	return gg.ExtractWords(*providers, provider.Names())
 }

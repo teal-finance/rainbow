@@ -13,6 +13,7 @@ import (
 
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
+	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
@@ -29,7 +30,7 @@ func main() {
 	log.Init("Providers:", names)
 
 	g := garcon.New(
-		garcon.WithURLs(garcon.SplitClean(*mainAddr)...),
+		garcon.WithURLs(gg.SplitClean(*mainAddr)...),
 		garcon.WithDev(*dev))
 
 	// start the service in background
