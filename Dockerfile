@@ -38,8 +38,7 @@ COPY go.mod go.sum ./
 
 RUN set -ex          ;\
     go version       ;\
-    go mod download  ;\
-    go mod verify
+    go mod download
 
 COPY cmd cmd
 COPY pkg pkg
@@ -66,8 +65,7 @@ COPY go.mod go.sum ./
 
 RUN set -ex          ;\
     go version       ;\
-    go mod download  ;\
-    go mod verify
+    go mod download
 
 COPY cmd cmd
 COPY pkg pkg
@@ -75,11 +73,13 @@ COPY .git .git
 
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
+# GOAMD64=v3 --> https://github.com/golang/go/wiki/MinimumRequirements#amd64
 RUN set -ex                                                                      ;\
     v="$(cat version.txt)"                                                       ;\
     export CGO_ENABLED=0                                                         ;\
     export GOFLAGS="-trimpath -modcacherw"                                       ;\
     export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
+    export GOAMD64=v3                                                            ;\
     go build -v -ldflags="-X 'github.com/teal-finance/garcon.V=$v'" ./cmd/server ;\
     ls -sh server                                                                ;\
     ./server -version  # smoke test
