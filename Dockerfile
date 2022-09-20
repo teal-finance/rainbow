@@ -38,8 +38,7 @@ COPY go.mod go.sum ./
 
 RUN set -ex          ;\
     go version       ;\
-    go mod download  ;\
-    go mod verify
+    go mod download
 
 COPY cmd cmd
 COPY pkg pkg
@@ -66,8 +65,7 @@ COPY go.mod go.sum ./
 
 RUN set -ex          ;\
     go version       ;\
-    go mod download  ;\
-    go mod verify
+    go mod download
 
 COPY cmd cmd
 COPY pkg pkg
