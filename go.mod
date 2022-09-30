@@ -2,6 +2,9 @@ module github.com/teal-finance/rainbow
 
 go 1.18
 
+// Fix the Go-1.19 crash from an indirect dependency used by Solana libraries. See golang/go#54227
+replace github.com/daaku/go.zipexe v1.0.1 => github.com/42wim/go.zipexe v0.0.0-20220806143830-85f957dec14b
+
 require (
 	github.com/Khan/genqlient v0.5.0
 	github.com/davecgh/go-spew v1.1.1
