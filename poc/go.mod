@@ -1,4 +1,4 @@
-module github.com/teal-finance/rainbow
+module github.com/teal-finance/rainbow/poc
 
 go 1.19
 
