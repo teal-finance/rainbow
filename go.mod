@@ -24,7 +24,6 @@ require (
 	github.com/graphql-go/handler v0.2.3
 	github.com/jedib0t/go-pretty/v6 v6.3.9
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de
-	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/spewerspew/spew v0.0.0-20220201233537-1fb8bf5ed3d2
 	github.com/streamingfast/solana-go v0.5.1-0.20220502224452-432fbe84aee8
 	github.com/stretchr/testify v1.8.0
