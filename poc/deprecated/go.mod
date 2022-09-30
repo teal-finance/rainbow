@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/Khan/genqlient v0.5.0
 	github.com/ethereum/go-ethereum v1.10.23
-	github.com/gagliardetto/binary v0.6.1
+	github.com/gagliardetto/binary v0.7.1
 	github.com/gagliardetto/gofuzz v1.2.2
 	github.com/gagliardetto/solana-go v1.4.0
 	github.com/gagliardetto/treeout v0.1.4
