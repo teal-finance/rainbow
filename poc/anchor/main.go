@@ -88,8 +88,8 @@ func main() {
 		if err != nil {
 			continue
 		}
-		spew.Dump(gr.ProductGreeks[5]) //TODO compute the right index
-		spew.Dump(gr.ProductGreeks[6]) //TODO compute the right index
+		spew.Dump(gr.ProductGreeks[5]) // TODO compute the right index
+		spew.Dump(gr.ProductGreeks[6]) // TODO compute the right index
 
 		/*
 			a, b, c := deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.QuoteAssetMint), pub)
