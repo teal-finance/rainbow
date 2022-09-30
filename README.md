@@ -11,46 +11,6 @@ Please share any feedback:
 - Email at Teal.Finance@pm.me or
 - Twitter [@TealFinance](https://twitter.com/TealFinance).
 
-## ⚠️ Warning Go-1.19 🚨
-
-Rainbow [CLI](#run-the-cli)
-and [web-server](#makefile-for-server--web)
-are not yet Go-1.19 ready.
-
-### 😵 Crash it using Go-1.19
-
-    cd rainbow           # go to the source code
-    go build ./cmd/cli   # build the CLI
-    ./cli                # crash at startup
-
-### 💩 Origin of the bug
-
-The bug is in an indirect dependency
-used by Solana libraries that Rainbow use.  
-The problem has been discussed by Golang developers:
-<https://github.com/golang/go/issues/54227>
-
-A fix has been implemented in
-<https://github.com/42wim/go.zipexe>
-and <https://github.com/42wim/go.rice>.  
-But Rainbow cannot currently use this fix,
-since it is an indirect dependency of a dependency of a dependency of…
-
-### 🏗️ Workaround
-
-If you need to run the CLI with Go-1.19, use the following:
-
-    go run github.com/teal-finance/rainbow/cmd/cli@latest
-
-or replace "`go build`" by "`go run`":
-
-    cd rainbow
-    go run ./cmd/cli
-
-For the web server, we recommend using
-our [`Dockerfile`](./Dockerfile),
-which still uses Go-1.18.
-
 ## 🎯 Motivations
 
 **Rainbow** is inspired by the following trends:
