@@ -14,9 +14,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
-	"github.com/teal-finance/rainbow/pkg/provider/psyoptions"
 	"github.com/teal-finance/rainbow/pkg/provider/thales"
-	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
@@ -26,14 +24,15 @@ var log = emo.NewZone("provider")
 // AllProviders returns all supported providers.
 func AllProviders() []rainbow.Provider {
 	return []rainbow.Provider{
-		psyoptions.Provider{},    // separate psy and zeta to not
-		&deribit.Provider{},      //                  |
-		lyra.Provider{},          //                  |
-		zerox.Provider{},         //                  |
-		zetamarkets.Provider{},   // <----------------` exhaust solana/serum rpc quota
-		thales.Provider{},        // exotic market only live on /exotic
+		&deribit.Provider{},
+		lyra.Provider{},
+		zetamarkets.Provider{},
+		thales.Provider{},        // Thales = exotic options -> https://teal.finance/rainbow/exotic
 		deltaexchange.Provider{}, // last because slow (rate limit)
 	}
+	// PsyOptions and Opyn are currently deprecated:
+	// psyoptions.Provider{}
+	// zerox.Provider{}
 }
 
 // Names lists the names of all supported providers.

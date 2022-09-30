@@ -1,7 +1,7 @@
 # 🌈 ![Rainbow](doc/rainbow-chancery.png)
 
-| ![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With the Rainbow screener, users can scan CEX/DEX markets to fetch available options data. Empowered by the [Teal.Finance](https://teal.finance/) [team](https://teal.finance/#team). <br><br> [![Go Report Card](https://goreportcard.com/badge/github.com/teal-finance/rainbow)](https://goreportcard.com/report/github.com/teal-finance/rainbow)
-| --- | ---
+| ![logo](doc/small.png) | Dashboard for DeFi options trading highlighting market opportunities to ease strategies decision. With the Rainbow screener, users can scan CEX/DEX markets to fetch available options data. Empowered by the [Teal.Finance](https://teal.finance/) [team](https://teal.finance/#team). <br><br> [![Go Report Card](https://goreportcard.com/badge/github.com/teal-finance/rainbow)](https://goreportcard.com/report/github.com/teal-finance/rainbow) |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 Rainbow is live at [**teal.finance/rainbow**](https://teal.finance/rainbow/)
 
@@ -35,7 +35,7 @@ and [Encode Club's Hack DeFi](https://www.encode.club/hack-defi).
 More info on our motivations:
 [cryptonuage.com/posts/internet-of-decentralized-options](https://cryptonuage.com/posts/internet-of-decentralized-options/)
 
-## 🏛️ Currently supported options exchanges
+## 🏛️ Supported exchanges
 
 - [Deribit](https://www.deribit.com):
   Centralized exchange.
@@ -49,17 +49,19 @@ More info on our motivations:
   DeFi protocol for trading options based on Layer 2,
   Optimism, using a custom AMM.
 
-- [PsyOptions](https://www.psyoptions.io/) (Solana):
-  DeFi options protocol build on Serum order books.
-
-- [Opyn](https://www.opyn.co/) (Ethereum):
-  DeFi options protocol using TheGraph & 0x.
-
 - [Thales](https://thalesmarket.io/) Optimism and Polygon,
   DeFi protocol for [binary options](https://wikiless.org/wiki/Binary_option) (exotic options).
 
 - [Zeta](https://zeta.markets/) (Solana):
   DeFi options protocol built using Serum order books.
+
+## 🏗 Deprecated exchanges
+
+- [PsyOptions](https://www.psyoptions.io/) (Solana):
+  DeFi options protocol build on Serum order books.
+
+- [Opyn](https://www.opyn.co/) (Ethereum):
+  DeFi options protocol using TheGraph & 0x.
 
 ## 🏎️ Run it from source code
 

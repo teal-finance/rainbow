@@ -14,8 +14,8 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/spewerspew/spew"
 	"github.com/teal-finance/rainbow/pkg/provider/thales"
-	"github.com/teal-finance/rainbow/pkg/provider/zerox"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+	"github.com/teal-finance/rainbow/poc/deprecated/provider/zerox"
 )
 
 func main() {

@@ -11,8 +11,8 @@ import (
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
 
-	"github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+	"github.com/teal-finance/rainbow/poc/deprecated/provider/psyoptions/anchor"
 )
 
 const serumMainnet = "https://solana-api.projectserum.com"

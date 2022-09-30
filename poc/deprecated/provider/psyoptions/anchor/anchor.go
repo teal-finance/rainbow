@@ -10,7 +10,7 @@ import (
 	"github.com/gagliardetto/solana-go/rpc"
 
 	"github.com/teal-finance/emo"
-	psy "github.com/teal-finance/rainbow/pkg/provider/psyoptions/anchor/generated/psy_american"
+	psy "github.com/teal-finance/rainbow/poc/deprecated/provider/psyoptions/anchor/generated/psy_american"
 )
 
 var log = emo.NewZone("Psy")
