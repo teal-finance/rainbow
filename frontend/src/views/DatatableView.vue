@@ -46,13 +46,15 @@ import { classicQuery, exoticQuery } from '@/api/graphql';
 import filterPresets from "@/const/filter_presets";
 import PresetsSelect from "@/components/PresetsSelect.vue";
 import { OptionType } from '@/interfaces';
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
-import router from "@/router";
 
 const props = defineProps({
   type: {
     type: String as () => OptionType,
     required: true
+  },
+  preset: {
+    type: String,
+    default: "",
   }
 });
 
@@ -108,6 +110,10 @@ async function init() {
 }
 
 onBeforeMount(() => {
+  // load preset from prop if present
+  if (props.preset.length > 0) {
+    user.currentPreset.value = props.preset;
+  }
   init()
 })
 </script>

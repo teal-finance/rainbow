@@ -35,6 +35,13 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: "Classic options comparator for trading opportunities"
     }
+  },
+  {
+    path: "/classic/:preset",
+    component: () => import("./views/ClassicView.vue"),
+    meta: {
+      title: "Classic options comparator for trading opportunities"
+    }
   }
 ]
 
