@@ -8,7 +8,7 @@ Rainbow is live at [**teal.finance/rainbow**](https://teal.finance/rainbow/)
 Please share any feedback:
 
 - GitHub [issue](https://github.com/teal-finance/rainbow/issues) or
-- Email at Teal.Finance@pm.me or
+- Email at Teal.Finance[at]pm.me or
 - Twitter [@TealFinance](https://twitter.com/TealFinance).
 
 ## 🎯 Motivations
@@ -58,10 +58,10 @@ More info on our motivations:
 ## 🏗 Deprecated exchanges
 
 - [PsyOptions](https://www.psyoptions.io/) (Solana):
-  DeFi options protocol build on Serum order books.
+  DeFi options protocol build on Serum order books. This project pivoted to DeFi Options Vaults(DOV).
 
 - [Opyn](https://www.opyn.co/) (Ethereum):
-  DeFi options protocol using TheGraph & 0x.
+  DeFi options protocol using TheGraph & 0x. This project also pivoted to more vaults like product(Squeeth, Crab...).
 
 ## 🏎️ Run it from source code
 
@@ -255,13 +255,6 @@ Usage of /tmp/go-build1548629542/b001/exe/server:
         Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 ```
 
-## 🦆 Join the team
-
-Interested on what we build. Please contact us:
-
-- GitHub [issue](https://github.com/teal-finance/rainbow/issues)
-- Teal.Finance@pm.me
-- Twitter [@TealFinance](https://twitter.com/TealFinance)
 
 ## 🛣️ API
 
@@ -474,5 +467,5 @@ Please share your thoughts, suggest ideas, request features,
 contact us and join our efforts to build awesome tools:
 
 - GitHub [issue](https://github.com/teal-finance/rainbow/issues)
-- Teal.Finance@pm.me
+- Teal.Finance[at]pm.me
 - Twitter [@TealFinance](https://twitter.com/TealFinance)
