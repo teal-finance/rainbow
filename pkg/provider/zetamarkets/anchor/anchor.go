@@ -23,14 +23,16 @@ import (
 var log = emo.NewZone("Zeta")
 
 const (
-	ZetaID   = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
-	endpoint = "https://api.mainnet-beta.solana.com" // rpc.MainNetBeta_RPC
+	ZetaID = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
+	//endpoint = "https://api.mainnet-beta.solana.com" // rpc.MainNetBeta_RPC
+	SolanaRPC = "https://solana-mainnet.g.alchemy.com/v2/1NUlFJ7BXSudMEuTM8kns50OXHzDGDjE" //"https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
+
 )
 
 func Query() ([]Option, error) {
 	pubKey := solana.MustPublicKeyFromBase58(ZetaID)
 
-	jsonrpcclient := rpc.NewWithRateLimit(endpoint, 10)
+	jsonrpcclient := rpc.NewWithRateLimit(SolanaRPC, 10)
 
 	client := rpc.NewWithCustomRPCClient(jsonrpcclient)
 
