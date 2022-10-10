@@ -28,16 +28,23 @@ var log = emo.NewZone("Thales")
 
 const (
 	// thegraph urls.
+
 	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
 	urlPolygon  = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
+	urlArbitrum = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-arbitrum"
+	urlBsc      = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-bsc"
 
 	// rpc.
 	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
+	rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
+	rpcBsc      = "https://nd-747-272-879.p2pify.com/934be2335664b8002d732e48a40b1e43"
 
 	// amm.
 	ammPolygon  = "0x9b6d76B1C6140FbB0ABc9C4a348BFf4e4e8a1213"
 	ammOptimism = "0x5ae7454827D83526261F3871C1029792644Ef1B1"
+	ammArbitrum = "0x2b89275efB9509c33d9AD92A4586bdf8c4d21505"
+	ammBsc      = "0x465B66A3e33088F0666dB1836652fBcF037c7319"
 
 	// other.
 	name         = "Thales"
@@ -54,6 +61,10 @@ func LayerRPC(layer string) string {
 		return rpcOptimism
 	case "Polygon":
 		return rpcPolygon
+	case "Arbitrum":
+		return rpcArbitrum
+	case "Bsc":
+		return rpcBsc
 	}
 	log.Panic("Unexpected layer", layer)
 	return ""
@@ -65,6 +76,10 @@ func LayerURL(layer string) string {
 		return urlOptimism
 	case "Polygon":
 		return urlPolygon
+	case "Arbitrum":
+		return urlArbitrum
+	case "Bsc":
+		return urlBsc
 	}
 	log.Panic("Unexpected layer", layer)
 	return ""
@@ -76,6 +91,10 @@ func LayerAMM(layer string) string {
 		return ammOptimism
 	case "Polygon":
 		return ammPolygon
+	case "Arbitrum":
+		return ammArbitrum
+	case "Bsc":
+		return ammBsc
 	}
 	log.Panic("Unexpected layer", layer)
 	return ""
@@ -87,6 +106,11 @@ func LayerDecimals(layer string) int64 {
 		return rainbow.DefaultEthereumDecimals
 	case "Polygon":
 		return anchor.USDCDecimals
+	case "Arbitrum":
+		return anchor.USDCDecimals
+	case "Bsc":
+		return rainbow.DefaultEthereumDecimals
+
 	}
 	log.Panic("Unexpected layer", layer)
 	return 0
@@ -107,8 +131,16 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, err
 	}
+	marketsArbitrum, err := QueryAllMarkets(LayerURL("Arbitrum"))
+	if err != nil {
+		return nil, err
+	}
+	marketsBsc, err := QueryAllMarkets(LayerURL("Bsc"))
+	if err != nil {
+		return nil, err
+	}
 
-	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon))
+	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum)+2*len(marketsBsc))
 	err = ProcessMarkets(&options, marketsOptimism, "Optimism")
 	if err != nil {
 		return nil, err
@@ -118,12 +150,22 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, err
 	}
+	err = ProcessMarkets(&options, marketsArbitrum, "Arbitrum")
+	if err != nil {
+		return nil, err
+	}
+	err = ProcessMarkets(&options, marketsBsc, "Bsc")
+
+	if err != nil {
+		return nil, err
+	}
 
 	return options, err
 }
 
 func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
-	spew.Dump(len(markets))
+	//spew.Dump(len(markets))
+	log.Printf(layer, len(markets))
 	for i := range markets {
 		// HOTFIX for bug on Polygon
 		// 3 markets for BTC with very low strike
@@ -197,6 +239,7 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		Strike: rainbow.ToFloat(strikeInt, rainbow.DefaultEthereumDecimals),
 	}
 	binary.Name = binary.OptionName()
+	//log.Printf(binary.Name)
 	buy, err := getQuote(m, side, "BUY", layer)
 	if err != nil {
 		log.Error(err)
