@@ -95,8 +95,8 @@ func listProviderNames() []string {
 		if *cex {
 			*providers += ",deribit,delta"
 		}
-		if *dex {
-			*providers += ",lyra,opyn,psy,zeta"
+		if *dex { //deprecating "opyn" & "psy"
+			*providers += ",lyra,zeta"
 		}
 		if *exotic {
 			*providers += ",thales"

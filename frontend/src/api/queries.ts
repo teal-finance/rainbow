@@ -34,7 +34,7 @@ const classicOptionsQuery = `{
 }`;
 
 const exoticOptionsQuery = `{
-  rows(providers: ["Thales::Optimism", "Thales::Polygon"]) {
+  rows(providers: ["Thales::Optimism", "Thales::Polygon","Thales::Arbitrum","Thales::Bsc"]) {
     date
     expiry
     provider

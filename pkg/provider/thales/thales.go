@@ -29,7 +29,7 @@ var log = emo.NewZone("Thales")
 const (
 	// thegraph urls.
 
-	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-optimism"
+	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-markets"
 	urlPolygon  = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
 	urlArbitrum = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-arbitrum"
 	urlBsc      = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-bsc"
@@ -47,12 +47,14 @@ const (
 	ammBsc      = "0x465B66A3e33088F0666dB1836652fBcF037c7319"
 
 	// other.
-	name         = "Thales"
-	skip         = 0
-	first        = 500
-	UP     uint8 = 0
-	DOWN   uint8 = 1
-	amount       = 1
+	name           = "Thales"
+	skip           = 0
+	first          = 500
+	UP       uint8 = 0
+	DOWN     uint8 = 1
+	amount         = 1
+	baseUrl        = "https://thalesmarket.io/markets/"
+	referral       = "?referralId=0xb3ac309aee5780d951082731ff2cc7f94f9488fd"
 )
 
 func LayerRPC(layer string) string {
@@ -164,8 +166,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 }
 
 func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
-	//spew.Dump(len(markets))
-	log.Printf(layer, len(markets))
+	log.Printf("%s %v options\n", layer, len(markets))
 	for i := range markets {
 		// HOTFIX for bug on Polygon
 		// 3 markets for BTC with very low strike
@@ -196,6 +197,7 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			time.Sleep(1 * time.Second)
 		}
 	}
+
 	return nil
 }
 
@@ -223,23 +225,24 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 	}
 
 	binary := rainbow.Option{
-		Name:          "",
-		Type:          binaryType,
-		Asset:         Underlying(m.CurrencyKey),
-		Expiry:        expiry,
-		ExchangeType:  "DEX",
-		Chain:         "Ethereum",
-		Layer:         "L2",
-		LayerName:     layer,
-		Provider:      name + "::" + layer,
-		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon
+		Name:         "",
+		Type:         binaryType,
+		Asset:        Underlying(m.CurrencyKey),
+		Expiry:       expiry,
+		ExchangeType: "DEX",
+		Chain:        "Ethereum",
+		Layer:        "L2",
+		LayerName:    layer,
+		Provider:     name + "::" + layer,
+		//Link: url(m.Id)
+		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon/arbitrum,busd for binance
 		// TODO add underlying quote currency to be able to specify the token
 		Bid:    nil,
 		Ask:    nil,
 		Strike: rainbow.ToFloat(strikeInt, rainbow.DefaultEthereumDecimals),
 	}
 	binary.Name = binary.OptionName()
-	//log.Printf(binary.Name)
+	//log.Printf("%s\n", binary.Name)
 	buy, err := getQuote(m, side, "BUY", layer)
 	if err != nil {
 		log.Error(err)
@@ -399,4 +402,8 @@ func Underlying(s string) string {
 	b := l.Bytes()
 	b = bytes.Trim(b, "\x00")
 	return string(b)
+}
+
+func url(id string) string {
+	return baseUrl + id + referral
 }
