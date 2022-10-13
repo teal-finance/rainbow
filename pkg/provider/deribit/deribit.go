@@ -18,6 +18,8 @@ import (
 
 var log = emo.NewZone("Deribit")
 
+const baseURL = "https://www.deribit.com/options/"
+
 type Provider struct {
 	ar garcon.AdaptiveRate
 }
@@ -82,9 +84,9 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 }
 
 func (p *Provider) query(coin string) ([]instrument, error) {
-	const baseURL = "https://deribit.com/api/v2/public/get_instruments?currency="
+	const api = "https://deribit.com/api/v2/public/get_instruments?currency="
 	const opts = "&expired=false&kind=option"
-	url := baseURL + coin + opts
+	url := api + coin + opts
 	log.Info("Deribit " + url)
 
 	var result instrumentsResult
@@ -158,12 +160,12 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 	options := make([]rainbow.Option, 0, len(instruments))
 	var lastError error
 
-	baseURL := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
+	api := "https://www.deribit.com/api/v2/public/get_order_book?depth=" + strconv.Itoa(int(depth)) + "&instrument_name="
 
 	for i := range instruments {
 		var result orderBookResult
-		url := baseURL + instruments[i].InstrumentName
-		if err := p.ar.Get(instruments[i].InstrumentName, url, &result); err != nil {
+		apiurl := api + instruments[i].InstrumentName
+		if err := p.ar.Get(instruments[i].InstrumentName, apiurl, &result); err != nil {
 			lastError = err
 			log.Warn("Deribit book " + err.Error())
 		}
@@ -174,6 +176,8 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 		ns := (instruments[i].ExpirationTimestamp % 1000) * 1000_000
 		expiryTime := time.Unix(seconds, ns).UTC()
 		expiryStr := expiryTime.Format("2006-01-02 15:04:05")
+		name := strings.Split(instruments[i].InstrumentName, "-")
+		url := baseURL + instruments[i].BaseCurrency + "/" + name[0] + "-" + name[1]
 
 		bids := normalizeOrders(result.Result.Bids, result.Result.IndexPrice)
 		sort.Slice(bids, func(i, j int) bool {
@@ -198,6 +202,8 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 			QuoteCurrency: instruments[i].QuoteCurrency,
 			Bid:           bids,
 			Ask:           asks,
+			MarketIV:      result.Result.MarkIv,
+			URL:           url,
 		})
 	}
 
