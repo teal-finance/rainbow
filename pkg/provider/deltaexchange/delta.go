@@ -21,6 +21,7 @@ var log = emo.NewZone("Delta")
 const (
 	deltaProducts  = "https://api.delta.exchange/v2/products?states=live&contract_types=put_options,call_options"
 	deltaOrders    = "https://api.delta.exchange/v2/l2orderbook/"
+	baseURL        = "https://www.delta.exchange/app/options_chain/trade/"
 	maxBytesToRead = 20_000_000 // Prevent wasting memory/CPU when receiving an abnormally huge response from Delta API
 )
 
@@ -59,7 +60,7 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 
 		// Ugly fix for front, the 100K strike is too long number so I will filter it out
 		// TODO, reduce the size of the front character to fit more things
-		if strike > 75000 {
+		if strike > 50000 {
 			continue
 		}
 
@@ -72,6 +73,8 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		if err != nil {
 			return nil, err
 		}
+		//log.Printf(p.ID)
+		//spew.Dump(p)
 
 		options = append(options, rainbow.Option{
 			Name:          p.Symbol,
@@ -86,7 +89,11 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 			QuoteCurrency: p.QuotingAsset.Symbol,
 			Bid:           bids,
 			Ask:           asks,
+			URL:           baseURL + p.ContractUnitCurrency + "/" + p.Symbol,
+			//TODO add MarketIV
+			//https://docs.delta.exchange/#get-tickers-for-products
 		})
+		log.Print(options[len(options)-1].URL)
 	}
 
 	return options, nil

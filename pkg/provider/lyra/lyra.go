@@ -6,7 +6,6 @@
 package lyra
 
 import (
-	"fmt"
 	"math"
 	"math/big"
 	"strings"
@@ -219,10 +218,10 @@ func url(o *rainbow.Option, strikeID *big.Int) string {
 	asset := strings.ToLower(o.Asset[1:])
 	// TODO if they include asset with decimal, modify this
 	// most likely example: SOL, LINK
-	strike := fmt.Sprintf("%.f", rainbow.ToFloat(strikeID, 0))
-	t := strings.ToLower(o.Type)
+	//strike := fmt.Sprintf("%.f", rainbow.ToFloat(strikeID, 0))
+	//t := strings.ToLower(o.Type)
 
-	return base + "/" + asset + "/" + strike + "/" + t
+	return base + "/" + asset //+ "/" + strike + "/" + t
 	//return base + "market=" + asset + "&id=" + ""
 }
 

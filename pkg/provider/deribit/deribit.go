@@ -177,7 +177,7 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 		expiryTime := time.Unix(seconds, ns).UTC()
 		expiryStr := expiryTime.Format("2006-01-02 15:04:05")
 		name := strings.Split(instruments[i].InstrumentName, "-")
-		url := baseURL + instruments[i].BaseCurrency + "/" + name[0] + "-" + name[1]
+		url := baseURL + instruments[i].BaseCurrency + "/" + name[0] + "-" + name[1] + "/" + instruments[i].InstrumentName
 
 		bids := normalizeOrders(result.Result.Bids, result.Result.IndexPrice)
 		sort.Slice(bids, func(i, j int) bool {

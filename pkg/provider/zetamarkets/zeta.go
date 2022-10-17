@@ -72,6 +72,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			QuoteCurrency: i.Quote(),
 			Bid:           bids,
 			Ask:           asks,
+			URL:           "https://dex.zeta.markets/",
 		})
 	}
 
