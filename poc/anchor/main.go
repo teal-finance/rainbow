@@ -15,6 +15,7 @@ import (
 	"github.com/spewerspew/spew"
 	sol "github.com/streamingfast/solana-go"
 
+	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor"
 	zeta "github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor/generated/zeta"
 )
 
@@ -69,11 +70,11 @@ func main() {
 			continue
 		}
 
-		spew.Dump(zo.Products[5])  // opt)////TODO compute the right index
-		spew.Dump(zo.Products[6])  // opt)////TODO compute the right index
+		spew.Dump(zo.Products[5]) // opt)////TODO compute the right index
+		//spew.Dump(zo.Products[6])  // opt)////TODO compute the right index
 		spew.Dump(zo.Products[16]) // opt)////TODO compute the right index
-		spew.Dump(zo.Products[17]) // opt)////TODO compute the right index
-		spew.Dump(zo.Greeks)       // opt)
+		//spew.Dump(zo.Products[17]) // opt)////TODO compute the right index
+		spew.Dump(zo.Greeks) // opt)
 
 		ooo, err := client.GetAccountInfo(
 			context.TODO(),
@@ -89,7 +90,9 @@ func main() {
 			continue
 		}
 		spew.Dump(gr.ProductGreeks[5]) // TODO compute the right index
-		spew.Dump(gr.ProductGreeks[6]) // TODO compute the right index
+		spew.Dump(anchor.FromAnchorToDecimals(gr.ProductGreeks[5].Volatility))
+		spew.Dump(gr.ProductGreeks[16]) // TODO compute the right index
+		spew.Dump(anchor.FromAnchorToDecimals(gr.ProductGreeks[6].Volatility))
 
 		/*
 			a, b, c := deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.QuoteAssetMint), pub)

@@ -16,11 +16,14 @@ import (
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
 
+	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 //const serumMainnet = "https://solana-mainnet.g.alchemy.com/v2/1NUlFJ7BXSudMEuTM8kns50OXHzDGDjE" //"https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
+
+var log = emo.NewZone("Zeta")
 
 type Provider struct{}
 
@@ -45,6 +48,8 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 		if err != nil {
 			// TODO make proper error since this is fixed
 			// for now because error in serumAddress generated
+			//log.Warn("Deribit book " + err.Error())
+			//
 			continue
 		}
 
