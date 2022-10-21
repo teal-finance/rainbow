@@ -93,6 +93,7 @@ func main() {
 		spew.Dump(anchor.FromAnchorToDecimals(gr.ProductGreeks[5].Volatility))
 		spew.Dump(gr.ProductGreeks[16]) // TODO compute the right index
 		spew.Dump(anchor.FromAnchorToDecimals(gr.ProductGreeks[6].Volatility))
+		spew.Dump(gr.Volatility)
 
 		/*
 			a, b, c := deriveSerumMarketAddress(i.Pubkey, solana.PublicKey(opt.QuoteAssetMint), pub)

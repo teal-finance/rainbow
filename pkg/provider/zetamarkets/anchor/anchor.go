@@ -38,7 +38,7 @@ func Query() ([]Option, error) {
 
 	out, err := client.GetProgramAccounts(context.TODO(), pubKey)
 	if err != nil {
-		return nil, err
+		return nil, log.Error("GetProgramAccounts", err).Err()
 	}
 
 	result := make([]Option, 0, 4*len(out))
@@ -48,33 +48,46 @@ func Query() ([]Option, error) {
 
 		err = bin.NewBinDecoder(account.Account.Data.GetBinary()).Decode(&z)
 		if err != nil {
-			// TODO make proper error since this is fixed
-
+			//spew.Dump(account.Pubkey)
+			//too many accounts with that error to explicitely log. so we just silently skip them
 			continue
+			//return []Option{}, log.Error("NewBinDecoder", "account=", account, err).Err()
+
+		}
+		greekInfo, err := client.GetAccountInfo(context.TODO(), z.Greeks)
+		if err != nil {
+			return []Option{}, log.Error("GetAccountInfo", "greeks=", z.Greeks, err).Err()
+		}
+		gr := new(zeta.Greeks)
+		err = bin.NewBinDecoder(greekInfo.Value.Data.GetBinary()).Decode(&gr)
+		if err != nil {
+			return []Option{}, log.Error("NewBinDecoder", "greeks=", z.Greeks, err).Err()
+
 		}
 
-		result = append(result, extractOptions(z, z.Products[:], false)...)
-		result = append(result, extractOptions(z, z.ProductsPadding[:], true)...) // extra space that might be used in the future
+		result = append(result, extractOptions(z, gr, false)...)
+		result = append(result, extractOptions(z, gr, true)...) // extra space that might be used in the future
 	}
-
 	return result, nil
 }
 
-func extractOptions(z *zeta.ZetaGroup, products []zeta.Product, padding bool) []Option {
-	options := make([]Option, 0, len(products))
-
-	counter := 0
-
-	for _, p := range products {
-		if p.Strike.IsSet && p.Kind.String() != "Future" {
-			if padding {
-				options = append(options, Option{z, p, z.ExpirySeriesPadding[counter/23].ExpiryTs})
-			} else {
-				options = append(options, Option{z, p, z.ExpirySeries[counter/23].ExpiryTs})
+func extractOptions(z *zeta.ZetaGroup, g *zeta.Greeks, padding bool) []Option {
+	options := make([]Option, 0, len(z.Products))
+	if padding {
+		for i := range z.ProductsPadding {
+			if z.ProductsPadding[i].Strike.IsSet && z.ProductsPadding[i].Kind.String() != "Future" {
+				options = append(options, Option{z, &z.ProductsPadding[i], &g.ProductGreeksPadding[i%23], z.ExpirySeriesPadding[i/23].ExpiryTs})
 			}
 		}
 
-		counter++
+	}
+	if !padding {
+		for i := range z.Products {
+			if z.Products[i].Strike.IsSet && z.Products[i].Kind.String() != "Future" {
+				options = append(options, Option{z, &z.Products[i], &g.ProductGreeks[i%23], z.ExpirySeries[i/23].ExpiryTs})
+			}
+		}
+
 	}
 
 	return options
@@ -82,7 +95,8 @@ func extractOptions(z *zeta.ZetaGroup, products []zeta.Product, padding bool) []
 
 type Option struct {
 	ZG      *zeta.ZetaGroup
-	Product zeta.Product
+	Product *zeta.Product
+	Greek   *zeta.ProductGreeks
 	expiry  uint64
 	// in ZetaGroup the Product & ProductPaddings are by packet of 23 = 11 calls + 11 puts + 1 future.
 	// To find the corresponding expiry(padding), we need its index in the array, and divide by 23
@@ -119,6 +133,10 @@ func (o Option) Asset() string {
 
 		return "ZZZZ"
 	}
+}
+
+func (o Option) Vol() float64 {
+	return FromAnchorToDecimals(o.Greek.Volatility)
 }
 
 func (o Option) Name() string {

@@ -46,11 +46,9 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 
 		out, err := serum.FetchMarket(context.Background(), client, pubKey)
 		if err != nil {
-			// TODO make proper error since this is fixed
-			// for now because error in serumAddress generated
-			//log.Warn("Deribit book " + err.Error())
-			//
-			continue
+			// previously just silently skipped because of a weird error from Serum
+			return []rainbow.Option{}, log.Error("serum FetchMarket", err).Err()
+
 		}
 
 		// inverting the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
@@ -77,6 +75,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			QuoteCurrency: i.Quote(),
 			Bid:           bids,
 			Ask:           asks,
+			MarketIV:      i.Vol(),
 			URL:           "https://dex.zeta.markets/",
 		})
 	}
