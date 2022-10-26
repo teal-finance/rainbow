@@ -42,6 +42,7 @@ func printTable(options []rainbow.Option) {
 	green := color.FgGreen.Render
 	red := color.FgRed.Render
 	magenta := color.FgMagenta.Render
+	blue := color.FgCyan.Render
 
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
@@ -49,7 +50,7 @@ func printTable(options []rainbow.Option) {
 	t.SetTitle(" Fetched %d options", len(options))
 
 	t.AppendHeader(table.Row{
-		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", "MarketIV",
+		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", blue("MarketIV"),
 		red(" Ask"), "Size", "Instrument", magenta("url"),
 	})
 
@@ -60,7 +61,7 @@ func printTable(options []rainbow.Option) {
 		t.AppendRows([]table.Row{{
 			highlight(o.Provider), o.Asset, o.Type,
 			bestBidQty, green(bestBidPx), math.Round(o.Strike*100) / 100,
-			math.Round(o.MarketIV*100) / 100,
+			blue(math.Round(o.MarketIV*100) / 100),
 			red(bestAskPx), bestAskQty, o.Name, magenta(o.URL),
 		}})
 	}
