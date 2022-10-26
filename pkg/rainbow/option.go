@@ -25,8 +25,10 @@ type Option struct {
 	AskIV         float64 `json:"askIV"`     // Implied Volatility computed from the ask
 	MarketIV      float64 `json:"markIV"`    // When it is present on the provider, we store their Market IV
 	// see https://corporatefinanceinstitute.com/resources/knowledge/trading-investing/option-greeks/
-	Greeks TheGreeks `json:"greeks"` // Greeks measure the sensitivity of an option’s price to its the underlying determining parameters.
-	Strike float64   `json:"strike"` //
+	Greeks       TheGreeks `json:"greeks"`       // Greeks measure the sensitivity of an option’s price to its the underlying determining parameters.
+	Strike       float64   `json:"strike"`       //
+	OpenInterest float64   `json:"openinterest"` //
+
 }
 
 // TODO put standard name here.

@@ -23,13 +23,13 @@ import (
 var log = emo.NewZone("Zeta")
 
 const (
-	ZetaID = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
-	//endpoint = "https://api.mainnet-beta.solana.com" // rpc.MainNetBeta_RPC
+	ZetaID    = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
 	SolanaRPC = "https://solana-mainnet.g.alchemy.com/v2/1NUlFJ7BXSudMEuTM8kns50OXHzDGDjE" //"https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
 
 )
 
-func Query() ([]Option, error) {
+func Query() ([]Option, map[string][]uint64, error) {
+	m := make(map[string][]uint64)
 	pubKey := solana.MustPublicKeyFromBase58(ZetaID)
 
 	jsonrpcclient := rpc.NewWithRateLimit(SolanaRPC, 10)
@@ -38,7 +38,7 @@ func Query() ([]Option, error) {
 
 	out, err := client.GetProgramAccounts(context.TODO(), pubKey)
 	if err != nil {
-		return nil, log.Error("GetProgramAccounts", err).Err()
+		return nil, nil, log.Error("GetProgramAccounts", err).Err()
 	}
 
 	result := make([]Option, 0, 4*len(out))
@@ -54,21 +54,25 @@ func Query() ([]Option, error) {
 			//return []Option{}, log.Error("NewBinDecoder", "account=", account, err).Err()
 
 		}
+		fillmap(m, z)
 		greekInfo, err := client.GetAccountInfo(context.TODO(), z.Greeks)
 		if err != nil {
-			return []Option{}, log.Error("GetAccountInfo", "greeks=", z.Greeks, err).Err()
+			return []Option{}, nil, log.Error("GetAccountInfo", "greeks=", z.Greeks, err).Err()
 		}
 		gr := new(zeta.Greeks)
 		err = bin.NewBinDecoder(greekInfo.Value.Data.GetBinary()).Decode(&gr)
 		if err != nil {
-			return []Option{}, log.Error("NewBinDecoder", "greeks=", z.Greeks, err).Err()
+			return []Option{}, nil, log.Error("NewBinDecoder", "greeks=", z.Greeks, err).Err()
 
 		}
 
 		result = append(result, extractOptions(z, gr, false)...)
 		result = append(result, extractOptions(z, gr, true)...) // extra space that might be used in the future
 	}
-	return result, nil
+	//spew.Dump(m)
+	//spew.Dump(&m)
+
+	return result, m, nil
 }
 
 func extractOptions(z *zeta.ZetaGroup, g *zeta.Greeks, padding bool) []Option {
@@ -91,6 +95,24 @@ func extractOptions(z *zeta.ZetaGroup, g *zeta.Greeks, padding bool) []Option {
 	}
 
 	return options
+}
+
+func fillmap(m map[string][]uint64, z *zeta.ZetaGroup) {
+	a := Asset(z)
+	e := []zeta.ExpirySeries{}
+	e = append(e, z.ExpirySeries[:]...)
+	e = append(e, z.ExpirySeriesPadding[:]...)
+
+	m[a] = extractExpiries(e)
+}
+func extractExpiries(ze []zeta.ExpirySeries) []uint64 {
+	exp := make([]uint64, 0, len(ze))
+	for _, e := range ze {
+		if e.ExpiryTs != 0 {
+			exp = append(exp, e.ExpiryTs)
+		}
+	}
+	return exp
 }
 
 type Option struct {
@@ -121,15 +143,18 @@ func (o Option) Quote() string {
 }
 
 func (o Option) Asset() string {
+	return Asset(o.ZG)
+}
+func Asset(zg *zeta.ZetaGroup) string {
 	switch {
-	case o.ZG.UnderlyingMint == solana.MustPublicKeyFromBase58(SOLAddress):
+	case zg.UnderlyingMint == solana.MustPublicKeyFromBase58(SOLAddress):
 		return "SOL"
-	case o.ZG.UnderlyingMint == solana.MustPublicKeyFromBase58(ETHAddress):
+	case zg.UnderlyingMint == solana.MustPublicKeyFromBase58(ETHAddress):
 		return "ETH"
-	case o.ZG.UnderlyingMint == solana.MustPublicKeyFromBase58(BTCAddress):
+	case zg.UnderlyingMint == solana.MustPublicKeyFromBase58(BTCAddress):
 		return "BTC"
 	default:
-		log.Warn("Zeta Unknown token:", o.ZG.UnderlyingMint)
+		log.Warn("Zeta Unknown token:", zg.UnderlyingMint)
 
 		return "ZZZZ"
 	}

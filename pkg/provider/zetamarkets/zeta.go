@@ -12,6 +12,7 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/streamingfast/solana-go"
 	"github.com/streamingfast/solana-go/programs/serum"
 	"github.com/streamingfast/solana-go/rpc"
@@ -21,7 +22,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-//const serumMainnet = "https://solana-mainnet.g.alchemy.com/v2/1NUlFJ7BXSudMEuTM8kns50OXHzDGDjE" //"https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
+const ZetaAPIUrl = "https://api.zeta.markets/markets/"
 
 var log = emo.NewZone("Zeta")
 
@@ -32,10 +33,14 @@ func (Provider) Name() string {
 }
 
 func (p Provider) Options() ([]rainbow.Option, error) {
-	rawOptions, err := anchor.Query()
+	rawOptions, m, err := anchor.Query()
 	if err != nil {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
+	//spew.Dump(m)
+	//spew.Dump(&m)
+	oi := OpenInterestMap(m)
+	spew.Dump(oi)
 
 	client := rpc.NewClient(anchor.SolanaRPC)
 
@@ -139,4 +144,53 @@ func normalizeOrders(
 	}
 
 	return orders, nil
+}
+
+func OpenInterestMap(m map[string][]uint64) map[string]ZetaAPI {
+	//if error fail with just a log
+	//let's keep it like that for now because evyrything shouldn't fail if zeta api is down
+	oi := make(map[string]ZetaAPI)
+	/*
+		for asset, expiries := range m {
+
+			for _, e := range expiries {
+				url := ZetaAPIUrl + asset + "?expiry=" + strconv.FormatUint(e, 10)
+				spew.Dump(url)
+				resp, err := http.Get(url)
+				if err != nil {
+					log.Warnf("zeta open interest GET %s: %w", url, err)
+					return nil
+				}
+				defer resp.Body.Close()
+				//spew.Dump(resp.Body)
+
+				var result struct {
+					Result []ZetaAPI `json:"result"`
+				}
+				if err = gg.DecodeJSONResponse(resp, &result.Result); err != nil {
+					//return Quote{}, fmt.Errorf("quote from Ox: %w", err)
+					return nil
+				}
+				json.NewDecoder(resp.Body).Decode(&result)
+				//json.Unmarshal(resp.Body, &result)
+				spew.Dump(result)
+			}
+
+		}
+	*/
+
+	return oi
+
+}
+
+type ZetaAPI struct {
+	OI ZetaOI
+}
+type ZetaOI struct {
+	Timestamp         int64   `json:"timestamp"`
+	OpenInterest      int     `json:"open_interest"`
+	ImpliedVolatility float64 `json:"implied_volatility"`
+	Delta             int     `json:"delta"`
+	Vega              int     `json:"vega"`
+	Theo              float64 `json:"theo"`
 }
