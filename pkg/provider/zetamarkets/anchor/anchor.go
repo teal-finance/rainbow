@@ -119,7 +119,7 @@ type Option struct {
 	ZG      *zeta.ZetaGroup
 	Product *zeta.Product
 	Greek   *zeta.ProductGreeks
-	expiry  uint64
+	Expiry  uint64
 	// in ZetaGroup the Product & ProductPaddings are by packet of 23 = 11 calls + 11 puts + 1 future.
 	// To find the corresponding expiry(padding), we need its index in the array, and divide by 23
 	// the quotient is the index of the expiry of interest
@@ -172,7 +172,7 @@ func (o Option) Name() string {
 const ContractSize = 1000
 
 func (o Option) Expiration() string {
-	seconds := int64(o.expiry)
+	seconds := int64(o.Expiry)
 	expiryTime := time.Unix(seconds, 0).UTC()
 	return expiryTime.Format("2006-01-02 15:04:05")
 }

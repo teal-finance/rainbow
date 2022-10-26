@@ -7,9 +7,14 @@ package zetamarkets
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"math/big"
+	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
@@ -39,8 +44,8 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	}
 	//spew.Dump(m)
 	//spew.Dump(&m)
-	oi := OpenInterestMap(m)
-	spew.Dump(oi)
+	zoi := OpenInterestMap(m)
+	//spew.Dump(zoi)
 
 	client := rpc.NewClient(anchor.SolanaRPC)
 
@@ -67,7 +72,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			return nil, err
 		}
 
-		options = append(options, rainbow.Option{
+		o := rainbow.Option{
 			Name:          i.Name(),
 			Type:          i.OptionType(),
 			Asset:         i.Asset(),
@@ -82,7 +87,9 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			Ask:           asks,
 			MarketIV:      i.Vol(),
 			URL:           "https://dex.zeta.markets/",
-		})
+		}
+		o.OpenInterest = OpenInterest(&i, zoi)
+		options = append(options, o)
 	}
 
 	if len(options) == 0 {
@@ -146,51 +153,63 @@ func normalizeOrders(
 	return orders, nil
 }
 
-func OpenInterestMap(m map[string][]uint64) map[string]ZetaAPI {
+func OpenInterestMap(m map[string][]uint64) ZetaOI {
 	//if error fail with just a log
 	//let's keep it like that for now because evyrything shouldn't fail if zeta api is down
-	oi := make(map[string]ZetaAPI)
-	/*
-		for asset, expiries := range m {
+	//oi := make(map[string]ZetaAPI)
+	var oi ZetaOI
 
-			for _, e := range expiries {
-				url := ZetaAPIUrl + asset + "?expiry=" + strconv.FormatUint(e, 10)
-				spew.Dump(url)
-				resp, err := http.Get(url)
-				if err != nil {
-					log.Warnf("zeta open interest GET %s: %w", url, err)
-					return nil
-				}
-				defer resp.Body.Close()
-				//spew.Dump(resp.Body)
+	for asset, expiries := range m {
 
-				var result struct {
-					Result []ZetaAPI `json:"result"`
-				}
-				if err = gg.DecodeJSONResponse(resp, &result.Result); err != nil {
-					//return Quote{}, fmt.Errorf("quote from Ox: %w", err)
-					return nil
-				}
-				json.NewDecoder(resp.Body).Decode(&result)
-				//json.Unmarshal(resp.Body, &result)
-				spew.Dump(result)
+		for _, e := range expiries {
+			url := ZetaAPIUrl + asset + "?expiry=" + strconv.FormatUint(e, 10)
+			spew.Dump(url)
+			resp, err := http.Get(url)
+			if err != nil {
+				log.Warnf("zeta open interest GET %s: %w", url, err)
+				return nil
 			}
+			defer resp.Body.Close()
+			//spew.Dump(resp.Body)
 
+			/*var result struct {
+				Result []ZetaAPI `json:"result"`
+			}
+			if err = gg.DecodeJSONResponse(resp, &result.Result); err != nil {
+				//return Quote{}, fmt.Errorf("quote from Ox: %w", err)
+				return nil
+			}
+			json.NewDecoder(resp.Body).Decode(&result)
+			//json.Unmarshal(resp.Body, &result)
+			spew.Dump(result)*/
+			data, _ := io.ReadAll(resp.Body)
+			json.Unmarshal(data, &oi)
+			//spew.Dump(oi)
 		}
-	*/
+
+	}
+	//spew.Dump(oi)
 
 	return oi
 
 }
 
-type ZetaAPI struct {
-	OI ZetaOI
-}
-type ZetaOI struct {
+//	type ZetaAPI struct {
+//		OI ZetaOI
+//	}
+type ZetaOI map[string]struct {
 	Timestamp         int64   `json:"timestamp"`
-	OpenInterest      int     `json:"open_interest"`
+	OpenInterest      float64 `json:"open_interest"`
 	ImpliedVolatility float64 `json:"implied_volatility"`
-	Delta             int     `json:"delta"`
-	Vega              int     `json:"vega"`
+	Delta             float64 `json:"delta"`
+	Vega              float64 `json:"vega"`
 	Theo              float64 `json:"theo"`
+}
+
+func OpenInterest(o *anchor.Option, zoi ZetaOI) float64 {
+	key := o.Asset() + `#` + strconv.FormatUint(o.Expiry, 10) +
+		`#` + strings.ToLower(o.OptionType()) + `#` + fmt.Sprintf("%.1f", o.Strike())
+	//spew.Dump(key)
+	//spew.Dump(zoi[key])
+	return zoi[key].OpenInterest
 }
