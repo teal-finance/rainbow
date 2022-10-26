@@ -65,7 +65,8 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		}
 
 		if p.ContractUnitCurrency == "BNB" || p.ContractUnitCurrency == "XRP" ||
-			p.ContractUnitCurrency == "MATIC" || p.ContractUnitCurrency == "AVAX" {
+			p.ContractUnitCurrency == "MATIC" || p.ContractUnitCurrency == "AVAX" ||
+			p.ContractUnitCurrency == "LINK" {
 			continue // We'll add them when those assets are on other providers
 		}
 
