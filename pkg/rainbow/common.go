@@ -29,8 +29,15 @@ func ToFloat(n *big.Int, decimals int64) float64 {
 	if decimals == 0 {
 		return float64(n.Int64())
 	}
+
+	// divide by 10^(decimals-5)
+	divisor := big.NewInt(int64(math.Pow(10, float64(decimals-5))))
+	if divisor.Int64() == 0 {
+		return 0
+	}
+
 	q := big.NewInt(0)
-	q.Quo(n, big.NewInt(int64(math.Pow(10, float64(decimals-5))))) // divided by 10^(decimals-5)
+	q.Quo(n, divisor)
 	return float64(q.Int64()) / 100000.0
 }
 
