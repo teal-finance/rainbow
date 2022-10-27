@@ -74,8 +74,8 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 		if err != nil {
 			return nil, err
 		}
-		//log.Printf(p.ID)
-		//spew.Dump(p)
+		// log.Printf(p.ID)
+		// spew.Dump(p)
 
 		options = append(options, rainbow.Option{
 			Name:          p.Symbol,
@@ -91,8 +91,8 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 			Bid:           bids,
 			Ask:           asks,
 			URL:           baseURL + p.ContractUnitCurrency + "/" + p.Symbol,
-			//TODO add MarketIV
-			//https://docs.delta.exchange/#get-tickers-for-products
+			// TODO add MarketIV
+			// https://docs.delta.exchange/#get-tickers-for-products
 		})
 		log.Print(options[len(options)-1].URL)
 	}

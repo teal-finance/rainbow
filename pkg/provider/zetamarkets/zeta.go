@@ -42,10 +42,10 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
-	//spew.Dump(m)
-	//spew.Dump(&m)
+	// spew.Dump(m)
+	// spew.Dump(&m)
 	zoi := OpenInterestMap(m)
-	//spew.Dump(zoi)
+	// spew.Dump(zoi)
 
 	client := rpc.NewClient(anchor.SolanaRPC)
 
@@ -58,7 +58,6 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 		if err != nil {
 			// previously just silently skipped because of a weird error from Serum
 			return []rainbow.Option{}, log.Error("serum FetchMarket", err).Err()
-
 		}
 
 		// inverting the order to be able to quickly find the best bid (bids[0]) and ask (asks[len(offer)-1])
@@ -154,13 +153,12 @@ func normalizeOrders(
 }
 
 func OpenInterestMap(m map[string][]uint64) ZetaOI {
-	//if error fail with just a log
-	//let's keep it like that for now because evyrything shouldn't fail if zeta api is down
-	//oi := make(map[string]ZetaAPI)
+	// if error fail with just a log
+	// let's keep it like that for now because evyrything shouldn't fail if zeta api is down
+	// oi := make(map[string]ZetaAPI)
 	var oi ZetaOI
 
 	for asset, expiries := range m {
-
 		for _, e := range expiries {
 			url := ZetaAPIUrl + asset + "?expiry=" + strconv.FormatUint(e, 10)
 			spew.Dump(url)
@@ -170,7 +168,7 @@ func OpenInterestMap(m map[string][]uint64) ZetaOI {
 				return nil
 			}
 			defer resp.Body.Close()
-			//spew.Dump(resp.Body)
+			// spew.Dump(resp.Body)
 
 			/*var result struct {
 				Result []ZetaAPI `json:"result"`
@@ -184,14 +182,12 @@ func OpenInterestMap(m map[string][]uint64) ZetaOI {
 			spew.Dump(result)*/
 			data, _ := io.ReadAll(resp.Body)
 			json.Unmarshal(data, &oi)
-			//spew.Dump(oi)
+			// spew.Dump(oi)
 		}
-
 	}
-	//spew.Dump(oi)
+	// spew.Dump(oi)
 
 	return oi
-
 }
 
 //	type ZetaAPI struct {
@@ -209,7 +205,7 @@ type ZetaOI map[string]struct {
 func OpenInterest(o *anchor.Option, zoi ZetaOI) float64 {
 	key := o.Asset() + `#` + strconv.FormatUint(o.Expiry, 10) +
 		`#` + strings.ToLower(o.OptionType()) + `#` + fmt.Sprintf("%.1f", o.Strike())
-	//spew.Dump(key)
-	//spew.Dump(zoi[key])
+	// spew.Dump(key)
+	// spew.Dump(zoi[key])
 	return zoi[key].OpenInterest
 }

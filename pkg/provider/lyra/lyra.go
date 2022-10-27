@@ -213,16 +213,16 @@ func Asset(address common.Address) string {
 
 // TODO check function on their frontend.
 func url(o *rainbow.Option, strikeID *big.Int) string {
-	//base := "https://app.lyra.finance/position/?"
+	// base := "https://app.lyra.finance/position/?"
 	base := "https://app.lyra.finance/trade"
 	asset := strings.ToLower(o.Asset[1:])
 	// TODO if they include asset with decimal, modify this
 	// most likely example: SOL, LINK
-	//strike := fmt.Sprintf("%.f", rainbow.ToFloat(strikeID, 0))
-	//t := strings.ToLower(o.Type)
+	// strike := fmt.Sprintf("%.f", rainbow.ToFloat(strikeID, 0))
+	// t := strings.ToLower(o.Type)
 
 	return base + "/" + asset //+ "/" + strike + "/" + t
-	//return base + "market=" + asset + "&id=" + ""
+	// return base + "market=" + asset + "&id=" + ""
 }
 
 func expiration(e *big.Int) string {

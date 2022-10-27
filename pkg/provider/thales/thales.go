@@ -234,7 +234,7 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		Layer:        "L2",
 		LayerName:    layer,
 		Provider:     name + "::" + layer,
-		//Link: url(m.Id)
+		// Link: url(m.Id)
 		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon/arbitrum,busd for binance
 		// TODO add underlying quote currency to be able to specify the token
 		Bid:    nil,
@@ -242,7 +242,7 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		Strike: rainbow.ToFloat(strikeInt, rainbow.DefaultEthereumDecimals),
 	}
 	binary.Name = binary.OptionName()
-	//log.Printf("%s\n", binary.Name)
+	// log.Printf("%s\n", binary.Name)
 	buy, err := getQuote(m, side, "BUY", layer)
 	if err != nil {
 		log.Error(err)

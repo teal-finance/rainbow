@@ -10,26 +10,27 @@ import (
 
 // https://github.com/zetamarkets/sdk/blob/79b4f37dea9c494091b924d241c3437885bd6f5f/src/decimal.ts#L23
 
-const SCALE_MASK = 0x00ff_0000
-const SCALE_SHIFT = 16
-const SIGN_MASK = 0x8000_0000
+const (
+	SCALE_MASK  = 0x00ff_0000
+	SCALE_SHIFT = 16
+	SIGN_MASK   = 0x8000_0000
+)
 
 func FromAnchorToDecimals(a zeta.AnchorDecimal) float64 {
-	//spew.Dump(a)
+	// spew.Dump(a)
 	scale := scale(a)
-	//spew.Dump(scale)
+	// spew.Dump(scale)
 	array := make([]byte, 0, 4*3*4)
-	//AppendUint32 does the work for us.
+	// AppendUint32 does the work for us.
 	array = binary.BigEndian.AppendUint32(array, a.Hi)
 	array = binary.BigEndian.AppendUint32(array, a.Mid)
 	array = binary.BigEndian.AppendUint32(array, a.Lo)
 
 	z := new(big.Int)
 	z.SetBytes(array)
-	//spew.Dump(array)
-	//spew.Dump(z)
+	// spew.Dump(array)
+	// spew.Dump(z)
 	return rainbow.ToFloat(z, int64(scale)-2)
-
 }
 
 func scale(a zeta.AnchorDecimal) uint32 {

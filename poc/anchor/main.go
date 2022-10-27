@@ -72,9 +72,9 @@ func main() {
 		spew.Dump(zo.ExpirySeries)
 		spew.Dump(zo.ExpirySeriesPadding)
 		spew.Dump(zo.Products[5]) // opt)////TODO compute the right index
-		//spew.Dump(zo.Products[6])  // opt)////TODO compute the right index
+		// spew.Dump(zo.Products[6])  // opt)////TODO compute the right index
 		spew.Dump(zo.Products[16]) // opt)////TODO compute the right index
-		//spew.Dump(zo.Products[17]) // opt)////TODO compute the right index
+		// spew.Dump(zo.Products[17]) // opt)////TODO compute the right index
 		spew.Dump(zo.Greeks) // opt)
 
 		ooo, err := client.GetAccountInfo(

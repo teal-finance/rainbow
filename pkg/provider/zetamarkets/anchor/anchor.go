@@ -48,10 +48,10 @@ func Query() ([]Option, map[string][]uint64, error) {
 
 		err = bin.NewBinDecoder(account.Account.Data.GetBinary()).Decode(&z)
 		if err != nil {
-			//spew.Dump(account.Pubkey)
-			//too many accounts with that error to explicitely log. so we just silently skip them
+			// spew.Dump(account.Pubkey)
+			// too many accounts with that error to explicitely log. so we just silently skip them
 			continue
-			//return []Option{}, log.Error("NewBinDecoder", "account=", account, err).Err()
+			// return []Option{}, log.Error("NewBinDecoder", "account=", account, err).Err()
 
 		}
 		fillmap(m, z)
@@ -63,14 +63,13 @@ func Query() ([]Option, map[string][]uint64, error) {
 		err = bin.NewBinDecoder(greekInfo.Value.Data.GetBinary()).Decode(&gr)
 		if err != nil {
 			return []Option{}, nil, log.Error("NewBinDecoder", "greeks=", z.Greeks, err).Err()
-
 		}
 
 		result = append(result, extractOptions(z, gr, false)...)
 		result = append(result, extractOptions(z, gr, true)...) // extra space that might be used in the future
 	}
-	//spew.Dump(m)
-	//spew.Dump(&m)
+	// spew.Dump(m)
+	// spew.Dump(&m)
 
 	return result, m, nil
 }
@@ -83,7 +82,6 @@ func extractOptions(z *zeta.ZetaGroup, g *zeta.Greeks, padding bool) []Option {
 				options = append(options, Option{z, &z.ProductsPadding[i], &g.ProductGreeksPadding[i%23], z.ExpirySeriesPadding[i/23].ExpiryTs})
 			}
 		}
-
 	}
 	if !padding {
 		for i := range z.Products {
@@ -91,7 +89,6 @@ func extractOptions(z *zeta.ZetaGroup, g *zeta.Greeks, padding bool) []Option {
 				options = append(options, Option{z, &z.Products[i], &g.ProductGreeks[i%23], z.ExpirySeries[i/23].ExpiryTs})
 			}
 		}
-
 	}
 
 	return options
@@ -105,6 +102,7 @@ func fillmap(m map[string][]uint64, z *zeta.ZetaGroup) {
 
 	m[a] = extractExpiries(e)
 }
+
 func extractExpiries(ze []zeta.ExpirySeries) []uint64 {
 	exp := make([]uint64, 0, len(ze))
 	for _, e := range ze {
@@ -145,6 +143,7 @@ func (o Option) Quote() string {
 func (o Option) Asset() string {
 	return Asset(o.ZG)
 }
+
 func Asset(zg *zeta.ZetaGroup) string {
 	switch {
 	case zg.UnderlyingMint == solana.MustPublicKeyFromBase58(SOLAddress):
