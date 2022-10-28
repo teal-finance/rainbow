@@ -30,6 +30,7 @@ func ToFloat(n *big.Int, decimals int64) float64 {
 		return float64(n.Int64())
 	}
 
+	// TODO remove this fix and add better check upfront
 	// divide by 10^(decimals-5)
 	divisor := big.NewInt(int64(math.Pow(10, float64(decimals-5))))
 	if divisor.Int64() == 0 {

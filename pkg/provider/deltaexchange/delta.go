@@ -94,7 +94,6 @@ func (pro Provider) Options() ([]rainbow.Option, error) {
 			// TODO add MarketIV
 			// https://docs.delta.exchange/#get-tickers-for-products
 		})
-		log.Print(options[len(options)-1].URL)
 	}
 
 	return options, nil
