@@ -36,7 +36,7 @@ const filterPresets: Record<string, any> = {
   },
   'DEXes': {
     assets: { 'defaultValue': true },
-    providers: { 'defaultValue': false, 'Lyra': true, 'Opyn': true, 'PsyOptions': true, 'Zeta': true }
+    providers: { 'defaultValue': false, 'Lyra': true, 'Synquote': true, 'Zeta': true }
   },
   'BTC': {
     assets: { 'defaultValue': false, 'BTC': true },

@@ -42,10 +42,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, fmt.Errorf("anchor.query: %w", err)
 	}
-	// spew.Dump(m)
-	// spew.Dump(&m)
 	zoi := OpenInterestMap(m)
-	// spew.Dump(zoi)
 
 	client := rpc.NewClient(anchor.SolanaRPC)
 
@@ -155,7 +152,6 @@ func normalizeOrders(
 func OpenInterestMap(m map[string][]uint64) ZetaOI {
 	// if error fail with just a log
 	// let's keep it like that for now because evyrything shouldn't fail if zeta api is down
-	// oi := make(map[string]ZetaAPI)
 	var oi ZetaOI
 
 	for asset, expiries := range m {
@@ -168,31 +164,15 @@ func OpenInterestMap(m map[string][]uint64) ZetaOI {
 				return nil
 			}
 			defer resp.Body.Close()
-			// spew.Dump(resp.Body)
 
-			/*var result struct {
-				Result []ZetaAPI `json:"result"`
-			}
-			if err = gg.DecodeJSONResponse(resp, &result.Result); err != nil {
-				//return Quote{}, fmt.Errorf("quote from Ox: %w", err)
-				return nil
-			}
-			json.NewDecoder(resp.Body).Decode(&result)
-			//json.Unmarshal(resp.Body, &result)
-			spew.Dump(result)*/
 			data, _ := io.ReadAll(resp.Body)
 			json.Unmarshal(data, &oi)
-			// spew.Dump(oi)
 		}
 	}
-	// spew.Dump(oi)
 
 	return oi
 }
 
-//	type ZetaAPI struct {
-//		OI ZetaOI
-//	}
 type ZetaOI map[string]struct {
 	Timestamp         int64   `json:"timestamp"`
 	OpenInterest      float64 `json:"open_interest"`

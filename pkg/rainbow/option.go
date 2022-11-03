@@ -16,7 +16,7 @@ type Option struct {
 	Chain         string  `json:"chain"`     // Ethereum, Solana and "–" for CEX (Deribit)
 	Layer         string  `json:"layer"`     // L1, L2 and "–" for CEX (Deribit)
 	LayerName     string  `json:"layername"` // name of the layer 1/2. "-" for CEX
-	Provider      string  `json:"provider"`  // Opyn, Lyra, Thales, Deribit, Psyoptions, Zeta, Delta
+	Provider      string  `json:"provider"`  // Lyra, Thales, Deribit, Synquote, Zeta, Delta
 	QuoteCurrency string  `json:"currency"`  // USD // TODO add the real underlying sUSD, USDC, USDT...
 	URL           string  `json:"url"`       // link to market @ provider.
 	Bid           []Order `json:"bid"`       // Bid = buying offers
