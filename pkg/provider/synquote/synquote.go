@@ -180,6 +180,5 @@ func month(m string) time.Month {
 func (q Quote) check() bool {
 
 	a := strings.Contains(q.ID, "NOV")
-	fmt.Println(a, q.ID)
 	return a
 }
