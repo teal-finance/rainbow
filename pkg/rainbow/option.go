@@ -11,12 +11,12 @@ type Option struct {
 	Name          string  `json:"name"`      // ASSET-DATE-Strike-OptionsType
 	Type          string  `json:"type"`      // CALL / PUT  // TODO add exotic like binary and perp(squeeth)
 	Asset         string  `json:"asset"`     // ETH, BTC, SOL, ...  // TODO add the underlying asset so that we don't need conversion
-	Expiry        string  `json:"expiry"`    // Expiry date in format 2021-12-31
+	Expiry        string  `json:"expiry"`    // Expiry date in Format("2006-01-02 15:04:05")
 	ExchangeType  string  `json:"exchange"`  // CEX / DEX
 	Chain         string  `json:"chain"`     // Ethereum, Solana and "–" for CEX (Deribit)
 	Layer         string  `json:"layer"`     // L1, L2 and "–" for CEX (Deribit)
 	LayerName     string  `json:"layername"` // name of the layer 1/2. "-" for CEX
-	Provider      string  `json:"provider"`  // Opyn, Lyra, Thales, Deribit, Psyoptions, Zeta, Delta
+	Provider      string  `json:"provider"`  // Lyra, Thales, Deribit, Synquote, Zeta, Delta
 	QuoteCurrency string  `json:"currency"`  // USD // TODO add the real underlying sUSD, USDC, USDT...
 	URL           string  `json:"url"`       // link to market @ provider.
 	Bid           []Order `json:"bid"`       // Bid = buying offers

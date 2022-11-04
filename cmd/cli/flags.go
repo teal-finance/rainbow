@@ -14,12 +14,12 @@ import (
 )
 
 const (
-	defaultProviders = "deribit,delta,lyra,opyn,psy,zeta"
+	defaultProviders = "deribit,delta,lyra,synquote,zeta"
 )
 
 var (
 	cex       = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
-	dex       = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Opyn, PsyOptions and Zeta")
+	dex       = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote and Zeta")
 	exotic    = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
 	providers = flag.String("providers", gg.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, same as the PROVIDERS env. var.")
 )
@@ -45,7 +45,7 @@ func listProviderNames() []string {
 			*providers += ",deribit,delta"
 		}
 		if *dex {
-			*providers += ",lyra,opyn,psy,zeta"
+			*providers += ",lyra,synquote,zeta"
 		}
 		if *exotic {
 			*providers += ",thales"
