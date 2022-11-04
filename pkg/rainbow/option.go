@@ -11,7 +11,7 @@ type Option struct {
 	Name          string  `json:"name"`      // ASSET-DATE-Strike-OptionsType
 	Type          string  `json:"type"`      // CALL / PUT  // TODO add exotic like binary and perp(squeeth)
 	Asset         string  `json:"asset"`     // ETH, BTC, SOL, ...  // TODO add the underlying asset so that we don't need conversion
-	Expiry        string  `json:"expiry"`    // Expiry date in format 2021-12-31
+	Expiry        string  `json:"expiry"`    // Expiry date in Format("2006-01-02 15:04:05")
 	ExchangeType  string  `json:"exchange"`  // CEX / DEX
 	Chain         string  `json:"chain"`     // Ethereum, Solana and "–" for CEX (Deribit)
 	Layer         string  `json:"layer"`     // L1, L2 and "–" for CEX (Deribit)
