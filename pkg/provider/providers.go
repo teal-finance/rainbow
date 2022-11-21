@@ -16,7 +16,6 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
 	"github.com/teal-finance/rainbow/pkg/provider/synquote"
 	"github.com/teal-finance/rainbow/pkg/provider/thales"
-	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -28,7 +27,7 @@ func AllProviders() []rainbow.Provider {
 		&deribit.Provider{},
 		lyra.Provider{},
 		synquote.Provider{},
-		zetamarkets.Provider{},
+		//zetamarkets.Provider{}, // paused platform due to current market conditions
 		thales.Provider{},        // Thales = exotic options -> https://teal.finance/rainbow/exotic
 		deltaexchange.Provider{}, // last because slow (rate limit)
 	}

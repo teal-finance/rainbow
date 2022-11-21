@@ -137,12 +137,14 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, err
 	}
-	marketsBsc, err := QueryAllMarkets(LayerURL("Bsc"))
+	// uncomment when BSC is ready
+	/*marketsBsc, err := QueryAllMarkets(LayerURL("Bsc"))
 	if err != nil {
 		return nil, err
-	}
+	}*/
 
-	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum)+2*len(marketsBsc))
+	//options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum)+2*len(marketsBsc))
+	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum))
 	err = ProcessMarkets(&options, marketsOptimism, "Optimism")
 	if err != nil {
 		return nil, err
@@ -156,11 +158,10 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = ProcessMarkets(&options, marketsBsc, "Bsc")
-
+	/*err = ProcessMarkets(&options, marketsBsc, "Bsc")
 	if err != nil {
 		return nil, err
-	}
+	}*/
 
 	return options, err
 }
@@ -286,13 +287,13 @@ func getQuote(m *thales.AllMarketsMarketsMarket, side uint8, action, layer strin
 	if action == "BUY" {
 		quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
-			log.Error("Thales BuyFromAmmQuote", err)
+			log.Error("Thales BuyFromAmmQuote on ", layer, err)
 			return 0, err
 		}
 	} else if action == "SELL" {
 		quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
-			log.Error("Thales SellToAmmQuote", err)
+			log.Error("Thales SellToAmmQuote on ", layer, err)
 			return 0, err
 		}
 	}
