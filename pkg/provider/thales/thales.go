@@ -181,6 +181,28 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			markets[i].Id == "0xd0792be5111fd1ac4da4da106db53a82d967a41b" {
 			continue
 		}*/
+
+		//TODO
+
+		// if poolsize ==0 , continue
+		//
+		if markets[i].Id == "0x412ae8cb7eed0c0cafd5c87d03317fa20db8c350" {
+			continue
+		}
+
+		poolSize := new(big.Int)
+		_, err := fmt.Sscan(markets[i].PoolSize, poolSize)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+
+		// check if big int iszero
+		// https://stackoverflow.com/questions/64257065/is-there-another-way-of-testing-if-a-big-int-is-0
+		// TODO make a function maybe
+		if len(poolSize.Bits()) == 0 {
+			continue
+		}
 		up, err := getOption(&markets[i], UP, layer)
 		if err != nil {
 			log.Error("#", i, "getOption: "+markets[i].Id+" UP:", err)
@@ -243,26 +265,34 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		Strike: rainbow.ToFloat(strikeInt, rainbow.DefaultEthereumDecimals),
 	}
 	binary.Name = binary.OptionName()
-	// log.Printf("%s\n", binary.Name)
-	buy, err := getQuote(m, side, "BUY", layer)
-	if err != nil {
-		log.Error(err)
-		return rainbow.Option{}, err
+
+	// here I had to do a weird choice. basically, if the orderbook is empty on one side,
+	// I obviously can't get a quote. I think I should get something like this:
+	// execution reverted: SafeMath: subtraction overflow from ...
+	// the real error is mainly when both fail, i.e., the whole AMM is empty or something worth logging
+	//
+	buy, err1 := getQuote(m, side, "BUY", layer)
+	sell, err2 := getQuote(m, side, "SELL", layer)
+
+	if err1 != nil && err2 != nil {
+		log.Error(err1)
+		log.Error(err2)
+		return rainbow.Option{}, err1
 	}
 
-	sell, err := getQuote(m, side, "SELL", layer)
-	if err != nil {
-		log.Error(err)
-		return rainbow.Option{}, err
+	if err2 != nil {
+		binary.Bid = append(binary.Bid, rainbow.Order{
+			Price: sell,
+			Size:  float64(amount),
+		})
 	}
-	binary.Bid = append(binary.Bid, rainbow.Order{
-		Price: sell,
-		Size:  float64(amount),
-	})
-	binary.Ask = append(binary.Ask, rainbow.Order{
-		Price: buy,
-		Size:  float64(amount),
-	})
+
+	if err1 != nil {
+		binary.Ask = append(binary.Ask, rainbow.Order{
+			Price: buy,
+			Size:  float64(amount),
+		})
+	}
 
 	return binary, nil
 }
