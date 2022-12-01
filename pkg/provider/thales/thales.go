@@ -182,14 +182,6 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			continue
 		}*/
 
-		//TODO
-
-		// if poolsize ==0 , continue
-		//
-		if markets[i].Id == "0x412ae8cb7eed0c0cafd5c87d03317fa20db8c350" {
-			continue
-		}
-
 		poolSize := new(big.Int)
 		_, err := fmt.Sscan(markets[i].PoolSize, poolSize)
 		if err != nil {
