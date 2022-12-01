@@ -125,7 +125,7 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	marketsOptimism, err := QueryAllMarkets(LayerURL("Optimism"))
+	/*marketsOptimism, err := QueryAllMarkets(LayerURL("Optimism"))
 	if err != nil {
 		return nil, err
 	}
@@ -136,16 +136,18 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	marketsArbitrum, err := QueryAllMarkets(LayerURL("Arbitrum"))
 	if err != nil {
 		return nil, err
-	}
+	}*/
 	// uncomment when BSC is ready
-	/*marketsBsc, err := QueryAllMarkets(LayerURL("Bsc"))
+	marketsBsc, err := QueryAllMarkets(LayerURL("Bsc"))
 	if err != nil {
 		return nil, err
-	}*/
+	}
 
 	//options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum)+2*len(marketsBsc))
-	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum))
-	err = ProcessMarkets(&options, marketsOptimism, "Optimism")
+	//options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum))
+	options := make([]rainbow.Option, 0, 2*len(marketsBsc))
+
+	/*err = ProcessMarkets(&options, marketsOptimism, "Optimism")
 	if err != nil {
 		return nil, err
 	}
@@ -157,17 +159,17 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	err = ProcessMarkets(&options, marketsArbitrum, "Arbitrum")
 	if err != nil {
 		return nil, err
-	}
-	/*err = ProcessMarkets(&options, marketsBsc, "Bsc")
+	}*/
+	err = ProcessMarkets(&options, marketsBsc, "Bsc")
 	if err != nil {
 		return nil, err
-	}*/
+	}
 
 	return options, err
 }
 
 func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
-	log.Printf("%s %v options\n", layer, len(markets))
+	log.Printf("Processing %s %v options\n", layer, len(markets))
 	for i := range markets {
 		// HOTFIX for bug on Polygon
 		// 3 markets for BTC with very low strike
@@ -182,18 +184,10 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			continue
 		}*/
 
-		//TODO
-
-		// if poolsize ==0 , continue
-		//
-		if markets[i].Id == "0x412ae8cb7eed0c0cafd5c87d03317fa20db8c350" {
-			continue
-		}
-
 		poolSize := new(big.Int)
 		_, err := fmt.Sscan(markets[i].PoolSize, poolSize)
 		if err != nil {
-			log.Error(err)
+			log.Error("Poolsize conversion", err)
 			return err
 		}
 
@@ -207,19 +201,25 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 		if err != nil {
 			log.Error("#", i, "getOption: "+markets[i].Id+" UP:", err)
 			spew.Dump(markets[i])
-			return err
+			//return err
+		} else {
+			*options = append(*options, up)
 		}
 		down, err := getOption(&markets[i], DOWN, layer)
 		if err != nil {
 			log.Error("#", i, "getOption:"+markets[i].Id+" DOWN:", err)
 			spew.Dump(markets[i])
-			return err
+			//return err
+		} else {
+			*options = append(*options, down)
+
 		}
-		*options = append(*options, up, down)
+		//pause because we don't have a premium RPC (we too poor)
 		if i%10 == 0 {
 			time.Sleep(1 * time.Second)
 		}
 	}
+	spew.Dump(options)
 
 	return nil
 }
@@ -254,8 +254,9 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		Expiry:       expiry,
 		ExchangeType: "DEX",
 		Chain:        "Ethereum",
-		Layer:        "L2",
+		Layer:        "L2", //TODO put L1 for BSC
 		LayerName:    layer,
+		ProtocolID:   m.Id,
 		Provider:     name + "::" + layer,
 		// Link: url(m.Id)
 		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon/arbitrum,busd for binance
@@ -273,11 +274,16 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 	//
 	buy, err1 := getQuote(m, side, "BUY", layer)
 	sell, err2 := getQuote(m, side, "SELL", layer)
+	err = err1
 
 	if err1 != nil && err2 != nil {
-		log.Error(err1)
-		log.Error(err2)
-		return rainbow.Option{}, err1
+		//log.Error(err1)
+		//log.Error(err2)
+		//both error are logged so doesn't really matter which I send back
+		// I'm assuming that there is a real problem is both side have issue, if not
+		// as long as one works, we store that data
+		// that's wht I'm going with right now
+		return rainbow.Option{}, err2
 	}
 
 	if err2 != nil {
@@ -285,6 +291,7 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 			Price: sell,
 			Size:  float64(amount),
 		})
+		err = err2
 	}
 
 	if err1 != nil {
@@ -294,7 +301,7 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		})
 	}
 
-	return binary, nil
+	return binary, err
 }
 
 func getQuote(m *thales.AllMarketsMarketsMarket, side uint8, action, layer string) (float64, error) {
