@@ -62,3 +62,11 @@ func TimeStringConvert(s string) (expiry string, err error) {
 	}
 	return expiry, err
 }
+
+// IsBigIntNull check if the big Int is ==0
+// https://stackoverflow.com/questions/64257065/is-there-another-way-of-testing-if-a-big-int-is-0
+// TODO make a function maybe
+func IsBigIntNull(b *big.Int) bool {
+
+	return len(b.Bits()) == 0
+}

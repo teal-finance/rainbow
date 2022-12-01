@@ -183,23 +183,12 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			markets[i].Id == "0xd0792be5111fd1ac4da4da106db53a82d967a41b" {
 			continue
 		}*/
+		//spew.Dump(markets[i])
 
-		poolSize := new(big.Int)
-		_, err := fmt.Sscan(markets[i].PoolSize, poolSize)
-		if err != nil {
-			log.Error("Poolsize conversion", err)
-			return err
-		}
-
-		// check if big int iszero
-		// https://stackoverflow.com/questions/64257065/is-there-another-way-of-testing-if-a-big-int-is-0
-		// TODO make a function maybe
-		if len(poolSize.Bits()) == 0 {
-			continue
-		}
 		up, err := getOption(&markets[i], UP, layer)
 		if err != nil {
 			log.Error("#", i, "getOption: "+markets[i].Id+" UP:", err)
+			spew.Dump(up)
 			spew.Dump(markets[i])
 			//return err
 		} else {
@@ -208,6 +197,7 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 		down, err := getOption(&markets[i], DOWN, layer)
 		if err != nil {
 			log.Error("#", i, "getOption:"+markets[i].Id+" DOWN:", err)
+			spew.Dump(down)
 			spew.Dump(markets[i])
 			//return err
 		} else {
@@ -219,7 +209,7 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			time.Sleep(1 * time.Second)
 		}
 	}
-	spew.Dump(options)
+	//spew.Dump(options)
 
 	return nil
 }
@@ -254,7 +244,7 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		Expiry:       expiry,
 		ExchangeType: "DEX",
 		Chain:        "Ethereum",
-		Layer:        "L2", //TODO put L1 for BSC
+		Layer:        l1orl2(layer),
 		LayerName:    layer,
 		ProtocolID:   m.Id,
 		Provider:     name + "::" + layer,
@@ -277,6 +267,7 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 	err = err1
 
 	if err1 != nil && err2 != nil {
+		log.Error("market error buy/sell")
 		//log.Error(err1)
 		//log.Error(err2)
 		//both error are logged so doesn't really matter which I send back
@@ -286,15 +277,17 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		return rainbow.Option{}, err2
 	}
 
-	if err2 != nil {
+	if err2 == nil {
 		binary.Bid = append(binary.Bid, rainbow.Order{
 			Price: sell,
 			Size:  float64(amount),
 		})
+	} else {
 		err = err2
+
 	}
 
-	if err1 != nil {
+	if err1 == nil {
 		binary.Ask = append(binary.Ask, rainbow.Order{
 			Price: buy,
 			Size:  float64(amount),
@@ -337,6 +330,13 @@ func getQuote(m *thales.AllMarketsMarketsMarket, side uint8, action, layer strin
 
 	decimals := LayerDecimals(layer)
 	return rainbow.ToFloat(quote, decimals), nil
+}
+
+func l1orl2(layer string) string {
+	if layer == "Bsc" {
+		return "L1"
+	}
+	return "L2"
 }
 
 func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
