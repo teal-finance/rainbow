@@ -125,7 +125,7 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	/*marketsOptimism, err := QueryAllMarkets(LayerURL("Optimism"))
+	marketsOptimism, err := QueryAllMarkets(LayerURL("Optimism"))
 	if err != nil {
 		return nil, err
 	}
@@ -136,18 +136,15 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	marketsArbitrum, err := QueryAllMarkets(LayerURL("Arbitrum"))
 	if err != nil {
 		return nil, err
-	}*/
-	// uncomment when BSC is ready
+	}
 	marketsBsc, err := QueryAllMarkets(LayerURL("Bsc"))
 	if err != nil {
 		return nil, err
 	}
 
-	//options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum)+2*len(marketsBsc))
-	//options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum))
-	options := make([]rainbow.Option, 0, 2*len(marketsBsc))
+	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum)+2*len(marketsBsc))
 
-	/*err = ProcessMarkets(&options, marketsOptimism, "Optimism")
+	err = ProcessMarkets(&options, marketsOptimism, "Optimism")
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +156,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	err = ProcessMarkets(&options, marketsArbitrum, "Arbitrum")
 	if err != nil {
 		return nil, err
-	}*/
+	}
 	err = ProcessMarkets(&options, marketsBsc, "Bsc")
 	if err != nil {
 		return nil, err
@@ -200,7 +197,6 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			time.Sleep(1 * time.Second)
 		}
 	}
-	//spew.Dump(options)
 
 	return nil
 }
