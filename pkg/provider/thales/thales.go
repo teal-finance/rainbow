@@ -175,14 +175,14 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 		// 3 markets for BTC with very low strike
 		// TODO properly understand this error "execution reverted: uint overflow from multiplication"
 		// remove annoying market
-		/*if markets[i].Id == "0xa0692fa1040200ac4e4818b460055753855fd623" ||
-			markets[i].Id == "0x419bf5bfaf543c1a6d9db5fbd8da8fe24a05c31c" ||
-			markets[i].Id == "0x08baf8b8791bb39c4f677eb4b2023665f0a46df8" ||
-			markets[i].Id == "0x5a14ad0a5b9108a8c557fa68cab4c2f44005f6ac" ||
-			markets[i].Id == "0xbef5d8d4e8f0e86b7c24b1b6f224020c55b65af1" ||
-			markets[i].Id == "0xd0792be5111fd1ac4da4da106db53a82d967a41b" {
+
+		//using this for a bug on BSC that give me 2 already expired market
+		//I'm guessing that's maybe because they created the market but didn't settle them or something
+		if markets[i].Id == "0x587e8d90249add7953f1af55deb10089d586feef" ||
+			//markets[i].Id == "0x419bf5bfaf543c1a6d9db5fbd8da8fe24a05c31c" ||
+			markets[i].Id == "0x7f97a2fe1facec844b1afd654c2e278fbc3510a3" {
 			continue
-		}*/
+		}
 		//spew.Dump(markets[i])
 
 		up, err := getOption(&markets[i], UP, layer)
