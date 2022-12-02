@@ -176,15 +176,6 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 		// TODO properly understand this error "execution reverted: uint overflow from multiplication"
 		// remove annoying market
 
-		//using this for a bug on BSC that give me 2 already expired market
-		//I'm guessing that's maybe because they created the market but didn't settle them or something
-		if markets[i].Id == "0x587e8d90249add7953f1af55deb10089d586feef" ||
-			//markets[i].Id == "0x419bf5bfaf543c1a6d9db5fbd8da8fe24a05c31c" ||
-			markets[i].Id == "0x7f97a2fe1facec844b1afd654c2e278fbc3510a3" {
-			continue
-		}
-		//spew.Dump(markets[i])
-
 		up, err := getOption(&markets[i], UP, layer)
 		if err != nil {
 			log.Error("#", i, "getOption: "+markets[i].Id+" UP:", err)
