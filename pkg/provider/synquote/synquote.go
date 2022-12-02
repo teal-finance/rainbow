@@ -177,8 +177,9 @@ func month(m string) time.Month {
 }
 
 // quick restrictions until OK from synquote team
+// TODO change it everymonth lol
 func (q Quote) check() bool {
 
-	a := strings.Contains(q.ID, "NOV")
+	a := strings.Contains(q.ID, "DEC")
 	return a
 }

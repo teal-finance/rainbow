@@ -28,6 +28,7 @@ type Option struct {
 	Greeks       TheGreeks `json:"greeks"`       // Greeks measure the sensitivity of an option’s price to its the underlying determining parameters.
 	Strike       float64   `json:"strike"`       //
 	OpenInterest float64   `json:"openinterest"` //
+	ProtocolID   string    `json:"protocolID"`   // when present log the ID of that instrument on the provider
 }
 
 // TODO put standard name here.
