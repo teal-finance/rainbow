@@ -1,30 +1,19 @@
 <template>
   <div class="relative z-10 w-full min-h-[2rem] text-sm">
-    <div class="absolute background top-0 right-0 flex flex-col justify-start w-full">
+    <div class="absolute top-0 right-0 flex flex-col justify-start background">
       <div id="presets-select" class="flex flex-row w-full lighter" @click="collapse = !collapse">
         <div class="flex-grow">
-          <button class="btn w-full text-left">{{ user.currentPreset.value }}</button>
+          <button class="w-full text-left btn">{{ user.currentPreset.value }}</button>
         </div>
-        <div class="flex justify-center items-center text-lg mr-2">
+        <div class="flex items-center justify-center mr-2 text-lg">
           <carret-down v-if="collapse"></carret-down>
           <carret-up v-else></carret-up>
         </div>
       </div>
-      <div
-        :class="collapse === true ? ['slideup'] : ['slidedown']"
-        class="slide-y duration-200 border bord-lighter"
-      >
-        <div
-          v-for="(preset, i) in Object.keys(filterPresets)"
-          :key="i"
-          class="w-full background hover:secondary"
-        >
-          <button
-            :id="'preset-' + preset"
-            class="btn w-full text-left"
-            v-if="preset != user.currentPreset.value"
-            @click="onChangePreset(preset, $event)"
-          >{{ preset }}</button>
+      <div :class="collapse === true ? ['slideup'] : ['slidedown']" class="duration-200 border slide-y bord-lighter">
+        <div v-for="(preset, i) in Object.keys(filterPresets)" :key="i" class="w-full background hover:secondary">
+          <button :id="'preset-' + preset" class="w-full text-left btn" v-if="preset != user.currentPreset.value"
+            @click="onChangePreset(preset, $event)">{{ preset }}</button>
         </div>
       </div>
     </div>

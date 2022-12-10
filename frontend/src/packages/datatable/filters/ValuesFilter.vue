@@ -1,15 +1,10 @@
 <template>
-  <component
-    :is="renderer"
-    :col="col"
-    :values="entries"
-    @include="include($event)"
-    @exclude="exclude($event)"
-  ></component>
+  <component :is="renderer" :col="col" :values="entries" @include="include($event)" @exclude="exclude($event)">
+  </component>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref, onMounted, reactive, watch } from 'vue'
+import { defineComponent, toRefs, onMounted, reactive, watch } from 'vue'
 import SwDatatableModel from '../models/datatable'
 import ValuesFilterSwitchRender from './ValuesFilterSwitchRender.vue';
 

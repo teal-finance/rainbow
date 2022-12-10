@@ -1,66 +1,34 @@
 <template>
-  <div v-if="isReady">
-    <div class="flex flex-row" v-if="!isMobile">
-      <div class="w-4/5">
-        <generic-datatable :model="datatable" :type="type"></generic-datatable>
-      </div>
-      <div class="w-1/5 pl-5 pr-3">
-        <presets-select v-if="isReady && type == 'classic'" @changepreset="mutatePreset($event)"></presets-select>
-        <div>
-          <div class="mt-3 text-xl">Asset</div>
-          <hr class="my-3" />
-          <values-filter :model="datatable" col="asset" :filters-state="filterConf.assets"></values-filter>
-        </div>
-        <div class="mt-2">
-          <div class="text-xl">Provider</div>
-          <hr class="my-3" />
-          <values-filter :model="datatable" col="provider" :filters-state="filterConf.providers"></values-filter>
-        </div>
-        <div class="mt-2">
-          <div class="text-xl">Expiry</div>
-          <hr class="my-3" />
-          <values-filter :model="datatable" col="expiry"></values-filter>
-        </div>
-      </div>
-    </div>
-    <div v-else>
+  <div>
+    <div v-if="isDatatableReady" class="w-full">
       <generic-datatable :model="datatable" :type="type"></generic-datatable>
     </div>
-  </div>
-  <div v-else>
-    <loading-indicator></loading-indicator>
+    <div v-else>
+      <loading-indicator></loading-indicator>
+    </div>
   </div>
 </template>
 
 
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount } from 'vue'
+import { onBeforeMount, onBeforeUnmount } from 'vue'
 import Option from '@/models/options/option';
 import SwDataTableModel from "@/packages/datatable/models/datatable";
 import ValuesFilter from '@/packages/datatable/filters/ValuesFilter.vue'
 import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
 import GenericDatatable from '@/components/GenericDatatable.vue';
 import LoadingIndicator from '@/components/widgets/LoadingIndicator.vue';
-import { isMobile, user } from '@/state';
+import { isMobile, user, datatable, isDatatableReady, filterConf } from '@/state';
 import { classicQuery, exoticQuery } from '@/api/graphql';
 import filterPresets from "@/const/filter_presets";
 import PresetsSelect from "@/components/PresetsSelect.vue";
 import { OptionType } from '@/interfaces';
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
-import router from "@/router";
 
 const props = defineProps({
   type: {
     type: String as () => OptionType,
     required: true
   }
-});
-
-const datatable = ref(new SwDataTableModel<OptionsTable>());
-const isReady = ref(false);
-const filterConf = reactive<Record<string, Record<string, boolean>>>({
-  assets: { 'defaultValue': true },
-  providers: { 'defaultValue': true },
 });
 
 function loadData(dataset: OptionsJsonDataset) {
@@ -104,12 +72,14 @@ async function init() {
     d = await exoticQuery()
   }
   loadData(d);
-  isReady.value = true;
+  isDatatableReady.value = true;
 }
 
 onBeforeMount(() => {
   init()
-})
+});
+
+onBeforeUnmount(() => isDatatableReady.value = false)
 </script>
 
 <style scoped lang="sass">
