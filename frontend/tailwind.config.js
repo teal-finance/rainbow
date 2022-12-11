@@ -73,6 +73,16 @@ module.exports = {
             txt: colors.neutral[100]
           }
         },
+        secondary: {
+          light: {
+            bg: '#298597',
+            txt: colors.white,
+          },
+          dark: {
+            bg: '#14414a',
+            txt: colors.neutral[100]
+          }
+        }
       },
       colors: {
         'rainbow': rainbowColors,

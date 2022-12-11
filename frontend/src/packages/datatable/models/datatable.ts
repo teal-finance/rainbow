@@ -111,7 +111,7 @@ export default class SwDatatableModel<T = Record<string, any>> {
   }
 
   setColumnsFromData(): void {
-    const row = this.state.rows[0]; //eslint-disable-line
+    const row = toRaw(this.state.rows[0]);
     console.log("Setting columns from row names", Object.keys(row))
     const cols = {} as Record<string, string>;
     Object.keys(row).forEach((k) => {
