@@ -138,18 +138,15 @@ export default defineComponent({
     })
 
     const linkText = computed<"Classic" | "Exotic">(() => {
-      let mode: "Classic" | "Exotic" = "Classic"
+      let mode: "Classic" | "Exotic" = "Exotic"
       if (router.currentRoute.value.path.startsWith("/exotic")) {
         mode = "Classic"
-      }
-      if (router.currentRoute.value.path.startsWith("/classic")) {
-        mode = "Exotic"
       }
       return mode
     })
 
-    const linkURL = computed<"/classic" | "/exotic">(() => {
-      return router.currentRoute.value.path.startsWith("/exotic") ? "/classic" : "/exotic"
+    const linkURL = computed<"/" | "/exotic">(() => {
+      return router.currentRoute.value.path.startsWith("/exotic") ? "/" : "/exotic"
     })
 
     return {
