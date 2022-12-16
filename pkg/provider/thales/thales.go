@@ -125,19 +125,19 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	marketsOptimism, err := QueryAllMarkets(LayerURL("Optimism"))
+	marketsOptimism, err := QueryAllMarkets("Optimism")
 	if err != nil {
 		return nil, err
 	}
-	marketsPolygon, err := QueryAllMarkets(LayerURL("Polygon"))
+	marketsPolygon, err := QueryAllMarkets("Polygon")
 	if err != nil {
 		return nil, err
 	}
-	marketsArbitrum, err := QueryAllMarkets(LayerURL("Arbitrum"))
+	marketsArbitrum, err := QueryAllMarkets("Arbitrum")
 	if err != nil {
 		return nil, err
 	}
-	marketsBsc, err := QueryAllMarkets(LayerURL("Bsc"))
+	marketsBsc, err := QueryAllMarkets("Bsc")
 	if err != nil {
 		return nil, err
 	}
@@ -342,14 +342,15 @@ func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 }
 
 // TODO add err.
-func QueryAllMarkets(url string) ([]thales.AllMarketsMarketsMarket, error) {
-	graphqlClient := graphql.NewClient(url, nil)
+func QueryAllMarkets(layer string) ([]thales.AllMarketsMarketsMarket, error) {
+
+	graphqlClient := graphql.NewClient(LayerURL(layer), nil)
 	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)
 	if err != nil {
-		return nil, fmt.Errorf("AllMarkets: %w", err)
+		return nil, fmt.Errorf("AllMarkets on %s: %w", layer, err)
 	}
 	if resp == nil {
-		return nil, fmt.Errorf("AllMarkets resp=nil")
+		return nil, fmt.Errorf("AllMarkets on %s: resp=nil", layer)
 	}
 	return resp.Markets, nil
 }
