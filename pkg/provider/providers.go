@@ -27,7 +27,7 @@ func AllProviders() []rainbow.Provider {
 		&deribit.Provider{},
 		lyra.Provider{},
 		synquote.Provider{},
-		//zetamarkets.Provider{}, // paused platform due to current market conditions
+		// zetamarkets.Provider{}, // paused platform due to current market conditions
 		thales.Provider{},        // Thales = exotic options -> https://teal.finance/rainbow/exotic
 		deltaexchange.Provider{}, // last because slow (rate limit)
 	}

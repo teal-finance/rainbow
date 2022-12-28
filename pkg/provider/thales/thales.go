@@ -53,7 +53,7 @@ const (
 	UP       uint8 = 0
 	DOWN     uint8 = 1
 	amount         = 1
-	baseUrl        = "https://thalesmarket.io/markets/"
+	baseURL        = "https://thalesmarket.io/markets/"
 	referral       = "?referralId=0xb3ac309aee5780d951082731ff2cc7f94f9488fd"
 )
 
@@ -112,7 +112,6 @@ func LayerDecimals(layer string) int64 {
 		return anchor.USDCDecimals
 	case "Bsc":
 		return rainbow.DefaultEthereumDecimals
-
 	}
 	log.Panic("Unexpected layer", layer)
 	return 0
@@ -178,7 +177,7 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			log.Error("#", i, "getOption: "+markets[i].Id+" UP:", err)
 			spew.Dump(up)
 			spew.Dump(markets[i])
-			//return err
+			// return err
 		} else {
 			*options = append(*options, up)
 		}
@@ -187,12 +186,11 @@ func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			log.Error("#", i, "getOption:"+markets[i].Id+" DOWN:", err)
 			spew.Dump(down)
 			spew.Dump(markets[i])
-			//return err
+			// return err
 		} else {
 			*options = append(*options, down)
-
 		}
-		//pause because we don't have a premium RPC (we too poor)
+		// pause because we don't have a premium RPC (we too poor)
 		if i%10 == 0 {
 			time.Sleep(1 * time.Second)
 		}
@@ -255,9 +253,9 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 
 	if err1 != nil && err2 != nil {
 		log.Error("market error buy/sell")
-		//log.Error(err1)
-		//log.Error(err2)
-		//both error are logged so doesn't really matter which I send back
+		// log.Error(err1)
+		// log.Error(err2)
+		// both error are logged so doesn't really matter which I send back
 		// I'm assuming that there is a real problem is both side have issue, if not
 		// as long as one works, we store that data
 		// that's wht I'm going with right now
@@ -271,7 +269,6 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		})
 	} else {
 		err = err2
-
 	}
 
 	if err1 == nil {
@@ -343,7 +340,6 @@ func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 
 // TODO add err.
 func QueryAllMarkets(layer string) ([]thales.AllMarketsMarketsMarket, error) {
-
 	graphqlClient := graphql.NewClient(LayerURL(layer), nil)
 	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)
 	if err != nil {
@@ -430,6 +426,7 @@ func Underlying(s string) string {
 	return string(b)
 }
 
+// url is not used anymore // TODO delete.
 func url(id string) string {
-	return baseUrl + id + referral
+	return baseURL + id + referral
 }

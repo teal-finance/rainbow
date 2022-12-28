@@ -39,7 +39,7 @@ func ToFloat(n *big.Int, decimals int64) float64 {
 
 	q := big.NewInt(0)
 	q.Quo(n, divisor)
-	return float64(q.Int64()) / 100000.0
+	return float64(q.Int64()) / 100_000.0
 }
 
 // ToFloats converts multiple big.Int{decimals} to float64 values.
@@ -65,8 +65,7 @@ func TimeStringConvert(s string) (expiry string, err error) {
 
 // IsBigIntNull check if the big Int is ==0
 // https://stackoverflow.com/questions/64257065/is-there-another-way-of-testing-if-a-big-int-is-0
-// TODO make a function maybe
+// TODO make a function maybe.
 func IsBigIntNull(b *big.Int) bool {
-
 	return len(b.Bits()) == 0
 }
