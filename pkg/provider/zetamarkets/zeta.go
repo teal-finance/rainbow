@@ -160,7 +160,7 @@ func OpenInterestMap(m map[string][]uint64) ZetaOI {
 			spew.Dump(url)
 			resp, err := http.Get(url)
 			if err != nil {
-				log.Warnf("zeta open interest GET %s: %w", url, err)
+				log.Warnf("zeta open interest GET %s: %s", url, err)
 				return nil
 			}
 			defer resp.Body.Close()

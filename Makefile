@@ -79,7 +79,7 @@ vet:
 	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run --fix || true
 	go run -race ./cmd/client || true
 	go run -race ./cmd/cli
-	go run -race ./cmd/server
+	timeout 16m go run -race ./cmd/server  || echo "Terminated by timeout 16m"
 
 ##########  Container targets  ##########
 

@@ -14,8 +14,10 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-const synquoteApi = "https://api.synquote.com/listings-with-quotes?network=polygon&market="
-const marketURL = "https://app.synquote.com/trade/"
+const (
+	synquoteAPI = "https://api.synquote.com/listings-with-quotes?network=polygon&market="
+	marketURL   = "https://app.synquote.com/trade/"
+)
 
 var log = emo.NewZone("Synquote")
 
@@ -26,10 +28,10 @@ func (Provider) Name() string {
 }
 
 func (p Provider) Options() ([]rainbow.Option, error) {
-	markets := []string{"BTC", "ETH"} //, "MATIC", "LINK"}// TO ADD when more liquid
+	markets := []string{"BTC", "ETH"} // , "MATIC", "LINK"}// TO ADD when more liquid
 	var quotes []Quote
 	for _, m := range markets {
-		url := synquoteApi + m
+		url := synquoteAPI + m
 		log.Info(url)
 		resp, err := http.Get(url)
 		if err != nil {
@@ -46,15 +48,14 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 			return nil, fmt.Errorf("query market %s decode: %w", m, err)
 		}
 		quotes = append(quotes, result.Result...)
-
 	}
 
 	return extractOptions(quotes)
 }
 
 func extractOptions(quotes []Quote) ([]rainbow.Option, error) {
-	var options []rainbow.Option
-	//spew.Dump(quotes)
+	options := make([]rainbow.Option, 0, len(quotes))
+	// spew.Dump(quotes)
 	for _, q := range quotes {
 		if !q.check() {
 			continue
@@ -71,19 +72,17 @@ func extractOptions(quotes []Quote) ([]rainbow.Option, error) {
 			Layer:         "Polygon",
 			Provider:      "Synquote",
 			QuoteCurrency: "USD",
-			//TODO add underlyingquote currency
+			// TODO add underlyingquote currency
 			// e.g. here the quote are in USD
 			// but the token used is USDC
 			Bid: []rainbow.Order{{
 				Price: bidPrice,
 				Size:  bidSize,
-			},
-			},
+			}},
 			Ask: []rainbow.Order{{
 				Price: askPrice,
 				Size:  askSize,
-			},
-			},
+			}},
 			URL: marketURL + asset,
 		})
 	}
@@ -97,7 +96,7 @@ type Quote struct {
 	Ask float64 `json:"ask"`
 }
 
-func (q Quote) Split() (Asset, optionType, expiry string, strike, bidPrice, bidSize, askPrice, askSize float64) {
+func (q Quote) Split() (asset, optionType, expiry string, strike, bidPrice, bidSize, askPrice, askSize float64) {
 	s := strings.Split(q.ID, "-")
 	if len(s) != 4 {
 		log.Warn("Option with bad name format", q.ID)
@@ -114,7 +113,7 @@ func (q Quote) Split() (Asset, optionType, expiry string, strike, bidPrice, bidS
 }
 
 // the API return the quote for size=1
-// when there is no order, the API sends "-1"
+// when there is no order, the API sends "-1".
 func priceSize(bidAsk float64) (price, size float64) {
 	if bidAsk == -1 {
 		return 0, 0
@@ -122,64 +121,73 @@ func priceSize(bidAsk float64) (price, size float64) {
 	return bidAsk, 1
 }
 
-// Because I couldn't see a way to do that directly, here is my date parsor
 // Expiry parse the date
 // Also expiry hour is the same as deribit (like everyon except delta)
 // string in format 27JAN23
-// Note: failure is silent here because I'm lazy
+// Note 1: Because I couldn't see a way to do that directly, here is my date parsor
+// Note 2: failure is silent here because I'm lazy.
 func Expiry(s string) string {
 	length := len(s)
 	y := s[length-2 : length]
 	m := s[length-5 : length-2]
 	d := s[0 : length-5]
-	//spew.Dump(s, d, m, y)
-	//dummyDate:=
+	// spew.Dump(s, d, m, y)
+	// dummyDate:=
 	yy, _ := strconv.Atoi(y)
 	dd, _ := strconv.Atoi(d)
 	t := time.Date(2000+yy, month(m), dd, deribit.Hour, 0, 0, 0, time.UTC)
 
 	return t.Format("2006-01-02 15:04:05")
-
 }
 
-// ¯\_(ツ)_/¯
+// ¯\_(ツ)_/¯.
 func month(m string) time.Month {
-	switch m {
-	case "JAN":
-		return time.January
-	case "FEB":
+	if len(m) < 3 {
+		log.Warn("month(%q) expects 3 characters", m)
 		return time.February
-	case "MAR":
-		return time.March
-	case "APR":
-		return time.April
-	case "MAY":
+	}
+
+	switch m[2] {
+	case 'B':
+		return time.February
+	case 'Y':
 		return time.May
-	case "JUN":
-		return time.June
-	case "JUL":
+	case 'L':
 		return time.July
-	case "AUG":
+	case 'G':
 		return time.August
-	case "SEP":
+	case 'P':
 		return time.September
-	case "OCT":
+	case 'T':
 		return time.October
-	case "NOV":
+	case 'V':
 		return time.November
-	case "DEC":
+	case 'C':
 		return time.December
 	}
 
-	//if there is something weird, hopefully February is a weirsd month enough to notice lol
-	return time.February
+	switch m[0] {
+	case 'M':
+		return time.March
+	case 'A':
+		return time.April
+	}
 
+	switch m[1] {
+	case 'A':
+		return time.January
+	case 'U':
+		return time.June
+	}
+
+	// if there is something weird, hopefully February is a weirsd month enough to notice lol
+	log.Warn("month(%q) expects a capitalized month abbreviation using 3 characters", m)
+	return time.February
 }
 
 // quick restrictions until OK from synquote team
-// TODO change it everymonth lol
+// TODO change it everymonth lol.
 func (q Quote) check() bool {
-
 	a := strings.Contains(q.ID, "DEC")
 	return a
 }

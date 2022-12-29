@@ -143,8 +143,8 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq
 	call.Name = call.OptionName()
 	put.Name = put.OptionName()
 
-	call.URL = url(&call, b.Strikes[i].StrikeId)
-	put.URL = url(&put, b.Strikes[i].StrikeId)
+	call.URL = url(&call) // , b.Strikes[i].StrikeId)
+	put.URL = url(&put)   // , b.Strikes[i].StrikeId)
 
 	// Market IV = board IV (baseIV) * Skew
 	call.MarketIV = rainbow.ToFloat(b.BaseIv, rainbow.DefaultEthereumDecimals) *
@@ -212,7 +212,7 @@ func Asset(address common.Address) string {
 }
 
 // TODO check function on their frontend.
-func url(o *rainbow.Option, strikeID *big.Int) string {
+func url(o *rainbow.Option /*, strikeID *big.Int*/) string {
 	// base := "https://app.lyra.finance/position/?"
 	base := "https://app.lyra.finance/trade"
 	asset := strings.ToLower(o.Asset[1:])

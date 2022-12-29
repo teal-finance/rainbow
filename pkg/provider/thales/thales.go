@@ -53,7 +53,7 @@ const (
 	UP       uint8 = 0
 	DOWN     uint8 = 1
 	amount         = 1
-	baseUrl        = "https://thalesmarket.io/markets/"
+	baseURL        = "https://thalesmarket.io/markets/"
 	referral       = "?referralId=0xb3ac309aee5780d951082731ff2cc7f94f9488fd"
 )
 
@@ -112,7 +112,6 @@ func LayerDecimals(layer string) int64 {
 		return anchor.USDCDecimals
 	case "Bsc":
 		return rainbow.DefaultEthereumDecimals
-
 	}
 	log.Panic("Unexpected layer", layer)
 	return 0
@@ -125,80 +124,135 @@ func (Provider) Name() string {
 }
 
 func (Provider) Options() ([]rainbow.Option, error) {
-	marketsOptimism, err := QueryAllMarkets("Optimism")
-	if err != nil {
-		return nil, err
+	var err error
+
+	marketsOptimism, err := queryAllMarkets("Optimism")
+
+	marketsPolygon, e := queryAllMarkets("Polygon")
+	if e != nil {
+		if err == nil {
+			err = e
+		} else {
+			err = fmt.Errorf("%s, %w", err, e)
+		}
 	}
-	marketsPolygon, err := QueryAllMarkets("Polygon")
-	if err != nil {
-		return nil, err
+
+	marketsArbitrum, e := queryAllMarkets("Arbitrum")
+	if e != nil {
+		if err == nil {
+			err = e
+		} else {
+			err = fmt.Errorf("%s, %w", err, e)
+		}
 	}
-	marketsArbitrum, err := QueryAllMarkets("Arbitrum")
-	if err != nil {
-		return nil, err
-	}
-	marketsBsc, err := QueryAllMarkets("Bsc")
-	if err != nil {
-		return nil, err
+
+	marketsBsc, e := queryAllMarkets("Bsc")
+	if e != nil {
+		if err == nil {
+			err = e
+		} else {
+			err = fmt.Errorf("%s, %w", err, e)
+		}
 	}
 
 	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum)+2*len(marketsBsc))
 
-	err = ProcessMarkets(&options, marketsOptimism, "Optimism")
-	if err != nil {
-		return nil, err
+	e = processMarkets(&options, marketsOptimism, "Optimism")
+	if e != nil {
+		if err == nil {
+			err = e
+		} else {
+			err = fmt.Errorf("%s, %w", err, e)
+		}
 	}
-	err = ProcessMarkets(&options, marketsPolygon, "Polygon")
 
-	if err != nil {
-		return nil, err
+	e = processMarkets(&options, marketsPolygon, "Polygon")
+	if e != nil {
+		if err == nil {
+			err = e
+		} else {
+			err = fmt.Errorf("%s, %w", err, e)
+		}
 	}
-	err = ProcessMarkets(&options, marketsArbitrum, "Arbitrum")
-	if err != nil {
-		return nil, err
+
+	e = processMarkets(&options, marketsArbitrum, "Arbitrum")
+	if e != nil {
+		if err == nil {
+			err = e
+		} else {
+			err = fmt.Errorf("%s, %w", err, e)
+		}
 	}
-	err = ProcessMarkets(&options, marketsBsc, "Bsc")
-	if err != nil {
-		return nil, err
+
+	e = processMarkets(&options, marketsBsc, "Bsc")
+	if e != nil {
+		if err == nil {
+			err = e
+		} else {
+			err = fmt.Errorf("%s, %w", err, e)
+		}
 	}
 
 	return options, err
 }
 
-func ProcessMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
+func queryAllMarkets(layer string) ([]thales.AllMarketsMarketsMarket, error) {
+	graphqlClient := graphql.NewClient(LayerURL(layer), nil)
+	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)
+	if err != nil {
+		return nil, log.Error("queryAllMarkets(%s) %s", layer, err).Err()
+	}
+	if resp == nil {
+		return nil, log.Error("queryAllMarkets(%s) resp=nil", layer).Err()
+	}
+	return resp.Markets, nil
+}
+
+func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
 	log.Printf("Processing %s %v options\n", layer, len(markets))
+	var err error
+
 	for i := range markets {
 		// HOTFIX for bug on Polygon
 		// 3 markets for BTC with very low strike
 		// TODO properly understand this error "execution reverted: uint overflow from multiplication"
 		// remove annoying market
 
-		up, err := getOption(&markets[i], UP, layer)
-		if err != nil {
-			log.Error("#", i, "getOption: "+markets[i].Id+" UP:", err)
+		up, errUp := getOption(&markets[i], UP, layer)
+		if errUp != nil {
+			errUp = log.Error("#", i, " getOption: "+markets[i].Id+" UP:", err).Err()
 			spew.Dump(up)
 			spew.Dump(markets[i])
-			//return err
+			if err == nil {
+				err = errUp
+			} else {
+				err = fmt.Errorf("%s, %w", err, errUp)
+			}
 		} else {
 			*options = append(*options, up)
 		}
-		down, err := getOption(&markets[i], DOWN, layer)
-		if err != nil {
-			log.Error("#", i, "getOption:"+markets[i].Id+" DOWN:", err)
+
+		down, errDown := getOption(&markets[i], DOWN, layer)
+		if errDown != nil {
+			errDown = log.Error("#", i, " getOption:"+markets[i].Id+" DOWN:", err).Err()
 			spew.Dump(down)
 			spew.Dump(markets[i])
-			//return err
+			if err == nil {
+				err = errDown
+			} else {
+				err = fmt.Errorf("%s, %w", err, errUp)
+			}
 		} else {
 			*options = append(*options, down)
-
 		}
-		//pause because we don't have a premium RPC (we too poor)
+
+		// pause because we don't have a premium RPC (we too poor)
 		if i%10 == 0 {
 			time.Sleep(1 * time.Second)
 		}
 	}
 
-	return nil
+	return err
 }
 
 func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
@@ -255,9 +309,9 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 
 	if err1 != nil && err2 != nil {
 		log.Error("market error buy/sell")
-		//log.Error(err1)
-		//log.Error(err2)
-		//both error are logged so doesn't really matter which I send back
+		// log.Error(err1)
+		// log.Error(err2)
+		// both error are logged so doesn't really matter which I send back
 		// I'm assuming that there is a real problem is both side have issue, if not
 		// as long as one works, we store that data
 		// that's wht I'm going with right now
@@ -271,7 +325,6 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		})
 	} else {
 		err = err2
-
 	}
 
 	if err1 == nil {
@@ -339,20 +392,6 @@ func QueryAllLiveMarkets(url string) ([]thales.AllLiveMarketsMarket, error) {
 		return nil, err
 	}
 	return resp.Markets, err
-}
-
-// TODO add err.
-func QueryAllMarkets(layer string) ([]thales.AllMarketsMarketsMarket, error) {
-
-	graphqlClient := graphql.NewClient(LayerURL(layer), nil)
-	resp, err := thales.AllMarkets(context.TODO(), graphqlClient, skip, first)
-	if err != nil {
-		return nil, fmt.Errorf("AllMarkets on %s: %w", layer, err)
-	}
-	if resp == nil {
-		return nil, fmt.Errorf("AllMarkets on %s: resp=nil", layer)
-	}
-	return resp.Markets, nil
 }
 
 func QueryMarkets(url string) ([]thales.MarketsMarketsMarket, error) {
@@ -430,6 +469,7 @@ func Underlying(s string) string {
 	return string(b)
 }
 
+// url is not used anymore // TODO delete.
 func url(id string) string {
-	return baseUrl + id + referral
+	return baseURL + id + referral
 }

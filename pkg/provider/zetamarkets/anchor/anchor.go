@@ -24,7 +24,7 @@ var log = emo.NewZone("Zeta")
 
 const (
 	ZetaID    = "ZETAxsqBRek56DhiGXrn75yj2NHU3aYUnxvHXpkf3aD"
-	SolanaRPC = "https://solana-mainnet.g.alchemy.com/v2/1NUlFJ7BXSudMEuTM8kns50OXHzDGDjE" //"https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
+	SolanaRPC = "https://solana-mainnet.g.alchemy.com/v2/1NUlFJ7BXSudMEuTM8kns50OXHzDGDjE" // "https://solana-api.projectserum.com" // "https://api.mainnet-beta.solana.com"
 
 )
 
@@ -49,10 +49,9 @@ func Query() ([]Option, map[string][]uint64, error) {
 		err = bin.NewBinDecoder(account.Account.Data.GetBinary()).Decode(&z)
 		if err != nil {
 			// spew.Dump(account.Pubkey)
-			// too many accounts with that error to explicitely log. so we just silently skip them
+			// too many accounts with that error to explicitly log. so we just silently skip them
 			continue
 			// return []Option{}, log.Error("NewBinDecoder", "account=", account, err).Err()
-
 		}
 		fillmap(m, z)
 		greekInfo, err := client.GetAccountInfo(context.TODO(), z.Greeks)
