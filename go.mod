@@ -28,11 +28,10 @@ require (
 	github.com/streamingfast/solana-go v0.5.1-0.20220502224452-432fbe84aee8
 	github.com/stretchr/testify v1.8.1
 	github.com/teal-finance/emo v0.0.0-20221020231838-605890cfa1bd
-	github.com/teal-finance/garcon v0.30.1
+	github.com/teal-finance/garcon v0.30.2
 )
 
 require (
-	contrib.go.opencensus.io/exporter/stackdriver v0.13.14 // indirect
 	filippo.io/edwards25519 v1.0.0 // indirect
 	github.com/GeertJohan/go.rice v1.0.3 // indirect
 	github.com/JohannesKaufmann/html-to-markdown v1.3.6 // indirect
@@ -55,15 +54,13 @@ require (
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.1.0 // indirect
 	github.com/dfuse-io/logging v0.0.0-20221209193439-bff11742bf4c // indirect
-	github.com/dgryski/trifles v0.0.0-20220729183022-231ecf6ed548 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.3 // indirect
-	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/pprof v0.0.0-20221212185716-aee1124e3a93 // indirect
+	github.com/google/pprof v0.0.0-20221219190121-3cb0bae90811 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/rpc v1.2.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
@@ -85,23 +82,21 @@ require (
 	github.com/mostynb/zstdpool-freelist v0.0.0-20201229113212-927304c0c3b1 // indirect
 	github.com/mr-tron/base58 v1.2.0 // indirect
 	github.com/mtraver/base91 v1.0.0 // indirect
-	github.com/onsi/gomega v1.17.0 // indirect
 	github.com/pkg/profile v1.7.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.14.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
-	github.com/prometheus/common v0.38.0 // indirect
-	github.com/prometheus/procfs v0.8.0 // indirect
+	github.com/prometheus/common v0.39.0 // indirect
+	github.com/prometheus/procfs v0.9.0 // indirect
 	github.com/rivo/uniseg v0.4.3 // indirect
 	github.com/rjeczalik/notify v0.9.2 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
-	github.com/rs/cors v1.8.2 // indirect
+	github.com/rs/cors v1.8.3 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 // indirect
 	github.com/streamingfast/logging v0.0.0-20221209193439-bff11742bf4c // indirect
-	github.com/teal-finance/incorruptible v0.0.0-20221028154453-d2cad280c72f // indirect
+	github.com/teal-finance/incorruptible v0.0.0-20221218151336-b7408a3dd11b // indirect
 	github.com/teal-finance/quid v0.0.0-20221113141027-48c235729dea // indirect
-	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569 // indirect
 	github.com/tidwall/gjson v1.14.4 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
@@ -112,9 +107,7 @@ require (
 	github.com/ybbus/jsonrpc v2.1.2+incompatible // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	go.mongodb.org/mongo-driver v1.11.1 // indirect
-	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/goleak v1.1.12 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
@@ -125,6 +118,7 @@ require (
 	golang.org/x/term v0.3.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.4.0 // indirect
+	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
