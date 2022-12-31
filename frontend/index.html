@@ -9,8 +9,10 @@
   <meta content="Rainbow — Compare DeFi options across exchanges to spot trading opportunities." name="description">
   <meta content="Rainbow — Compare DeFi options across exchanges to spot trading opportunities." name="twitter:title">
   <meta content="Rainbow — Compare DeFi options across exchanges to spot trading opportunities." property="og:title">
-  <meta content="Rainbow — Compare DeFi options across exchanges to spot trading opportunities." property="og:description">
-  <meta content="Rainbow — Compare DeFi options across exchanges to spot trading opportunities." property="og:image:alt">
+  <meta content="Rainbow — Compare DeFi options across exchanges to spot trading opportunities."
+    property="og:description">
+  <meta content="Rainbow — Compare DeFi options across exchanges to spot trading opportunities."
+    property="og:image:alt">
   <meta content="/img/preview.jpg" name="twitter:image:src">
   <meta content="/img/preview.jpg" property="og:image">
   <meta property="og:type" content="object">
@@ -34,13 +36,30 @@
   — <a href="<%- VersionEndpoint %>">
     <%- VersionInformation %>
   </a>
-  
+
 </footer>
 
-<script>const BADGE_ID = '47c08013e26e238f';</script>
-<script type="text/javascript" src="https://static.alchemyapi.io/scripts/analytics/badge-analytics.js"></script>
+<script>
+  const BADGE_ID = '47c08013e26e238f';
+  let ALCHEMY_URL = `https://alchemyapi.io/?r=badge:${BADGE_ID}`;
+  const ALCHEMY_ANALYTICS_URL = `https://analytics.alchemyapi.io/analytics`
+
+  function logBadgeClick() {
+    fetch(`${ALCHEMY_ANALYTICS_URL}/badge-click`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        badge_id: BADGE_ID,
+      }),
+    });
+    window.open(ALCHEMY_URL, '_blank').focus();
+  }
+</script>
 <a href="#">
-    <img onclick=logBadgeClick() id="badge-button" style="width:240px;height:53px" src="https://static.alchemyapi.io/images/marketing/badgeLight.png" alt="Alchemy Supercharged" />
+  <img onclick=logBadgeClick() id="badge-button" style="width:240px;height:53px"
+    src="https://static.alchemyapi.io/images/marketing/badgeLight.png" alt="Alchemy Supercharged" />
 </a>
 
 </html>
