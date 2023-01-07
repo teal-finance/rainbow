@@ -46,7 +46,7 @@
 **/tmp
 **/values.dev.yaml
 
-# Web front-end
+# Web frontend
 **/*local.env*
 **/dist/
 **/node_modules/
@@ -58,7 +58,7 @@
 **/.bundle
 **/.gzipper/
 
-# Go Back-end
+# Go backend
 **/.golangci.yml
 
 # Custom

@@ -148,7 +148,7 @@ RUN set -ex                                                 ;\
     echo "teal:x:$uid:$uid::/:" > etc/passwd                ;\
     echo "teal:x:$uid:"         > etc/group
 
-# Copy static website and back-end executable
+# Copy static website and backend executable
 COPY --from=web_builder /code/dist   var/www
 COPY --from=go_builder  /code/server .
 

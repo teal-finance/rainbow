@@ -236,7 +236,7 @@
               <div class="w-full">
                 <h2 class="text-lg font-medium">Arad</h2>
                 <p class="mb-4">
-                  Arad is a talented junior front-end developer and UX specialist.
+                  Arad is a talented junior frontend developer and UX/UI specialist.
                 </p>
                 <span class="inline-flex">
                   <a class="text-gray-500 hover:text-foreground" href="https://github.com/arad1990">
