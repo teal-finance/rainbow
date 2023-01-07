@@ -58,15 +58,17 @@ More info on our motivations:
 ## 🏗 Deprecated exchanges
 
 - [PsyOptions](https://www.psyoptions.io/) (Solana):
-  DeFi options protocol build on Serum order books. This project pivoted to DeFi Options Vaults(DOV).
+  DeFi options protocol build on Serum order books.
+  But PsyOptions pivoted to DeFi Options Vaults (DOV).
 
 - [Opyn](https://www.opyn.co/) (Ethereum):
-  DeFi options protocol using TheGraph & 0x. This project also pivoted to more vaults like product(Squeeth, Crab...).
+  DeFi options protocol using TheGraph & 0x.
+  But Opyn also pivoted to more vaults like products Squeeth, Crab...
 
 ## 🏎️ Run it from source code
 
 Rainbow can be used as a [CLI](#🪃-run-the-cli)
-or with a [front-end](#⚒️-makefile-for-server--web)
+or with a [frontend](#⚒️-makefile-for-server--web)
 as our official instance:
 <https://teal.finance/rainbow>.
 
@@ -159,9 +161,9 @@ The _container_ parameters can be customized: :slightly_smiling_face:
 
 ### 🖐️ Manual build & run
 
-#### Back-end
+#### Backend
 
-The front-end requires the server API.
+The frontend requires the server API.
 
     go build ./cmd/server && ./server
 
@@ -169,16 +171,16 @@ The front-end requires the server API.
 
     go run ./cmd/server     # same as "make run"
 
-#### Front-end
+#### Frontend
 
-To run the Vue3 front-end in dev mode.
+To run the Vue3 frontend in dev mode.
 Similar to `make run-ui`:
 
     cd frontend
     yarn
     yarn dev --open
 
-In prod mode, the back-end serves the web static files from `frontend/dist`.
+In prod mode, the backend serves the web static files from `frontend/dist`.
 Same as `make frontend/dist`:
 
     cd frontend
@@ -191,12 +193,14 @@ Finally open <http://localhost:8090>
 
 This Git repo provides a [Dockerfile](Dockerfile) for a secured and light all-in-one container image: 30 MB.
 
-The image contains the hardened sever executable and the front-end static files.
+The image contains the hardened sever executable and the frontend static files.
 
 The container enables by default the CORS, the export ports and a rate limiter.
 Some of these features can be customized using environments variables.
 
-The following commands configures the server listening on port 2222 (published to port 1111) and front-end using CORS with `http://localhost:1111`. See also the comments within the [Dockerfile](Dockerfile) for the details.
+The following commands configures the server listening on port 2222 (published to port 1111)
+and frontend using CORS with `http://localhost:1111`.
+See also the comments within the [Dockerfile](Dockerfile) for the details.
 
     podman build --build-arg addr=http://localhost:1111 --build-arg port=2222 -t rainbow .
     podman stop rainbow # if already running in background
@@ -216,49 +220,47 @@ including a rate limiter, an export port (Prometheus monitoring),
 and more. For more details see the underlying project
 [Teal.Finance/Garcon](https://github.com/teal-finance/garcon/).
 
-```sh
-$ go run github.com/teal-finance/rainbow/cmd/server -h
-Usage of /tmp/go-build1548629542/b001/exe/server:
-  -addr string
-        Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR (default "http://localhost")
-  -aes string
-         128-bit AES key (32 hex digits) for the session cookies, has precedence over AES128
-  -alert string
-        Webhook endpoint to notify anomalies, has precedence over ALERT_URL
-  -burst int
-        Max requests during a burst, has precedence over REQ_BURST (default 22)
-  -cex
-        Enable the centralized exchanges: Deribit and Delta Exchange
-  -dev
-        Enable the developer mode (enabled by default if -addr and -port are not used)
-  -dex
-        Enable the decentralized exchanges: Lyra, Opyn, PsyOptions and Zeta
-  -exotic
-        Enable the decentralized exchanges with binary options: Thales
-  -exp int
-        Export port for Prometheus, has precedence over EXP_PORT
-  -form string
-        Webhook endpoint to notify filled contact form, has precedence over WEBFORM_URL
-  -hmac string
-        HMAC-SHA256 key (64 hex digits) for the JWT tokens, has precedence over HMAC_SHA256
-  -period duration
-        Period to fetch market data from providers (default 10m0s)
-  -port int
-        API port, has precedence over MAIN_PORT (default 8090)
-  -providers string
-        Coma-separated list of providers, has precedence over PROVIDERS (default "deribit,delta,lyra,opyn,psy,zeta")
-  -rate int
-        Max requests per minute, has precedence over REQ_PER_MINUTE (default 88)
-  -version
-        Print version and exit
-  -www string
-        Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
-```
-
+    $ go build ./cmd/server
+    $ ./server -h
+    Usage of ./server:
+      -addr string
+          Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR (default "http://localhost")
+      -aes string
+          128-bit AES key (32 hex digits) for the session cookies, has precedence over AES128
+      -alert string
+          Webhook endpoint to notify anomalies, has precedence over ALERT_URL
+      -burst int
+          Max requests during a burst, has precedence over REQ_BURST (default 22)
+      -cex
+          Enable the centralized exchanges: Deribit and Delta Exchange
+      -dev
+          Enable the developer mode (enabled by default if -addr and -port are not used)
+      -dex
+          Enable the decentralized exchanges: Lyra, Synquote and Zeta
+      -exotic
+          Enable the decentralized exchanges with binary options: Thales
+      -exp int
+          Export port for Prometheus, has precedence over EXP_PORT
+      -form string
+          Webhook endpoint to notify filled contact form, has precedence over WEBFORM_URL
+      -hmac string
+          HMAC-SHA256 key (64 hex digits) for the JWT tokens, has precedence over HMAC_SHA256
+      -period duration
+          Period to fetch market data from providers (default 10m0s)
+      -port int
+          API port, has precedence over MAIN_PORT (default 8090)
+      -providers string
+          Coma-separated list of providers, has precedence over PROVIDERS (default "ALL")
+      -rate int
+          Max requests per minute, has precedence over REQ_PER_MINUTE (default 88)
+      -version
+          Print version and exit
+      -www string
+          Folder of the web static files, has precedence over WWW_DIR (default "frontend/dist")
 
 ## 🛣️ API
 
-To test the API endpoints, run the back-end:
+To test the API endpoints, run the backend:
 
     make run
 
@@ -415,7 +417,7 @@ BTC-1APR22-42000-P,2022-04-01 08:00:00,BTC,BTC,42000,PUT,Deribit,–,–,71.2757
 ### /v0/bff/cp
 
 This endpoint has been inspired by the [BFF pattern](https://blog.bitsrc.io/e4fa965128bf)
-(Backend for Frontend pattern) to simplify the front-end processing.
+(Backend for Frontend pattern) to simplify the frontend processing.
 This endpoint should not used by API users because we may drop it in a further release.
 
 ```js
@@ -459,7 +461,7 @@ Please contact us. 😉
 
 ### /v0/graphiql (with an "i")
 
-This interactive GraphQL endpoint is used in developer mode to tune the front-end GraphQL queries.
+This interactive GraphQL endpoint is used in developer mode to tune the frontend GraphQL queries.
 
 ## 🗣️ Need something else?
 
