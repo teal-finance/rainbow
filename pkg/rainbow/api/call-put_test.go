@@ -11,9 +11,9 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/teal-finance/rainbow/pkg/rainbow"
-
 	"github.com/google/go-cmp/cmp"
+
+	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
 func BenchmarkAlign_buildCallPut(b *testing.B) {

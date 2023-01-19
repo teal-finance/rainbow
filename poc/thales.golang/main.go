@@ -10,6 +10,7 @@ import (
 	"log"
 
 	"github.com/spewerspew/spew"
+
 	"github.com/teal-finance/rainbow/pkg/provider/thales"
 )
 

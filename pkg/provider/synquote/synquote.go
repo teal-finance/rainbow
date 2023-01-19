@@ -187,7 +187,7 @@ func month(m string) time.Month {
 
 // quick restrictions until OK from synquote team
 // TODO change it everymonth lol.
-// Adding FEB to JAN just to have some margin
+// Adding FEB to JAN just to have some margin.
 func (q Quote) check() bool {
 	a := strings.Contains(q.ID, "JAN")
 	b := strings.Contains(q.ID, "FEB")
