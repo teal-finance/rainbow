@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -221,8 +220,8 @@ func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 		up, errUp := getOption(&markets[i], UP, layer)
 		if errUp != nil {
 			errUp = log.Error("#", i, " getOption: "+markets[i].Id+" UP:", err).Err()
-			spew.Dump(up)
-			spew.Dump(markets[i])
+			//spew.Dump(up)
+			//spew.Dump(markets[i])
 			if err == nil {
 				err = errUp
 			} else {
@@ -235,8 +234,8 @@ func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 		down, errDown := getOption(&markets[i], DOWN, layer)
 		if errDown != nil {
 			errDown = log.Error("#", i, " getOption:"+markets[i].Id+" DOWN:", err).Err()
-			spew.Dump(down)
-			spew.Dump(markets[i])
+			//spew.Dump(down)
+			//spew.Dump(markets[i])
 			if err == nil {
 				err = errDown
 			} else {
@@ -279,17 +278,17 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 	}
 
 	binary := rainbow.Option{
-		Name:         "",
-		Type:         binaryType,
-		Asset:        Underlying(m.CurrencyKey),
-		Expiry:       expiry,
-		ExchangeType: "DEX",
-		Chain:        "Ethereum",
-		Layer:        l1orl2(layer),
-		LayerName:    layer,
-		ProtocolID:   m.Id,
-		Provider:     name + "::" + layer,
-		// Link: url(m.Id)
+		Name:          "",
+		Type:          binaryType,
+		Asset:         Underlying(m.CurrencyKey),
+		Expiry:        expiry,
+		ExchangeType:  "DEX",
+		Chain:         "Ethereum",
+		Layer:         l1orl2(layer),
+		LayerName:     layer,
+		ProtocolID:    m.Id,
+		Provider:      name + "::" + layer,
+		URL:           url(m.Id),
 		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon/arbitrum,busd for binance
 		// TODO add underlying quote currency to be able to specify the token
 		Bid:    nil,
