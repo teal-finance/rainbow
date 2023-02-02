@@ -39,11 +39,10 @@ const (
 	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
 	rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
 	rpcBsc      = "https://bsc.blockpi.network/v1/rpc/2b013a75d3adc818d3b49076fb7a0766d49794df"
-	// "https://nd-747-272-879.p2pify.com/934be2335664b8002d732e48a40b1e43"
 
 	// amm.
 	ammPolygon  = "0xd52B865584c25FEBfcB676B9A87F32683356A063"
-	ammOptimism = "0x5ae7454827D83526261F3871C1029792644Ef1B1"
+	ammOptimism = "0x278B5A44397c9D8E52743fEdec263c4760dc1A1A"
 	ammArbitrum = "0x2b89275efB9509c33d9AD92A4586bdf8c4d21505"
 	ammBsc      = "0x465B66A3e33088F0666dB1836652fBcF037c7319"
 
