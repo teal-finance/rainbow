@@ -357,13 +357,13 @@ func getQuote(m *thales.AllMarketsMarketsMarket, side uint8, action, layer strin
 	if action == "BUY" {
 		quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
-			log.Error("Thales BuyFromAmmQuote on ", layer, err)
+			log.Error("Thales BuyFromAmmQuote on", layer, err)
 			return 0, err
 		}
 	} else if action == "SELL" {
 		quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
-			log.Error("Thales SellToAmmQuote on ", layer, err)
+			log.Error("Thales SellToAmmQuote on", layer, err)
 			return 0, err
 		}
 	}
