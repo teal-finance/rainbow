@@ -21,13 +21,20 @@ import (
 
 var log = emo.NewZone("Lyra")
 
+// DOC: https://docs.lyra.finance/developers/deployed-contracts
+
 const (
 	optimismrpc        = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
 	name               = "Lyra"
 	lyraRegistry       = "0xF5A0442D4753cA1Ea36427ec071aa5E786dA5916"
 	optionMarketViewer = "0xEAf788AD8abd9C98bA05F6802a62B8DbC673D76B"
 	QuoterAddress      = "0xea83ee73eB397c5974CB6b5220AE0A32fbE48B2B"
-	oneOption          = 1
+	/*arbitrum
+	lyraRegistry       = "0x6c87e4364Fd44B0D425ADfD0328e56b89b201329"
+	optionMarketViewer = "0x97B688cEd83a1164AF9D3c0244EC36602E6C3B88"
+	QuoterAddress      = "0x4CdB992fDEFcb840125dd344f87BDCbb8fEfA3e7"
+	*/
+	oneOption = 1
 )
 
 type Provider struct{}
@@ -149,8 +156,8 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq
 	// Market IV = board IV (baseIV) * Skew
 	call.MarketIV = rainbow.ToFloat(b.BaseIv, rainbow.DefaultEthereumDecimals) *
 		rainbow.ToFloat(b.Strikes[i].Skew, rainbow.DefaultEthereumDecimals)
-	// keep only 5 decimals (IV is already a % so it can be shown as XX.XXX%)
-	call.MarketIV = math.Floor(call.MarketIV*100000) / 100000
+	// keep only 5 decimals (0.XXXXX) and sho it as XX.XXX%
+	call.MarketIV = math.Floor(call.MarketIV*10_000_000) / 100_000
 	put.MarketIV = call.MarketIV
 
 	bidasks, err := getBidsAsks(b.Strikes[i].StrikeId, b.Market, oneOption, quoter)
