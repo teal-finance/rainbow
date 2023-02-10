@@ -69,17 +69,18 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 		return nil, err
 	}
 
-	optionsSOL, err := p.fillOptions(instruments, 5)
+	// SOL options paused for the time being
+	/*optionsSOL, err := p.fillOptions(instruments, 5)
 	if err != nil {
 		return nil, err
-	}
+	}*/
 
 	p.ar.LogStats()
 
 	var options []rainbow.Option
 	options = append(options, optionsBTC...)
 	options = append(options, optionsETH...)
-	options = append(options, optionsSOL...)
+	//options = append(options, optionsSOL...)
 	return options, nil
 }
 
