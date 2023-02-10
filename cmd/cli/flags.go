@@ -18,9 +18,11 @@ const (
 )
 
 var (
-	cex       = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
-	dex       = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote and Zeta")
-	exotic    = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
+	cex    = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
+	dex    = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote and Zeta")
+	exotic = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
+	infos  = flag.Bool("infos", false, "Show additional infos on instruments like URL ...")
+
 	providers = flag.String("providers", gg.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, same as the PROVIDERS env. var.")
 )
 
@@ -32,6 +34,8 @@ func parseFlags() {
 	log.Init("Centralized exchanges     -cex       =", *cex)
 	log.Init("Decentralized exchanges   -dex       =", *dex)
 	log.Init("Binary options exchanges  -exotic    =", *exotic)
+	log.Init("Additional infos          -infos     =", *infos)
+
 	log.Init("PROVIDERS                 -providers =", *providers)
 }
 

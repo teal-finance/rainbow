@@ -19,7 +19,14 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
 )
 
-var log = emo.NewZone("main")
+var (
+	log      = emo.NewZone("main")
+	green    = color.FgGreen.Render
+	red      = color.FgRed.Render
+	magenta  = color.FgMagenta.Render
+	blue     = color.FgCyan.Render
+	darkBlue = color.FgBlue.Render
+)
 
 func main() {
 	parseFlags()
@@ -34,16 +41,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	printTable(options)
+	if !*infos {
+		printTable(options)
+	} else {
+		altPrintTable(options)
+	}
 }
 
 func printTable(options []rainbow.Option) {
-	green := color.FgGreen.Render
-	red := color.FgRed.Render
-	magenta := color.FgMagenta.Render
-	blue := color.FgCyan.Render
-	darkBlue := color.FgBlue.Render
 
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
@@ -52,7 +57,7 @@ func printTable(options []rainbow.Option) {
 
 	t.AppendHeader(table.Row{
 		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", blue("MarketIV"),
-		red(" Ask"), "Size", darkBlue("Open Interest"), "Instrument", magenta("url"),
+		red(" Ask"), "Size", darkBlue("Open Interest"), "Instrument",
 	})
 
 	align := api.NewAlign()
@@ -63,7 +68,7 @@ func printTable(options []rainbow.Option) {
 			highlight(o.Provider), o.Asset, o.Type,
 			bestBidQty, green(bestBidPx), math.Round(o.Strike*100) / 100,
 			blue(math.Round(o.MarketIV*100) / 100),
-			red(bestAskPx), bestAskQty, darkBlue(math.Round(o.OpenInterest*100) / 100), o.Name, magenta(o.URL),
+			red(bestAskPx), bestAskQty, darkBlue(math.Round(o.OpenInterest*100) / 100), o.Name,
 		}})
 	}
 
@@ -101,4 +106,35 @@ func highlight(p string) string {
 	default:
 		return lightMagenta(p)
 	}
+}
+
+func altPrintTable(options []rainbow.Option) {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.SetStyle(table.StyleLight)
+	t.SetTitle(" Fetched %d options", len(options))
+
+	t.AppendHeader(table.Row{
+		"Provider", "Asset", "Type", "Strike", blue("MarketIV"),
+		magenta("url"),
+	})
+
+	for i := range options {
+		o := &options[i]
+		t.AppendRows([]table.Row{{
+			highlight(o.Provider), o.Asset, o.Type,
+			math.Round(o.Strike*100) / 100,
+			blue(math.Round(o.MarketIV*100) / 100),
+			magenta(o.URL),
+		}})
+	}
+
+	t.SortBy([]table.SortBy{
+		{Name: "Strike", Mode: table.AscNumeric},
+		{Name: "MarketIV", Mode: table.AscNumeric},
+		{Name: "Type", Mode: table.Dsc},
+	})
+
+	t.Render()
+
 }
