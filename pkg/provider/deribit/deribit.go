@@ -205,6 +205,7 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 			Ask:           asks,
 			MarketIV:      result.Result.MarkIv,
 			URL:           url,
+			OpenInterest:  result.Result.OpenInterest * result.Result.IndexPrice,
 		})
 	}
 
