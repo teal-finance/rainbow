@@ -57,9 +57,7 @@ func extractOptions(quotes []Quote) ([]rainbow.Option, error) {
 	options := make([]rainbow.Option, 0, len(quotes))
 	// spew.Dump(quotes)
 	for _, q := range quotes {
-		if !q.check() {
-			continue
-		}
+
 		asset, optionType, expiry, strike, bidPrice, bidSize, askPrice, askSize := q.Split()
 		options = append(options, rainbow.Option{
 			Name:          "Synquote-" + q.ID,
@@ -183,14 +181,4 @@ func month(m string) time.Month {
 	// if there is something weird, hopefully February is a weirsd month enough to notice lol
 	log.Warn("month(%q) expects a capitalized month abbreviation using 3 characters", m)
 	return time.February
-}
-
-// quick restrictions until OK from synquote team
-// TODO change it everymonth lol.
-// Adding FEB to JAN just to have some margin.
-func (q Quote) check() bool {
-	a := strings.Contains(q.ID, "JAN")
-	b := strings.Contains(q.ID, "FEB")
-
-	return a || b
 }
