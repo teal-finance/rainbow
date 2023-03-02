@@ -13,13 +13,13 @@ import (
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
+	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -106,9 +106,9 @@ func LayerDecimals(layer string) int64 {
 	case "Optimism":
 		return rainbow.DefaultEthereumDecimals
 	case "Polygon":
-		return rainbow.DefaultEthereumDecimals //anchor.USDCDecimals
+		return anchor.USDCDecimals
 	case "Arbitrum":
-		return rainbow.DefaultEthereumDecimals //anchor.USDCDecimals
+		return anchor.USDCDecimals
 	case "Bsc":
 		return rainbow.DefaultEthereumDecimals
 	}
@@ -220,8 +220,6 @@ func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 		up, errUp := getOption(&markets[i], UP, layer, iv)
 		if errUp != nil {
 			errUp = log.Error("#", i, " getOption: "+markets[i].Id+" UP:", err).Err()
-			//spew.Dump(up)
-			//spew.Dump(markets[i])
 			if err == nil {
 				err = errUp
 			} else {
@@ -234,8 +232,6 @@ func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 		down, errDown := getOption(&markets[i], DOWN, layer, iv)
 		if errDown != nil {
 			errDown = log.Error("#", i, " getOption:"+markets[i].Id+" DOWN:", err).Err()
-			//spew.Dump(down)
-			//spew.Dump(markets[i])
 			if err == nil {
 				err = errDown
 			} else {
@@ -272,9 +268,8 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string, iv m
 	}
 
 	underlyingAssetIV := iv[m.CurrencyKey]
-	fmt.Println("undiv ", underlyingAssetIV)
 	if underlyingAssetIV == 0.0 {
-		underlyingAssetIV, err := getIV(m, layer)
+		underlyingAssetIV, err = getIV(m, layer)
 		if err != nil {
 			log.Error(err)
 			return rainbow.Option{}, err
@@ -282,7 +277,6 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string, iv m
 		iv[m.CurrencyKey] = underlyingAssetIV
 
 	}
-
 	strikeInt := new(big.Int)
 	_, err = fmt.Sscan(m.StrikePrice, strikeInt)
 	if err != nil {
@@ -406,16 +400,13 @@ func getIV(m *thales.AllMarketsMarketsMarket, layer string) (float64, error) {
 	}
 	var key [32]byte
 	copy(key[:], common.FromHex(m.CurrencyKey))
-	spew.Dump(Underlying(m.CurrencyKey))
 
 	quote, err := instance.ImpliedVolatilityPerAsset(&bind.CallOpts{}, key)
 	if err != nil {
 		log.Error("Thales ImpliedVolatilityPerAsset on ", layer, err)
 		return 0, err
 	}
-	spew.Dump(quote)
-	decimals := LayerDecimals(layer)
-	return rainbow.ToFloat(quote, decimals), nil
+	return rainbow.ToFloat(quote, rainbow.DefaultEthereumDecimals), nil
 }
 
 func l1orl2(layer string) string {
@@ -515,7 +506,8 @@ func Underlying(s string) string {
 	return string(b)
 }
 
-// url is not used anymore // TODO delete.
+// url to the option
+// useful to put thereferral on the front
 func url(id string) string {
 	return baseURL + id + referral
 }
