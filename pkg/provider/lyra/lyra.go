@@ -156,7 +156,7 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq
 	// Market IV = board IV (baseIV) * Skew
 	call.MarketIV = rainbow.ToFloat(b.BaseIv, rainbow.DefaultEthereumDecimals) *
 		rainbow.ToFloat(b.Strikes[i].Skew, rainbow.DefaultEthereumDecimals)
-	// keep only 5 decimals (0.XXXXX) and sho it as XX.XXX%
+	// keep only 5 decimals (0.XXXXX) and show it as XX.XXX%
 	call.MarketIV = math.Floor(call.MarketIV*10_000_000) / 100_000
 	put.MarketIV = call.MarketIV
 
