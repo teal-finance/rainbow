@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/Khan/genqlient/graphql"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -38,7 +37,10 @@ const (
 	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
 	rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	rpcBsc      = "https://bsc.blockpi.network/v1/rpc/2b013a75d3adc818d3b49076fb7a0766d49794df"
+	rpcBsc      = "https://bsc-dataseed1.ninicoin.io/" //free bscscan rpc
+	// binance https://bsc-dataseed1.binance.org/
+	// blockpi "https://bsc.blockpi.network/v1/rpc/2b013a75d3adc818d3b49076fb7a0766d49794df"
+	// quicknode https://late-wispy-sanctuary.bsc.discover.quiknode.pro/a834c496c0eac9ad6e37c35ae00498da706026e1
 
 	// amm.
 	ammPolygon  = "0xd52B865584c25FEBfcB676B9A87F32683356A063"
@@ -211,18 +213,16 @@ func queryAllMarkets(layer string) ([]thales.AllMarketsMarketsMarket, error) {
 func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarketsMarket, layer string) error {
 	log.Printf("Processing %s %v options\n", layer, len(markets))
 	var err error
+	iv := make(map[string]float64)
 
 	for i := range markets {
 		// HOTFIX for bug on Polygon
 		// 3 markets for BTC with very low strike
 		// TODO properly understand this error "execution reverted: uint overflow from multiplication"
 		// remove annoying market
-
-		up, errUp := getOption(&markets[i], UP, layer)
+		up, errUp := getOption(&markets[i], UP, layer, iv)
 		if errUp != nil {
 			errUp = log.Error("#", i, " getOption: "+markets[i].Id+" UP:", err).Err()
-			spew.Dump(up)
-			spew.Dump(markets[i])
 			if err == nil {
 				err = errUp
 			} else {
@@ -232,11 +232,9 @@ func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			*options = append(*options, up)
 		}
 
-		down, errDown := getOption(&markets[i], DOWN, layer)
+		down, errDown := getOption(&markets[i], DOWN, layer, iv)
 		if errDown != nil {
 			errDown = log.Error("#", i, " getOption:"+markets[i].Id+" DOWN:", err).Err()
-			spew.Dump(down)
-			spew.Dump(markets[i])
 			if err == nil {
 				err = errDown
 			} else {
@@ -247,6 +245,7 @@ func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 		}
 
 		// pause because we don't have a premium RPC (we too poor)
+		// TODO becom rich enough to afford a RPC
 		if i%10 == 0 {
 			time.Sleep(1 * time.Second)
 		}
@@ -255,7 +254,7 @@ func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 	return err
 }
 
-func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rainbow.Option, error) {
+func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string, iv map[string]float64) (rainbow.Option, error) {
 	// TODO change front to take care of UP/DOWN properly
 	// here we do a hack where
 	// DOWN == PUT
@@ -271,6 +270,16 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		return rainbow.Option{}, err
 	}
 
+	underlyingAssetIV := iv[m.CurrencyKey]
+	if underlyingAssetIV == 0.0 {
+		underlyingAssetIV, err = getIV(m, layer)
+		if err != nil {
+			log.Error(err)
+			return rainbow.Option{}, err
+		}
+		iv[m.CurrencyKey] = underlyingAssetIV
+
+	}
 	strikeInt := new(big.Int)
 	_, err = fmt.Sscan(m.StrikePrice, strikeInt)
 	if err != nil {
@@ -287,9 +296,14 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string) (rai
 		Chain:        "Ethereum",
 		Layer:        l1orl2(layer),
 		LayerName:    layer,
-		ProtocolID:   m.Id,
-		Provider:     name + "::" + layer,
-		// Link: url(m.Id)
+		// Thales store the IV of the underlying asset, which we just store in MarketIV
+		// This is not the Market IV of the options
+		// it's update by whitelist addresses
+		// TODO learn how thales compute that IV
+		MarketIV:      underlyingAssetIV,
+		ProtocolID:    m.Id,
+		Provider:      name + "::" + layer,
+		URL:           url(m.Id),
 		QuoteCurrency: "USD", // sUSD for optimism, usdc for polygon/arbitrum,busd for binance
 		// TODO add underlying quote currency to be able to specify the token
 		Bid:    nil,
@@ -370,6 +384,32 @@ func getQuote(m *thales.AllMarketsMarketsMarket, side uint8, action, layer strin
 
 	decimals := LayerDecimals(layer)
 	return rainbow.ToFloat(quote, decimals), nil
+}
+
+func getIV(m *thales.AllMarketsMarketsMarket, layer string) (float64, error) {
+	rpc := LayerRPC(layer)
+	client, err := ethclient.Dial(rpc)
+	if err != nil {
+		log.Error("Thales ethclient.Dial", err)
+		return 0, err
+	}
+
+	amm := LayerAMM(layer)
+	address := common.HexToAddress(amm)
+	instance, err := NewThales(address, client)
+	if err != nil {
+		log.Error("NewThales", err)
+		return 0, err
+	}
+	var key [32]byte
+	copy(key[:], common.FromHex(m.CurrencyKey))
+
+	quote, err := instance.ImpliedVolatilityPerAsset(&bind.CallOpts{}, key)
+	if err != nil {
+		log.Error("Thales ImpliedVolatilityPerAsset on ", layer, err)
+		return 0, err
+	}
+	return rainbow.ToFloat(quote, rainbow.DefaultEthereumDecimals), nil
 }
 
 func l1orl2(layer string) string {
@@ -469,7 +509,8 @@ func Underlying(s string) string {
 	return string(b)
 }
 
-// url is not used anymore // TODO delete.
+// url to the option
+// useful to put thereferral on the front
 func url(id string) string {
 	return baseURL + id + referral
 }

@@ -69,17 +69,18 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 		return nil, err
 	}
 
-	optionsSOL, err := p.fillOptions(instruments, 5)
+	// SOL options paused for the time being
+	/*optionsSOL, err := p.fillOptions(instruments, 5)
 	if err != nil {
 		return nil, err
-	}
+	}*/
 
 	p.ar.LogStats()
 
 	var options []rainbow.Option
 	options = append(options, optionsBTC...)
 	options = append(options, optionsETH...)
-	options = append(options, optionsSOL...)
+	//options = append(options, optionsSOL...)
 	return options, nil
 }
 
@@ -204,6 +205,7 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 			Ask:           asks,
 			MarketIV:      result.Result.MarkIv,
 			URL:           url,
+			OpenInterest:  result.Result.OpenInterest * result.Result.IndexPrice,
 		})
 	}
 

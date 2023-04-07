@@ -151,7 +151,7 @@ func normalizeOrders(
 
 func OpenInterestMap(m map[string][]uint64) ZetaOI {
 	// if error fail with just a log
-	// let's keep it like that for now because evyrything shouldn't fail if zeta api is down
+	// let's keep it like that for now because everything shouldn't fail if zeta api is down
 	var oi ZetaOI
 
 	for asset, expiries := range m {

@@ -21,13 +21,20 @@ import (
 
 var log = emo.NewZone("Lyra")
 
+// DOC: https://docs.lyra.finance/developers/deployed-contracts
+
 const (
-	optimismrpc        = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
-	name               = "Lyra"
-	lyraRegistry       = "0xF5A0442D4753cA1Ea36427ec071aa5E786dA5916"
-	optionMarketViewer = "0xEAf788AD8abd9C98bA05F6802a62B8DbC673D76B"
-	QuoterAddress      = "0xea83ee73eB397c5974CB6b5220AE0A32fbE48B2B"
-	oneOption          = 1
+	rpcOptimism                = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
+	name                       = "Lyra"
+	lyraRegistry               = "0xF5A0442D4753cA1Ea36427ec071aa5E786dA5916"
+	optionMarketViewer         = "0xEAf788AD8abd9C98bA05F6802a62B8DbC673D76B"
+	QuoterAddress              = "0xea83ee73eB397c5974CB6b5220AE0A32fbE48B2B"
+	rpcArbitrum                = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
+	lyraRegistryArbitrum       = "0x6c87e4364Fd44B0D425ADfD0328e56b89b201329"
+	optionMarketViewerArbitrum = "0x97B688cEd83a1164AF9D3c0244EC36602E6C3B88"
+	QuoterAddressArbitrum      = "0x4CdB992fDEFcb840125dd344f87BDCbb8fEfA3e7"
+
+	oneOption = 1
 )
 
 type Provider struct{}
@@ -38,15 +45,33 @@ func (Provider) Name() string {
 
 func (Provider) Options() ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
-	client, err := ethclient.Dial(optimismrpc)
+
+	marketsOP, clientOP, err := GetOptionsFromLayer("Optimism")
 	if err != nil {
-		return nil, log.Error("Lyra ethclient", err).Err()
+		return nil, log.Error("GetOptionsFromLayer", "Optimism", err).Err()
+	}
+	optionsOP, sumOP, err := processMarketsFromLayer("Optimism", marketsOP, clientOP)
+	if err != nil {
+		return nil, log.Error("processMarketsFromLayer", "Optimism", err).Err()
+	}
+	options = append(options, optionsOP...)
+	sum := sumOP
+	log.Info("Lyra total markets", sum)
+
+	return options, nil
+}
+
+func GetOptionsFromLayer(layer string) (*[]common.Address, *ethclient.Client, error) {
+	rpc := LayerRPC(layer)
+	client, err := ethclient.Dial(rpc)
+	if err != nil {
+		return nil, &ethclient.Client{}, log.Error("Lyra ethclient", layer, err).Err()
 	}
 
 	address := common.HexToAddress(lyraRegistry)
 	registry, err := NewLyrar(address, client)
 	if err != nil {
-		return nil, log.Error("Lyra registry", err).Err()
+		return nil, &ethclient.Client{}, log.Error("Lyra registry", layer, err).Err()
 	}
 
 	// DO NOT use make() here!
@@ -65,48 +90,50 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	if len(markets) == 0 {
 		log.Error("registry.OptionMarkets return empty array")
 	}
+	return &markets, client, nil
+}
 
+func processMarketsFromLayer(layer string, markets *[]common.Address, client *ethclient.Client) ([]rainbow.Option, int, error) {
+	options := []rainbow.Option{}
 	sum := 0
+
 	viewer, err := NewLyrap(common.HexToAddress(optionMarketViewer), client)
 	if err != nil {
-		return nil, log.Error("optionMarketViewer", err).Err()
+		return nil, 0, log.Error("optionMarketViewer", layer, err).Err()
 	}
 	quoter, err := NewLyraq(common.HexToAddress(QuoterAddress), client)
 	if err != nil {
-		return nil, log.Error("quoter contract", err).Err()
+		return nil, 0, log.Error("quoter contract", layer, err).Err()
 	}
 
-	for i := 0; i < len(markets); i++ {
-		marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, markets[i])
+	for i := 0; i < len(*markets); i++ {
+		marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, (*markets)[i])
 		if err != nil {
-			return nil, log.Error("MarketAddresses", err).Err()
+			return nil, 0, log.Error("MarketAddresses", layer, err).Err()
 		}
 		baseAsset := Asset(marketAddresses.BaseAsset)
 
-		boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, markets[i])
+		boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, (*markets)[i])
 		if err != nil {
-			return nil, log.Error("GetLiveBoards", err).Err()
+			return nil, 0, log.Error("GetLiveBoards", layer, err).Err()
 		}
 
 		for _, b := range boards {
 			sum += len(b.Strikes)
 
 			for ii := range b.Strikes {
-				callPut, err := b.process(ii, baseAsset, quoter)
+				callPut, err := b.process(ii, baseAsset, quoter, layer)
 				if err != nil {
-					return nil, log.Error("process", err).Err()
+					return nil, 0, log.Error("process", layer, err).Err()
 				}
 				options = append(options, callPut...)
 			}
 		}
 	}
-
-	log.Info("Lyra total markets", sum)
-
-	return options, nil
+	return options, sum, nil
 }
 
-func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq) ([]rainbow.Option, error) {
+func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq, layer string) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 
 	call := rainbow.Option{
@@ -117,8 +144,8 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq
 		ExchangeType:  "DEX",
 		Chain:         "Ethereum",
 		Layer:         "L2",
-		LayerName:     "Optimism",
-		Provider:      name,
+		LayerName:     layer,
+		Provider:      name + "::" + layer,
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
@@ -132,8 +159,8 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq
 		ExchangeType:  "DEX",
 		Chain:         "Ethereum",
 		Layer:         "L2",
-		LayerName:     "Optimism",
-		Provider:      name,
+		LayerName:     layer,
+		Provider:      name + "::" + layer,
 		QuoteCurrency: "USD", // sUSD but anyway
 		Bid:           nil,
 		Ask:           nil,
@@ -149,8 +176,8 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq
 	// Market IV = board IV (baseIV) * Skew
 	call.MarketIV = rainbow.ToFloat(b.BaseIv, rainbow.DefaultEthereumDecimals) *
 		rainbow.ToFloat(b.Strikes[i].Skew, rainbow.DefaultEthereumDecimals)
-	// keep only 5 decimals (IV is already a % so it can be shown as XX.XXX%)
-	call.MarketIV = math.Floor(call.MarketIV*100000) / 100000
+	// keep only 5 decimals (0.XXXXX) and show it as XX.XXX%
+	call.MarketIV = math.Floor(call.MarketIV*10_000_000) / 100_000
 	put.MarketIV = call.MarketIV
 
 	bidasks, err := getBidsAsks(b.Strikes[i].StrikeId, b.Market, oneOption, quoter)
@@ -229,4 +256,15 @@ func expiration(e *big.Int) string {
 	seconds := e.Int64()
 	expiryTime := time.Unix(seconds, 0).UTC()
 	return expiryTime.Format("2006-01-02 15:04:05")
+}
+
+func LayerRPC(layer string) string {
+	switch layer {
+	case "Optimism":
+		return rpcOptimism
+	case "Arbitrum":
+		return rpcArbitrum
+	}
+	log.Panic("Unexpected layer", layer)
+	return ""
 }
