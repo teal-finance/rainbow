@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -24,15 +25,15 @@ var log = emo.NewZone("Lyra")
 // DOC: https://docs.lyra.finance/developers/deployed-contracts
 
 const (
-	rpcOptimism                = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
-	name                       = "Lyra"
-	lyraRegistry               = "0xF5A0442D4753cA1Ea36427ec071aa5E786dA5916"
-	optionMarketViewer         = "0xEAf788AD8abd9C98bA05F6802a62B8DbC673D76B"
-	QuoterAddress              = "0xea83ee73eB397c5974CB6b5220AE0A32fbE48B2B"
-	rpcArbitrum                = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	lyraRegistryArbitrum       = "0x6c87e4364Fd44B0D425ADfD0328e56b89b201329"
-	optionMarketViewerArbitrum = "0x97B688cEd83a1164AF9D3c0244EC36602E6C3B88"
-	QuoterAddressArbitrum      = "0x4CdB992fDEFcb840125dd344f87BDCbb8fEfA3e7"
+	rpcOP                 = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
+	name                  = "Lyra"
+	lyraRegistryOP        = "0xF5A0442D4753cA1Ea36427ec071aa5E786dA5916"
+	optionMarketViewerOP  = "0xEAf788AD8abd9C98bA05F6802a62B8DbC673D76B"
+	quoterAddressOP       = "0xea83ee73eB397c5974CB6b5220AE0A32fbE48B2B"
+	rpcARB                = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
+	lyraRegistryARB       = "0x6c87e4364Fd44B0D425ADfD0328e56b89b201329"
+	optionMarketViewerARB = "0x0527A05c3CEBc9Ef8171FeD29DE5900A7ea093a4"
+	quoterAddressARB      = "0x4CdB992fDEFcb840125dd344f87BDCbb8fEfA3e7"
 
 	oneOption = 1
 )
@@ -50,12 +51,25 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, log.Error("GetOptionsFromLayer", "Optimism", err).Err()
 	}
+	spew.Dump(marketsOP)
 	optionsOP, sumOP, err := processMarketsFromLayer("Optimism", marketsOP, clientOP)
 	if err != nil {
 		return nil, log.Error("processMarketsFromLayer", "Optimism", err).Err()
 	}
+
+	marketsARB, clientARB, err := GetOptionsFromLayer("Arbitrum")
+	if err != nil {
+		return nil, log.Error("GetOptionsFromLayer", "Arbitrum", err).Err()
+	}
+	spew.Dump(marketsARB)
+
+	optionsARB, sumARB, err := processMarketsFromLayer("Arbitrum", marketsARB, clientARB)
+	if err != nil {
+		return nil, log.Error("processMarketsFromLayer", "Arbitrum", err).Err()
+	}
 	options = append(options, optionsOP...)
-	sum := sumOP
+	options = append(options, optionsARB...)
+	sum := sumOP + sumARB
 	log.Info("Lyra total markets", sum)
 
 	return options, nil
@@ -67,7 +81,7 @@ func GetOptionsFromLayer(layer string) (*[]common.Address, *ethclient.Client, er
 	if err != nil {
 		return nil, &ethclient.Client{}, log.Error("Lyra ethclient", layer, err).Err()
 	}
-
+	lyraRegistry, _, _ := LayerAddresses(layer)
 	address := common.HexToAddress(lyraRegistry)
 	registry, err := NewLyrar(address, client)
 	if err != nil {
@@ -94,14 +108,17 @@ func GetOptionsFromLayer(layer string) (*[]common.Address, *ethclient.Client, er
 }
 
 func processMarketsFromLayer(layer string, markets *[]common.Address, client *ethclient.Client) ([]rainbow.Option, int, error) {
+	log.Printf("Processing options on %s  \n", layer)
+
 	options := []rainbow.Option{}
 	sum := 0
 
+	_, optionMarketViewer, quoterAddress := LayerAddresses(layer)
 	viewer, err := NewLyrap(common.HexToAddress(optionMarketViewer), client)
 	if err != nil {
 		return nil, 0, log.Error("optionMarketViewer", layer, err).Err()
 	}
-	quoter, err := NewLyraq(common.HexToAddress(QuoterAddress), client)
+	quoter, err := NewLyraq(common.HexToAddress(quoterAddress), client)
 	if err != nil {
 		return nil, 0, log.Error("quoter contract", layer, err).Err()
 	}
@@ -115,6 +132,7 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 
 		boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, (*markets)[i])
 		if err != nil {
+			spew.Dump((*markets)[i])
 			return nil, 0, log.Error("GetLiveBoards", layer, err).Err()
 		}
 
@@ -130,6 +148,8 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 			}
 		}
 	}
+	log.Printf("Processed  %v options on %s\n", len(options), layer)
+
 	return options, sum, nil
 }
 
@@ -137,34 +157,36 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq
 	options := []rainbow.Option{}
 
 	call := rainbow.Option{
-		Name:          "",
-		Type:          "CALL",
-		Asset:         asset,
-		Expiry:        expiration(b.Expiry),
-		ExchangeType:  "DEX",
-		Chain:         "Ethereum",
-		Layer:         "L2",
-		LayerName:     layer,
-		Provider:      name + "::" + layer,
-		QuoteCurrency: "USD", // sUSD but anyway
-		Bid:           nil,
-		Ask:           nil,
-		Strike:        rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
+		Name:            "",
+		Type:            "CALL",
+		Asset:           asset,
+		Expiry:          expiration(b.Expiry),
+		ExchangeType:    "DEX",
+		Chain:           "Ethereum",
+		Layer:           "L2",
+		LayerName:       layer,
+		Provider:        name + "::" + layer,
+		QuoteCurrency:   "USD", // sUSD or USDC
+		UnderlyingQuote: LayerUnderlyingQuoteCurrency(layer),
+		Bid:             nil,
+		Ask:             nil,
+		Strike:          rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
 	}
 	put := rainbow.Option{
-		Name:          "",
-		Type:          "PUT",
-		Asset:         asset,
-		Expiry:        expiration(b.Expiry),
-		ExchangeType:  "DEX",
-		Chain:         "Ethereum",
-		Layer:         "L2",
-		LayerName:     layer,
-		Provider:      name + "::" + layer,
-		QuoteCurrency: "USD", // sUSD but anyway
-		Bid:           nil,
-		Ask:           nil,
-		Strike:        rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
+		Name:            "",
+		Type:            "PUT",
+		Asset:           asset,
+		Expiry:          expiration(b.Expiry),
+		ExchangeType:    "DEX",
+		Chain:           "Ethereum",
+		Layer:           "L2",
+		LayerName:       layer,
+		Provider:        name + "::" + layer,
+		QuoteCurrency:   "USD", // sUSD or USDC
+		UnderlyingQuote: LayerUnderlyingQuoteCurrency(layer),
+		Bid:             nil,
+		Ask:             nil,
+		Strike:          rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
 	}
 
 	call.Name = call.OptionName()
@@ -232,6 +254,10 @@ func Asset(address common.Address) string {
 		return "sSOL"
 	case address.String() == sLINK:
 		return "sLINK"
+	case address.String() == WBTC:
+		return "WBTC"
+	case address.String() == WETH:
+		return "WETH"
 	default:
 		log.Warn("Lyra Unknown token:", address.String())
 		return "LLLL"
@@ -261,10 +287,34 @@ func expiration(e *big.Int) string {
 func LayerRPC(layer string) string {
 	switch layer {
 	case "Optimism":
-		return rpcOptimism
+		return rpcOP
 	case "Arbitrum":
-		return rpcArbitrum
+		return rpcARB
 	}
 	log.Panic("Unexpected layer", layer)
 	return ""
+}
+
+// LayerAddresses returns lyraRegistry,optionMarketViewer,QuoterAddress for the choosen layer
+func LayerAddresses(layer string) (string, string, string) {
+	switch layer {
+	case "Optimism":
+		return lyraRegistryOP, optionMarketViewerOP, quoterAddressOP
+	case "Arbitrum":
+		return lyraRegistryARB, optionMarketViewerARB, quoterAddressARB
+	}
+	log.Panic("Unexpected layer", layer)
+	return "", "", ""
+}
+
+func LayerUnderlyingQuoteCurrency(layer string) string {
+	switch layer {
+	case "Optimism":
+		return "sUSD"
+	case "Arbitrum":
+		return "USDC"
+	}
+	log.Panic("Unexpected layer", layer)
+	return "UUU"
+
 }
