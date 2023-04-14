@@ -18,6 +18,7 @@ import (
 
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+	"github.com/teal-finance/rainbow/pkg/rainbow/pkg/provider/lyra/arbitrum"
 )
 
 var log = emo.NewZone("Lyra")
@@ -37,6 +38,9 @@ const (
 
 	oneOption = 1
 )
+
+// TODO remove OptionMarket.go/abi if not necessary
+// I guess it was there for testing in the beginning.
 
 type Provider struct{}
 
@@ -81,7 +85,7 @@ func GetOptionsFromLayer(layer string) (*[]common.Address, *ethclient.Client, er
 	if err != nil {
 		return nil, &ethclient.Client{}, log.Error("Lyra ethclient", layer, err).Err()
 	}
-	lyraRegistry, _, _ := LayerAddresses(layer)
+	lyraRegistry := LayerRegistry(layer)
 	address := common.HexToAddress(lyraRegistry)
 	registry, err := NewLyrar(address, client)
 	if err != nil {
@@ -113,14 +117,14 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 	options := []rainbow.Option{}
 	sum := 0
 
-	_, optionMarketViewer, quoterAddress := LayerAddresses(layer)
-	viewer, err := NewLyrap(common.HexToAddress(optionMarketViewer), client)
+	q, err := LayerQuoter(layer, client)
 	if err != nil {
-		return nil, 0, log.Error("optionMarketViewer", layer, err).Err()
+		return nil, 0, err
 	}
-	quoter, err := NewLyraq(common.HexToAddress(quoterAddress), client)
+
+	viewer, err := LayerMarketViewer(layer, client)
 	if err != nil {
-		return nil, 0, log.Error("quoter contract", layer, err).Err()
+		return nil, 0, err
 	}
 
 	for i := 0; i < len(*markets); i++ {
@@ -140,7 +144,7 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 			sum += len(b.Strikes)
 
 			for ii := range b.Strikes {
-				callPut, err := b.process(ii, baseAsset, quoter, layer)
+				callPut, err := b.process(ii, baseAsset, q, layer)
 				if err != nil {
 					return nil, 0, log.Error("process", layer, err).Err()
 				}
@@ -153,7 +157,7 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 	return options, sum, nil
 }
 
-func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq, layer string) ([]rainbow.Option, error) {
+func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter Quoter, layer string) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 
 	call := rainbow.Option{
@@ -230,10 +234,10 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Lyraq
 	return options, err
 }
 
-func getBidsAsks(strikeID *big.Int, market common.Address, amount int, quoter *Lyraq) ([]float64, error) {
-	// TODO check what iteration really mean in Lyra
-	// I know they use 1 :-)
-	premium, _, err := quoter.FullQuotes(&bind.CallOpts{}, market, strikeID, common.Big1,
+// TODO use fullquotes on arbitrum
+func getBidsAsks(strikeID *big.Int, market common.Address, amount int, quoter Quoter) ([]float64, error) {
+	// We use 3 iterations (common.Big3) here because  that's what they do in the UI
+	premium, _, err := quoter.FullQuotes(&bind.CallOpts{}, market, strikeID, common.Big3,
 		rainbow.IntToEthereumUint256(amount, 18))
 	if err != nil {
 		return nil, log.Error("FullQuotes market=", market, "strikeID=", strikeID, err).Err()
@@ -295,16 +299,55 @@ func LayerRPC(layer string) string {
 	return ""
 }
 
-// LayerAddresses returns lyraRegistry,optionMarketViewer,QuoterAddress for the choosen layer
-func LayerAddresses(layer string) (string, string, string) {
+// LayerRegistry returns lyraRegistry Address for the choosen layer
+// This is fine since it does not seem like the code is different between layers
+func LayerRegistry(layer string) string {
 	switch layer {
 	case "Optimism":
-		return lyraRegistryOP, optionMarketViewerOP, quoterAddressOP
+		return lyraRegistryOP
 	case "Arbitrum":
-		return lyraRegistryARB, optionMarketViewerARB, quoterAddressARB
+		return lyraRegistryARB
 	}
 	log.Panic("Unexpected layer", layer)
-	return "", "", ""
+	return ""
+}
+
+func LayerQuoter(layer string, client *ethclient.Client) (Quoter, error) {
+	if layer == "Optimism" {
+		quoter, err := NewQuoterOP(common.HexToAddress(quoterAddressOP), client)
+		if err != nil {
+			return nil, log.Error("quoter contract", layer, err).Err()
+		}
+		return quoter, nil
+	} else if layer == "Arbitrum" {
+		quoter, err := NewQuoterARB(common.HexToAddress(quoterAddressARB), client)
+		if err != nil {
+			return nil, log.Error("quoter contract", layer, err).Err()
+		}
+		return quoter, nil
+	}
+	//just to remove warning
+	return nil, nil
+}
+
+// LayerMarketViewer to view market, what did you expect
+// I am at the "I'm too tired to properly code/comment"
+func LayerMarketViewer(layer string, client *ethclient.Client) (MarketViewer, error) {
+	if layer == "Optimism" {
+		viewer, err := NewMarketViewerOP(common.HexToAddress(optionMarketViewerOP), client)
+		if err != nil {
+			return nil, log.Error("quoter contract", layer, err).Err()
+		}
+		return viewer, nil
+	} else if layer == "Arbitrum" {
+		viewer, err := arbitrum.NewMarketViewerARB(common.HexToAddress(optionMarketViewerARB), client)
+		if err != nil {
+			return nil, log.Error("quoter contract", layer, err).Err()
+		}
+		return viewer, nil
+	}
+	//just to remove warning
+	return nil, nil
 }
 
 func LayerUnderlyingQuoteCurrency(layer string) string {
@@ -317,4 +360,24 @@ func LayerUnderlyingQuoteCurrency(layer string) string {
 	log.Panic("Unexpected layer", layer)
 	return "UUU"
 
+}
+
+type Quoter interface {
+	FullQuotes(opts *bind.CallOpts, _optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error)
+}
+
+type MarketViewer interface {
+	MarketAddresses(opts *bind.CallOpts, arg0 common.Address) (struct {
+		LiquidityPool      common.Address
+		LiquidityToken     common.Address
+		GreekCache         common.Address
+		OptionMarket       common.Address
+		OptionMarketPricer common.Address
+		OptionToken        common.Address
+		ShortCollateral    common.Address
+		PoolHedger         common.Address
+		QuoteAsset         common.Address
+		BaseAsset          common.Address
+	}, error)
+	GetLiveBoards(opts *bind.CallOpts, market common.Address) ([]OptionMarketViewerBoardView, error)
 }

@@ -1,3 +1,18 @@
+# Newport version(Arbitrum) and update/tidy on Optimism
+
+```
+abigen --abi=./ABI/QuoterOP.abi --pkg=quoterOP --out=QuoterOP.go
+abigen --abi=./ABI/QuoterARB.abi --pkg=quoterARB --out=QuoterARB.go
+abigen --abi=./ABI/MarketViewerARB.abi --pkg=marketViewerARB --out=MarketViewerARB.go
+abigen --abi=./ABI/MarketViewerOP.abi --pkg=marketViewerOP --out=MarketViewerOP.go
+```
+
+Change the package of `QuoterOP.go`and `QuoterARB.go`to `lyra`
+Change the package of `MarketViewerOP.go`and `MarketViewerARB.go`to `lyra`
+Solve the duplicate by changing the names, say in `MarketViewerARB.go` until it compiles :-). I could have just deleted the conflict and see if it works now that I think about it... Actually did that because if not the signature would not match. 😭didn't work
+
+
+
 # Avalon version 
 
 The ABIs of Lyra Avalon are available here: https://github.com/lyra-finance/lyra-protocol/blob/master/deployments/mainnet-ovm/lyra.json
