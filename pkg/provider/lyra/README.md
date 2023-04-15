@@ -8,8 +8,9 @@ abigen --abi=./ABI/MarketViewerOP.abi --pkg=marketViewerOP --out=MarketViewerOP.
 ```
 
 Change the package of `QuoterOP.go`and `QuoterARB.go`to `lyra`
-Change the package of `MarketViewerOP.go`and `MarketViewerARB.go`to `lyra`
-Solve the duplicate by changing the names, say in `MarketViewerARB.go` until it compiles :-). I could have just deleted the conflict and see if it works now that I think about it... Actually did that because if not the signature would not match. 😭didn't work
+Change the package of `MarketViewerOP.go` to `lyra`
+Move `MarketViewerARB.go` to a folder called `arbitrum` and change the package name to `arbitrum`
+note: I had to do this bevause I couldn't make that code in a generic fashion
 
 
 
