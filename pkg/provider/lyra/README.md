@@ -1,3 +1,19 @@
+# Newport version(Arbitrum) and update/tidy on Optimism
+
+```
+abigen --abi=./ABI/QuoterOP.abi --pkg=quoterOP --out=QuoterOP.go
+abigen --abi=./ABI/QuoterARB.abi --pkg=quoterARB --out=QuoterARB.go
+abigen --abi=./ABI/MarketViewerARB.abi --pkg=marketViewerARB --out=MarketViewerARB.go
+abigen --abi=./ABI/MarketViewerOP.abi --pkg=marketViewerOP --out=MarketViewerOP.go
+```
+
+Change the package of `QuoterOP.go`and `QuoterARB.go`to `lyra`
+Change the package of `MarketViewerOP.go` to `lyra`
+Move `MarketViewerARB.go` to a folder called `arbitrum` and change the package name to `arbitrum`
+note: I had to do this bevause I couldn't make that code in a generic fashion
+
+
+
 # Avalon version 
 
 The ABIs of Lyra Avalon are available here: https://github.com/lyra-finance/lyra-protocol/blob/master/deployments/mainnet-ovm/lyra.json
