@@ -17,8 +17,9 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 
 	"github.com/teal-finance/emo"
+	"github.com/teal-finance/rainbow/pkg/provider/lyra/arbitrum"
+	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
-	"github.com/teal-finance/rainbow/pkg/rainbow/pkg/provider/lyra/arbitrum"
 )
 
 var log = emo.NewZone("Lyra")
@@ -50,6 +51,16 @@ func (Provider) Name() string {
 
 func (Provider) Options() ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
+	marketsARB, clientARB, err := GetOptionsFromLayer("Arbitrum")
+	if err != nil {
+		return nil, log.Error("GetOptionsFromLayer", "Arbitrum", err).Err()
+	}
+	spew.Dump(marketsARB)
+
+	optionsARB, sumARB, err := processMarketsFromLayer("Arbitrum", marketsARB, clientARB)
+	if err != nil {
+		return nil, log.Error("processMarketsFromLayer", "Arbitrum", err).Err()
+	}
 
 	marketsOP, clientOP, err := GetOptionsFromLayer("Optimism")
 	if err != nil {
@@ -61,18 +72,9 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		return nil, log.Error("processMarketsFromLayer", "Optimism", err).Err()
 	}
 
-	marketsARB, clientARB, err := GetOptionsFromLayer("Arbitrum")
-	if err != nil {
-		return nil, log.Error("GetOptionsFromLayer", "Arbitrum", err).Err()
-	}
-	spew.Dump(marketsARB)
-
-	optionsARB, sumARB, err := processMarketsFromLayer("Arbitrum", marketsARB, clientARB)
-	if err != nil {
-		return nil, log.Error("processMarketsFromLayer", "Arbitrum", err).Err()
-	}
-	options = append(options, optionsOP...)
 	options = append(options, optionsARB...)
+	options = append(options, optionsOP...)
+
 	sum := sumOP + sumARB
 	log.Info("Lyra total markets", sum)
 
@@ -122,43 +124,91 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 		return nil, 0, err
 	}
 
-	viewer, err := LayerMarketViewer(layer, client)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	for i := 0; i < len(*markets); i++ {
-		marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, (*markets)[i])
+	if layer == "Optimism" {
+		viewer, err := NewMarketViewerOP(common.HexToAddress(optionMarketViewerOP), client)
 		if err != nil {
 			return nil, 0, log.Error("MarketAddresses", layer, err).Err()
 		}
-		baseAsset := Asset(marketAddresses.BaseAsset)
 
-		boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, (*markets)[i])
-		if err != nil {
-			spew.Dump((*markets)[i])
-			return nil, 0, log.Error("GetLiveBoards", layer, err).Err()
-		}
+		for i := 0; i < len(*markets); i++ {
+			marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, (*markets)[i])
+			if err != nil {
+				return nil, 0, log.Error("MarketAddresses", layer, err).Err()
+			}
+			baseAsset := Asset(marketAddresses.BaseAsset)
 
-		for _, b := range boards {
-			sum += len(b.Strikes)
+			boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, (*markets)[i])
+			if err != nil {
+				spew.Dump((*markets)[i])
+				return nil, 0, log.Error("GetLiveBoards", layer, err).Err()
+			}
 
-			for ii := range b.Strikes {
-				callPut, err := b.process(ii, baseAsset, q, layer)
-				if err != nil {
-					return nil, 0, log.Error("process", layer, err).Err()
+			for _, b := range boards {
+				sum += len(b.Strikes)
+
+				for ii := range b.Strikes {
+					callPut, err := b.process(ii, baseAsset, q, layer)
+					if err != nil {
+						return nil, 0, log.Error("process", layer, err).Err()
+					}
+					options = append(options, callPut...)
 				}
-				options = append(options, callPut...)
 			}
 		}
-	}
-	log.Printf("Processed  %v options on %s\n", len(options), layer)
+		log.Printf("Processed  %v options on %s\n", len(options), layer)
 
-	return options, sum, nil
+		return options, sum, nil
+	} else if layer == "Arbitrum" {
+		viewer, err := arbitrum.NewMarketViewerARB(common.HexToAddress(optionMarketViewerARB), client)
+		if err != nil {
+			return nil, 0, log.Error("MarketAddresses", layer, err).Err()
+		}
+
+		for i := 0; i < len(*markets); i++ {
+			marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, (*markets)[i])
+			if err != nil {
+				return nil, 0, log.Error("MarketAddresses", layer, err).Err()
+			}
+			baseAsset := Asset(marketAddresses.BaseAsset)
+
+			boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, (*markets)[i])
+			if err != nil {
+				spew.Dump((*markets)[i])
+				return nil, 0, log.Error("GetLiveBoards", layer, err).Err()
+			}
+
+			for _, b := range boards {
+				sum += len(b.Strikes)
+				tempBoard := OptionMarketViewerBoardViewARB{
+					O: &b,
+				}
+				//spew.Dump(b.Strikes)
+
+				for ii := range b.Strikes {
+					callPut, err := tempBoard.process(ii, baseAsset, q, layer)
+					if err != nil {
+						return nil, 0, log.Error("process", layer, err).Err()
+					}
+					options = append(options, callPut...)
+				}
+			}
+		}
+		log.Printf("Processed  %v options on %s\n", len(options), layer)
+
+		return options, sum, nil
+	}
+
+	return nil, 0, log.Error("processMarketsFromLayer", layer, "not recognized").Err()
+
+}
+
+type OptionMarketViewerBoardViewARB struct {
+	O *arbitrum.OptionMarketViewerBoardView
 }
 
 func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter Quoter, layer string) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
+	decimals := LayerDecimals(layer)
 
 	call := rainbow.Option{
 		Name:            "",
@@ -174,7 +224,7 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter Quoter
 		UnderlyingQuote: LayerUnderlyingQuoteCurrency(layer),
 		Bid:             nil,
 		Ask:             nil,
-		Strike:          rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
+		Strike:          rainbow.ToFloat(b.Strikes[i].StrikePrice, decimals),
 	}
 	put := rainbow.Option{
 		Name:            "",
@@ -190,7 +240,7 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter Quoter
 		UnderlyingQuote: LayerUnderlyingQuoteCurrency(layer),
 		Bid:             nil,
 		Ask:             nil,
-		Strike:          rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
+		Strike:          rainbow.ToFloat(b.Strikes[i].StrikePrice, decimals),
 	}
 
 	call.Name = call.OptionName()
@@ -199,14 +249,14 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter Quoter
 	call.URL = url(&call) // , b.Strikes[i].StrikeId)
 	put.URL = url(&put)   // , b.Strikes[i].StrikeId)
 
-	// Market IV = board IV (baseIV) * Skew
+	// Market IV = board IV (baseIV) * Skew //TODO verify it's still 18 on arbitrum
 	call.MarketIV = rainbow.ToFloat(b.BaseIv, rainbow.DefaultEthereumDecimals) *
 		rainbow.ToFloat(b.Strikes[i].Skew, rainbow.DefaultEthereumDecimals)
 	// keep only 5 decimals (0.XXXXX) and show it as XX.XXX%
 	call.MarketIV = math.Floor(call.MarketIV*10_000_000) / 100_000
 	put.MarketIV = call.MarketIV
 
-	bidasks, err := getBidsAsks(b.Strikes[i].StrikeId, b.Market, oneOption, quoter)
+	bidasks, err := getBidsAsks(b.Strikes[i].StrikeId, b.Market, oneOption, quoter, decimals)
 	if err != nil {
 		return options, log.Error("getBidsAsks", err).Err()
 	}
@@ -234,15 +284,21 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter Quoter
 	return options, err
 }
 
+func (b *OptionMarketViewerBoardViewARB) process(i int, asset string, quoter Quoter, layer string) ([]rainbow.Option, error) {
+	options := []rainbow.Option{}
+	return options, nil
+
+}
+
 // TODO use fullquotes on arbitrum
-func getBidsAsks(strikeID *big.Int, market common.Address, amount int, quoter Quoter) ([]float64, error) {
+func getBidsAsks(strikeID *big.Int, market common.Address, amount int, quoter Quoter, decimals int64) ([]float64, error) {
 	// We use 3 iterations (common.Big3) here because  that's what they do in the UI
 	premium, _, err := quoter.FullQuotes(&bind.CallOpts{}, market, strikeID, common.Big3,
-		rainbow.IntToEthereumUint256(amount, 18))
+		rainbow.IntToEthereumUint256(amount, decimals))
 	if err != nil {
 		return nil, log.Error("FullQuotes market=", market, "strikeID=", strikeID, err).Err()
 	}
-	return rainbow.ToFloats(premium, rainbow.DefaultEthereumDecimals), nil
+	return rainbow.ToFloats(premium, decimals), nil
 }
 
 func Asset(address common.Address) string {
@@ -330,6 +386,7 @@ func LayerQuoter(layer string, client *ethclient.Client) (Quoter, error) {
 	return nil, nil
 }
 
+/*
 // LayerMarketViewer to view market, what did you expect
 // I am at the "I'm too tired to properly code/comment"
 func LayerMarketViewer(layer string, client *ethclient.Client) (MarketViewer, error) {
@@ -349,6 +406,7 @@ func LayerMarketViewer(layer string, client *ethclient.Client) (MarketViewer, er
 	//just to remove warning
 	return nil, nil
 }
+*/
 
 func LayerUnderlyingQuoteCurrency(layer string) string {
 	switch layer {
@@ -362,10 +420,24 @@ func LayerUnderlyingQuoteCurrency(layer string) string {
 
 }
 
+// This worked to make it generic but I couldn't manage with the viewer. So gave up
 type Quoter interface {
 	FullQuotes(opts *bind.CallOpts, _optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error)
 }
 
+func LayerDecimals(layer string) int64 {
+	switch layer {
+	case "Optimism":
+		return rainbow.DefaultEthereumDecimals
+
+	case "Arbitrum":
+		return anchor.USDCDecimals
+	}
+	log.Panic("Unexpected layer", layer)
+	return rainbow.DefaultEthereumDecimals
+}
+
+/* // I couldn't manage with the viewer generic. So gave up
 type MarketViewer interface {
 	MarketAddresses(opts *bind.CallOpts, arg0 common.Address) (struct {
 		LiquidityPool      common.Address
@@ -379,5 +451,6 @@ type MarketViewer interface {
 		QuoteAsset         common.Address
 		BaseAsset          common.Address
 	}, error)
-	GetLiveBoards(opts *bind.CallOpts, market common.Address) ([]OptionMarketViewerBoardView, error)
-}
+	//GetLiveBoards(opts *bind.CallOpts, market common.Address) ([]OptionMarketViewerBoardView, error)
+	//GetLiveBoards(opts *bind.CallOpts, market common.Address) ([]arbitrum.OptionMarketViewerBoardView, error)
+}*/
