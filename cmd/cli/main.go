@@ -49,7 +49,6 @@ func main() {
 }
 
 func printTable(options []rainbow.Option) {
-
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.SetStyle(table.StyleLight)
@@ -136,5 +135,4 @@ func altPrintTable(options []rainbow.Option) {
 	})
 
 	t.Render()
-
 }

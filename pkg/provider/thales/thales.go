@@ -37,7 +37,7 @@ const (
 	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
 	rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	rpcBsc      = "https://bsc-dataseed1.ninicoin.io/" //free bscscan rpc
+	rpcBsc      = "https://bsc-dataseed1.ninicoin.io/" // free bscscan rpc
 	// binance https://bsc-dataseed1.binance.org/
 	// blockpi "https://bsc.blockpi.network/v1/rpc/2b013a75d3adc818d3b49076fb7a0766d49794df"
 	// quicknode https://late-wispy-sanctuary.bsc.discover.quiknode.pro/a834c496c0eac9ad6e37c35ae00498da706026e1

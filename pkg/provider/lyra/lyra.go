@@ -141,7 +141,6 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 			}
 
 			for _, b := range boards {
-
 				for ii := range b.Strikes {
 					sum++
 					callPut, err := b.process(ii, baseAsset, q, layer)
@@ -194,7 +193,6 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 	}
 
 	return nil, 0, log.Error("processMarketsFromLayer", layer, "not recognized").Err()
-
 }
 
 type OptionMarketViewerBoardViewARB struct {
@@ -355,7 +353,6 @@ func (b *OptionMarketViewerBoardViewARB) process(i int, asset string, quoter Quo
 	options = append(options, call, put)
 
 	return options, nil
-
 }
 
 func getBidsAsks(strikeID *big.Int, market common.Address, amount int, quoter Quoter) ([]float64, error) {
@@ -449,7 +446,7 @@ func LayerQuoter(layer string, client *ethclient.Client) (Quoter, error) {
 		}
 		return quoter, nil
 	}
-	//just to remove warning
+	// just to remove warning
 	return nil, nil
 }
 
@@ -484,12 +481,11 @@ func LayerUnderlyingQuoteCurrency(layer string) string {
 	}
 	log.Panic("Unexpected layer", layer)
 	return "UUU"
-
 }
 
 // This worked to make it generic but I couldn't manage with the viewer. So gave up
 type Quoter interface {
-	FullQuotes(opts *bind.CallOpts, _optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error)
+	FullQuotes(opts *bind.CallOpts, _optionMarket common.Address, strikeId, iterations, amount *big.Int) ([]*big.Int, []*big.Int, error)
 }
 
 /* // I couldn't manage with the viewer generic. So gave up

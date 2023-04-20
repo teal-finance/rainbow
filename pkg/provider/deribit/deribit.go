@@ -80,7 +80,7 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 	var options []rainbow.Option
 	options = append(options, optionsBTC...)
 	options = append(options, optionsETH...)
-	//options = append(options, optionsSOL...)
+	// options = append(options, optionsSOL...)
 	return options, nil
 }
 
