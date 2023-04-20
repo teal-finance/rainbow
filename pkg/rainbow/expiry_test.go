@@ -2,6 +2,7 @@
 // This file is part of Teal.Finance/Rainbow,
 // a screener for DeFi options under the MIT License.
 // SPDX-License-Identifier: MIT
+
 package rainbow
 
 import (

@@ -1,3 +1,8 @@
+// Copyright 2022 Teal.Finance/Rainbow contributors
+// This file is part of Teal.Finance/Rainbow,
+// a screener for DeFi options under the MIT License.
+// SPDX-License-Identifier: MIT
+
 package opyn
 
 import (
@@ -12,7 +17,7 @@ import (
 )
 
 const (
-	Osqth             = "0xf1B99e3E573A1a9C5E6B2Ce818b617F0E664E86B" //Squeeth token address 0squth=Opyn Squeeth
+	Osqth             = "0xf1B99e3E573A1a9C5E6B2Ce818b617F0E664E86B" // Squeeth token address 0squth=Opyn Squeeth
 	ControllerAddress = "0x64187ae08781B09368e6253F9E94951243A493D5" // controller address
 	InfuraRPC         = "https://mainnet.infura.io/v3/c1b94bff90754066a81d195ddc337ff3"
 )
@@ -41,8 +46,8 @@ func GetClient() (*ethclient.Client, error) {
 	}
 	return client, nil
 }
-func GetVault(v int64, client *ethclient.Client) (Vault, error) {
 
+func GetVault(v int64, client *ethclient.Client) (Vault, error) {
 	controller, err := NewController(common.HexToAddress(ControllerAddress), client)
 	if err != nil {
 		log.Print("controller", err)
@@ -62,12 +67,10 @@ func GetVault(v int64, client *ethclient.Client) (Vault, error) {
 	err*/
 
 	return vault, err
-
 }
 
 // HasNFT if the vault has a Uniswap LP NFT (!=0)
 func (v Vault) HasNFT() bool {
-
 	return v.NftCollateralId != 0
 }
 
