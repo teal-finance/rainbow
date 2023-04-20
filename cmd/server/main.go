@@ -39,7 +39,7 @@ func main() {
 	go service.Run(*period)
 
 	// chain middleware
-	middleware, connState := g.StartMetricsServer(*expPort)
+	middleware, connState := g.StartExporter(*expPort)
 	middleware = middleware.Append(
 		g.MiddlewareRejectUnprintableURI(),
 		g.MiddlewareLogRequest(),
