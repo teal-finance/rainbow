@@ -96,7 +96,8 @@ func listProviderNames() []string {
 			*providers += ",deribit,delta"
 		}
 		if *dex { // deprecating "opyn" & "psy"
-			*providers += ",lyra,synquote,zeta"
+			// pausin synquote until I get the new API link
+			*providers += ",lyra,zeta"
 		}
 		if *exotic {
 			*providers += ",thales"

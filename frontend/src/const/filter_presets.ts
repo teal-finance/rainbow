@@ -36,7 +36,11 @@ const filterPresets: Record<string, any> = {
   },
   'DEXes': {
     assets: { 'defaultValue': true },
-    providers: { 'defaultValue': false, 'Lyra': true, 'Synquote': true, 'Zeta': true }
+    providers: {
+      'defaultValue': false, 'Lyra::Optimism': true, 'Lyra::Arbitrum': true,
+      'Thales::Polygon': true, 'Thales::Arbitrum': true, 'Thales::Optimism': true,
+      'Thales::Bsc': true, 'Synquote': true, 'Zeta': true
+    }
   },
   'BTC': {
     assets: { 'defaultValue': false, 'BTC': true },
@@ -48,6 +52,13 @@ const filterPresets: Record<string, any> = {
   },
   'SOL': {
     assets: { 'defaultValue': false, 'SOL': true },
+    providers: { 'defaultValue': true },
+  },
+  'L1/L2 tokens': {
+    assets: {
+      'defaultValue': false, 'BTC': true, 'ETH': true, 'SOL': true,
+      'ARB': true, 'OP': true, 'BNB': true, 'MATIC': true
+    },
     providers: { 'defaultValue': true },
   }
 }
