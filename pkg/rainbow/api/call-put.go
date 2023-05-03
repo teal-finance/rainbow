@@ -157,9 +157,15 @@ func groupByExpiry(options []rainbow.Option) (expiryToOptions map[string][]rainb
 
 	for i := range options {
 		slice, ok := expiryToOptions[options[i].Expiry]
+		// there should never be an error here if we format properly
+		// TODO add a proper db and fix that on the storage front
+		expiry, _ := time.Parse("2006-01-02 15:04:05", options[i].Expiry)
+		_ = expiry
+
+		stillActive := expiry.After(time.Now())
 		if ok {
 			expiryToOptions[options[i].Expiry] = append(slice, options[i])
-		} else {
+		} else if stillActive {
 			expiryToOptions[options[i].Expiry] = []rainbow.Option{options[i]}
 		}
 	}
