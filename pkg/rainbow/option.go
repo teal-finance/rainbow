@@ -7,6 +7,14 @@ package rainbow
 
 import "fmt"
 
+// TODO
+// ADD a "quote" type for data that change often
+// ADD a timestamp to this "quote"
+// Do a proper Name
+// ADD a hash on the name
+// ADD dump of db on the cli
+// Work on the csv
+
 type Option struct {
 	Name            string `json:"name"`            // ASSET-DATE-Strike-OptionsType
 	Type            string `json:"type"`            // CALL / PUT  // TODO add exotic like binary and perp(squeeth)
