@@ -28,13 +28,13 @@ var log = emo.NewZone("Lyra")
 const (
 	rpcOP                 = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" // "https://mainnet.optimism.io"
 	name                  = "Lyra"
-	lyraRegistryOP        = "0xF5A0442D4753cA1Ea36427ec071aa5E786dA5916"
-	optionMarketViewerOP  = "0xEAf788AD8abd9C98bA05F6802a62B8DbC673D76B"
+	lyraRegistryOP        = "0x70619E0bD4B0191564e888700f3eB1318fC73926"
+	optionMarketViewerOP  = "0x136d92f1d103BA5267c85555b28787AE53Ee3CEF"
 	quoterAddressOP       = "0xea83ee73eB397c5974CB6b5220AE0A32fbE48B2B"
-	rpcARB                = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	lyraRegistryARB       = "0x6c87e4364Fd44B0D425ADfD0328e56b89b201329"
-	optionMarketViewerARB = "0x0527A05c3CEBc9Ef8171FeD29DE5900A7ea093a4"
-	quoterAddressARB      = "0x23236b4c7772636b5224df56Be8168A2f42df31C"
+	rpcARB                = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m" //"https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
+	lyraRegistryARB       = "0x0FEd189bCD4A680e05B153dC7c3dC87004e162fb"                            //"0x6c87e4364Fd44B0D425ADfD0328e56b89b201329"
+	optionMarketViewerARB = "0x136d92f1d103BA5267c85555b28787AE53Ee3CEF"                            //"0x0527A05c3CEBc9Ef8171FeD29DE5900A7ea093a4"
+	quoterAddressARB      = "0x70619E0bD4B0191564e888700f3eB1318fC73926"                            //"0x23236b4c7772636b5224df56Be8168A2f42df31C"
 
 	oneOption = 1
 )
@@ -112,6 +112,7 @@ func GetOptionsFromLayer(layer string) (*[]common.Address, *ethclient.Client, er
 
 func processMarketsFromLayer(layer string, markets *[]common.Address, client *ethclient.Client) ([]rainbow.Option, int, error) {
 	log.Printf("Processing options on %s  \n", layer)
+	spew.Dump(markets)
 
 	options := []rainbow.Option{}
 	sum := 0
@@ -139,6 +140,7 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 				spew.Dump((*markets)[i])
 				return nil, 0, log.Error("GetLiveBoards", layer, err).Err()
 			}
+			spew.Dump(boards)
 
 			for _, b := range boards {
 				for ii := range b.Strikes {
@@ -380,7 +382,9 @@ func Asset(address common.Address) string {
 		return "sLINK"
 	case address.String() == WBTC:
 		return "WBTC"
-	case address.String() == WETH:
+	case address.String() == oWETH:
+		return "WETH"
+	case address.String() == aWETH:
 		return "WETH"
 	default:
 		log.Warn("Lyra Unknown token:", address.String())
