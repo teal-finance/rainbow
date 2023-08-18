@@ -62,10 +62,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	options = append(options, optionsOP...)
 	log.Info("Lyra total markets", len(options))
 
-	_ = clientARB
-	_ = clientOP
-	spew.Dump(marketsARB, marketsOP)
-	spew.Dump(options)
 	return options, nil
 }
 
@@ -142,9 +138,8 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 	if err != nil {
 		return nil, log.Error("MarketAddresses", layer, err).Err()
 	}
-	spew.Dump(markets)
 
-	for i := 0; i < 1; i++ { //len(*markets); i++ {
+	for i := 0; i < len(*markets); i++ {
 		marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, (*markets)[i])
 		if err != nil {
 			return nil, log.Error("MarketAddresses", layer, i, err).Err()
@@ -157,8 +152,8 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 			return nil, log.Error("GetLiveBoards", layer, err).Err()
 		}
 
-		for _, b := range boards[0:1] {
-			for ii := range b.Strikes[0:2] {
+		for _, b := range boards {
+			for ii := range b.Strikes {
 				callPut, err := b.process(ii, baseAsset, q, layer)
 				if err != nil {
 					return nil, log.Error("process", layer, err).Err()
