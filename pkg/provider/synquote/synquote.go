@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	synquoteAPI = "https://api.synquote.com/listings-with-quotes?network=polygon&market="
+	synquoteAPI = "https://api.synquote.com/listings-with-quotes?network=arbitrum&market="
 	marketURL   = "https://app.synquote.com/trade/"
 )
 
