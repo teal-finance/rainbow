@@ -26,165 +26,166 @@ var (
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = event.NewSubscription
+	_ = abi.ConvertType
 )
 
-// QuoterARBMetaData contains all meta data concerning the QuoterARB contract.
-var QuoterARBMetaData = &bind.MetaData{
+// QuoterMetaData contains all meta data concerning the Quoter contract.
+var QuoterMetaData = &bind.MetaData{
 	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lyraRegister\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"thrower\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"boardId\",\"type\":\"uint256\"}],\"name\":\"BoardAlreadySettled\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"thrower\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"boardId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"boardExpiry\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentTime\",\"type\":\"uint256\"}],\"name\":\"BoardExpired\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"thrower\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"boardId\",\"type\":\"uint256\"}],\"name\":\"BoardIsFrozen\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"thrower\",\"type\":\"address\"},{\"internalType\":\"enumIOptionMarket.NonZeroValues\",\"name\":\"valueType\",\"type\":\"uint8\"}],\"name\":\"ExpectedNonZeroValue\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"thrower\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"strikeId\",\"type\":\"uint256\"}],\"name\":\"InvalidStrikeId\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"contractIOptionMarket\",\"name\":\"_optionMarket\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"strikeId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"iterations\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"fullQuotes\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIOptionMarket\",\"name\":\"_optionMarket\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"strikeId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"iterations\",\"type\":\"uint256\"},{\"internalType\":\"enumIOptionMarket.OptionType\",\"name\":\"optionType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"quote\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"totalPremium\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalFee\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
-// QuoterARBABI is the input ABI used to generate the binding from.
-// Deprecated: Use QuoterARBMetaData.ABI instead.
-var QuoterARBABI = QuoterARBMetaData.ABI
+// QuoterABI is the input ABI used to generate the binding from.
+// Deprecated: Use QuoterMetaData.ABI instead.
+var QuoterABI = QuoterMetaData.ABI
 
-// QuoterARB is an auto generated Go binding around an Ethereum contract.
-type QuoterARB struct {
-	QuoterARBCaller     // Read-only binding to the contract
-	QuoterARBTransactor // Write-only binding to the contract
-	QuoterARBFilterer   // Log filterer for contract events
+// Quoter is an auto generated Go binding around an Ethereum contract.
+type Quoter struct {
+	QuoterCaller     // Read-only binding to the contract
+	QuoterTransactor // Write-only binding to the contract
+	QuoterFilterer   // Log filterer for contract events
 }
 
-// QuoterARBCaller is an auto generated read-only Go binding around an Ethereum contract.
-type QuoterARBCaller struct {
+// QuoterCaller is an auto generated read-only Go binding around an Ethereum contract.
+type QuoterCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// QuoterARBTransactor is an auto generated write-only Go binding around an Ethereum contract.
-type QuoterARBTransactor struct {
+// QuoterTransactor is an auto generated write-only Go binding around an Ethereum contract.
+type QuoterTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// QuoterARBFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
-type QuoterARBFilterer struct {
+// QuoterFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
+type QuoterFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// QuoterARBSession is an auto generated Go binding around an Ethereum contract,
+// QuoterSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
-type QuoterARBSession struct {
-	Contract     *QuoterARB        // Generic contract binding to set the session for
+type QuoterSession struct {
+	Contract     *Quoter           // Generic contract binding to set the session for
 	CallOpts     bind.CallOpts     // Call options to use throughout this session
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// QuoterARBCallerSession is an auto generated read-only Go binding around an Ethereum contract,
+// QuoterCallerSession is an auto generated read-only Go binding around an Ethereum contract,
 // with pre-set call options.
-type QuoterARBCallerSession struct {
-	Contract *QuoterARBCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts    // Call options to use throughout this session
+type QuoterCallerSession struct {
+	Contract *QuoterCaller // Generic contract caller binding to set the session for
+	CallOpts bind.CallOpts // Call options to use throughout this session
 }
 
-// QuoterARBTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
+// QuoterTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
 // with pre-set transact options.
-type QuoterARBTransactorSession struct {
-	Contract     *QuoterARBTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts    // Transaction auth options to use throughout this session
+type QuoterTransactorSession struct {
+	Contract     *QuoterTransactor // Generic contract transactor binding to set the session for
+	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// QuoterARBRaw is an auto generated low-level Go binding around an Ethereum contract.
-type QuoterARBRaw struct {
-	Contract *QuoterARB // Generic contract binding to access the raw methods on
+// QuoterRaw is an auto generated low-level Go binding around an Ethereum contract.
+type QuoterRaw struct {
+	Contract *Quoter // Generic contract binding to access the raw methods on
 }
 
-// QuoterARBCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
-type QuoterARBCallerRaw struct {
-	Contract *QuoterARBCaller // Generic read-only contract binding to access the raw methods on
+// QuoterCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
+type QuoterCallerRaw struct {
+	Contract *QuoterCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// QuoterARBTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
-type QuoterARBTransactorRaw struct {
-	Contract *QuoterARBTransactor // Generic write-only contract binding to access the raw methods on
+// QuoterTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
+type QuoterTransactorRaw struct {
+	Contract *QuoterTransactor // Generic write-only contract binding to access the raw methods on
 }
 
-// NewQuoterARB creates a new instance of QuoterARB, bound to a specific deployed contract.
-func NewQuoterARB(address common.Address, backend bind.ContractBackend) (*QuoterARB, error) {
-	contract, err := bindQuoterARB(address, backend, backend, backend)
+// NewQuoter creates a new instance of Quoter, bound to a specific deployed contract.
+func NewQuoter(address common.Address, backend bind.ContractBackend) (*Quoter, error) {
+	contract, err := bindQuoter(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &QuoterARB{QuoterARBCaller: QuoterARBCaller{contract: contract}, QuoterARBTransactor: QuoterARBTransactor{contract: contract}, QuoterARBFilterer: QuoterARBFilterer{contract: contract}}, nil
+	return &Quoter{QuoterCaller: QuoterCaller{contract: contract}, QuoterTransactor: QuoterTransactor{contract: contract}, QuoterFilterer: QuoterFilterer{contract: contract}}, nil
 }
 
-// NewQuoterARBCaller creates a new read-only instance of QuoterARB, bound to a specific deployed contract.
-func NewQuoterARBCaller(address common.Address, caller bind.ContractCaller) (*QuoterARBCaller, error) {
-	contract, err := bindQuoterARB(address, caller, nil, nil)
+// NewQuoterCaller creates a new read-only instance of Quoter, bound to a specific deployed contract.
+func NewQuoterCaller(address common.Address, caller bind.ContractCaller) (*QuoterCaller, error) {
+	contract, err := bindQuoter(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &QuoterARBCaller{contract: contract}, nil
+	return &QuoterCaller{contract: contract}, nil
 }
 
-// NewQuoterARBTransactor creates a new write-only instance of QuoterARB, bound to a specific deployed contract.
-func NewQuoterARBTransactor(address common.Address, transactor bind.ContractTransactor) (*QuoterARBTransactor, error) {
-	contract, err := bindQuoterARB(address, nil, transactor, nil)
+// NewQuoterTransactor creates a new write-only instance of Quoter, bound to a specific deployed contract.
+func NewQuoterTransactor(address common.Address, transactor bind.ContractTransactor) (*QuoterTransactor, error) {
+	contract, err := bindQuoter(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &QuoterARBTransactor{contract: contract}, nil
+	return &QuoterTransactor{contract: contract}, nil
 }
 
-// NewQuoterARBFilterer creates a new log filterer instance of QuoterARB, bound to a specific deployed contract.
-func NewQuoterARBFilterer(address common.Address, filterer bind.ContractFilterer) (*QuoterARBFilterer, error) {
-	contract, err := bindQuoterARB(address, nil, nil, filterer)
+// NewQuoterFilterer creates a new log filterer instance of Quoter, bound to a specific deployed contract.
+func NewQuoterFilterer(address common.Address, filterer bind.ContractFilterer) (*QuoterFilterer, error) {
+	contract, err := bindQuoter(address, nil, nil, filterer)
 	if err != nil {
 		return nil, err
 	}
-	return &QuoterARBFilterer{contract: contract}, nil
+	return &QuoterFilterer{contract: contract}, nil
 }
 
-// bindQuoterARB binds a generic wrapper to an already deployed contract.
-func bindQuoterARB(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(QuoterARBABI))
+// bindQuoter binds a generic wrapper to an already deployed contract.
+func bindQuoter(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	parsed, err := QuoterMetaData.GetAbi()
 	if err != nil {
 		return nil, err
 	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
+	return bind.NewBoundContract(address, *parsed, caller, transactor, filterer), nil
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_QuoterARB *QuoterARBRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _QuoterARB.Contract.QuoterARBCaller.contract.Call(opts, result, method, params...)
+func (_Quoter *QuoterRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _Quoter.Contract.QuoterCaller.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_QuoterARB *QuoterARBRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _QuoterARB.Contract.QuoterARBTransactor.contract.Transfer(opts)
+func (_Quoter *QuoterRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Quoter.Contract.QuoterTransactor.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_QuoterARB *QuoterARBRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _QuoterARB.Contract.QuoterARBTransactor.contract.Transact(opts, method, params...)
+func (_Quoter *QuoterRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _Quoter.Contract.QuoterTransactor.contract.Transact(opts, method, params...)
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_QuoterARB *QuoterARBCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _QuoterARB.Contract.contract.Call(opts, result, method, params...)
+func (_Quoter *QuoterCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _Quoter.Contract.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_QuoterARB *QuoterARBTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _QuoterARB.Contract.contract.Transfer(opts)
+func (_Quoter *QuoterTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Quoter.Contract.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_QuoterARB *QuoterARBTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _QuoterARB.Contract.contract.Transact(opts, method, params...)
+func (_Quoter *QuoterTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _Quoter.Contract.contract.Transact(opts, method, params...)
 }
 
 // FullQuotes is a free data retrieval call binding the contract method 0xae2275b3.
 //
 // Solidity: function fullQuotes(address _optionMarket, uint256 strikeId, uint256 iterations, uint256 amount) view returns(uint256[], uint256[])
-func (_QuoterARB *QuoterARBCaller) FullQuotes(opts *bind.CallOpts, _optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error) {
+func (_Quoter *QuoterCaller) FullQuotes(opts *bind.CallOpts, _optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error) {
 	var out []interface{}
-	err := _QuoterARB.contract.Call(opts, &out, "fullQuotes", _optionMarket, strikeId, iterations, amount)
+	err := _Quoter.contract.Call(opts, &out, "fullQuotes", _optionMarket, strikeId, iterations, amount)
 
 	if err != nil {
 		return *new([]*big.Int), *new([]*big.Int), err
@@ -200,26 +201,26 @@ func (_QuoterARB *QuoterARBCaller) FullQuotes(opts *bind.CallOpts, _optionMarket
 // FullQuotes is a free data retrieval call binding the contract method 0xae2275b3.
 //
 // Solidity: function fullQuotes(address _optionMarket, uint256 strikeId, uint256 iterations, uint256 amount) view returns(uint256[], uint256[])
-func (_QuoterARB *QuoterARBSession) FullQuotes(_optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error) {
-	return _QuoterARB.Contract.FullQuotes(&_QuoterARB.CallOpts, _optionMarket, strikeId, iterations, amount)
+func (_Quoter *QuoterSession) FullQuotes(_optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error) {
+	return _Quoter.Contract.FullQuotes(&_Quoter.CallOpts, _optionMarket, strikeId, iterations, amount)
 }
 
 // FullQuotes is a free data retrieval call binding the contract method 0xae2275b3.
 //
 // Solidity: function fullQuotes(address _optionMarket, uint256 strikeId, uint256 iterations, uint256 amount) view returns(uint256[], uint256[])
-func (_QuoterARB *QuoterARBCallerSession) FullQuotes(_optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error) {
-	return _QuoterARB.Contract.FullQuotes(&_QuoterARB.CallOpts, _optionMarket, strikeId, iterations, amount)
+func (_Quoter *QuoterCallerSession) FullQuotes(_optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error) {
+	return _Quoter.Contract.FullQuotes(&_Quoter.CallOpts, _optionMarket, strikeId, iterations, amount)
 }
 
 // Quote is a free data retrieval call binding the contract method 0x4c438ca7.
 //
 // Solidity: function quote(address _optionMarket, uint256 strikeId, uint256 iterations, uint8 optionType, uint256 amount) view returns(uint256 totalPremium, uint256 totalFee)
-func (_QuoterARB *QuoterARBCaller) Quote(opts *bind.CallOpts, _optionMarket common.Address, strikeId *big.Int, iterations *big.Int, optionType uint8, amount *big.Int) (struct {
+func (_Quoter *QuoterCaller) Quote(opts *bind.CallOpts, _optionMarket common.Address, strikeId *big.Int, iterations *big.Int, optionType uint8, amount *big.Int) (struct {
 	TotalPremium *big.Int
 	TotalFee     *big.Int
 }, error) {
 	var out []interface{}
-	err := _QuoterARB.contract.Call(opts, &out, "quote", _optionMarket, strikeId, iterations, optionType, amount)
+	err := _Quoter.contract.Call(opts, &out, "quote", _optionMarket, strikeId, iterations, optionType, amount)
 
 	outstruct := new(struct {
 		TotalPremium *big.Int
@@ -239,19 +240,19 @@ func (_QuoterARB *QuoterARBCaller) Quote(opts *bind.CallOpts, _optionMarket comm
 // Quote is a free data retrieval call binding the contract method 0x4c438ca7.
 //
 // Solidity: function quote(address _optionMarket, uint256 strikeId, uint256 iterations, uint8 optionType, uint256 amount) view returns(uint256 totalPremium, uint256 totalFee)
-func (_QuoterARB *QuoterARBSession) Quote(_optionMarket common.Address, strikeId *big.Int, iterations *big.Int, optionType uint8, amount *big.Int) (struct {
+func (_Quoter *QuoterSession) Quote(_optionMarket common.Address, strikeId *big.Int, iterations *big.Int, optionType uint8, amount *big.Int) (struct {
 	TotalPremium *big.Int
 	TotalFee     *big.Int
 }, error) {
-	return _QuoterARB.Contract.Quote(&_QuoterARB.CallOpts, _optionMarket, strikeId, iterations, optionType, amount)
+	return _Quoter.Contract.Quote(&_Quoter.CallOpts, _optionMarket, strikeId, iterations, optionType, amount)
 }
 
 // Quote is a free data retrieval call binding the contract method 0x4c438ca7.
 //
 // Solidity: function quote(address _optionMarket, uint256 strikeId, uint256 iterations, uint8 optionType, uint256 amount) view returns(uint256 totalPremium, uint256 totalFee)
-func (_QuoterARB *QuoterARBCallerSession) Quote(_optionMarket common.Address, strikeId *big.Int, iterations *big.Int, optionType uint8, amount *big.Int) (struct {
+func (_Quoter *QuoterCallerSession) Quote(_optionMarket common.Address, strikeId *big.Int, iterations *big.Int, optionType uint8, amount *big.Int) (struct {
 	TotalPremium *big.Int
 	TotalFee     *big.Int
 }, error) {
-	return _QuoterARB.Contract.Quote(&_QuoterARB.CallOpts, _optionMarket, strikeId, iterations, optionType, amount)
+	return _Quoter.Contract.Quote(&_Quoter.CallOpts, _optionMarket, strikeId, iterations, optionType, amount)
 }
