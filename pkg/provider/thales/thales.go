@@ -31,22 +31,19 @@ const (
 	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-markets"
 	urlPolygon  = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
 	urlArbitrum = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-arbitrum"
-	urlBsc      = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-bsc"
+	//urlBsc      = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-bsc"
 
 	// rpc.
 	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
 	rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	rpcBsc      = "https://bsc-dataseed1.ninicoin.io/" // free bscscan rpc
+	//rpcBsc      = "https://bsc-dataseed1.ninicoin.io/" // free bscscan rpc
 	// binance https://bsc-dataseed1.binance.org/
-	// blockpi "https://bsc.blockpi.network/v1/rpc/2b013a75d3adc818d3b49076fb7a0766d49794df"
-	// quicknode https://late-wispy-sanctuary.bsc.discover.quiknode.pro/a834c496c0eac9ad6e37c35ae00498da706026e1
 
 	// amm.
 	ammPolygon  = "0xd52B865584c25FEBfcB676B9A87F32683356A063"
 	ammOptimism = "0x278B5A44397c9D8E52743fEdec263c4760dc1A1A"
 	ammArbitrum = "0x2b89275efB9509c33d9AD92A4586bdf8c4d21505"
-	ammBsc      = "0x465B66A3e33088F0666dB1836652fBcF037c7319"
 
 	// other.
 	name           = "Thales"
@@ -67,8 +64,6 @@ func LayerRPC(layer string) string {
 		return rpcPolygon
 	case "Arbitrum":
 		return rpcArbitrum
-	case "Bsc":
-		return rpcBsc
 	}
 	log.Panic("Unexpected layer", layer)
 	return ""
@@ -82,8 +77,6 @@ func LayerURL(layer string) string {
 		return urlPolygon
 	case "Arbitrum":
 		return urlArbitrum
-	case "Bsc":
-		return urlBsc
 	}
 	log.Panic("Unexpected layer", layer)
 	return ""
@@ -97,8 +90,6 @@ func LayerAMM(layer string) string {
 		return ammPolygon
 	case "Arbitrum":
 		return ammArbitrum
-	case "Bsc":
-		return ammBsc
 	}
 	log.Panic("Unexpected layer", layer)
 	return ""
@@ -112,8 +103,6 @@ func LayerDecimals(layer string) int64 {
 		return anchor.USDCDecimals
 	case "Arbitrum":
 		return anchor.USDCDecimals
-	case "Bsc":
-		return rainbow.DefaultEthereumDecimals
 	}
 	log.Panic("Unexpected layer", layer)
 	return 0
@@ -148,16 +137,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		}
 	}
 
-	marketsBsc, e := queryAllMarkets("Bsc")
-	if e != nil {
-		if err == nil {
-			err = e
-		} else {
-			err = fmt.Errorf("%s, %w", err, e)
-		}
-	}
-
-	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum)+2*len(marketsBsc))
+	options := make([]rainbow.Option, 0, 2*len(marketsOptimism)+2*len(marketsPolygon)+2*len(marketsArbitrum))
 
 	e = processMarkets(&options, marketsOptimism, "Optimism")
 	if e != nil {
@@ -178,15 +158,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 	}
 
 	e = processMarkets(&options, marketsArbitrum, "Arbitrum")
-	if e != nil {
-		if err == nil {
-			err = e
-		} else {
-			err = fmt.Errorf("%s, %w", err, e)
-		}
-	}
-
-	e = processMarkets(&options, marketsBsc, "Bsc")
 	if e != nil {
 		if err == nil {
 			err = e
