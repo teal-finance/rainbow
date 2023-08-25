@@ -75,9 +75,9 @@ func (p *Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, erro
 	options := make([]rainbow.Option, 0, len(instruments))
 	var err error
 
-	var result tickers
-
 	for _, i := range instruments {
+		var result tickers
+
 		if i.Type != "option" {
 			continue
 		}
@@ -114,6 +114,8 @@ func (p *Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, erro
 			Price: result.Result.BestAskPrice,
 			Size:  result.Result.BestAskAmount,
 		})
+		log.Info(o.Bid[0].Size)
+		log.Info(result.Result.BestBidAmount)
 
 		options = append(options, o)
 	}
