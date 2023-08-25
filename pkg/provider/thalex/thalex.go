@@ -114,8 +114,6 @@ func (p *Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, erro
 			Price: result.Result.BestAskPrice,
 			Size:  result.Result.BestAskAmount,
 		})
-		log.Info(o.Bid[0].Size)
-		log.Info(result.Result.BestBidAmount)
 
 		options = append(options, o)
 	}
