@@ -6,9 +6,9 @@
 package thalex
 
 import (
+	"strings"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -16,7 +16,7 @@ import (
 
 var log = emo.NewZone(name)
 
-const baseURL = "https://www."
+const baseURL = "https://thalex.com/api/v2/public/"
 const name = "Thalex"
 
 type Provider struct {
@@ -49,24 +49,18 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, err
 	}
-	j := 9
-	spew.Dump(instruments[j : j+1])
-	i := instruments[j]
-	var result tickers
-	apiurl := "https://thalex.com/api/v2/public/ticker" + "?instrument_name=" + i.InstrumentName
-	if err := p.ar.Get(i.InstrumentName, apiurl, &result); err != nil {
-		log.Warn(name + " book " + err.Error())
+
+	options, err := p.fillOptions(instruments)
+	if err != nil {
+		return nil, err
 	}
-
-	spew.Dump(result)
-
-	return []rainbow.Option{}, nil
+	return options, nil
 }
 
-func (p *Provider) query() ([]Instruments, error) {
-	const api = "https://thalex.com/api/v2/public/instruments"
+func (p *Provider) query() ([]Instrument, error) {
+	const api = baseURL + "instruments"
 	url := api
-	log.Info(name + url)
+	log.Info(name + " " + url)
 
 	var result instrumentsResult
 	err := p.ar.Get("", url, &result, maxBytesToRead)
@@ -77,15 +71,79 @@ func (p *Provider) query() ([]Instruments, error) {
 	return result.Result, nil
 }
 
+func (p *Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, error) {
+	options := make([]rainbow.Option, 0, len(instruments))
+	var err error
+
+	var result tickers
+
+	for _, i := range instruments {
+		if i.Type != "option" {
+			continue
+		}
+		apiurl := baseURL + "ticker?instrument_name=" + i.InstrumentName
+		if err := p.ar.Get(i.InstrumentName, apiurl, &result); err != nil {
+			log.Warn(name + " book " + err.Error())
+		}
+
+		asset := getUnderlying(i.Underlying)
+
+		o := rainbow.Option{
+			Name:            i.InstrumentName,
+			Type:            strings.ToUpper(i.OptionType),
+			UnderlyingAsset: asset,
+			Asset:           asset,
+			Strike:          i.StrikePrice,
+			Expiry:          i.ExpiryDate + " 08:00:00",
+			ExchangeType:    "CEX",
+			Chain:           "-",
+			Layer:           "-",
+			LayerName:       "-",
+			Provider:        name,
+			UnderlyingQuote: i.BaseCurrency,
+			QuoteCurrency:   "USD",
+			URL:             "https://thalex.com/exchange/options?underlying=" + i.Product + "&expiration=" + i.ExpiryDate,
+			OpenInterest:    result.Result.OpenInterest * result.Result.Index,
+			MarketIV:        100 * result.Result.Iv,
+		}
+		o.Bid = append(o.Bid, rainbow.Order{
+			Price: result.Result.BestBidPrice,
+			Size:  result.Result.BestBidAmount,
+		})
+		o.Ask = append(o.Ask, rainbow.Order{
+			Price: result.Result.BestAskPrice,
+			Size:  result.Result.BestAskAmount,
+		})
+
+		options = append(options, o)
+	}
+
+	return options, err
+
+}
+func getUnderlying(u string) string {
+	coin := ""
+	switch u {
+	case "ETHUSD":
+		coin = "ETH"
+	case "BTCUSD":
+		coin = "BTC"
+	default:
+		log.Warn(name + " unknow underlying instrument " + u)
+		coin = "TTT"
+	}
+	return coin
+}
+
 type tickers struct {
 	Result Ticker `json:"result"`
 }
 
 type Ticker struct {
 	MarkPrice     float64 `json:"mark_price"`
-	BestBidPrice  int     `json:"best_bid_price"`
+	BestBidPrice  float64 `json:"best_bid_price"`
 	BestBidAmount float64 `json:"best_bid_amount"`
-	BestAskPrice  int     `json:"best_ask_price"`
+	BestAskPrice  float64 `json:"best_ask_price"`
 	BestAskAmount float64 `json:"best_ask_amount"`
 	LastPrice     int     `json:"last_price"`
 	Iv            float64 `json:"iv"`
@@ -105,10 +163,10 @@ type Ticker struct {
 }
 
 type instrumentsResult struct {
-	Result []Instruments `json:"result"`
+	Result []Instrument `json:"result"`
 }
 
-type Instruments struct {
+type Instrument struct {
 	InstrumentName      string  `json:"instrument_name"`
 	Product             string  `json:"product"`
 	TickSize            float64 `json:"tick_size"`

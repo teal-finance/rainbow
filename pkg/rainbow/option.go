@@ -16,11 +16,11 @@ import "fmt"
 // Work on the csv
 
 type Option struct {
-	Name            string `json:"name"`            // ASSET-DATE-Strike-OptionsType
-	Type            string `json:"type"`            // CALL / PUT  // TODO add exotic like binary and perp(squeeth)
-	Asset           string `json:"asset"`           // ETH, BTC, SOL, ... the crypto we are exposed to
-	UnderlyingAsset string `json:"underlyingasset"` // sETH, WETH, sBTC, WBTC ... the actual asset token we track
-
+	Name            string  `json:"name"`               // ASSET-DATE-Strike-OptionsType
+	Type            string  `json:"type"`               // CALL / PUT  // TODO add exotic like binary and perp(squeeth)
+	Asset           string  `json:"asset"`              // ETH, BTC, SOL, ... the crypto we are exposed to
+	UnderlyingAsset string  `json:"underlyingasset"`    // sETH, WETH, sBTC, WBTC ... the actual asset token we track
+	Strike          float64 `json:"strike"`             // Option strike
 	Expiry          string  `json:"expiry"`             // Expiry date in Format("2006-01-02 15:04:05")
 	ExchangeType    string  `json:"exchange"`           // CEX / DEX
 	Chain           string  `json:"chain"`              // Ethereum, Solana and "–" for CEX (Deribit)
@@ -37,7 +37,6 @@ type Option struct {
 	MarketIV        float64 `json:"markIV"`             // When it is present on the provider, we store their Market IV
 	// see https://corporatefinanceinstitute.com/resources/knowledge/trading-investing/option-greeks/
 	Greeks       TheGreeks `json:"greeks"`       // Greeks measure the sensitivity of an option’s price to its the underlying determining parameters.
-	Strike       float64   `json:"strike"`       //
 	OpenInterest float64   `json:"openinterest"` //
 	ProtocolID   string    `json:"protocolID"`   // when present log the ID of that instrument on the provider
 }
