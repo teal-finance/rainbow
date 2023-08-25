@@ -46,7 +46,7 @@ func listProviderNames() []string {
 			*providers = ""
 		}
 		if *cex {
-			*providers += ",deribit,delta"
+			*providers += ",deribit,delta,thalex"
 		}
 		if *dex {
 			*providers += ",lyra,synquote,zeta"
