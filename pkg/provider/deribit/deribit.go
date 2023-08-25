@@ -16,7 +16,9 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-var log = emo.NewZone("Deribit")
+const name = "Deribit"
+
+var log = emo.NewZone(name)
 
 const baseURL = "https://www.deribit.com/options/"
 
@@ -25,7 +27,7 @@ type Provider struct {
 }
 
 func (Provider) Name() string {
-	return "Deribit"
+	return name
 }
 
 // adaptiveMinSleepTime to rate limit the Deribit API.
@@ -41,7 +43,7 @@ const maxBytesToRead = 2_000_000
 
 func (p *Provider) Options() ([]rainbow.Option, error) {
 	if p.ar.Name == "" {
-		p.ar = garcon.NewAdaptiveRate("Deribit", adaptiveMinSleepTime)
+		p.ar = garcon.NewAdaptiveRate(name, adaptiveMinSleepTime)
 	}
 
 	instruments, err := p.query("BTC")
@@ -88,7 +90,7 @@ func (p *Provider) query(coin string) ([]instrument, error) {
 	const api = "https://deribit.com/api/v2/public/get_instruments?currency="
 	const opts = "&expired=false&kind=option"
 	url := api + coin + opts
-	log.Info("Deribit " + url)
+	log.Info(name + url)
 
 	var result instrumentsResult
 	err := p.ar.Get(coin, url, &result, maxBytesToRead)
@@ -168,7 +170,7 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 		apiurl := api + instruments[i].InstrumentName
 		if err := p.ar.Get(instruments[i].InstrumentName, apiurl, &result); err != nil {
 			lastError = err
-			log.Warn("Deribit book " + err.Error())
+			log.Warn(name + " book " + err.Error())
 		}
 
 		// API doc: https://docs.deribit.com/#public-get_index_price_names

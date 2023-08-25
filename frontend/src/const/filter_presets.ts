@@ -32,7 +32,7 @@ const filterPresets: Record<string, any> = {
   },
   'CEXes': {
     assets: { 'defaultValue': true },
-    providers: { 'defaultValue': false, 'Deribit': true, 'Delta Exchange': true }
+    providers: { 'defaultValue': false, 'Deribit': true, 'Delta Exchange': true, 'Thalex': true }
   },
   'DEXes': {
     assets: { 'defaultValue': true },
@@ -53,14 +53,14 @@ const filterPresets: Record<string, any> = {
   'SOL': {
     assets: { 'defaultValue': false, 'SOL': true },
     providers: { 'defaultValue': true },
-  },//TODO separate L1 & L2
+  },
   'L1 tokens': {
     assets: {
       'defaultValue': false, 'BTC': true, 'ETH': true, 'SOL': true,
       'TRX': true, 'LTC': true, 'BNB': true,
     },
     providers: { 'defaultValue': true },
-  },//TODO separate L1 & L2
+  },
   'L2 tokens': {
     assets: {
       'defaultValue': false,
