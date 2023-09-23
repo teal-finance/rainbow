@@ -34,18 +34,8 @@ FROM docker.io/golang:1.20 AS version
 
 WORKDIR /code
 
-COPY go.mod go.sum ./
-
-RUN set -ex          ;\
-    go version       ;\
-    go mod download
-
-COPY cmd cmd
-COPY pkg pkg
 COPY .git .git
 
-# Go build flags: https://shibumi.dev/posts/hardening-executables/
-# "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
 RUN set -ex                                           ;\
     t="$(git describe --tags --abbrev=0 --always)"    ;\
     b="$(git branch --show-current)"                  ;\
@@ -69,7 +59,6 @@ RUN set -ex          ;\
 
 COPY cmd cmd
 COPY pkg pkg
-COPY .git .git
 
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
