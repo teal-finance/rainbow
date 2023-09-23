@@ -30,7 +30,7 @@ ARG uid=5505
 # base = /rainbow/
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.20 AS version
+FROM docker.io/golang:1.21 AS version
 
 WORKDIR /code
 
@@ -126,7 +126,7 @@ RUN set -ex                                            ;\
     yarn compress
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.20 AS integrator
+FROM docker.io/golang:1.21 AS integrator
 
 WORKDIR /target
 
