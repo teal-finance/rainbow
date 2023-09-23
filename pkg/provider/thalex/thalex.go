@@ -16,8 +16,10 @@ import (
 
 var log = emo.NewZone(name)
 
-const baseURL = "https://thalex.com/api/v2/public/"
-const name = "Thalex"
+const (
+	baseURL = "https://thalex.com/api/v2/public/"
+	name    = "Thalex"
+)
 
 type Provider struct {
 	ar garcon.AdaptiveRate
@@ -119,8 +121,8 @@ func (p *Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, erro
 	}
 
 	return options, err
-
 }
+
 func getUnderlying(u string) string {
 	coin := ""
 	switch u {

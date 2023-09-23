@@ -66,7 +66,6 @@ func (Provider) Options() ([]rainbow.Option, error) {
 }
 
 func GetOptionsFromLayer(layer string) (*[]common.Address, *ethclient.Client, error) {
-
 	rpc := ""
 	lyraRegistry := ""
 
@@ -126,7 +125,6 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 		optionMarketViewer = optionMarketViewerARB
 	} else {
 		return nil, log.Error("Unknown layer", layer).Err()
-
 	}
 
 	q, err := NewQuoter(common.HexToAddress(quoterAddress), client)

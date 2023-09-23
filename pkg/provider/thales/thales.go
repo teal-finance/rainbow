@@ -31,13 +31,13 @@ const (
 	urlOptimism = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-markets"
 	urlPolygon  = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-polygon"
 	urlArbitrum = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-arbitrum"
-	//urlBsc      = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-bsc"
+	// urlBsc      = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-bsc"
 
 	// rpc.
 	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
 	rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	//rpcBsc      = "https://bsc-dataseed1.ninicoin.io/" // free bscscan rpc
+	// rpcBsc      = "https://bsc-dataseed1.ninicoin.io/" // free bscscan rpc
 	// binance https://bsc-dataseed1.binance.org/
 
 	// amm.
