@@ -34,12 +34,23 @@ const (
 	// urlBsc      = "https://api.thegraph.com/subgraphs/name/thales-markets/thales-bsc"
 
 	// rpc.
-	//rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
-	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/uksZH_SjXAaBnIw95hZcBoCWGCXs9VXI"
-	//rpcPolygon  = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
-	rpcPolygon = "https://polygon-mainnet.g.alchemy.com/v2/uQ-knqUJnSNM61nlSnOxpGfx9cqPPfos"
-	//rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
+	// TODO use teal on Optimism
+	// TODO use perso on Arbitrum and Polygon
+	// TODO do that on the 1st Nov
+
+	// teal
+	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
+	// perso
+	//rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/uksZH_SjXAaBnIw95hZcBoCWGCXs9VXI"
+	// teal
+	rpcPolygon = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
+	// perso
+	//rpcPolygon = "https://polygon-mainnet.g.alchemy.com/v2/uQ-knqUJnSNM61nlSnOxpGfx9cqPPfos"
+	// teal
+	rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
+	// perso
+	//rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
+
 	//rpcBsc      = "https://bsc-dataseed1.ninicoin.io/" // free bscscan rpc
 	// binance https://bsc-dataseed1.binance.org/
 

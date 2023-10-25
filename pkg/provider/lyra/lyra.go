@@ -24,11 +24,19 @@ var log = emo.NewZone("Lyra")
 // DOC: https://docs.lyra.finance/developers/deployed-contracts
 
 const (
-	//rpcOP  = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
-	rpcOP = "https://opt-mainnet.g.alchemy.com/v2/uksZH_SjXAaBnIw95hZcBoCWGCXs9VXI"
-	name  = "Lyra"
-	//rpcARB = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	rpcARB = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
+	// TODO use teal on Optimism
+	// TODO use perso on Arbitrum
+	// TODO do that on the 1st Nov
+
+	// teal
+	rpcOP = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
+	// perso
+	//rpcOP = "https://opt-mainnet.g.alchemy.com/v2/uksZH_SjXAaBnIw95hZcBoCWGCXs9VXI"
+	name = "Lyra"
+	// teal
+	rpcARB = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
+	// perso
+	//rpcARB = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
 
 	oneOption = 1
 )
