@@ -20,22 +20,23 @@ func IsExpiryAvailable(expiries []time.Time, expiry time.Time) bool {
 	return false
 }
 
-// Expiries return today, tomorrow and next n fridays. hour is the hour at which the option expires:
+// Expiries return today, tomorrow, tosurlendemain and next n fridays. hour is the hour at which the option expires:
 // - Deribit is 8:00 UTC (hour=8)
 // - Delta is 12:00 UTC (hour=12)
 // There is going to be duplicate but it doesn't matter in the end, if the expiry of an option is present,
 // it will be fetched anyway and won't circle back to that expiry (won't fetch twice the same option).
 func Expiries(t time.Time, hour int) []time.Time {
-	expiries := make([]time.Time, 0, 18)
+	expiries := make([]time.Time, 0, 20)
 
 	today := time.Date(t.Year(), t.Month(), t.Day(), hour, 0, 0, 0, time.UTC)
 	tomorrow := today.Add(24 * time.Hour)
+	tosurlendemain := today.Add(48 * time.Hour)
 
-	expiries = append(expiries, today, tomorrow)
+	expiries = append(expiries, today, tomorrow, tosurlendemain)
 
 	// next Fridays on the day after tomorrow
 	expiries = append(expiries, NextNFridays(today, 13)...)
-	expiries = append(expiries, LastFridayOfEachQuarter(today, hour)[0:3]...)
+	expiries = append(expiries, LastFridayOfEachQuarter(today, hour)...)
 
 	return expiries
 }
