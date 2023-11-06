@@ -22,14 +22,15 @@ import (
 const (
 	synquoteAPI = "https://api.synquote.com/listings-with-quotes?network=arbitrum&market="
 	marketURL   = "https://app.synquote.com/trade/"
+	name        = "Synquote"
 )
 
-var log = emo.NewZone("Synquote")
+var log = emo.NewZone(name)
 
 type Provider struct{}
 
 func (Provider) Name() string {
-	return "Synquote"
+	return name
 }
 
 func (p Provider) Options() ([]rainbow.Option, error) {

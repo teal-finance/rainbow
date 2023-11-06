@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -42,7 +41,7 @@ const Hour = 8
 // we put the same param as Deribit
 const maxBytesToRead = 2_000_000
 
-func (p *Provider) Options() ([]rainbow.Option, error) {
+func (p Provider) Options() ([]rainbow.Option, error) {
 	if p.ar.Name == "" {
 		p.ar = garcon.NewAdaptiveRate(name, adaptiveMinSleepTime)
 	}
@@ -51,7 +50,6 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, err
 	}
-	spew.Dump(len(instruments))
 
 	options, err := p.fillOptions(instruments)
 	if err != nil {
@@ -61,7 +59,7 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 	return options, nil
 }
 
-func (p *Provider) query() (Markets, error) {
+func (p Provider) query() (Markets, error) {
 	const api = baseURL + "markets?instrument_type=OPTION"
 	url := api
 	log.Info(name + " " + url)
@@ -76,7 +74,7 @@ func (p *Provider) query() (Markets, error) {
 	return result, nil
 }
 
-func (p *Provider) fillOptions(instruments Markets) ([]rainbow.Option, error) {
+func (p Provider) fillOptions(instruments Markets) ([]rainbow.Option, error) {
 
 	url := ""
 	var result Orderbook
@@ -108,6 +106,15 @@ func (p *Provider) fillOptions(instruments Markets) ([]rainbow.Option, error) {
 		if err != nil {
 			return nil, log.Error("Bid conversion", err).Err()
 		}
+		e, err := strconv.ParseInt(i.Expiry, 10, 64)
+		if err != nil {
+			return nil, log.Error("convert date", i.Expiry, err).Err()
+		}
+
+		seconds := e / 1000000000
+		ns := (e % 1000_000_000) * 1000_000
+		expiryTime := time.Unix(seconds, ns).UTC()
+		expiryStr := expiryTime.Format("2006-01-02 15:04:05")
 
 		options = append(options, rainbow.Option{
 			Name:            i.InstrumentName,
@@ -115,7 +122,7 @@ func (p *Provider) fillOptions(instruments Markets) ([]rainbow.Option, error) {
 			Asset:           i.UnderlyingAsset,
 			UnderlyingAsset: i.UnderlyingAsset,
 			Strike:          s,
-			Expiry:          i.Expiry, //TODO convert timestamp to proper date
+			Expiry:          expiryStr,
 			ExchangeType:    "CEX",
 			Chain:           "-",
 			Layer:           "-",
@@ -131,10 +138,6 @@ func (p *Provider) fillOptions(instruments Markets) ([]rainbow.Option, error) {
 			//OpenInterest: , TODO https://api-docs.aevo.xyz/reference/getinstrumentinstrumentname
 			ProtocolID: i.InstrumentID,
 		})
-		//spew.Dump(result)
-		//spew.Dump(i)
-		//spew.Dump(options[len(options)-1])
-
 	}
 
 	return options, nil
@@ -175,7 +178,7 @@ func bidAsksToOrders(orders [][]string) ([]rainbow.Order, error) {
 }
 
 func translateGreeks(g greeks) (rainbow.TheGreeks, error) {
-
+	// TODO
 	return rainbow.TheGreeks{}, nil
 }
 func convert(s string) (float64, error) {

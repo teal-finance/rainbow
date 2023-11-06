@@ -25,8 +25,8 @@ const (
 var (
 	dev          = flag.Bool("dev", false, "Enable the developer mode (enabled by default if -addr and -port are not used)")
 	period       = flag.Duration("period", 10*time.Minute, "Period to fetch market data from providers")
-	cex          = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
-	dex          = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote and Zeta")
+	cex          = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit, Delta Exchange and Thalex")
+	dex          = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote and Aevo")
 	exotic       = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
 	providers    = flag.String("providers", gg.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, has precedence over PROVIDERS")
 	mainAddr     = flag.String("addr", gg.EnvStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
