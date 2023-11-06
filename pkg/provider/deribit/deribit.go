@@ -90,7 +90,7 @@ func (p *Provider) query(coin string) ([]instrument, error) {
 	const api = "https://deribit.com/api/v2/public/get_instruments?currency="
 	const opts = "&expired=false&kind=option"
 	url := api + coin + opts
-	log.Info(name + url)
+	log.Info(name + " " + url)
 
 	var result instrumentsResult
 	err := p.ar.Get(coin, url, &result, maxBytesToRead)

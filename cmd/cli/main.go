@@ -41,6 +41,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	//spew.Dump(rainbow.ListProviders(options))
 	if !*infos {
 		printTable(options)
 	} else {

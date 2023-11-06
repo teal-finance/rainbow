@@ -5,7 +5,9 @@
 
 package rainbow
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // TODO
 // ADD a "quote" type for data that change often
@@ -61,4 +63,19 @@ type TheGreeks struct {
 	Rho   float64 `json:"rho"`
 	Gamma float64 `json:"gamma"`
 	Delta float64 `json:"delta"`
+}
+
+func ListProviders(ro []Option) map[string]int {
+
+	providerToOptions := make(map[string]int)
+	for i := range ro {
+		_, ok := providerToOptions[ro[i].Provider]
+		if ok {
+			providerToOptions[ro[i].Provider]++
+		} else {
+			providerToOptions[ro[i].Provider] = 1
+		}
+	}
+	return providerToOptions
+
 }

@@ -23,7 +23,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-var log = emo.NewZone("Thales")
+var log = emo.NewZone(name)
 
 const (
 	// thegraph urls.
