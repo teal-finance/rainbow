@@ -14,12 +14,12 @@ import (
 )
 
 const (
-	defaultProviders = "deribit,delta,lyra,synquote,zeta"
+	defaultProviders = "deribit,delta,lyra,synquote,aevo"
 )
 
 var (
-	cex    = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit and Delta Exchange")
-	dex    = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote and Zeta")
+	cex    = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit, Delta Exchange, Thalex")
+	dex    = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote and Aevo")
 	exotic = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
 	infos  = flag.Bool("infos", false, "Show additional infos on instruments like URL ...")
 
@@ -39,6 +39,7 @@ func parseFlags() {
 	log.Init("PROVIDERS                 -providers =", *providers)
 }
 
+// TODO remove duplicates
 // listProviderNames is duplicated https://github.com/teal-finance/rainbow/blob/main/cmd/server/flags.go#L88
 func listProviderNames() []string {
 	if *cex || *dex || *exotic {
@@ -48,8 +49,8 @@ func listProviderNames() []string {
 		if *cex {
 			*providers += ",deribit,delta,thalex"
 		}
-		if *dex {
-			*providers += ",lyra,synquote,zeta"
+		if *dex { // deprecating "opyn" & "psy" & "zeta"
+			*providers += ",lyra,synquote,aevo"
 		}
 		if *exotic {
 			*providers += ",thales"

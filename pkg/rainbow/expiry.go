@@ -30,9 +30,10 @@ func Expiries(t time.Time, hour int) []time.Time {
 
 	today := time.Date(t.Year(), t.Month(), t.Day(), hour, 0, 0, 0, time.UTC)
 	tomorrow := today.Add(24 * time.Hour)
-	tosurlendemain := today.Add(48 * time.Hour)
+	next1 := today.Add(48 * time.Hour)
+	next2 := today.Add(72 * time.Hour)
 
-	expiries = append(expiries, today, tomorrow, tosurlendemain)
+	expiries = append(expiries, today, tomorrow, next1, next2)
 
 	// next Fridays on the day after tomorrow
 	expiries = append(expiries, NextNFridays(today, 13)...)
