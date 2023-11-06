@@ -37,7 +37,7 @@ type Option struct {
 	MarketIV        float64 `json:"markIV"`             // When it is present on the provider, we store their Market IV
 	// see https://corporatefinanceinstitute.com/resources/knowledge/trading-investing/option-greeks/
 	Greeks       TheGreeks `json:"greeks"`       // Greeks measure the sensitivity of an option’s price to its the underlying determining parameters.
-	OpenInterest float64   `json:"openinterest"` //
+	OpenInterest float64   `json:"openinterest"` // TODO ADD volume too
 	ProtocolID   string    `json:"protocolID"`   // when present log the ID of that instrument on the provider
 }
 
@@ -52,6 +52,7 @@ func (o *Option) OptionName() string {
 type Order struct {
 	Price float64 `json:"px"`
 	Size  float64 `json:"size"`
+	// TODO add the IV if provided for the order here
 }
 
 type TheGreeks struct {

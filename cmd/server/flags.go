@@ -86,18 +86,18 @@ func parseFlags() {
 	}
 }
 
-// listProviderNames is duplicated https://github.com/teal-finance/rainbow/blob/main/cmd/cli/flags.go#L37
+// TODO remove duplicate
+// listProviderNames is duplicated https://github.com/teal-finance/rainbow/blob/main/cmd/cli/flags.go#L42
 func listProviderNames() []string {
 	if *cex || *dex || *exotic {
 		if *providers == defaultProviders {
 			*providers = ""
 		}
 		if *cex {
-			*providers += ",deribit,delta"
+			*providers += ",deribit,delta,thalex"
 		}
-		if *dex { // deprecating "opyn" & "psy"
-			// pausin synquote until I get the new API link
-			*providers += ",lyra,zeta"
+		if *dex { // deprecating "opyn" & "psy" & "zeta"
+			*providers += ",lyra,synquote,aevo"
 		}
 		if *exotic {
 			*providers += ",thales"
