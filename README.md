@@ -76,21 +76,20 @@ as our official instance:
 
 - Go v1.18+ (single requirement for the CLI)
 - Node v14+
-- Yarn v1.20+
+- Npm
 - Docker v20 (optional)
 - Podman v3 (optional)
 
 Rainbow can be used in the [CLI](#🪃-run-the-cli),
-without requiring Node, Yarn, Docker…
+without requiring Node, Npm, Docker…
 
 [Snap](<https://en.wikipedia.org/wiki/Snap_(package_manager)>) provides a simple way to install these requirements on many Linux distributions:
 
     snap install go   --classic
-    snap install node --classic  # installs yarn too
+    snap install node --classic
 
     # check
     go   version
-    yarn versions
 
 On Debian/Ubuntu, the command `sudo apt install golang` may install an older version.
 Check it with `apt list --all-versions golang golang-1.*`.
@@ -177,15 +176,15 @@ To run the Vue3 frontend in dev mode.
 Similar to `make run-ui`:
 
     cd frontend
-    yarn
-    yarn dev --open
+    npm i
+    npm run dev
 
 In prod mode, the backend serves the web static files from `frontend/dist`.
 Same as `make frontend/dist`:
 
     cd frontend
-    yarn
-    yarn build
+    npm i
+    npm run build
 
 Finally open <http://localhost:8090>
 
