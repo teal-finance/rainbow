@@ -86,14 +86,12 @@ FROM docker.io/node:20-alpine AS web_builder
 
 WORKDIR /code
 
-COPY frontend/package.json \
-    frontend/yarn.lock    ./
+COPY frontend/package.json    ./
 
 RUN set -ex                         ;\
     node --version                  ;\
-    yarn versions                   ;\
-    yarn install --frozen-lockfile  ;\
-    yarn cache clean
+    npm i                           ;\
+    npm cache clean
 
 COPY frontend/index.html        \
     frontend/postcss.config.js  \
@@ -122,8 +120,8 @@ RUN set -ex                                            ;\
     sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  ;\
     sed -e "s|^VITE_BASE=.*|VITE_BASE=$base|" -i .env  ;\
     head .env                                          ;\
-    yarn build --base "$base"                          ;\
-    yarn compress
+    npm run build --base "$base"                          ;\
+    npm run compress
 
 # --------------------------------------------------------------------
 FROM docker.io/golang:1.21 AS integrator

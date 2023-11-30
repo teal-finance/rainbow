@@ -45,9 +45,7 @@ go.sum: go.mod
 front: frontend/dist
 
 frontend/dist: frontend/src/*
-	cd frontend && \
-	{ yarn    && yarn    build && yarn    compress; } || \
-	{ yarnpkg && yarnpkg build && yarnpkg compress; }
+	cd frontend && npm i && npm run build && npm run compress
 
 .PHONY: run
 run: go.sum
@@ -55,7 +53,7 @@ run: go.sum
 
 .PHONY: run-ui
 run-ui:
-	cd frontend && yarn dev
+	cd frontend && npm run dev
 
 ##########  Backend only  ##########
 
