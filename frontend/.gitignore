@@ -7,3 +7,4 @@
 /.gzipper
 /*.local
 .gzipper
+package-lock.json
