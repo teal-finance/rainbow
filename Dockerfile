@@ -140,15 +140,6 @@ RUN set -ex                                                 ;\
 COPY --from=web_builder /code/dist   var/www
 COPY --from=go_builder  /code/server .
 
-# The following commented code copies the dynamic libs
-# when Go build uses CGO_ENABLED=1 https://stackoverflow.com/q/62817082
-# RUN mkdir lib           &&\
-#     ldd server           |\
-#     while read f rest    ;\
-#     do cp -v "$f" lib    ;\
-#     done                &&\
-#     ls -lA
-
 # --------------------------------------------------------------------
 FROM scratch AS final
 
