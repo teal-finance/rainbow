@@ -82,7 +82,8 @@ RUN set -ex                                                                     
 # https://github.com/rancher/image-build-base/blob/master/Dockerfile.amd64
 
 # --------------------------------------------------------------------
-FROM docker.io/node:20-alpine AS web_builder
+# https://hub.docker.com/_/node
+FROM docker.io/node:21-alpine AS web_builder
 
 WORKDIR /code
 
