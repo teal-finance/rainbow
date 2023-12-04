@@ -87,9 +87,8 @@ without requiring Node, Npm, Docker…
 
     snap install go   --classic
     snap install node --classic
-
-    # check
-    go   version
+    go     version
+    node --version
 
 On Debian/Ubuntu, the command `sudo apt install golang` may install an older version.
 Check it with `apt list --all-versions golang golang-1.*`.
