@@ -91,7 +91,8 @@ COPY frontend/package.json    ./
 
 RUN set -ex                    ;\
     node --version             ;\
-    npm  --versions            ;\
+    npm --version             ;\
+    npm  cache verify          ;\
     npm i
 
 COPY frontend/index.html        \
@@ -121,7 +122,7 @@ RUN set -ex                                            ;\
     sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  ;\
     sed -e "s|^VITE_BASE=.*|VITE_BASE=$base|" -i .env  ;\
     head .env                                          ;\
-    npm run build --base ."$base"                      ;\
+    npm run build --base ".$base"                      ;\
     npm run compress
 
 # --------------------------------------------------------------------
