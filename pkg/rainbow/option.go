@@ -79,3 +79,32 @@ func ListProviders(ro []Option) map[string]int {
 	return providerToOptions
 
 }
+
+/*
+for easy copy-pasta
+
+ rainbow.Option {
+	Name:
+	Type:
+	Asset:
+	UnderlyingAsset:
+	Strike:
+	Expiry:
+	ExchangeType:
+	Chain:
+	Layer:
+	LayerName:
+	Provider:
+	QuoteCurrency:
+	UnderlyingQuote:
+	URL:
+	Bid:
+	BidIV:
+	Ask:
+	AskIV:
+	MarketIV:
+	Greeks:
+	OpenInterest:
+	ProtocolID:
+}
+*/
