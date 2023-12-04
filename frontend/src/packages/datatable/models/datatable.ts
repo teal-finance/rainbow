@@ -79,7 +79,7 @@ export default class SwDatatableModel<T = Record<string, any>> {
     //console.log("Add ex filter", col, value)
     this.filterset.appendExcludeFilterValue(col, toRaw(value))
     this.filter();
-  };
+  }
 
   removeExcludeFilter(col: string, value: any) {
     this.filterset.removeExcludeFilterValue(col, value)
