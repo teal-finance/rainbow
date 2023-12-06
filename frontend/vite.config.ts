@@ -13,7 +13,7 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    base: '/next/',
+    base: env.VITE_BASE,
     
     build: {
       rollupOptions: {
