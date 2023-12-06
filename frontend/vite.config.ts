@@ -3,8 +3,6 @@ import { loadEnv } from 'vite'
 import Components from 'unplugin-vue-components/vite'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
-import path from 'path'
-import typescript2 from "rollup-plugin-typescript2"
 import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
@@ -44,12 +42,6 @@ export default (({ command, mode }) => {
             VersionInformation: env.VITE_VERS,
           },
         },
-      }),
-
-      typescript2({
-        check: false,
-        tsconfig: path.resolve(__dirname, 'tsconfig.json'),
-        clean: true
       }),
       vue(),
       Components({
