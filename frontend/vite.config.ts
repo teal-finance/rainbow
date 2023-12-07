@@ -3,7 +3,7 @@ import { loadEnv } from 'vite'
 import Components from 'unplugin-vue-components/vite'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
-import vue from '@vitejs/plugin-vue'
+import Vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default (({ command, mode }) => {
@@ -32,18 +32,19 @@ export default (({ command, mode }) => {
     },
 
     plugins: [
+      Vue(),
       // https://github.com/vbenjs/vite-plugin-html
       // https://stackoverflow.com/q/68180648
       createHtmlPlugin({
         minify: true,
         inject: {
           data: {
+            title: 'Rainbow version',
             VersionEndpoint: env.VITE_ADDR + env.VITE_BASE + "version",
             VersionInformation: env.VITE_VERS,
           },
         },
       }),
-      vue(),
       Components({
         resolvers: [IconsResolver()],
       }),
