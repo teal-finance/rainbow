@@ -12,7 +12,7 @@ export default (({ command, mode }) => {
 
   return {
     base: env.VITE_BASE,
-    
+
     build: {
       rollupOptions: {
         output: {
@@ -45,7 +45,7 @@ export default (({ command, mode }) => {
       }),
       vue(),
       Components({
-        resolvers: IconsResolver(),
+        resolvers: [IconsResolver()],
       }),
       Icons({
         scale: 1.2,
