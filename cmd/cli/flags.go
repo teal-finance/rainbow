@@ -14,12 +14,12 @@ import (
 )
 
 const (
-	defaultProviders = "deribit,delta,lyra,synquote,aevo"
+	defaultProviders = "deribit,delta,lyra,synquote,aevo,sdx"
 )
 
 var (
 	cex    = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit, Delta Exchange, Thalex")
-	dex    = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote and Aevo")
+	dex    = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote, Aevo and SDX")
 	exotic = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
 	infos  = flag.Bool("infos", false, "Show additional infos on instruments like URL ...")
 
@@ -50,7 +50,7 @@ func listProviderNames() []string {
 			*providers += ",deribit,delta,thalex"
 		}
 		if *dex { // deprecating "opyn" & "psy" & "zeta"
-			*providers += ",lyra,synquote,aevo"
+			*providers += ",lyra,synquote,aevo,sdx"
 		}
 		if *exotic {
 			*providers += ",thales"

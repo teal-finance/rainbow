@@ -1,18 +1,18 @@
 import { createHtmlPlugin } from 'vite-plugin-html'
-import { defineConfig, loadEnv } from 'vite'
+import { loadEnv } from 'vite'
 import Components from 'unplugin-vue-components/vite'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
-import path from 'path'
-import typescript2 from "rollup-plugin-typescript2"
-import vue from '@vitejs/plugin-vue'
+import Vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode }) => {
+export default (({ command, mode }) => {
   // Load env file based on `mode` https://vitejs.dev/config/#environment-variables
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
+    base: env.VITE_BASE,
+
     build: {
       rollupOptions: {
         output: {
@@ -32,26 +32,21 @@ export default defineConfig(({ command, mode }) => {
     },
 
     plugins: [
+      Vue(),
       // https://github.com/vbenjs/vite-plugin-html
       // https://stackoverflow.com/q/68180648
       createHtmlPlugin({
         minify: true,
         inject: {
           data: {
+            title: 'Rainbow version',
             VersionEndpoint: env.VITE_ADDR + env.VITE_BASE + "version",
             VersionInformation: env.VITE_VERS,
           },
         },
       }),
-
-      typescript2({
-        check: false,
-        tsconfig: path.resolve(__dirname, 'tsconfig.json'),
-        clean: true
-      }),
-      vue(),
       Components({
-        resolvers: IconsResolver(),
+        resolvers: [IconsResolver()],
       }),
       Icons({
         scale: 1.2,

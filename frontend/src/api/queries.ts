@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 const classicOptionsQuery = `{
-  rows(providers: ["Delta Exchange", "Deribit", "Thalex", "Aevo", "Lyra::Arbitrum", "Lyra::Optimism", "Synquote", "Zeta"]) {
+  rows(providers: ["Delta Exchange", "Deribit", "Thalex", "Aevo", "Lyra::Arbitrum", "Lyra::Optimism", "Synquote", "SDX"]) {
     date
     expiry
     provider

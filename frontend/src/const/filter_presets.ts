@@ -9,6 +9,7 @@ const assetsPresets = {
     'BTC': true,
     'ETH': true,
     'SOL': true,
+    'MSOL': true,
   },
   'BTC and ETH': {
     'defaultValue': false,
@@ -40,7 +41,7 @@ const filterPresets: Record<string, any> = {
       'defaultValue': false, 'Aevo': true,
       'Lyra::Optimism': true, 'Lyra::Arbitrum': true,
       'Thales::Polygon': true, 'Thales::Arbitrum': true, 'Thales::Optimism': true,
-      'Thales::Bsc': true, 'Synquote': true, 'Zeta': true
+      'Thales::Bsc': true, 'Synquote': true, 'SDX': true
     }
   },
   'BTC': {
@@ -52,13 +53,13 @@ const filterPresets: Record<string, any> = {
     providers: { 'defaultValue': true },
   },
   'SOL': {
-    assets: { 'defaultValue': false, 'SOL': true },
+    assets: { 'defaultValue': false, 'SOL': true, 'MSOL': true },
     providers: { 'defaultValue': true },
   },
   'L1 tokens': {
     assets: {
       'defaultValue': false, 'BTC': true, 'ETH': true, 'SOL': true,
-      'TRX': true, 'LTC': true, 'BNB': true,
+      'TRX': true, 'LTC': true, 'BNB': true, 'MSOL': true,
     },
     providers: { 'defaultValue': true },
   },
