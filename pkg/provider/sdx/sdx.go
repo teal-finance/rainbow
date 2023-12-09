@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -65,7 +64,6 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, err
 	}
-	spew.Dump(assets[0].Markets[6:13])
 	options, _ := process(assets)
 	return options, nil
 }
@@ -89,9 +87,10 @@ func process(under []UnderlyingAsset) ([]rainbow.Option, error) {
 	var options []rainbow.Option
 
 	for _, m := range markets {
-		typ := m.OptionType()
-		if typ == "READ" {
-			continue // too lazy to properly convert this to SPREAD lol
+		optionType := m.OptionType
+		//fmt.Println(optionType)
+		if len(optionType) >= 5 {
+			continue
 		}
 		coin, expiry, strike, err := m.Infos()
 		if err != nil {
@@ -100,7 +99,7 @@ func process(under []UnderlyingAsset) ([]rainbow.Option, error) {
 		//fmt.Println(coin, expiry, typ, strike)
 		option := rainbow.Option{
 			Name:            m.MarketName,
-			Type:            typ,
+			Type:            optionType,
 			Asset:           coin,
 			UnderlyingAsset: coin,
 			Strike:          strike,
@@ -123,6 +122,10 @@ func process(under []UnderlyingAsset) ([]rainbow.Option, error) {
 			}},
 			ProtocolID: strconv.Itoa(m.SeriesID),
 		}
+
+		if len(m.MarkPriceIV) != 0 {
+			option.MarketIV = m.MarkPriceIV[0] * 100
+		}
 		options = append(options, option)
 	}
 	return options, nil
@@ -139,30 +142,22 @@ type UnderlyingAsset struct {
 	Markets      []Market `json:"markets"`
 }
 type Market struct {
-	MarketName          string  `json:"marketName"`
-	SeriesID            int     `json:"seriesId"`
-	MarkPriceStable     float64 `json:"markPriceStable"`
-	MarkPriceUnderlying float64 `json:"markPriceUnderlying"`
-	BidStable           float64 `json:"bidStable"`
-	BidUnderlying       float64 `json:"bidUnderlying"`
-	AskStable           float64 `json:"askStable"`
-	AskUnderlying       float64 `json:"askUnderlying"`
-}
-
-func (m *Market) OptionType() string {
-	/* example of names from API
-	"MSOL-08Dec23-$64-Put"
-	"MSOL-08Dec23-$70/$100-Call Spread"
-	"MSOL-01Dec23-$76-Call"
-	*/
-	name := m.MarketName
-
-	t := strings.ToUpper(strings.Trim(name[len(name)-4:], " -"))
-	return t
+	MarketName          string    `json:"marketName"`
+	SeriesID            int       `json:"seriesId"`
+	OptionType          string    `json:"optionType"`
+	UnderlyingPrice     float64   `json:"underlyingPrice"`
+	MarkPriceStable     float64   `json:"markPriceStable"`
+	MarkPriceUnderlying float64   `json:"markPriceUnderlying"`
+	BidStable           float64   `json:"bidStable"`
+	BidUnderlying       float64   `json:"bidUnderlying"`
+	AskStable           float64   `json:"askStable"`
+	AskUnderlying       float64   `json:"askUnderlying"`
+	BidIV               []float64 `json:"bidIV"`
+	AskIV               []float64 `json:"askIV"`
+	MarkPriceIV         []float64 `json:"markPriceIV"`
 }
 
 // expiry: 0800 UTC each Friday
-// For now just assume SPREAD not process and filter before entering here
 func (m *Market) Infos() (string, string, float64, error) {
 	/* example of names from API
 	"MSOL-08Dec23-$64-Put"
