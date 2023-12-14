@@ -9,7 +9,6 @@ import (
 	"math"
 	"math/big"
 	"strings"
-	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -230,7 +229,7 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Quote
 		Name:            "",
 		Type:            "CALL",
 		Asset:           asset,
-		Expiry:          expiration(b.Expiry),
+		Expiry:          rainbow.Expiration(b.Expiry.Int64()),
 		ExchangeType:    "DEX",
 		Chain:           "Ethereum",
 		Layer:           "L2",
@@ -247,7 +246,7 @@ func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Quote
 		Name:            "",
 		Type:            "PUT",
 		Asset:           asset,
-		Expiry:          expiration(b.Expiry),
+		Expiry:          rainbow.Expiration(b.Expiry.Int64()),
 		ExchangeType:    "DEX",
 		Chain:           "Ethereum",
 		Layer:           "L2",
@@ -323,10 +322,4 @@ func url(o *rainbow.Option /*, strikeID *big.Int*/) string {
 
 	return base + "/" + asset //+ "/" + strike + "/" + t
 	// return base + "market=" + asset + "&id=" + ""
-}
-
-func expiration(e *big.Int) string {
-	seconds := e.Int64()
-	expiryTime := time.Unix(seconds, 0).UTC()
-	return expiryTime.Format("2006-01-02 15:04:05")
 }

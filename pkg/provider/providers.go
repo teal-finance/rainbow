@@ -15,6 +15,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
+	"github.com/teal-finance/rainbow/pkg/provider/rysk"
 	"github.com/teal-finance/rainbow/pkg/provider/sdx"
 	"github.com/teal-finance/rainbow/pkg/provider/synquote"
 	"github.com/teal-finance/rainbow/pkg/provider/thales"
@@ -28,6 +29,7 @@ var log = emo.NewZone("provider")
 func AllProviders() []rainbow.Provider {
 	return []rainbow.Provider{
 		&deribit.Provider{},
+		&rysk.Provider{},
 		lyra.Provider{},
 		synquote.Provider{},
 		&thalex.Provider{},
