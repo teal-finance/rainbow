@@ -62,11 +62,13 @@ export default defineComponent({
     function exclude(evt: any) {
       //console.log("exclude filter", col.value, evt)
       model.value.addExcludeFilter(col.value, evt)
+      entries[evt] = false;
     }
 
     function include(evt: any) {
       //console.log("include filter", col.value, evt)
-      model.value.removeExcludeFilter(col.value, evt)
+      model.value.removeExcludeFilter(col.value, evt);
+      entries[evt] = true;
     }
 
     onMounted(() => {
