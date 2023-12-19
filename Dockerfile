@@ -99,7 +99,7 @@ COPY frontend/index.html        \
     frontend/postcss.config.js  \
     frontend/tailwind.config.js \
     frontend/tsconfig.json      \
-    frontend/vite.config.ts     \
+    frontend/vite.config.mts     \
     frontend/.env              ./
 
 COPY frontend/public public
