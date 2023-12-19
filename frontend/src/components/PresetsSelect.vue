@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-10 w-full min-h-[2rem] text-sm">
+  <div class="relative z-10 min-h-[2rem] text-sm min-w-[12em]">
     <div class="absolute top-0 right-0 flex flex-col justify-start background">
       <div id="presets-select" class="flex flex-row w-full lighter" @click="collapse = !collapse">
         <div class="flex-grow">

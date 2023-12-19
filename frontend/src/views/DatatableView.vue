@@ -14,14 +14,12 @@
 import { onBeforeMount, onBeforeUnmount } from 'vue'
 import Option from '@/models/options/option';
 import SwDataTableModel from "@/packages/datatable/models/datatable";
-import ValuesFilter from '@/packages/datatable/filters/ValuesFilter.vue'
 import { OptionsJsonDataset, OptionsTable } from '@/models/options/types';
 import GenericDatatable from '@/components/GenericDatatable.vue';
 import LoadingIndicator from '@/components/widgets/LoadingIndicator.vue';
-import { isMobile, user, datatable, isDatatableReady, filterConf } from '@/state';
+import { user, datatable, isDatatableReady, filterConf } from '@/state';
 import { classicQuery, exoticQuery } from '@/api/graphql';
 import filterPresets from "@/const/filter_presets";
-import PresetsSelect from "@/components/PresetsSelect.vue";
 import { OptionType } from '@/interfaces';
 
 const props = defineProps({
