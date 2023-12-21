@@ -19,7 +19,6 @@ require (
 	github.com/jedib0t/go-pretty/v6 v6.4.9
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de
 	github.com/spewerspew/spew v0.0.0-20230513223542-89b69fbbe2bd
-	github.com/streamingfast/solana-go v0.5.1
 	github.com/stretchr/testify v1.8.4
 	github.com/teal-finance/emo v0.0.0-20230927210932-6d44701ae57e
 	github.com/teal-finance/garcon v0.33.0
@@ -27,7 +26,6 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
-	github.com/GeertJohan/go.rice v1.0.0 // indirect
 	github.com/JohannesKaufmann/html-to-markdown v1.3.7 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/PuerkitoBio/goquery v1.8.1 // indirect
@@ -50,7 +48,6 @@ require (
 	github.com/consensys/gnark-crypto v0.12.1 // indirect
 	github.com/crate-crypto/go-kzg-4844 v0.7.0 // indirect
 	github.com/cristalhq/base64 v0.1.2 // indirect
-	github.com/daaku/go.zipexe v1.0.0 // indirect
 	github.com/deckarep/golang-set/v2 v2.1.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
 	github.com/ethereum/c-kzg-4844 v0.4.0 // indirect
@@ -63,11 +60,9 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/pprof v0.0.0-20230406165453-00490a63f317 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/gorilla/rpc v1.2.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/holiman/uint256 v1.2.3 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.16.5 // indirect
 	github.com/logrusorgru/aurora v2.0.3+incompatible // indirect
@@ -93,19 +88,14 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/cors v1.9.0 // indirect
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
-	github.com/streamingfast/binary v0.0.0-20210928223119-44fc44e4a0b5 // indirect
 	github.com/streamingfast/logging v0.0.0-20230608130331-f22c91403091 // indirect
 	github.com/supranational/blst v0.3.11 // indirect
 	github.com/teal-finance/incorruptible v0.0.0-20221218151336-b7408a3dd11b // indirect
 	github.com/teal-finance/quid v0.0.0-20230216061629-9c9b3ff5e887 // indirect
-	github.com/tidwall/gjson v1.11.0 // indirect
-	github.com/tidwall/match v1.1.1 // indirect
-	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
 	github.com/tklauser/numcpus v0.6.1 // indirect
 	github.com/vektah/gqlparser/v2 v2.5.1 // indirect
 	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
-	github.com/ybbus/jsonrpc v2.1.2+incompatible // indirect
 	go.mongodb.org/mongo-driver v1.11.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
