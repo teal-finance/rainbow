@@ -806,13 +806,8 @@ func (v *__WithArgsInput) GetOrderDirection() OrderDirection { return v.OrderDir
 // GetWhere returns __WithArgsInput.Where, and is useful for accessing the field via an interface.
 func (v *__WithArgsInput) GetWhere() Swap_filter { return v.Where }
 
-func HardCoded(
-	ctx context.Context,
-	client graphql.Client,
-) (*HardCodedResponse, error) {
-	req := &graphql.Request{
-		OpName: "HardCoded",
-		Query: `
+// The query or mutation executed by HardCoded.
+const HardCoded_Operation = `
 query HardCoded {
 	Chain1_swaps(skip: 0, first: 100, orderBy: timestamp, orderDirection: desc, where: {timestamp_gt:1650000000}) {
 		id
@@ -846,7 +841,15 @@ query HardCoded {
 		amountUSD
 	}
 }
-`,
+`
+
+func HardCoded(
+	ctx context.Context,
+	client graphql.Client,
+) (*HardCodedResponse, error) {
+	req := &graphql.Request{
+		OpName: "HardCoded",
+		Query:  HardCoded_Operation,
 	}
 	var err error
 
@@ -862,18 +865,8 @@ query HardCoded {
 	return &data, err
 }
 
-func WithArgs(
-	ctx context.Context,
-	client graphql.Client,
-	skip int,
-	first int,
-	orderBy Swap_orderBy,
-	orderDirection OrderDirection,
-	where Swap_filter,
-) (*WithArgsResponse, error) {
-	req := &graphql.Request{
-		OpName: "WithArgs",
-		Query: `
+// The query or mutation executed by WithArgs.
+const WithArgs_Operation = `
 query WithArgs ($skip: Int, $first: Int, $orderBy: Swap_orderBy, $orderDirection: OrderDirection, $where: Swap_filter) {
 	Chain1_swaps(skip: $skip, first: $first, orderBy: $orderBy, orderDirection: $orderDirection, where: $where) {
 		id
@@ -907,7 +900,20 @@ query WithArgs ($skip: Int, $first: Int, $orderBy: Swap_orderBy, $orderDirection
 		amountUSD
 	}
 }
-`,
+`
+
+func WithArgs(
+	ctx context.Context,
+	client graphql.Client,
+	skip int,
+	first int,
+	orderBy Swap_orderBy,
+	orderDirection OrderDirection,
+	where Swap_filter,
+) (*WithArgsResponse, error) {
+	req := &graphql.Request{
+		OpName: "WithArgs",
+		Query:  WithArgs_Operation,
 		Variables: &__WithArgsInput{
 			Skip:           skip,
 			First:          first,

@@ -1018,13 +1018,8 @@ func (v *__RangedMarketsInput) GetFirst() int { return v.First }
 // GetT returns __RangedMarketsInput.T, and is useful for accessing the field via an interface.
 func (v *__RangedMarketsInput) GetT() string { return v.T }
 
-func AllLive(
-	ctx context.Context,
-	client graphql.Client,
-) (*AllLiveResponse, error) {
-	req := &graphql.Request{
-		OpName: "AllLive",
-		Query: `
+// The query or mutation executed by AllLive.
+const AllLive_Operation = `
 query AllLive {
 	markets(where: {result:null}) {
 		id
@@ -1041,7 +1036,15 @@ query AllLive {
 		finalPrice
 	}
 }
-`,
+`
+
+func AllLive(
+	ctx context.Context,
+	client graphql.Client,
+) (*AllLiveResponse, error) {
+	req := &graphql.Request{
+		OpName: "AllLive",
+		Query:  AllLive_Operation,
 	}
 	var err error
 
@@ -1057,15 +1060,8 @@ query AllLive {
 	return &data, err
 }
 
-func AllMarkets(
-	ctx context.Context,
-	client graphql.Client,
-	skip int,
-	first int,
-) (*AllMarketsResponse, error) {
-	req := &graphql.Request{
-		OpName: "AllMarkets",
-		Query: `
+// The query or mutation executed by AllMarkets.
+const AllMarkets_Operation = `
 query AllMarkets ($skip: Int, $first: Int) {
 	markets(skip: $skip, first: $first, orderBy: timestamp, orderDirection: desc, where: {result:null}) {
 		id
@@ -1085,7 +1081,17 @@ query AllMarkets ($skip: Int, $first: Int) {
 		finalPrice
 	}
 }
-`,
+`
+
+func AllMarkets(
+	ctx context.Context,
+	client graphql.Client,
+	skip int,
+	first int,
+) (*AllMarketsResponse, error) {
+	req := &graphql.Request{
+		OpName: "AllMarkets",
+		Query:  AllMarkets_Operation,
 		Variables: &__AllMarketsInput{
 			Skip:  skip,
 			First: first,
@@ -1105,15 +1111,8 @@ query AllMarkets ($skip: Int, $first: Int) {
 	return &data, err
 }
 
-func AllRangedMarkets(
-	ctx context.Context,
-	client graphql.Client,
-	skip int,
-	first int,
-) (*AllRangedMarketsResponse, error) {
-	req := &graphql.Request{
-		OpName: "AllRangedMarkets",
-		Query: `
+// The query or mutation executed by AllRangedMarkets.
+const AllRangedMarkets_Operation = `
 query AllRangedMarkets ($skip: Int, $first: Int) {
 	rangedMarkets(skip: $skip, first: $first, orderBy: timestamp, orderDirection: desc) {
 		id
@@ -1163,7 +1162,17 @@ query AllRangedMarkets ($skip: Int, $first: Int) {
 		finalPrice
 	}
 }
-`,
+`
+
+func AllRangedMarkets(
+	ctx context.Context,
+	client graphql.Client,
+	skip int,
+	first int,
+) (*AllRangedMarketsResponse, error) {
+	req := &graphql.Request{
+		OpName: "AllRangedMarkets",
+		Query:  AllRangedMarkets_Operation,
 		Variables: &__AllRangedMarketsInput{
 			Skip:  skip,
 			First: first,
@@ -1183,14 +1192,8 @@ query AllRangedMarkets ($skip: Int, $first: Int) {
 	return &data, err
 }
 
-func Market(
-	ctx context.Context,
-	client graphql.Client,
-	id string,
-) (*MarketResponse, error) {
-	req := &graphql.Request{
-		OpName: "Market",
-		Query: `
+// The query or mutation executed by Market.
+const Market_Operation = `
 query Market ($id: ID!) {
 	market(id: $id) {
 		timestamp
@@ -1209,7 +1212,16 @@ query Market ($id: ID!) {
 		finalPrice
 	}
 }
-`,
+`
+
+func Market(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*MarketResponse, error) {
+	req := &graphql.Request{
+		OpName: "Market",
+		Query:  Market_Operation,
 		Variables: &__MarketInput{
 			Id: id,
 		},
@@ -1228,16 +1240,8 @@ query Market ($id: ID!) {
 	return &data, err
 }
 
-func Markets(
-	ctx context.Context,
-	client graphql.Client,
-	skip int,
-	first int,
-	t string,
-) (*MarketsResponse, error) {
-	req := &graphql.Request{
-		OpName: "Markets",
-		Query: `
+// The query or mutation executed by Markets.
+const Markets_Operation = `
 query Markets ($skip: Int, $first: Int, $t: BigInt) {
 	markets(skip: $skip, first: $first, orderBy: timestamp, orderDirection: desc, where: {timestamp_gt:$t}) {
 		id
@@ -1257,7 +1261,18 @@ query Markets ($skip: Int, $first: Int, $t: BigInt) {
 		finalPrice
 	}
 }
-`,
+`
+
+func Markets(
+	ctx context.Context,
+	client graphql.Client,
+	skip int,
+	first int,
+	t string,
+) (*MarketsResponse, error) {
+	req := &graphql.Request{
+		OpName: "Markets",
+		Query:  Markets_Operation,
 		Variables: &__MarketsInput{
 			Skip:  skip,
 			First: first,
@@ -1278,14 +1293,8 @@ query Markets ($skip: Int, $first: Int, $t: BigInt) {
 	return &data, err
 }
 
-func RangedMarket(
-	ctx context.Context,
-	client graphql.Client,
-	id string,
-) (*RangedMarketResponse, error) {
-	req := &graphql.Request{
-		OpName: "RangedMarket",
-		Query: `
+// The query or mutation executed by RangedMarket.
+const RangedMarket_Operation = `
 query RangedMarket ($id: ID!) {
 	rangedMarket(id: $id) {
 		timestamp
@@ -1334,7 +1343,16 @@ query RangedMarket ($id: ID!) {
 		finalPrice
 	}
 }
-`,
+`
+
+func RangedMarket(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*RangedMarketResponse, error) {
+	req := &graphql.Request{
+		OpName: "RangedMarket",
+		Query:  RangedMarket_Operation,
 		Variables: &__RangedMarketInput{
 			Id: id,
 		},
@@ -1353,16 +1371,8 @@ query RangedMarket ($id: ID!) {
 	return &data, err
 }
 
-func RangedMarkets(
-	ctx context.Context,
-	client graphql.Client,
-	skip int,
-	first int,
-	t string,
-) (*RangedMarketsResponse, error) {
-	req := &graphql.Request{
-		OpName: "RangedMarkets",
-		Query: `
+// The query or mutation executed by RangedMarkets.
+const RangedMarkets_Operation = `
 query RangedMarkets ($skip: Int, $first: Int, $t: BigInt) {
 	rangedMarkets(skip: $skip, first: $first, orderBy: timestamp, orderDirection: desc, where: {timestamp_gt:$t}) {
 		id
@@ -1412,7 +1422,18 @@ query RangedMarkets ($skip: Int, $first: Int, $t: BigInt) {
 		finalPrice
 	}
 }
-`,
+`
+
+func RangedMarkets(
+	ctx context.Context,
+	client graphql.Client,
+	skip int,
+	first int,
+	t string,
+) (*RangedMarketsResponse, error) {
+	req := &graphql.Request{
+		OpName: "RangedMarkets",
+		Query:  RangedMarkets_Operation,
 		Variables: &__RangedMarketsInput{
 			Skip:  skip,
 			First: first,
