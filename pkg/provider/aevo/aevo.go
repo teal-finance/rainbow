@@ -54,7 +54,6 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	options, err := p.fillOptions(instruments)
 	if err != nil {
 		return nil, log.Error("filloptions", err).Err()
-
 	}
 	return options, nil
 }
@@ -68,14 +67,12 @@ func (p Provider) query() (Markets, error) {
 	err := p.ar.Get("", url, &result, maxBytesToRead)
 	if err != nil {
 		return nil, log.Error("query", url, err).Err()
-
 	}
 
 	return result, nil
 }
 
 func (p Provider) fillOptions(instruments Markets) ([]rainbow.Option, error) {
-
 	url := ""
 	var result Orderbook
 	var err error
@@ -91,12 +88,10 @@ func (p Provider) fillOptions(instruments Markets) ([]rainbow.Option, error) {
 		s, err = convert(i.Strike)
 		if err != nil {
 			return nil, err
-
 		}
 		iv, err = convert(i.Greeks.Iv)
 		if err != nil {
 			return nil, err
-
 		}
 		bid, err := bidAsksToOrders(result.Bids)
 		if err != nil {
@@ -132,16 +127,15 @@ func (p Provider) fillOptions(instruments Markets) ([]rainbow.Option, error) {
 			QuoteCurrency:   "USD",
 			URL:             baseURL + "option/" + i.UnderlyingAsset + "/" + i.InstrumentName,
 			MarketIV:        iv * 100,
-			//Greeks: ,
+			// Greeks: ,
 			Bid: bid,
 			Ask: ask,
-			//OpenInterest: , TODO https://api-docs.aevo.xyz/reference/getinstrumentinstrumentname
+			// OpenInterest: , TODO https://api-docs.aevo.xyz/reference/getinstrumentinstrumentname
 			ProtocolID: i.InstrumentID,
 		})
 	}
 
 	return options, nil
-
 }
 
 func bidAsksToOrders(orders [][]string) ([]rainbow.Order, error) {
@@ -149,28 +143,26 @@ func bidAsksToOrders(orders [][]string) ([]rainbow.Order, error) {
 		return []rainbow.Order{}, nil
 	}
 	convertedOrders := []rainbow.Order{}
-	p := 0.0 //price
+	p := 0.0 // price
 
-	s := 0.0 //size
-	//i:=0.0 iv
+	s := 0.0 // size
+	// i:=0.0 iv
 	var err error
 	for _, o := range orders {
 		p, err = convert(o[0])
 		if err != nil {
 			return nil, log.Error("bidAsksToOrders", err).Err()
-
 		}
 		s, err = convert(o[1])
 		if err != nil {
 			return nil, log.Error("bidAsksToOrders", err).Err()
-
 		}
 
 		convertedOrders = append(convertedOrders, rainbow.Order{
 			Price: p,
 			Size:  s,
 		})
-		//i,err=convert(o[2])
+		// i,err=convert(o[2])
 
 	}
 
@@ -181,11 +173,11 @@ func translateGreeks(g greeks) (rainbow.TheGreeks, error) {
 	// TODO
 	return rainbow.TheGreeks{}, nil
 }
+
 func convert(s string) (float64, error) {
 	f, err := strconv.ParseFloat(s, 64)
 	if err != nil {
 		return 0.0, log.Error("conversion failure", s, err).Err()
-
 	}
 	return f, nil
 }
@@ -197,25 +189,27 @@ func convert(s string) (float64, error) {
 
 // https://api-docs.aevo.xyz/reference/getorderbook
 
-type Markets []Market
-type Market struct {
-	InstrumentID    string `json:"instrument_id"`
-	InstrumentName  string `json:"instrument_name"`
-	InstrumentType  string `json:"instrument_type"`
-	UnderlyingAsset string `json:"underlying_asset"`
-	QuoteAsset      string `json:"quote_asset"`
-	PriceStep       string `json:"price_step"`
-	AmountStep      string `json:"amount_step"`
-	MinOrderValue   string `json:"min_order_value"`
-	MarkPrice       string `json:"mark_price"`
-	ForwardPrice    string `json:"forward_price"`
-	IndexPrice      string `json:"index_price"`
-	IsActive        bool   `json:"is_active"`
-	OptionType      string `json:"option_type"`
-	Expiry          string `json:"expiry"`
-	Strike          string `json:"strike"`
-	Greeks          greeks `json:"greeks"`
-}
+type (
+	Markets []Market
+	Market  struct {
+		InstrumentID    string `json:"instrument_id"`
+		InstrumentName  string `json:"instrument_name"`
+		InstrumentType  string `json:"instrument_type"`
+		UnderlyingAsset string `json:"underlying_asset"`
+		QuoteAsset      string `json:"quote_asset"`
+		PriceStep       string `json:"price_step"`
+		AmountStep      string `json:"amount_step"`
+		MinOrderValue   string `json:"min_order_value"`
+		MarkPrice       string `json:"mark_price"`
+		ForwardPrice    string `json:"forward_price"`
+		IndexPrice      string `json:"index_price"`
+		IsActive        bool   `json:"is_active"`
+		OptionType      string `json:"option_type"`
+		Expiry          string `json:"expiry"`
+		Strike          string `json:"strike"`
+		Greeks          greeks `json:"greeks"`
+	}
+)
 
 type greeks struct {
 	Delta string `json:"delta"`

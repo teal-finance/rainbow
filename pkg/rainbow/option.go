@@ -66,7 +66,6 @@ type TheGreeks struct {
 }
 
 func ListProviders(ro []Option) map[string]int {
-
 	providerToOptions := make(map[string]int)
 	for i := range ro {
 		_, ok := providerToOptions[ro[i].Provider]
@@ -77,7 +76,6 @@ func ListProviders(ro []Option) map[string]int {
 		}
 	}
 	return providerToOptions
-
 }
 
 /*

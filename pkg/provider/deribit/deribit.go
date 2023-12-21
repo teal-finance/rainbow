@@ -147,7 +147,7 @@ func filterTooFar(instruments []instrument) []instrument {
 func isStrikeAvailable(i *instrument) bool {
 	ethStrike := []float64{400, 20000}
 	btcStrike := []float64{10000, 200000}
-	//solStrike := []float64{10, 60}
+	// solStrike := []float64{10, 60}
 	strikes := ethStrike
 
 	if i.BaseCurrency == "BTC" {

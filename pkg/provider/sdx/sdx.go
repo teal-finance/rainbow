@@ -82,13 +82,13 @@ func (p *Provider) query(coin string) ([]UnderlyingAsset, error) {
 }
 
 func process(under []UnderlyingAsset) ([]rainbow.Option, error) {
-	//TODO Loop when more markets :)
+	// TODO Loop when more markets :)
 	markets := under[0].Markets
 	var options []rainbow.Option
 
 	for _, m := range markets {
 		optionType := m.OptionType
-		//fmt.Println(optionType)
+		// fmt.Println(optionType)
 		if len(optionType) >= 5 {
 			continue
 		}
@@ -96,7 +96,7 @@ func process(under []UnderlyingAsset) ([]rainbow.Option, error) {
 		if err != nil {
 			return []rainbow.Option{}, log.Error("Processing error", m.MarketName, err).Err()
 		}
-		//fmt.Println(coin, expiry, typ, strike)
+		// fmt.Println(coin, expiry, typ, strike)
 		option := rainbow.Option{
 			Name:            m.MarketName,
 			Type:            optionType,

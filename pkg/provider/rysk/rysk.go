@@ -24,8 +24,7 @@ const (
 
 var log = emo.NewZone(name)
 
-type Provider struct {
-}
+type Provider struct{}
 
 func (Provider) Name() string {
 	return name
@@ -74,9 +73,9 @@ func process(expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType str
 
 	for _, drill := range drills {
 		delta := rainbow.ToFloat(drill.Delta, rainbow.DefaultEthereumDecimals)
-		//spew.Dump(delta)
-		//exposure := rainbow.ToFloat(drill.Exposure, rainbow.DefaultEthereumDecimals)
-		//spew.Dump(exposure)
+		// spew.Dump(delta)
+		// exposure := rainbow.ToFloat(drill.Exposure, rainbow.DefaultEthereumDecimals)
+		// spew.Dump(exposure)
 
 		strike := rainbow.ToFloat(drill.Strike, rainbow.DefaultEthereumDecimals)
 		_, sell, sellfee, selldisable, sellpremiumtoosmall := convertQuotes(drill.Sell)
@@ -91,26 +90,25 @@ func process(expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType str
 			priceBuy = 0
 		}
 
-		o :=
-			rainbow.Option{
-				Type:            optionType,
-				Asset:           "ETH",
-				UnderlyingAsset: "WETH",
-				Strike:          strike,
-				Expiry:          expStr,
-				ExchangeType:    "DEX",
-				Chain:           "Ethereum",
-				Layer:           "L2",
-				LayerName:       "Arbitrum",
-				Provider:        name,
-				QuoteCurrency:   "USD",
-				UnderlyingQuote: "USDC",
-				URL:             url,
-				MarketIV:        iv,
-				/*
-				  OpenInterest:
-				  ProtocolID:*/
-			}
+		o := rainbow.Option{
+			Type:            optionType,
+			Asset:           "ETH",
+			UnderlyingAsset: "WETH",
+			Strike:          strike,
+			Expiry:          expStr,
+			ExchangeType:    "DEX",
+			Chain:           "Ethereum",
+			Layer:           "L2",
+			LayerName:       "Arbitrum",
+			Provider:        name,
+			QuoteCurrency:   "USD",
+			UnderlyingQuote: "USDC",
+			URL:             url,
+			MarketIV:        iv,
+			/*
+			  OpenInterest:
+			  ProtocolID:*/
+		}
 		o.Name = o.OptionName()
 		o.Greeks = rainbow.TheGreeks{
 			Delta: delta,
@@ -129,7 +127,6 @@ func process(expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType str
 	}
 
 	return &options, nil
-
 }
 
 // convertQuotes converst DHVLensMK1TradingSpec to floats mostly
@@ -147,7 +144,7 @@ func convertQuotes(t DHVLensMK1TradingSpec) (float64, float64, float64, bool, bo
 func test() {
 	client, err := ethclient.Dial(rpc)
 	if err != nil {
-		return //nil, &ethclient.Client{}, log.Error("Lyra ethclient", err).Err()
+		return // nil, &ethclient.Client{}, log.Error("Lyra ethclient", err).Err()
 	}
 
 	address := common.HexToAddress(lens)
@@ -172,5 +169,4 @@ func test() {
 	spew.Dump(convertQuotes(co.Buy))
 	spew.Dump(convertQuotes(co.Sell))
 	spew.Dump(rainbow.Expiration(int64(exp[0])))
-
 }
