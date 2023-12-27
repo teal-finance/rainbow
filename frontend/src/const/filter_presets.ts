@@ -39,7 +39,7 @@ const filterPresets: Record<string, any> = {
     assets: { 'defaultValue': true },
     providers: {
       'defaultValue': false, 'Aevo': true,
-      'Lyra::Optimism': true, 'Lyra::Arbitrum': true,
+      'Lyrav2': true, 'Lyra::Optimism': true, 'Lyra::Arbitrum': true,
       'Thales::Polygon': true, 'Thales::Arbitrum': true, 'Thales::Optimism': true,
       'Thales::Bsc': true, 'Synquote': true, 'SDX': true
     }
@@ -66,7 +66,7 @@ const filterPresets: Record<string, any> = {
   'L2 tokens': {
     assets: {
       'defaultValue': false,
-      'ARB': true, 'OP': true, 'BNB': true, 'MATIC': true
+      'ARB': true, 'OP': true, 'MATIC': true
     },
     providers: { 'defaultValue': true },
   }

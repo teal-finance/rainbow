@@ -24,6 +24,7 @@ type Option struct {
 	UnderlyingAsset string  `json:"underlyingasset"`    // sETH, WETH, sBTC, WBTC ... the actual asset token we track
 	Strike          float64 `json:"strike"`             // Option strike
 	Expiry          string  `json:"expiry"`             // Expiry date in Format("2006-01-02 15:04:05")
+	ExpiryTime      int     `json:"expirytime"`         // Expiry in timestamp format (1136241533) seconds since the UNIX epoch
 	ExchangeType    string  `json:"exchange"`           // CEX / DEX
 	Chain           string  `json:"chain"`              // Ethereum, Solana and "–" for CEX (Deribit)
 	Layer           string  `json:"layer"`              // L1, L2 and "–" for CEX (Deribit)
@@ -88,6 +89,7 @@ for easy copy-pasta
 	UnderlyingAsset:
 	Strike:
 	Expiry:
+	ExpiryTime:
 	ExchangeType:
 	Chain:
 	Layer:
