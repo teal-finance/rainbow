@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spewerspew/spew"
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -80,8 +79,8 @@ func (p Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, error
 	var ticker GetTickerResult
 	var err error
 	options := []rainbow.Option{}
-	s := 0.0
-	iv := 0.0
+	var s, iv, index, OpenInterest float64
+	var bidSize, bidPrice, askSize, askPrice float64
 	//askiv := 0.0
 	//bidiv := 0.0
 	optionType := ""
@@ -112,58 +111,69 @@ func (p Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, error
 		if err != nil {
 			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
 		}
+		index, err = strconv.ParseFloat(ticker.Result.IndexPrice, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		OpenInterest, err = strconv.ParseFloat(ticker.Result.Stats.OpenInterest, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		bidPrice, err = strconv.ParseFloat(ticker.Result.BestBidPrice, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		bidSize, err = strconv.ParseFloat(ticker.Result.BestBidAmount, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		askPrice, err = strconv.ParseFloat(ticker.Result.BestAskPrice, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		askSize, err = strconv.ParseFloat(ticker.Result.BestAskAmount, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		infos := strings.Split(i.InstrumentName, "-")
 
-		/*
-			bid, err := bidAsksToOrders(result.Bids)
-			if err != nil {
-				return nil, log.Error("Bid conversion", err).Err()
-			}
-			ask, err := bidAsksToOrders(result.Asks)
-			if err != nil {
-				return nil, log.Error("Bid conversion", err).Err()
-			}
-			e, err := strconv.ParseInt(i.Expiry, 10, 64)
-			if err != nil {
-				return nil, log.Error("convert date", i.Expiry, err).Err()
-			}
-
-
-			seconds := e / 1000000000
-			ns := (e % 1000_000_000) * 1000_000
-			expiryTime := time.Unix(seconds, ns).UTC()
-			expiryStr := expiryTime.Format("2006-01-02 15:04:05")*/
+		expiry := time.Unix(int64(i.Details.Expiry), 0).UTC().Format("2006-01-02 15:04:05")
 
 		options = append(options, rainbow.Option{
-			Name: i.InstrumentName,
-			Type: strings.ToUpper(optionType),
-			/*Asset:           i.UnderlyingAsset,
-			UnderlyingAsset: i.UnderlyingAsset,*/
-			Strike: s, /*
-				Expiry:          expiryStr,*/
-			ExpiryTime:   i.Details.Expiry,
-			ExchangeType: "DEX",
-			Chain:        "Ethereum",
-			Layer:        "L2",
-			LayerName:    "Lyra",
-			Provider:     name, /*
-				UnderlyingQuote: i.QuoteAsset,*/
-			QuoteCurrency: "USD",
-			//TODO use expiry in url (you have until the 12/01)
-			URL: uiURL + "btc?drawer=false&buy=true&expiry=20240112&option=" + i.InstrumentName,
-			/*
+			Name:            i.InstrumentName,
+			Type:            strings.ToUpper(optionType),
+			Asset:           ticker.Result.BaseCurrency,
+			UnderlyingAsset: ticker.Result.BaseCurrency,
+			Strike:          s,
+			Expiry:          expiry,
+			ExpiryTime:      i.Details.Expiry,
+			ExchangeType:    "DEX",
+			Chain:           "Ethereum",
+			Layer:           "L2",
+			LayerName:       "Lyra",
+			Provider:        name,
+			UnderlyingQuote: ticker.Result.QuoteCurrency,
+			QuoteCurrency:   "USD",
+			URL:             uiURL + "btc?drawer=false&buy=true&expiry=" + infos[1] + "&option=" + i.InstrumentName,
+			Bid: []rainbow.Order{{
+				Price: bidPrice,
+				Size:  bidSize,
+			}},
+			//BidIV:,
 
-				Bid:
-				BidIV:
-				Ask:
-				AskIV:*/
+			Ask: []rainbow.Order{{
+				Price: askPrice,
+				Size:  askSize,
+			}},
+			//AskIV:,
 			MarketIV: iv * 100,
-			/*
-				Greeks:
-				OpenInterest:*/
-			ProtocolID: i.InstrumentName,
+			// TODO greeks
+			// Greeks:
+			OpenInterest: OpenInterest * index,
+			ProtocolID:   i.InstrumentName,
 		})
 	}
-	spew.Dump(options)
+	//spew.Dump(options)
 
 	return options, nil
 }
