@@ -53,11 +53,11 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 		if err != nil {
 			return []rainbow.Option{}, log.Error(name, " GetOptionExpirationDrill error", err).Err()
 		}
-		calls, err := process(expStr, drill.CallOptionDrill, "CALL")
+		calls, err := process(e, expStr, drill.CallOptionDrill, "CALL")
 		if err != nil {
 			return []rainbow.Option{}, log.Error(name, " calls processing ", expStr, " error", err).Err()
 		}
-		puts, err := process(expStr, drill.PutOptionDrill, "PUT")
+		puts, err := process(e, expStr, drill.PutOptionDrill, "PUT")
 		if err != nil {
 			return []rainbow.Option{}, log.Error(name, " puts processing ", expStr, " error", err).Err()
 		}
@@ -68,7 +68,7 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 	return options, nil
 }
 
-func process(expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType string) (*[]rainbow.Option, error) {
+func process(expTime uint64, expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType string) (*[]rainbow.Option, error) {
 	options := []rainbow.Option{}
 
 	for _, drill := range drills {
@@ -96,6 +96,7 @@ func process(expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType str
 			UnderlyingAsset: "WETH",
 			Strike:          strike,
 			Expiry:          expStr,
+			ExpiryTime:      int(expTime),
 			ExchangeType:    "DEX",
 			Chain:           "Ethereum",
 			Layer:           "L2",
