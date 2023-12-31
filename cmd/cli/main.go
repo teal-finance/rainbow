@@ -6,6 +6,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"os"
 
@@ -17,6 +18,7 @@ import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
+	"github.com/teal-finance/rainbow/pkg/rainbow/x"
 )
 
 var (
@@ -29,8 +31,9 @@ var (
 )
 
 func main() {
+	//_ = x.Note
 	parseFlags()
-
+	fmt.Println(*x.Note)
 	names := listProviderNames()
 	log.Init("Providers:", names)
 
