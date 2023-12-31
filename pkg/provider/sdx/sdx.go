@@ -92,7 +92,7 @@ func process(under []UnderlyingAsset) ([]rainbow.Option, error) {
 		if len(optionType) >= 5 {
 			continue
 		}
-		coin, expiry, strike, err := m.Infos()
+		coin, expiryTime, expiry, strike, err := m.Infos()
 		if err != nil {
 			return []rainbow.Option{}, log.Error("Processing error", m.MarketName, err).Err()
 		}
@@ -104,6 +104,7 @@ func process(under []UnderlyingAsset) ([]rainbow.Option, error) {
 			UnderlyingAsset: coin,
 			Strike:          strike,
 			Expiry:          expiry,
+			ExpiryTime:      int(expiryTime),
 			ExchangeType:    "DEX",
 			Chain:           "Solana",
 			Layer:           "L1",
@@ -157,8 +158,9 @@ type Market struct {
 	MarkPriceIV         []float64 `json:"markPriceIV"`
 }
 
+// Infos returns coin, expiry(Unix),expiry (formatted string), strike, err
 // expiry: 0800 UTC each Friday
-func (m *Market) Infos() (string, string, float64, error) {
+func (m *Market) Infos() (string, int64, string, float64, error) {
 	/* example of names from API
 	"MSOL-08Dec23-$64-Put"
 	"MSOL-08Dec23-$70/$100-Call Spread"
@@ -168,14 +170,14 @@ func (m *Market) Infos() (string, string, float64, error) {
 
 	expiry, err := time.Parse("02Jan06", infos[1])
 	if err != nil {
-		return "", "", 0, log.Error("Expiry Parsing", m.MarketName, err).Err()
+		return "", 0, "", 0, log.Error("Expiry Parsing", m.MarketName, err).Err()
 	}
 	expiryStr := expiry.Add(Hour * time.Hour).Format("2006-01-02 15:04:05")
 
 	strike, err := strconv.ParseFloat(strings.Trim(infos[2], "$"), 64)
 	if err != nil {
-		return "", "", 0, log.Error("Strike Parsing", m.MarketName, err).Err()
+		return "", 0, "", 0, log.Error("Strike Parsing", m.MarketName, err).Err()
 	}
 
-	return infos[0], expiryStr, strike, nil
+	return infos[0], expiry.Unix(), expiryStr, strike, nil
 }
