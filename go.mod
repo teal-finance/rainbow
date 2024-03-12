@@ -20,8 +20,8 @@ require (
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de
 	github.com/spewerspew/spew v0.0.0-20230513223542-89b69fbbe2bd
 	github.com/stretchr/testify v1.9.0
-	github.com/teal-finance/emo v0.0.0-20240312100810-1c5a4984c875
-	github.com/teal-finance/garcon v0.34.0
+	github.com/teal-finance/emo v0.0.0-20240312162720-10aac528c0d2
+	github.com/teal-finance/garcon v0.35.0
 )
 
 require (
@@ -45,11 +45,11 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/consensys/bavard v0.1.13 // indirect
 	github.com/consensys/gnark-crypto v0.12.1 // indirect
-	github.com/crate-crypto/go-kzg-4844 v0.7.0 // indirect
+	github.com/crate-crypto/go-kzg-4844 v1.0.0 // indirect
 	github.com/cristalhq/base64 v0.1.2 // indirect
 	github.com/deckarep/golang-set/v2 v2.6.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
-	github.com/ethereum/c-kzg-4844 v0.4.3 // indirect
+	github.com/ethereum/c-kzg-4844 v1.0.0 // indirect
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/felixge/fgprof v0.9.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
