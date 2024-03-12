@@ -18,7 +18,7 @@ import (
 var log = emo.NewZone(name)
 
 const (
-	//https://api.lyra.finance/public/get_instruments?currency=BTC&instrument_type=option&expired=false
+	// https://api.lyra.finance/public/get_instruments?currency=BTC&instrument_type=option&expired=false
 	baseURL = "https://api.lyra.finance/public/"
 	uiURL   = "https://www.lyra.finance/options/"
 	name    = "Lyrav2"
@@ -81,8 +81,8 @@ func (p Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, error
 	options := []rainbow.Option{}
 	var s, iv, index, OpenInterest float64
 	var bidSize, bidPrice, askSize, askPrice float64
-	//askiv := 0.0
-	//bidiv := 0.0
+	// askiv := 0.0
+	// bidiv := 0.0
 	optionType := ""
 	for _, i := range instruments {
 		if !strings.Contains(i.InstrumentName, "20240112") {
@@ -159,13 +159,13 @@ func (p Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, error
 				Price: bidPrice,
 				Size:  bidSize,
 			}},
-			//BidIV:,
+			// BidIV:,
 
 			Ask: []rainbow.Order{{
 				Price: askPrice,
 				Size:  askSize,
 			}},
-			//AskIV:,
+			// AskIV:,
 			MarketIV: iv * 100,
 			// TODO greeks
 			// Greeks:
@@ -173,7 +173,7 @@ func (p Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, error
 			ProtocolID:   i.InstrumentName,
 		})
 	}
-	//spew.Dump(options)
+	// spew.Dump(options)
 
 	return options, nil
 }
