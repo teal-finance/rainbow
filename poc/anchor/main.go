@@ -63,7 +63,6 @@ func main() {
 		}*/
 		zo := new(zeta.ZetaGroup)
 		err = bin.NewBinDecoder(account.Account.Data.GetBinary()).Decode(&zo)
-
 		// opt := new(OptionMarket)
 		// err = bin.NewBorshDecoder(account.Account.Data.GetBinary()).Decode(&opt)
 		if err != nil {
