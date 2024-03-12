@@ -1039,25 +1039,25 @@ query AllLive {
 `
 
 func AllLive(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 ) (*AllLiveResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "AllLive",
 		Query:  AllLive_Operation,
 	}
-	var err error
+	var err_ error
 
-	var data AllLiveResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ AllLiveResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }
 
 // The query or mutation executed by AllMarkets.
@@ -1084,12 +1084,12 @@ query AllMarkets ($skip: Int, $first: Int) {
 `
 
 func AllMarkets(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 	skip int,
 	first int,
 ) (*AllMarketsResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "AllMarkets",
 		Query:  AllMarkets_Operation,
 		Variables: &__AllMarketsInput{
@@ -1097,18 +1097,18 @@ func AllMarkets(
 			First: first,
 		},
 	}
-	var err error
+	var err_ error
 
-	var data AllMarketsResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ AllMarketsResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }
 
 // The query or mutation executed by AllRangedMarkets.
@@ -1165,12 +1165,12 @@ query AllRangedMarkets ($skip: Int, $first: Int) {
 `
 
 func AllRangedMarkets(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 	skip int,
 	first int,
 ) (*AllRangedMarketsResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "AllRangedMarkets",
 		Query:  AllRangedMarkets_Operation,
 		Variables: &__AllRangedMarketsInput{
@@ -1178,18 +1178,18 @@ func AllRangedMarkets(
 			First: first,
 		},
 	}
-	var err error
+	var err_ error
 
-	var data AllRangedMarketsResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ AllRangedMarketsResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }
 
 // The query or mutation executed by Market.
@@ -1215,29 +1215,29 @@ query Market ($id: ID!) {
 `
 
 func Market(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 	id string,
 ) (*MarketResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "Market",
 		Query:  Market_Operation,
 		Variables: &__MarketInput{
 			Id: id,
 		},
 	}
-	var err error
+	var err_ error
 
-	var data MarketResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ MarketResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }
 
 // The query or mutation executed by Markets.
@@ -1264,13 +1264,13 @@ query Markets ($skip: Int, $first: Int, $t: BigInt) {
 `
 
 func Markets(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 	skip int,
 	first int,
 	t string,
 ) (*MarketsResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "Markets",
 		Query:  Markets_Operation,
 		Variables: &__MarketsInput{
@@ -1279,18 +1279,18 @@ func Markets(
 			T:     t,
 		},
 	}
-	var err error
+	var err_ error
 
-	var data MarketsResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ MarketsResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }
 
 // The query or mutation executed by RangedMarket.
@@ -1346,29 +1346,29 @@ query RangedMarket ($id: ID!) {
 `
 
 func RangedMarket(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 	id string,
 ) (*RangedMarketResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "RangedMarket",
 		Query:  RangedMarket_Operation,
 		Variables: &__RangedMarketInput{
 			Id: id,
 		},
 	}
-	var err error
+	var err_ error
 
-	var data RangedMarketResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ RangedMarketResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }
 
 // The query or mutation executed by RangedMarkets.
@@ -1425,13 +1425,13 @@ query RangedMarkets ($skip: Int, $first: Int, $t: BigInt) {
 `
 
 func RangedMarkets(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 	skip int,
 	first int,
 	t string,
 ) (*RangedMarketsResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "RangedMarkets",
 		Query:  RangedMarkets_Operation,
 		Variables: &__RangedMarketsInput{
@@ -1440,16 +1440,16 @@ func RangedMarkets(
 			T:     t,
 		},
 	}
-	var err error
+	var err_ error
 
-	var data RangedMarketsResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ RangedMarketsResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }

@@ -844,25 +844,25 @@ query HardCoded {
 `
 
 func HardCoded(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 ) (*HardCodedResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "HardCoded",
 		Query:  HardCoded_Operation,
 	}
-	var err error
+	var err_ error
 
-	var data HardCodedResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ HardCodedResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }
 
 // The query or mutation executed by WithArgs.
@@ -903,15 +903,15 @@ query WithArgs ($skip: Int, $first: Int, $orderBy: Swap_orderBy, $orderDirection
 `
 
 func WithArgs(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 	skip int,
 	first int,
 	orderBy Swap_orderBy,
 	orderDirection OrderDirection,
 	where Swap_filter,
 ) (*WithArgsResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "WithArgs",
 		Query:  WithArgs_Operation,
 		Variables: &__WithArgsInput{
@@ -922,16 +922,16 @@ func WithArgs(
 			Where:          where,
 		},
 	}
-	var err error
+	var err_ error
 
-	var data WithArgsResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ WithArgsResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }
