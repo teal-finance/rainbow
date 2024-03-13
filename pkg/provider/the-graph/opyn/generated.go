@@ -161,13 +161,13 @@ query Options ($skip: Int, $first: Int, $t: BigInt) {
 `
 
 func Options(
-	ctx context.Context,
-	client graphql.Client,
+	ctx_ context.Context,
+	client_ graphql.Client,
 	skip int,
 	first int,
 	t string,
 ) (*OptionsResponse, error) {
-	req := &graphql.Request{
+	req_ := &graphql.Request{
 		OpName: "Options",
 		Query:  Options_Operation,
 		Variables: &__OptionsInput{
@@ -176,16 +176,16 @@ func Options(
 			T:     t,
 		},
 	}
-	var err error
+	var err_ error
 
-	var data OptionsResponse
-	resp := &graphql.Response{Data: &data}
+	var data_ OptionsResponse
+	resp_ := &graphql.Response{Data: &data_}
 
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
 	)
 
-	return &data, err
+	return &data_, err_
 }

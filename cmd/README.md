@@ -10,7 +10,7 @@ Check it with `apt list --all-versions golang golang-1.*`.
 To install a more recent Go version, you may try:
 
     sudo apt purge   golang
-    sudo apt install golang-1.21
+    sudo apt install golang-1.22
 
 [Snap](<https://en.wikipedia.org/wiki/Snap_(package_manager)>) provides a simple way to install the latest Go version on most Linux distributions:
 

@@ -30,7 +30,7 @@ ARG uid=5505
 # base = /rainbow/
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.21 AS version
+FROM docker.io/golang:1.22 AS version
 
 WORKDIR /code
 
@@ -69,6 +69,7 @@ RUN set -ex                                                                     
     export GOFLAGS="-trimpath -modcacherw"                                       ;\
     export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
     export GOAMD64=v3                                                            ;\
+    export GOEXPERIMENT=newinliner                                               ;\
     go build -v -ldflags="-X 'github.com/teal-finance/garcon.V=$v'" ./cmd/server ;\
     ls -sh server                                                                ;\
     ./server -version  # smoke test
@@ -116,7 +117,7 @@ ENV GZIPPER_VERBOSE         0
 ENV GZIPPER_SKIP_COMPRESSED 1
 
 RUN set -ex                                            ;\
-    ls -lA                                             ;\
+    ls -lShA                                           ;\
     v="$(cat version.txt)"                             ;\
     sed -e "s|^VITE_VERS=.*|VITE_VERS=$v|"    -i .env  ;\
     sed -e "s|^VITE_ADDR=.*|VITE_ADDR=$addr|" -i .env  ;\
@@ -126,7 +127,7 @@ RUN set -ex                                            ;\
     npm run compress
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.21 AS integrator
+FROM docker.io/golang:1.22 AS integrator
 
 WORKDIR /target
 
