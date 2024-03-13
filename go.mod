@@ -1,6 +1,6 @@
 module github.com/teal-finance/rainbow
 
-go 1.22
+go 1.22.0
 
 require (
 	github.com/Khan/genqlient v0.7.0
@@ -45,11 +45,11 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/consensys/bavard v0.1.13 // indirect
 	github.com/consensys/gnark-crypto v0.12.1 // indirect
-	github.com/crate-crypto/go-kzg-4844 v1.0.0 // indirect
+	github.com/crate-crypto/go-kzg-4844 v0.7.0 // indirect
 	github.com/cristalhq/base64 v0.1.2 // indirect
-	github.com/deckarep/golang-set/v2 v2.6.0 // indirect
-	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
-	github.com/ethereum/c-kzg-4844 v1.0.0 // indirect
+	github.com/deckarep/golang-set/v2 v2.1.0 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
+	github.com/ethereum/c-kzg-4844 v0.4.0 // indirect
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/felixge/fgprof v0.9.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
@@ -86,8 +86,8 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/streamingfast/logging v0.0.0-20230608130331-f22c91403091 // indirect
 	github.com/supranational/blst v0.3.11 // indirect
-	github.com/teal-finance/incorruptible v0.0.0-20240312103045-cd27cac96f11 // indirect
-	github.com/teal-finance/quid v0.0.0-20230216061629-9c9b3ff5e887 // indirect
+	github.com/teal-finance/incorruptible v0.0.0-20240312165854-121ce0ea4494 // indirect
+	github.com/teal-finance/quid v0.0.0-20240312173051-86f439faafcf // indirect
 	github.com/tklauser/go-sysconf v0.3.13 // indirect
 	github.com/tklauser/numcpus v0.7.0 // indirect
 	github.com/vektah/gqlparser/v2 v2.5.11 // indirect
