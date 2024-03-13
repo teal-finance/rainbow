@@ -24,6 +24,7 @@ import (
 var (
 	log      = emo.NewZone("main")
 	green    = color.FgGreen.Render
+	gray     = color.FgGray.Render
 	red      = color.FgRed.Render
 	magenta  = color.FgMagenta.Render
 	blue     = color.FgCyan.Render
@@ -60,7 +61,7 @@ func printTable(options []rainbow.Option) {
 
 	t.AppendHeader(table.Row{
 		"Provider", "Asset", "Type", "Size", green(" Bid"), "Strike", blue("MarketIV"),
-		red(" Ask"), "Size", darkBlue("Open Interest"), "Instrument",
+		red(" Ask"), "Size", darkBlue("Open Interest"), "Instrument", "Expiry",
 	})
 
 	align := api.NewAlign()
@@ -71,7 +72,8 @@ func printTable(options []rainbow.Option) {
 			highlight(o.Provider), o.Asset, o.Type,
 			bestBidQty, green(bestBidPx), math.Round(o.Strike*100) / 100,
 			blue(math.Round(o.MarketIV*100) / 100),
-			red(bestAskPx), bestAskQty, darkBlue(math.Round(o.OpenInterest*100) / 100), o.Name,
+			red(bestAskPx), bestAskQty, darkBlue(math.Round(o.OpenInterest*100) / 100),
+			o.Name, gray(o.ExpiryTime),
 		}})
 	}
 
