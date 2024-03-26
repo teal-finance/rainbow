@@ -74,9 +74,9 @@ as our official instance:
 
 ### 📑 Requirements
 
-- Go v1.18+ (single requirement for the CLI)
-- Node v14+
-- Npm
+- Go v1.22 (single requirement for the [CLI](#🪃-run-the-cli))
+- Node v18
+- Npm v9
 - Docker v20 (optional)
 - Podman v3 (optional)
 
@@ -91,13 +91,16 @@ without requiring Node, Npm, Docker…
     node --version
 
 On Debian/Ubuntu, the command `sudo apt install golang` may install an older version.
-Check it with `apt list --all-versions golang golang-1.*`.
+List all available versions with:
+
+    apt list --all-versions golang golang-1.*
+
 To install a more recent Go version, you may try:
 
-    sudo apt purge   golang
-    sudo apt install golang-1.18
+    sudo apt purge   golang*
+    sudo apt install golang-1.22
 
-The [Dockerfile](#🐋-container) can be used equally with Docker or Podman.
+However, you may not need to install Go and Node if you build/run Rainbow using the [Dockerfile](#🐋-container).
 
 ### 📥 Clone the Rainbow Git repo
 
@@ -258,13 +261,23 @@ and more. For more details see the underlying project
 
 ## 🛣️ API
 
-To test the API endpoints, run the backend:
+The API is protected by a JWT.
+You can reuse the anonymous JWT provided by the frontend.
+To get the JWT, first visit the webpage
+https://teal.finance/rainbow
+then replace this former URL by
+https://teal.finance/rainbow/v0/options
+
+Moreover, you can also use the API by running the Rainbow backend in your machine:  
+
+Using the [Dockerfile](#🐋-container):
+
+    make container-run expose=8090
+
+Using the Go compiler installed on your local machine:
 
     make run
 
-or using the container alternative:
-
-    make container-run expose=8090
 
 ### /v0/options
 
