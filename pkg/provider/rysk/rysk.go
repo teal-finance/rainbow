@@ -15,11 +15,10 @@ import (
 )
 
 const (
-	name         = "Rysk"
-	lens         = "0xa306C00e08ebC84a5F4F67b561B8F6EDeb77600D"
-	rpc          = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
-	url          = "https://app.rysk.finance/options"
-	USDCDecimals = 6
+	name = "Rysk"
+	lens = "0xa306C00e08ebC84a5F4F67b561B8F6EDeb77600D"
+	rpc  = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
+	url  = "https://app.rysk.finance/options"
 )
 
 var log = emo.NewZone(name)
@@ -134,8 +133,8 @@ func process(expTime uint64, expStr string, drills []DHVLensMK1OptionStrikeDrill
 // return iv, quote, fee, disabled, premiumtoosmall
 func convertQuotes(t DHVLensMK1TradingSpec) (float64, float64, float64, bool, bool) {
 	iv := rainbow.ToFloat(t.Iv, rainbow.DefaultEthereumDecimals-2) // just to store it as XX.XXX% instead of .XXXXX
-	quote := rainbow.ToFloat(t.Quote, USDCDecimals)
-	fee := rainbow.ToFloat(t.Fee, USDCDecimals)
+	quote := rainbow.ToFloat(t.Quote, rainbow.USDCDecimals)
+	fee := rainbow.ToFloat(t.Fee, rainbow.USDCDecimals)
 
 	return iv, quote, fee, t.Disabled, t.PremiumTooSmall
 }

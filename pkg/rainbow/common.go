@@ -15,6 +15,9 @@ import (
 // DefaultEthereumDecimals is the default decimals that most token uses, starting with ETH.
 const DefaultEthereumDecimals int64 = 18
 
+// USDCDecimals is the number of decimals for USDC
+const USDCDecimals = 6
+
 // IntToEthereumUint256 convert an int to the Ethereum format.
 // Ethereum use 18 decimals in their VM.
 // To quote 1 option, you thus need to send 1000000000000000000.

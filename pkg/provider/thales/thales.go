@@ -19,7 +19,6 @@ import (
 
 	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
-	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -115,9 +114,9 @@ func LayerDecimals(layer string) int64 {
 	case "Optimism":
 		return rainbow.DefaultEthereumDecimals
 	case "Polygon":
-		return anchor.USDCDecimals
+		return rainbow.USDCDecimals
 	case "Arbitrum":
-		return anchor.USDCDecimals
+		return rainbow.USDCDecimals
 	}
 	log.Panic("Unexpected layer", layer)
 	return 0
