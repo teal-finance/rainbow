@@ -15,7 +15,6 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/provider/lyra"
-	"github.com/teal-finance/rainbow/pkg/provider/lyrav2"
 	"github.com/teal-finance/rainbow/pkg/provider/rysk"
 	"github.com/teal-finance/rainbow/pkg/provider/sdx"
 	"github.com/teal-finance/rainbow/pkg/provider/synquote"
@@ -32,7 +31,6 @@ func AllProviders() []rainbow.Provider {
 		&deribit.Provider{},
 		&rysk.Provider{},
 		lyra.Provider{},
-		lyrav2.Provider{},
 		synquote.Provider{},
 		&thalex.Provider{},
 		aevo.Provider{},

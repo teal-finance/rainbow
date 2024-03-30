@@ -1,4 +1,4 @@
-// Copyright 2022 Teal.Finance/Rainbow contributors
+// Copyright 2023 Teal.Finance/Rainbow contributors
 // This file is part of Teal.Finance/Rainbow,
 // a screener for DeFi options under the MIT License.
 // SPDX-License-Identifier: MIT
@@ -6,320 +6,305 @@
 package lyra
 
 import (
-	"math"
-	"math/big"
+	"strconv"
 	"strings"
+	"time"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/spewerspew/spew"
 	"github.com/teal-finance/emo"
+	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
-var log = emo.NewZone("Lyra")
-
-// DOC: https://docs.lyra.finance/developers/deployed-contracts
+var log = emo.NewZone(name)
 
 const (
-	// TODO use teal on Optimism
-	// TODO use perso on Arbitrum
-	// TODO do that on the 1st Nov
-	// Sorry alchemy but we r too poor
-
-	// teal
-	rpcOP = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
-	// perso
-	// rpcOP = "https://opt-mainnet.g.alchemy.com/v2/uksZH_SjXAaBnIw95hZcBoCWGCXs9VXI"
-	name = "Lyra"
-	// teal
-	// rpcARB = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	// perso
-	rpcARB = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
-
-	oneOption = 1
+	// https://api.lyra.finance/public/get_instruments?currency=BTC&instrument_type=option&expired=false
+	baseURL = "https://api.lyra.finance/public/"
+	uiURL   = "https://www.lyra.finance/options/"
+	name    = "Lyra"
 )
 
-type Provider struct{}
+type Provider struct {
+	ar garcon.AdaptiveRate
+}
 
 func (Provider) Name() string {
 	return name
 }
 
-func (Provider) Options() ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
-	marketsARB, clientARB, err := GetOptionsFromLayer("Arbitrum")
-	if err != nil {
-		return nil, log.Error("GetOptionsFromLayer", "Arbitrum", err).Err()
+// adaptiveMinSleepTime to rate limit the lyra API.
+// source: https://v2-docs.lyra.finance/reference/rate-limits
+const adaptiveMinSleepTime = 25 * time.Millisecond
+
+// Hour at which the options expires = 8:00 UTC.
+const Hour = 8
+
+// maxBytesToRead prevents wasting memory/CPU when receiving an abnormally huge response from Aevo API.
+// we put the same param as Deribit
+const maxBytesToRead = 2_000_000
+
+func (p Provider) Options() ([]rainbow.Option, error) {
+	if p.ar.Name == "" {
+		p.ar = garcon.NewAdaptiveRate(name, adaptiveMinSleepTime)
 	}
 
-	optionsARB, err := processMarketsFromLayer("Arbitrum", marketsARB, clientARB)
+	result, err := p.query()
 	if err != nil {
-		return nil, log.Error("processMarketsFromLayer", "Arbitrum", err).Err()
+		return nil, err
 	}
+	r := result.Instruments //[0:3]
 
-	marketsOP, clientOP, err := GetOptionsFromLayer("Optimism")
+	options, err := p.fillOptions(r)
 	if err != nil {
-		return nil, log.Error("GetOptionsFromLayer", "Optimism", err).Err()
+		return nil, log.Error("filloptions", err).Err()
 	}
-	optionsOP, err := processMarketsFromLayer("Optimism", marketsOP, clientOP)
-	if err != nil {
-		return nil, log.Error("processMarketsFromLayer", "Optimism", err).Err()
-	}
-
-	options = append(options, optionsARB...)
-	options = append(options, optionsOP...)
-	log.Info("Lyra total markets", len(options))
-
 	return options, nil
 }
 
-func GetOptionsFromLayer(layer string) (*[]common.Address, *ethclient.Client, error) {
-	rpc := ""
-	lyraRegistry := ""
+func (p Provider) query() (GetInstrumentsResults, error) {
+	const url = baseURL + "get_instruments?currency=BTC&instrument_type=option&expired=false"
+	log.Info(name + " " + url)
 
-	if layer == "Optimism" {
-		rpc = rpcOP
-		lyraRegistry = lyraRegistryOP
-	} else if layer == "Arbitrum" {
-		rpc = rpcARB
-		lyraRegistry = lyraRegistryARB
-	} else {
-		return nil, &ethclient.Client{}, log.Error("Unknown layer", layer).Err()
-	}
-
-	client, err := ethclient.Dial(rpc)
+	var results GetInstrumentsResults
+	err := p.ar.Get("", url, &results, maxBytesToRead)
 	if err != nil {
-		return nil, &ethclient.Client{}, log.Error("Lyra ethclient", layer, err).Err()
+		return GetInstrumentsResults{}, log.Error("query", url, err).Err()
 	}
 
-	address := common.HexToAddress(lyraRegistry)
-	registry, err := NewRegistry(address, client)
-	if err != nil {
-		return nil, &ethclient.Client{}, log.Error("Lyra registry", layer, err).Err()
-	}
-
-	// DO NOT use make() here!
-	// we don't want to have 0x00...0 initialize here.
-	// and we don't know how many market there will be.
-	markets := []common.Address{}
-
-	var i int64
-	var market common.Address
-	err = nil
-	for ; err == nil; i++ {
-		market, err = registry.OptionMarkets(&bind.CallOpts{}, big.NewInt(i))
-		if err == nil {
-			markets = append(markets, market)
-		}
-	}
-	if len(markets) == 0 {
-		log.Error("registry.OptionMarkets return empty array on + ", layer)
-	}
-	return &markets, client, nil
+	return results, nil
 }
 
-func processMarketsFromLayer(layer string, markets *[]common.Address, client *ethclient.Client) ([]rainbow.Option, error) {
-	log.Printf("Processing options on %s  \n", layer)
-
+func (p Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, error) {
+	url := ""
+	var ticker GetTickerResult
+	var err error
 	options := []rainbow.Option{}
-
-	quoterAddress := ""
-	optionMarketViewer := ""
-	if layer == "Optimism" {
-		quoterAddress = quoterAddressOP
-		optionMarketViewer = optionMarketViewerOP
-	} else if layer == "Arbitrum" {
-		quoterAddress = quoterAddressARB
-		optionMarketViewer = optionMarketViewerARB
-	} else {
-		return nil, log.Error("Unknown layer", layer).Err()
-	}
-
-	q, err := NewQuoter(common.HexToAddress(quoterAddress), client)
-	if err != nil {
-		return nil, log.Error("quoter contract", layer, err).Err()
-	}
-
-	viewer, err := NewMarketviewer(common.HexToAddress(optionMarketViewer), client)
-	if err != nil {
-		return nil, log.Error("MarketAddresses", layer, err).Err()
-	}
-
-	for i := 0; i < len(*markets); i++ {
-		marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, (*markets)[i])
+	var s, iv, index, OpenInterest float64
+	var bidSize, bidPrice, askSize, askPrice float64
+	// askiv := 0.0
+	// bidiv := 0.0
+	optionType := ""
+	for _, i := range instruments {
+		if !strings.Contains(i.InstrumentName, "20240112") {
+			continue
+		}
+		url = baseURL + "get_ticker?instrument_name=" + i.InstrumentName
+		err = p.ar.Get("", url, &ticker, maxBytesToRead)
 		if err != nil {
-			return nil, log.Error("MarketAddresses", layer, i, err).Err()
+			return nil, log.Error("Get Ticker", i.InstrumentName, err).Err()
 		}
-		baseAsset := Asset(marketAddresses.BaseAsset)
 
-		boards, err := viewer.GetLiveBoards(&bind.CallOpts{}, (*markets)[i])
+		if i.Details.OptionType == "C" {
+			optionType = "CALL"
+		} else if i.Details.OptionType == "P" {
+			optionType = "PUT"
+		} else {
+			log.Warn("Unknown option type")
+			optionType = "???"
+		}
+		s, err = strconv.ParseFloat(i.Details.Strike, 64)
 		if err != nil {
-			spew.Dump((*markets)[i])
-			return nil, log.Error("GetLiveBoards", layer, err).Err()
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
 		}
 
-		for _, b := range boards {
-			for ii := range b.Strikes {
-				callPut, err := b.process(ii, baseAsset, q, layer)
-				if err != nil {
-					return nil, log.Error("process", layer, err).Err()
-				}
-				options = append(options, callPut...)
-			}
+		iv, err = strconv.ParseFloat(ticker.Result.OptionPricing.Iv, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
 		}
+		index, err = strconv.ParseFloat(ticker.Result.IndexPrice, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		OpenInterest, err = strconv.ParseFloat(ticker.Result.Stats.OpenInterest, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		bidPrice, err = strconv.ParseFloat(ticker.Result.BestBidPrice, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		bidSize, err = strconv.ParseFloat(ticker.Result.BestBidAmount, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		askPrice, err = strconv.ParseFloat(ticker.Result.BestAskPrice, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		askSize, err = strconv.ParseFloat(ticker.Result.BestAskAmount, 64)
+		if err != nil {
+			return []rainbow.Option{}, log.Error("conversion failure", s, err).Err()
+		}
+		infos := strings.Split(i.InstrumentName, "-")
+
+		expiry := time.Unix(int64(i.Details.Expiry), 0).UTC().Format("2006-01-02 15:04:05")
+
+		options = append(options, rainbow.Option{
+			Name:            i.InstrumentName,
+			Type:            strings.ToUpper(optionType),
+			Asset:           ticker.Result.BaseCurrency,
+			UnderlyingAsset: ticker.Result.BaseCurrency,
+			Strike:          s,
+			Expiry:          expiry,
+			ExpiryTime:      i.Details.Expiry,
+			ExchangeType:    "DEX",
+			Chain:           "Ethereum",
+			Layer:           "L2",
+			LayerName:       "Lyra",
+			Provider:        name,
+			UnderlyingQuote: ticker.Result.QuoteCurrency,
+			QuoteCurrency:   "USD",
+			URL:             uiURL + "btc?drawer=false&buy=true&expiry=" + infos[1] + "&option=" + i.InstrumentName,
+			Bid: []rainbow.Order{{
+				Price: bidPrice,
+				Size:  bidSize,
+			}},
+			// BidIV:,
+
+			Ask: []rainbow.Order{{
+				Price: askPrice,
+				Size:  askSize,
+			}},
+			// AskIV:,
+			MarketIV: iv * 100,
+			// TODO greeks
+			// Greeks:
+			OpenInterest: OpenInterest * index,
+			ProtocolID:   i.InstrumentName,
+		})
 	}
-	log.Printf("Processed  %v options on %s\n", len(options), layer)
+	// spew.Dump(options)
 
 	return options, nil
 }
 
-func LayerUnderlyingQuoteCurrency(layer string) string {
-	switch layer {
-	case "Optimism":
-		return "sUSD"
-	case "Arbitrum":
-		return "USDC"
+/*
+func bidAsksToOrders(orders [][]string) ([]rainbow.Order, error) {
+	if len(orders) == 0 {
+		return []rainbow.Order{}, nil
 	}
-	log.Panic("Unexpected layer", layer)
-	return "UUU"
+	convertedOrders := []rainbow.Order{}
+	p := 0.0 // price
+
+	s := 0.0 // size
+	// i:=0.0 iv
+	var err error
+	for _, o := range orders {
+		p, err = convert(o[0])
+		if err != nil {
+			return nil, log.Error("bidAsksToOrders", err).Err()
+		}
+		s, err = convert(o[1])
+		if err != nil {
+			return nil, log.Error("bidAsksToOrders", err).Err()
+		}
+
+		convertedOrders = append(convertedOrders, rainbow.Order{
+			Price: p,
+			Size:  s,
+		})
+		// i,err=convert(o[2])
+
+	}
+
+	return convertedOrders, nil
 }
 
-func Asset(address common.Address) string {
-	// those asset are part of Synthetix so if it's not recognized
-	// it is an unknown synthetic asset.
-
-	switch {
-	case address.String() == SETH:
-		return "sETH"
-	case address.String() == SBTC:
-		return "sBTC"
-	case address.String() == SSOL:
-		return "sSOL"
-	case address.String() == SLINK:
-		return "sLINK"
-	case address.String() == AWBTC:
-		return "WBTC"
-	case address.String() == OWBTC:
-		return "WBTC"
-	case address.String() == AWETH:
-		return "WETH"
-	case address.String() == OWETH:
-		return "WETH"
-	case address.String() == OP:
-		return "OP"
-	case address.String() == LyraARB:
-		return "ARB"
-	case address.String() == LINK:
-		return "LINK"
-	case address.String() == LyraXRP:
-		return "XRP"
-	default:
-		log.Warn("Lyra Unknown token:", address.String())
-		return "LLLL"
-	}
+func translateGreeks(g greeks) (rainbow.TheGreeks, error) {
+	// TODO
+	return rainbow.TheGreeks{}, nil
 }
 
-// OptionMarketViewerBoardViewARB copies and slightly adapt OptionMarketViewerBoardView
-func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Quoter, layer string) ([]rainbow.Option, error) {
-	options := []rainbow.Option{}
+*/
 
-	call := rainbow.Option{
-		Name:            "",
-		Type:            "CALL",
-		Asset:           asset,
-		Expiry:          rainbow.Expiration(b.Expiry.Int64()),
-		ExchangeType:    "DEX",
-		Chain:           "Ethereum",
-		Layer:           "L2",
-		LayerName:       layer,
-		Provider:        name + "::" + layer,
-		QuoteCurrency:   "USD", // sUSD or USDC
-		UnderlyingQuote: LayerUnderlyingQuoteCurrency(layer),
-		Bid:             nil,
-		Ask:             nil,
-		Strike:          rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
-	}
-
-	put := rainbow.Option{
-		Name:            "",
-		Type:            "PUT",
-		Asset:           asset,
-		Expiry:          rainbow.Expiration(b.Expiry.Int64()),
-		ExchangeType:    "DEX",
-		Chain:           "Ethereum",
-		Layer:           "L2",
-		LayerName:       layer,
-		Provider:        name + "::" + layer,
-		QuoteCurrency:   "USD", // sUSD or USDC
-		UnderlyingQuote: LayerUnderlyingQuoteCurrency(layer),
-		Bid:             nil,
-		Ask:             nil,
-		Strike:          rainbow.ToFloat(b.Strikes[i].StrikePrice, rainbow.DefaultEthereumDecimals),
-	}
-	call.Name = call.OptionName()
-	put.Name = put.OptionName()
-
-	// TODO check properly
-	call.URL = url(&call) // , b.Strikes[i].StrikeId)
-	put.URL = url(&put)   // , b.Strikes[i].StrikeId)
-
-	// Market IV = board IV (baseIV) * Skew //TODO verify it's still 18 on arbitrum
-	call.MarketIV = rainbow.ToFloat(b.BaseIv, rainbow.DefaultEthereumDecimals) *
-		rainbow.ToFloat(b.Strikes[i].Skew, rainbow.DefaultEthereumDecimals)
-	// keep only 5 decimals (0.XXXXX) and show it as XX.XXX%
-	call.MarketIV = math.Floor(call.MarketIV*10_000_000) / 100_000
-	put.MarketIV = call.MarketIV
-
-	bidasks, err := getBidsAsks(b.Strikes[i].StrikeId, b.Market, oneOption, quoter)
-	if err != nil {
-		return options, log.Error("getBidsAsks", layer, err).Err()
-	}
-
-	call.Bid = append(call.Bid, rainbow.Order{
-		Price: bidasks[3],
-		Size:  float64(oneOption),
-	})
-
-	call.Ask = append(call.Ask, rainbow.Order{
-		Price: bidasks[0],
-		Size:  float64(oneOption),
-	})
-	put.Bid = append(put.Bid, rainbow.Order{
-		Price: bidasks[4],
-		Size:  float64(oneOption),
-	})
-
-	put.Ask = append(put.Ask, rainbow.Order{
-		Price: bidasks[1],
-		Size:  float64(oneOption),
-	})
-	options = append(options, call, put)
-
-	return options, nil
+type GetInstrumentsResults struct {
+	Instruments []Instrument `json:"result"`
+	ID          string       `json:"id"`
 }
 
-func getBidsAsks(strikeID *big.Int, market common.Address, amount int, quoter *Quoter) ([]float64, error) {
-	// We use 3 iterations (common.Big3) here because  that's what they do in the UI
-	premium, _, err := quoter.FullQuotes(&bind.CallOpts{}, market, strikeID, common.Big3,
-		rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals))
-	if err != nil {
-		return nil, log.Error("FullQuotes market=", market, "strikeID=", strikeID, err).Err()
-	}
-	return rainbow.ToFloats(premium, rainbow.DefaultEthereumDecimals), nil
+type Instrument struct {
+	InstrumentType        string        `json:"instrument_type"`
+	InstrumentName        string        `json:"instrument_name"`
+	ScheduledActivation   int           `json:"scheduled_activation"`
+	ScheduledDeactivation int           `json:"scheduled_deactivation"`
+	IsActive              bool          `json:"is_active"`
+	TickSize              string        `json:"tick_size"`
+	MinimumAmount         string        `json:"minimum_amount"`
+	MaximumAmount         string        `json:"maximum_amount"`
+	AmountStep            string        `json:"amount_step"`
+	MarkPriceFeeRateCap   string        `json:"mark_price_fee_rate_cap"`
+	MakerFeeRate          string        `json:"maker_fee_rate"`
+	TakerFeeRate          string        `json:"taker_fee_rate"`
+	BaseFee               string        `json:"base_fee"`
+	BaseCurrency          string        `json:"base_currency"`
+	QuoteCurrency         string        `json:"quote_currency"`
+	Details               OptionDetails `json:"option_details"`
+	PerpDetails           interface{}   `json:"perp_details"`
+	BaseAssetAddress      string        `json:"base_asset_address"`
+	BaseAssetSubID        string        `json:"base_asset_sub_id"`
+}
+type OptionDetails struct {
+	Index           string      `json:"index"`
+	Expiry          int         `json:"expiry"`
+	Strike          string      `json:"strike"`
+	OptionType      string      `json:"option_type"`
+	SettlementPrice interface{} `json:"settlement_price"`
 }
 
-// TODO check function on their frontend.
-func url(o *rainbow.Option /*, strikeID *big.Int*/) string {
-	// base := "https://app.lyra.finance/position/?"
-	base := "https://app.lyra.finance/trade"
-	asset := strings.ToLower(o.Asset[1:])
-	// TODO if they include asset with decimal, modify this
-	// most likely example: SOL, LINK
-	// strike := fmt.Sprintf("%.f", rainbow.ToFloat(strikeID, 0))
-	// t := strings.ToLower(o.Type)
+// https://v2-docs.lyra.finance/reference/post_public-get-ticker
+type GetTickerResult struct {
+	Result struct {
+		InstrumentType        string        `json:"instrument_type"`
+		InstrumentName        string        `json:"instrument_name"`
+		ScheduledActivation   int           `json:"scheduled_activation"`
+		ScheduledDeactivation int           `json:"scheduled_deactivation"`
+		IsActive              bool          `json:"is_active"`
+		TickSize              string        `json:"tick_size"`
+		MinimumAmount         string        `json:"minimum_amount"`
+		MaximumAmount         string        `json:"maximum_amount"`
+		AmountStep            string        `json:"amount_step"`
+		MarkPriceFeeRateCap   string        `json:"mark_price_fee_rate_cap"`
+		MakerFeeRate          string        `json:"maker_fee_rate"`
+		TakerFeeRate          string        `json:"taker_fee_rate"`
+		BaseFee               string        `json:"base_fee"`
+		BaseCurrency          string        `json:"base_currency"`
+		QuoteCurrency         string        `json:"quote_currency"`
+		Details               OptionDetails `json:"option_details"`
+		PerpDetails           interface{}   `json:"perp_details"`
+		BaseAssetAddress      string        `json:"base_asset_address"`
+		BaseAssetSubID        string        `json:"base_asset_sub_id"`
+		BestAskAmount         string        `json:"best_ask_amount"`
+		BestAskPrice          string        `json:"best_ask_price"`
+		BestBidAmount         string        `json:"best_bid_amount"`
+		BestBidPrice          string        `json:"best_bid_price"`
+		OptionPricing         struct {
+			Delta        string `json:"delta"`
+			Theta        string `json:"theta"`
+			Gamma        string `json:"gamma"`
+			Vega         string `json:"vega"`
+			Iv           string `json:"iv"`
+			Rho          string `json:"rho"`
+			MarkPrice    string `json:"mark_price"`
+			ForwardPrice string `json:"forward_price"`
+			BidIv        string `json:"bid_iv"`
+			AskIv        string `json:"ask_iv"`
+		} `json:"option_pricing"`
+		IndexPrice string          `json:"index_price"`
+		MarkPrice  string          `json:"mark_price"`
+		Stats      InstrumentStats `json:"stats"`
+		Timestamp  int64           `json:"timestamp"`
+		MinPrice   string          `json:"min_price"`
+		MaxPrice   string          `json:"max_price"`
+	} `json:"result"`
+	ID string `json:"id"`
+}
 
-	return base + "/" + asset //+ "/" + strike + "/" + t
-	// return base + "market=" + asset + "&id=" + ""
+type InstrumentStats struct {
+	ContractVolume string `json:"contract_volume"`
+	NumTrades      string `json:"num_trades"`
+	OpenInterest   string `json:"open_interest"`
+	High           string `json:"high"`
+	Low            string `json:"low"`
+	PercentChange  string `json:"percent_change"`
+	UsdChange      string `json:"usd_change"`
 }

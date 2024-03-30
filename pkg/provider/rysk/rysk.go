@@ -6,7 +6,6 @@
 package rysk
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -139,6 +138,7 @@ func convertQuotes(t DHVLensMK1TradingSpec) (float64, float64, float64, bool, bo
 	return iv, quote, fee, t.Disabled, t.PremiumTooSmall
 }
 
+/*
 // TODO remove
 // this is just to test and learn
 func test() {
@@ -170,3 +170,4 @@ func test() {
 	spew.Dump(convertQuotes(co.Sell))
 	spew.Dump(rainbow.Expiration(int64(exp[0])))
 }
+*/
