@@ -197,6 +197,7 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 			Type:          strings.ToUpper(instruments[i].OptionType),
 			Asset:         instruments[i].BaseCurrency,
 			Expiry:        expiryStr,
+			ExpiryTime:    int(seconds),
 			Strike:        instruments[i].Strike,
 			ExchangeType:  "CEX",
 			Chain:         "–",

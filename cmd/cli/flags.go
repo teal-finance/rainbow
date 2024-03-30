@@ -11,10 +11,7 @@ import (
 	"github.com/teal-finance/garcon"
 	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/rainbow/pkg/provider"
-)
-
-const (
-	defaultProviders = "ALL" //"deribit,delta,lyra,synquote,aevo,rysk,sdx"
+	"github.com/teal-finance/rainbow/pkg/rainbow/x"
 )
 
 var (
@@ -23,7 +20,7 @@ var (
 	exotic = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
 	infos  = flag.Bool("infos", false, "Show additional infos on instruments like URL ...")
 
-	providers = flag.String("providers", gg.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, same as the PROVIDERS env. var.")
+	providers = flag.String("providers", gg.EnvStr("PROVIDERS", x.DefaultProviders), "Coma-separated list of providers, same as the PROVIDERS env. var.")
 )
 
 func parseFlags() {
@@ -43,7 +40,7 @@ func parseFlags() {
 // listProviderNames is duplicated https://github.com/teal-finance/rainbow/blob/main/cmd/server/flags.go#L88
 func listProviderNames() []string {
 	if *cex || *dex || *exotic {
-		if *providers == defaultProviders {
+		if *providers == x.DefaultProviders {
 			*providers = ""
 		}
 		if *cex {

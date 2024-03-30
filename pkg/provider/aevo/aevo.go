@@ -118,6 +118,7 @@ func (p Provider) fillOptions(instruments Markets) ([]rainbow.Option, error) {
 			UnderlyingAsset: i.UnderlyingAsset,
 			Strike:          s,
 			Expiry:          expiryStr,
+			ExpiryTime:      int(seconds),
 			ExchangeType:    "DEX",
 			Chain:           "Ethereum",
 			Layer:           "L2",

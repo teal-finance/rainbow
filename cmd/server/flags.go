@@ -14,11 +14,10 @@ import (
 	"github.com/teal-finance/garcon/gg"
 	"github.com/teal-finance/garcon/timex"
 	"github.com/teal-finance/rainbow/pkg/provider"
+	"github.com/teal-finance/rainbow/pkg/rainbow/x"
 )
 
 const (
-	defaultAddr      = "http://localhost"
-	defaultPort      = 8090
 	defaultProviders = "ALL"
 )
 
@@ -28,9 +27,9 @@ var (
 	cex          = flag.Bool("cex", false, "Enable the centralized exchanges: Deribit, Delta Exchange and Thalex")
 	dex          = flag.Bool("dex", false, "Enable the decentralized exchanges: Lyra, Synquote, Aevo, Rysk and SDX")
 	exotic       = flag.Bool("exotic", false, "Enable the decentralized exchanges with binary options: Thales")
-	providers    = flag.String("providers", gg.EnvStr("PROVIDERS", defaultProviders), "Coma-separated list of providers, has precedence over PROVIDERS")
-	mainAddr     = flag.String("addr", gg.EnvStr("MAIN_ADDR", defaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
-	mainPort     = flag.Int("port", gg.EnvInt("MAIN_PORT", defaultPort), "API port, has precedence over MAIN_PORT")
+	providers    = flag.String("providers", gg.EnvStr("PROVIDERS", x.DefaultProviders), "Coma-separated list of providers, has precedence over PROVIDERS")
+	mainAddr     = flag.String("addr", gg.EnvStr("MAIN_ADDR", x.DefaultAddr), "Schema and DNS used for doc URL and CORS, has precedence over MAIN_ADDR")
+	mainPort     = flag.Int("port", gg.EnvInt("MAIN_PORT", x.DefaultPort), "API port, has precedence over MAIN_PORT")
 	expPort      = flag.Int("exp", gg.EnvInt("EXP_PORT"), "Export port for Prometheus, has precedence over EXP_PORT")
 	reqPerMinute = flag.Int("rate", gg.EnvInt("REQ_PER_MINUTE", 88), "Max requests per minute, has precedence over REQ_PER_MINUTE")
 	reqBurst     = flag.Int("burst", gg.EnvInt("REQ_BURST", 22), "Max requests during a burst, has precedence over REQ_BURST")
@@ -48,7 +47,7 @@ func parseFlags() {
 
 	listenAddr = ":" + strconv.Itoa(*mainPort)
 
-	if !*dev && *mainAddr == defaultAddr && *mainPort == defaultPort {
+	if !*dev && *mainAddr == x.DefaultAddr && *mainPort == x.DefaultPort {
 		*dev = true
 		log.Init("Enable -dev mode because -addr and -port flags are not used")
 	}
@@ -90,7 +89,7 @@ func parseFlags() {
 // listProviderNames is duplicated https://github.com/teal-finance/rainbow/blob/main/cmd/cli/flags.go#L42
 func listProviderNames() []string {
 	if *cex || *dex || *exotic {
-		if *providers == defaultProviders {
+		if *providers == x.DefaultProviders {
 			*providers = ""
 		}
 		if *cex {

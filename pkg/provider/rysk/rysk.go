@@ -6,7 +6,6 @@
 package rysk
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -15,11 +14,10 @@ import (
 )
 
 const (
-	name         = "Rysk"
-	lens         = "0xa306C00e08ebC84a5F4F67b561B8F6EDeb77600D"
-	rpc          = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
-	url          = "https://app.rysk.finance/options"
-	USDCDecimals = 6
+	name = "Rysk"
+	lens = "0xa306C00e08ebC84a5F4F67b561B8F6EDeb77600D"
+	rpc  = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
+	url  = "https://app.rysk.finance/options"
 )
 
 var log = emo.NewZone(name)
@@ -53,11 +51,11 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 		if err != nil {
 			return []rainbow.Option{}, log.Error(name, " GetOptionExpirationDrill error", err).Err()
 		}
-		calls, err := process(expStr, drill.CallOptionDrill, "CALL")
+		calls, err := process(e, expStr, drill.CallOptionDrill, "CALL")
 		if err != nil {
 			return []rainbow.Option{}, log.Error(name, " calls processing ", expStr, " error", err).Err()
 		}
-		puts, err := process(expStr, drill.PutOptionDrill, "PUT")
+		puts, err := process(e, expStr, drill.PutOptionDrill, "PUT")
 		if err != nil {
 			return []rainbow.Option{}, log.Error(name, " puts processing ", expStr, " error", err).Err()
 		}
@@ -68,7 +66,7 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 	return options, nil
 }
 
-func process(expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType string) (*[]rainbow.Option, error) {
+func process(expTime uint64, expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType string) (*[]rainbow.Option, error) {
 	options := []rainbow.Option{}
 
 	for _, drill := range drills {
@@ -96,6 +94,7 @@ func process(expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType str
 			UnderlyingAsset: "WETH",
 			Strike:          strike,
 			Expiry:          expStr,
+			ExpiryTime:      int(expTime),
 			ExchangeType:    "DEX",
 			Chain:           "Ethereum",
 			Layer:           "L2",
@@ -133,12 +132,13 @@ func process(expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType str
 // return iv, quote, fee, disabled, premiumtoosmall
 func convertQuotes(t DHVLensMK1TradingSpec) (float64, float64, float64, bool, bool) {
 	iv := rainbow.ToFloat(t.Iv, rainbow.DefaultEthereumDecimals-2) // just to store it as XX.XXX% instead of .XXXXX
-	quote := rainbow.ToFloat(t.Quote, USDCDecimals)
-	fee := rainbow.ToFloat(t.Fee, USDCDecimals)
+	quote := rainbow.ToFloat(t.Quote, rainbow.USDCDecimals)
+	fee := rainbow.ToFloat(t.Fee, rainbow.USDCDecimals)
 
 	return iv, quote, fee, t.Disabled, t.PremiumTooSmall
 }
 
+/*
 // TODO remove
 // this is just to test and learn
 func test() {
@@ -170,3 +170,4 @@ func test() {
 	spew.Dump(convertQuotes(co.Sell))
 	spew.Dump(rainbow.Expiration(int64(exp[0])))
 }
+*/

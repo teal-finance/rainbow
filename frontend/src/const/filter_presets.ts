@@ -38,8 +38,7 @@ const filterPresets: Record<string, any> = {
   'DEXes': {
     assets: { 'defaultValue': true },
     providers: {
-      'defaultValue': false, 'Aevo': true,
-      'Lyrav2': true, 'Lyra::Optimism': true, 'Lyra::Arbitrum': true,
+      'defaultValue': false, 'Aevo': true, 'Lyra': true,
       'Thales::Polygon': true, 'Thales::Arbitrum': true, 'Thales::Optimism': true,
       'Thales::Bsc': true, 'Synquote': true, 'SDX': true
     }
