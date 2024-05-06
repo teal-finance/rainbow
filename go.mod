@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/Khan/genqlient v0.7.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/ethereum/go-ethereum v1.13.14
+	github.com/ethereum/go-ethereum v1.13.15
 	github.com/friendsofgo/graphiql v0.2.2
 	github.com/gagliardetto/binary v0.7.9
 	github.com/gagliardetto/gofuzz v1.2.2
