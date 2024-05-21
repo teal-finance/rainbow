@@ -82,6 +82,10 @@ func (p *Provider) query(coin string) ([]UnderlyingAsset, error) {
 }
 
 func process(under []UnderlyingAsset) ([]rainbow.Option, error) {
+	if len(under) == 0 {
+		return nil, nil
+	}
+
 	// TODO Loop when more markets :)
 	markets := under[0].Markets
 	var options []rainbow.Option
