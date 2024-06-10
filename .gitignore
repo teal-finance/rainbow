@@ -7,6 +7,6 @@
 /client
 /code-coverage.out
 /dev
-/go.work*
-/server
 /poc
+/server
+go.work*
