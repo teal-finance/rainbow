@@ -103,7 +103,7 @@ func (a *alerter) vet(options []rainbow.Option, err error) error {
 // When the counter is over the Threshold, new incoming alerts are dropped.
 // Once the counter returns to zero, or after NoAlertDuration,
 // muter resumes the alerting. This is the Hysteresis principle:
-// https://wikiless.org/wiki/Hysteresis
+// https://en.wikipedia.org/wiki/Hysteresis
 type muter struct {
 	// counter is incremented/decremented depending on alerting activity, but is never negative.
 	counter int

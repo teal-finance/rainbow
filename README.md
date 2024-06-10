@@ -50,7 +50,7 @@ More info on our motivations:
   Optimism, using a custom AMM.
 
 - [Thales](https://thalesmarket.io/) Optimism and Polygon,
-  DeFi protocol for [binary options](https://wikiless.org/wiki/Binary_option) (exotic options).
+  DeFi protocol for [binary options](https://en.wikipedia.org/wiki/Binary_option) (exotic options).
 
 - [Zeta](https://zeta.markets/) (Solana):
   DeFi options protocol built using Serum order books.
@@ -294,14 +294,14 @@ Progressive filtering:
 - [/v0/options/BTC/2022-04-29/Deribit](http://localhost:8090/v0/options/BTC/2022-04-29/Deribit)
   (only the BTC-based options expiring on 2022-04-29 from Deribit)
 - [/v0/options/BTC/2022-04-29/Deribit/csv](http://localhost:8090/v0/options/BTC/2022-04-29/Deribit/csv)
-  (the same but in a [CSV](https://wikiless.org/wiki/Comma-separated_values "Comma-Separated Values") file,
+  (the same but in a [CSV](https://en.wikipedia.org/wiki/Comma-separated_values "Comma-Separated Values") file,
   see the [supported formats](#supported-formats))
 
 The general URL pattern:
 
     /v0/options/{asset}/{expiry}/{provider}/{format}
 
-The API may be tested with [cURL](https://wikiless.org/wiki/cURL):
+The API may be tested with [cURL](https://en.wikipedia.org/wiki/cURL):
 
     curl localhost:8090/v0/options
 
@@ -322,13 +322,13 @@ Moreover, the parameters can also be passed using the query string:
 
 #### POST method
 
-The API also supports the POST [form](https://wikiless.org/wiki/Application/x-www-form-urlencoded#The_application/x-www-form-urlencoded_type "application/x-www-form-urlencoded"):
+The API also supports the POST [form](https://en.wikipedia.org/wiki/Application/x-www-form-urlencoded#The_application/x-www-form-urlencoded_type "application/x-www-form-urlencoded"):
 
     curl localhost:8090/v0/options -d asset=BTC -d asset=ETH
 
     curl localhost:8090/v0/options -d asset=BTC -d expiry=2022 -d provider=Deribit -d format=csv
 
-The POST [form](https://wikiless.org/wiki/Application/x-www-form-urlencoded#The_application/x-www-form-urlencoded_type "application/x-www-form-urlencoded")
+The POST [form](https://en.wikipedia.org/wiki/Application/x-www-form-urlencoded#The_application/x-www-form-urlencoded_type "application/x-www-form-urlencoded")
 is recommended for privacy reasons since it hides your query within the encrypted request body when using HTTPS.
 
 #### Awesome expiry filtering
@@ -348,20 +348,20 @@ The `{format}` parameter is the last one at any position.
 - [/v0/options/json](http://localhost:8090/v0/options/json) (download a file in JSON format)
 - [/v0/options/csv](http://localhost:8090/v0/options/csv) (CSV file)
 - [/v0/options/tsv](http://localhost:8090/v0/options/tsv)
-  (TSV = [Tab-Separated Values](https://wikiless.org/wiki/Tab-separated_values))
+  (TSV = [Tab-Separated Values](https://en.wikipedia.org/wiki/Tab-separated_values))
 - [/v0/options/BTC/csv](http://localhost:8090/v0/options/BTC/csv)
   (only the BTC-based options in CSV)
 - [/v0/options/ALL/2022-06/csv](http://localhost:8090/v0/options/ALL/2022-06/csv)
   (all options expiring in June 2022 in CSV)
 
 The current supported formats are JSON,
-[CSV](https://wikiless.org/wiki/Comma-separated_values "Comma-Separated Values") and
-[TSV](https://wikiless.org/wiki/Tab-separated_values "Tab-Separated Values").
+[CSV](https://en.wikipedia.org/wiki/Comma-separated_values "Comma-Separated Values") and
+[TSV](https://en.wikipedia.org/wiki/Tab-separated_values "Tab-Separated Values").
 Depending on user requests, more formats may be supported such as
 [JSON-LD](https://github.com/piprate/json-gold "JSON for Linked Data"),
 [JSON Lines](https://jsonlines.org/examples/ "JSONL") (or
 [NDJSON](https://github.com/ndjson/ndjson.github.io/issues/1#issuecomment-109935996 "Newline-Delimited JSON"), see
-[JSON streaming](https://wikiless.org/wiki/JSON%20streaming#Line-delimited_JSON)),
+[JSON streaming](https://en.wikipedia.org/wiki/JSON%20streaming#Line-delimited_JSON)),
 [Avro](https://github.com/linkedin/goavro),
 [Parquet](https://github.com/xitongsys/parquet-go),
 [DataFrame](https://github.com/rocketlaunchr/dataframe-go),
