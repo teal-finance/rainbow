@@ -84,7 +84,7 @@ RUN set -ex                                                                     
 
 # --------------------------------------------------------------------
 # https://hub.docker.com/_/node
-FROM docker.io/node:21-alpine AS web_builder
+FROM docker.io/node:22-alpine AS web_builder
 
 WORKDIR /code
 
@@ -131,7 +131,7 @@ FROM docker.io/golang:1.22 AS integrator
 
 WORKDIR /target
 
-# Copy HTTPS root certificates (200 KB) + Create user/group files 
+# Copy HTTPS root certificates (200 KB) + Create user/group files
 RUN set -ex                                                 ;\
     mkdir -p                                 etc/ssl/certs  ;\
     cp -a /etc/ssl/certs/ca-certificates.crt etc/ssl/certs  ;\
