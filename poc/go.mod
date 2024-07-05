@@ -50,6 +50,7 @@ require (
 	github.com/deckarep/golang-set/v2 v2.6.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/dfuse-io/logging v0.0.0-20210518215502-2d920b2ad1f2 // indirect
+	github.com/ethereum/c-kzg-4844 v0.4.0 // indirect
 	github.com/ethereum/go-ethereum v1.13.14 // indirect
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/felixge/fgprof v0.9.4 // indirect
@@ -84,10 +85,11 @@ require (
 	github.com/prometheus/client_model v0.6.0 // indirect
 	github.com/prometheus/common v0.50.0 // indirect
 	github.com/prometheus/procfs v0.13.0 // indirect
-	github.com/rs/cors v1.10.1 // indirect
+	github.com/rs/cors v1.11.0 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/streamingfast/binary v0.0.0-20240116150400-b058b4376d53 // indirect
 	github.com/streamingfast/logging v0.0.0-20230608130331-f22c91403091 // indirect
+	github.com/supranational/blst v0.3.11 // indirect
 	github.com/teal-finance/emo v0.0.0-20240312100810-1c5a4984c875 // indirect
 	github.com/teal-finance/garcon v0.35.0 // indirect
 	github.com/teal-finance/incorruptible v0.0.0-20240312103045-cd27cac96f11 // indirect
