@@ -20,8 +20,8 @@ require (
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de
 	github.com/spewerspew/spew v0.0.0-20230513223542-89b69fbbe2bd
 	github.com/stretchr/testify v1.9.0
-	github.com/teal-finance/emo v0.0.0-20240610104517-58d37361ce25
-	github.com/teal-finance/garcon v0.35.1
+	github.com/teal-finance/emo v0.0.0-20240715102214-6340fad42a06
+	github.com/teal-finance/garcon v0.35.2
 )
 
 require (
@@ -87,7 +87,7 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/streamingfast/logging v0.0.0-20230608130331-f22c91403091 // indirect
 	github.com/supranational/blst v0.3.12 // indirect
-	github.com/teal-finance/incorruptible v0.0.0-20240610111019-e80aff374f9b // indirect
+	github.com/teal-finance/incorruptible v0.0.0-20240715101921-9d6a5ee47397 // indirect
 	github.com/teal-finance/quid v0.0.0-20240712160151-79f83e763510 // indirect
 	github.com/tklauser/go-sysconf v0.3.14 // indirect
 	github.com/tklauser/numcpus v0.8.0 // indirect
