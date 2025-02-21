@@ -112,9 +112,9 @@ ARG addr
 ARG base
 
 # No cache folder "/.gzipper" enabled by "gzipper compress --incremental"
-ENV GZIPPER_INCREMENTAL     0
-ENV GZIPPER_VERBOSE         0
-ENV GZIPPER_SKIP_COMPRESSED 1
+ENV GZIPPER_INCREMENTAL=0
+ENV GZIPPER_VERBOSE=0
+ENV GZIPPER_SKIP_COMPRESSED=1
 
 RUN set -ex                                            ;\
     ls -lShA                                           ;\
@@ -156,12 +156,12 @@ COPY --chown=$uid:$uid --from=integrator /target /
 USER $uid:$uid
 
 # Use UTC time zone by default
-ENV TZ        UTC0
-ENV WWW_DIR   /var/www
-ENV MAIN_ADDR "$addr$base"
-ENV MAIN_PORT "$port"
-ENV EXP_PORT  9868
-ENV HMAC_SHA256 C1C2C3C4C5C6C7C8C9C0CACBCCCDCECFC1C2C3C4C5C6C7C8C9C0CACBCCCDCECF
+ENV TZ=UTC0
+ENV WWW_DIR=/var/www
+ENV MAIN_ADDR="$addr$base"
+ENV MAIN_PORT="$port"
+ENV EXP_PORT=9868
+ENV HMAC_SHA256=C1C2C3C4C5C6C7C8C9C0CACBCCCDCECFC1C2C3C4C5C6C7C8C9C0CACBCCCDCECF
 
 EXPOSE "$port"
 EXPOSE 9868
