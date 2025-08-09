@@ -8,6 +8,7 @@ package thales
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"math/big"
 	"time"
