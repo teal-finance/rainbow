@@ -8,7 +8,7 @@ The Go-code generator is [genqlient](https://github.com/Khan/genqlient):
 
 - Compile-time validation of GraphQL queries: no invalid GraphQL query again!
 - Type-safe response objects: genqlient generates the right type for each query,
-  so you know the response will unmarshal correctly and never need to use `interface{}`.
+  so you know the response will unmarshal correctly and never need to use `any`.
 
 ## Step 1: Download the GraphQL schema
 

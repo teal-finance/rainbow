@@ -39,7 +39,7 @@ const adaptiveMinSleepTime = 25 * time.Millisecond
 const Hour = 8
 
 // maxBytesToRead prevents wasting memory/CPU when receiving an abnormally huge response from Thalex API.
-// we put the same param as Deribit
+// we put the same param as Deribit.
 const maxBytesToRead = 2_000_000
 
 func (p *Provider) Options() ([]rainbow.Option, error) {
@@ -84,7 +84,8 @@ func (p *Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, erro
 			continue
 		}
 		apiurl := baseURL + "ticker?instrument_name=" + i.InstrumentName
-		if err := p.ar.Get(i.InstrumentName, apiurl, &result); err != nil {
+		err := p.ar.Get(i.InstrumentName, apiurl, &result)
+		if err != nil {
 			log.Warn(name + " book " + err.Error())
 		}
 

@@ -47,7 +47,7 @@ func NextNFridays(t time.Time, fridays int) []time.Time {
 	expiries := make([]time.Time, fridays)
 	// adding "7" if not it counts the friday to the current week, not the next one
 	d := t.Add(time.Duration(7-t.Weekday()+time.Friday) * 24 * time.Hour)
-	for i := 0; i < fridays; i++ {
+	for i := range fridays {
 		expiries[i] = d.Add(time.Duration(i) * 7 * 24 * time.Hour)
 	}
 	return expiries

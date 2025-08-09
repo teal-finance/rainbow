@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	defaultProviders = "ALL" //"deribit,delta,lyra,synquote,aevo,rysk,sdx"
+	defaultProviders = "ALL" // "deribit,delta,lyra,synquote,aevo,rysk,sdx"
 )
 
 var (

@@ -98,7 +98,7 @@ func TestNextNFridays(t *testing.T) {
 	}}
 
 	for _, c := range cases {
-		c := c // required for parallel test
+		// required for parallel test
 
 		t.Run(c.name, func(t *testing.T) {
 			t.Parallel()

@@ -40,7 +40,7 @@ const adaptiveMinSleepTime = 25 * time.Millisecond
 const Hour = 8
 
 // maxBytesToRead prevents wasting memory/CPU when receiving an abnormally huge response from Aevo API.
-// we put the same param as Deribit
+// we put the same param as Deribit.
 const maxBytesToRead = 2_000_000
 
 func (p Provider) Options() ([]rainbow.Option, error) {
@@ -52,7 +52,7 @@ func (p Provider) Options() ([]rainbow.Option, error) {
 	if err != nil {
 		return nil, err
 	}
-	r := result.Instruments //[0:3]
+	r := result.Instruments // [0:3]
 
 	options, err := p.fillOptions(r)
 	if err != nil {
@@ -94,11 +94,12 @@ func (p Provider) fillOptions(instruments []Instrument) ([]rainbow.Option, error
 			return nil, log.Error("Get Ticker", i.InstrumentName, err).Err()
 		}
 
-		if i.Details.OptionType == "C" {
+		switch i.Details.OptionType {
+		case "C":
 			optionType = "CALL"
-		} else if i.Details.OptionType == "P" {
+		case "P":
 			optionType = "PUT"
-		} else {
+		default:
 			log.Warn("Unknown option type")
 			optionType = "???"
 		}
@@ -239,16 +240,16 @@ type Instrument struct {
 	BaseCurrency          string        `json:"base_currency"`
 	QuoteCurrency         string        `json:"quote_currency"`
 	Details               OptionDetails `json:"option_details"`
-	PerpDetails           interface{}   `json:"perp_details"`
+	PerpDetails           any           `json:"perp_details"`
 	BaseAssetAddress      string        `json:"base_asset_address"`
 	BaseAssetSubID        string        `json:"base_asset_sub_id"`
 }
 type OptionDetails struct {
-	Index           string      `json:"index"`
-	Expiry          int         `json:"expiry"`
-	Strike          string      `json:"strike"`
-	OptionType      string      `json:"option_type"`
-	SettlementPrice interface{} `json:"settlement_price"`
+	Index           string `json:"index"`
+	Expiry          int    `json:"expiry"`
+	Strike          string `json:"strike"`
+	OptionType      string `json:"option_type"`
+	SettlementPrice any    `json:"settlement_price"`
 }
 
 // https://v2-docs.lyra.finance/reference/post_public-get-ticker
@@ -270,7 +271,7 @@ type GetTickerResult struct {
 		BaseCurrency          string        `json:"base_currency"`
 		QuoteCurrency         string        `json:"quote_currency"`
 		Details               OptionDetails `json:"option_details"`
-		PerpDetails           interface{}   `json:"perp_details"`
+		PerpDetails           any           `json:"perp_details"`
 		BaseAssetAddress      string        `json:"base_asset_address"`
 		BaseAssetSubID        string        `json:"base_asset_sub_id"`
 		BestAskAmount         string        `json:"best_ask_amount"`

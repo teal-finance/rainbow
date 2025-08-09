@@ -37,19 +37,19 @@ const (
 	// TODO use teal on Optimism
 	// TODO use perso on Arbitrum and Polygon
 	// TODO do that on the 1st Nov
-	// Sorry alchemy but we r too poor
+	// Sorry alchemy but we r too poor.
 
-	// teal
+	// teal.
 	rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	// perso
 	// rpcOptimism = "https://opt-mainnet.g.alchemy.com/v2/uksZH_SjXAaBnIw95hZcBoCWGCXs9VXI"
 	// teal
 	// rpcPolygon = "https://polygon-mainnet.g.alchemy.com/v2/7MGFstWkvX-GscRyBQxehyisRlEoQWyu"
-	// perso
+	// perso.
 	rpcPolygon = "https://polygon-mainnet.g.alchemy.com/v2/uQ-knqUJnSNM61nlSnOxpGfx9cqPPfos"
 	// teal
 	// rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	// perso
+	// perso.
 	rpcArbitrum = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
 
 	// rpcBsc      = "https://bsc-dataseed1.ninicoin.io/" // free bscscan rpc
@@ -139,7 +139,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		if err == nil {
 			err = e
 		} else {
-			err = fmt.Errorf("%s, %w", err, e)
+			err = fmt.Errorf("%w, %w", err, e)
 		}
 	}
 
@@ -148,7 +148,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		if err == nil {
 			err = e
 		} else {
-			err = fmt.Errorf("%s, %w", err, e)
+			err = fmt.Errorf("%w, %w", err, e)
 		}
 	}
 
@@ -159,7 +159,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		if err == nil {
 			err = e
 		} else {
-			err = fmt.Errorf("%s, %w", err, e)
+			err = fmt.Errorf("%w, %w", err, e)
 		}
 	}
 
@@ -168,7 +168,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		if err == nil {
 			err = e
 		} else {
-			err = fmt.Errorf("%s, %w", err, e)
+			err = fmt.Errorf("%w, %w", err, e)
 		}
 	}
 
@@ -177,7 +177,7 @@ func (Provider) Options() ([]rainbow.Option, error) {
 		if err == nil {
 			err = e
 		} else {
-			err = fmt.Errorf("%s, %w", err, e)
+			err = fmt.Errorf("%w, %w", err, e)
 		}
 	}
 
@@ -212,7 +212,7 @@ func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			if err == nil {
 				err = errUp
 			} else {
-				err = fmt.Errorf("%s, %w", err, errUp)
+				err = fmt.Errorf("%w, %w", err, errUp)
 			}
 		} else {
 			*options = append(*options, up)
@@ -224,7 +224,7 @@ func processMarkets(options *[]rainbow.Option, markets []thales.AllMarketsMarket
 			if err == nil {
 				err = errDown
 			} else {
-				err = fmt.Errorf("%s, %w", err, errUp)
+				err = fmt.Errorf("%w, %w", err, errUp)
 			}
 		} else {
 			*options = append(*options, down)
@@ -264,7 +264,6 @@ func getOption(m *thales.AllMarketsMarketsMarket, side uint8, layer string, iv m
 			return rainbow.Option{}, err
 		}
 		iv[m.CurrencyKey] = underlyingAssetIV
-
 	}
 	strikeInt := new(big.Int)
 	_, err = fmt.Sscan(m.StrikePrice, strikeInt)
@@ -354,13 +353,14 @@ func getQuote(m *thales.AllMarketsMarketsMarket, side uint8, action, layer strin
 	}
 	amountToQuote := rainbow.IntToEthereumUint256(amount, rainbow.DefaultEthereumDecimals)
 	quote := new(big.Int)
-	if action == "BUY" {
+	switch action {
+	case "BUY":
 		quote, err = instance.BuyFromAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
 			log.Error("Thales BuyFromAmmQuote on", layer, err)
 			return 0, err
 		}
-	} else if action == "SELL" {
+	case "SELL":
 		quote, err = instance.SellToAmmQuote(&bind.CallOpts{}, common.HexToAddress(m.Id), side, amountToQuote)
 		if err != nil {
 			log.Error("Thales SellToAmmQuote on", layer, err)
@@ -428,7 +428,7 @@ func QueryMarkets(url string) ([]thales.MarketsMarketsMarket, error) {
 		return nil, fmt.Errorf("Markets: %w", err)
 	}
 	if resp == nil {
-		return nil, fmt.Errorf("Markets: resp=nil")
+		return nil, errors.New("Markets: resp=nil")
 	}
 	return resp.Markets, nil
 }
@@ -440,7 +440,7 @@ func QueryMarket(id, url string) (*thales.MarketMarket, error) {
 		return nil, fmt.Errorf("Market: %w", err)
 	}
 	if resp == nil {
-		return nil, fmt.Errorf("Market: resp=nil")
+		return nil, errors.New("Market: resp=nil")
 	}
 	return &resp.Market, nil
 }
@@ -496,7 +496,7 @@ func Underlying(s string) string {
 }
 
 // url to the option
-// useful to put thereferral on the front
+// useful to put thereferral on the front.
 func url(id string) string {
 	return baseURL + id + referral
 }

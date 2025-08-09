@@ -18,7 +18,7 @@ import (
 
 var log = emo.NewZone("Delta")
 
-// TODO add the adaptative rate that is from Deribit's code
+// TODO add the adaptative rate that is from Deribit's code.
 const (
 	deltaProducts  = "https://api.delta.exchange/v2/products?states=live&contract_types=put_options,call_options"
 	deltaOrders    = "https://api.delta.exchange/v2/l2orderbook/"

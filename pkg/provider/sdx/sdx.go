@@ -51,7 +51,7 @@ The API enforces rate limits to ensure equitable resource usage.
 const adaptiveMinSleepTime = 1 * time.Second
 
 // maxBytesToRead prevents wasting memory/CPU when receiving an abnormally huge response from SDX API.
-// taking Deribit value
+// taking Deribit value.
 const maxBytesToRead = 2_000_000
 
 func (p *Provider) Options() ([]rainbow.Option, error) {

@@ -63,7 +63,6 @@ func extractOptions(quotes []Quote) ([]rainbow.Option, error) {
 	options := make([]rainbow.Option, 0, len(quotes))
 	// spew.Dump(quotes)
 	for _, q := range quotes {
-
 		asset, optionType, expiry, strike, bidPrice, bidSize, askPrice, askSize := q.Split()
 		options = append(options, rainbow.Option{
 			Name:          "Synquote-" + q.ID,

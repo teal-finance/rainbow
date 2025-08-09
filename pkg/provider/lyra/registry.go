@@ -161,7 +161,7 @@ func bindRegistry(address common.Address, caller bind.ContractCaller, transactor
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Registry *RegistryRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Registry *RegistryRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Registry.Contract.RegistryCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -172,7 +172,7 @@ func (_Registry *RegistryRaw) Transfer(opts *bind.TransactOpts) (*types.Transact
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Registry *RegistryRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Registry *RegistryRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Registry.Contract.RegistryTransactor.contract.Transact(opts, method, params...)
 }
 
@@ -180,7 +180,7 @@ func (_Registry *RegistryRaw) Transact(opts *bind.TransactOpts, method string, p
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Registry *RegistryCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Registry *RegistryCallerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Registry.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -191,7 +191,7 @@ func (_Registry *RegistryTransactorRaw) Transfer(opts *bind.TransactOpts) (*type
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Registry *RegistryTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Registry *RegistryTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Registry.Contract.contract.Transact(opts, method, params...)
 }
 
@@ -199,7 +199,7 @@ func (_Registry *RegistryTransactorRaw) Transact(opts *bind.TransactOpts, method
 //
 // Solidity: function getGlobalAddress(bytes32 contractName) view returns(address globalContract)
 func (_Registry *RegistryCaller) GetGlobalAddress(opts *bind.CallOpts, contractName [32]byte) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Registry.contract.Call(opts, &out, "getGlobalAddress", contractName)
 
 	if err != nil {
@@ -230,7 +230,7 @@ func (_Registry *RegistryCallerSession) GetGlobalAddress(contractName [32]byte) 
 //
 // Solidity: function getMarketAddresses(address optionMarket) view returns((address,address,address,address,address,address,address,address,address,address,address))
 func (_Registry *RegistryCaller) GetMarketAddresses(opts *bind.CallOpts, optionMarket common.Address) (LyraRegistryOptionMarketAddresses, error) {
-	var out []interface{}
+	var out []any
 	err := _Registry.contract.Call(opts, &out, "getMarketAddresses", optionMarket)
 
 	if err != nil {
@@ -261,7 +261,7 @@ func (_Registry *RegistryCallerSession) GetMarketAddresses(optionMarket common.A
 //
 // Solidity: function globalAddresses(bytes32 ) view returns(address)
 func (_Registry *RegistryCaller) GlobalAddresses(opts *bind.CallOpts, arg0 [32]byte) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Registry.contract.Call(opts, &out, "globalAddresses", arg0)
 
 	if err != nil {
@@ -304,7 +304,7 @@ func (_Registry *RegistryCaller) MarketAddresses(opts *bind.CallOpts, arg0 commo
 	QuoteAsset         common.Address
 	BaseAsset          common.Address
 }, error) {
-	var out []interface{}
+	var out []any
 	err := _Registry.contract.Call(opts, &out, "marketAddresses", arg0)
 
 	outstruct := new(struct {
@@ -382,7 +382,7 @@ func (_Registry *RegistryCallerSession) MarketAddresses(arg0 common.Address) (st
 //
 // Solidity: function nominatedOwner() view returns(address)
 func (_Registry *RegistryCaller) NominatedOwner(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Registry.contract.Call(opts, &out, "nominatedOwner")
 
 	if err != nil {
@@ -413,7 +413,7 @@ func (_Registry *RegistryCallerSession) NominatedOwner() (common.Address, error)
 //
 // Solidity: function optionMarkets(uint256 ) view returns(address)
 func (_Registry *RegistryCaller) OptionMarkets(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Registry.contract.Call(opts, &out, "optionMarkets", arg0)
 
 	if err != nil {
@@ -444,7 +444,7 @@ func (_Registry *RegistryCallerSession) OptionMarkets(arg0 *big.Int) (common.Add
 //
 // Solidity: function owner() view returns(address)
 func (_Registry *RegistryCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Registry.contract.Call(opts, &out, "owner")
 
 	if err != nil {
@@ -655,7 +655,7 @@ type RegistryGlobalAddressUpdated struct {
 // Solidity: event GlobalAddressUpdated(bytes32 indexed name, address addr)
 func (_Registry *RegistryFilterer) FilterGlobalAddressUpdated(opts *bind.FilterOpts, name [][32]byte) (*RegistryGlobalAddressUpdatedIterator, error) {
 
-	var nameRule []interface{}
+	var nameRule []any
 	for _, nameItem := range name {
 		nameRule = append(nameRule, nameItem)
 	}
@@ -672,7 +672,7 @@ func (_Registry *RegistryFilterer) FilterGlobalAddressUpdated(opts *bind.FilterO
 // Solidity: event GlobalAddressUpdated(bytes32 indexed name, address addr)
 func (_Registry *RegistryFilterer) WatchGlobalAddressUpdated(opts *bind.WatchOpts, sink chan<- *RegistryGlobalAddressUpdated, name [][32]byte) (event.Subscription, error) {
 
-	var nameRule []interface{}
+	var nameRule []any
 	for _, nameItem := range name {
 		nameRule = append(nameRule, nameItem)
 	}
@@ -799,7 +799,7 @@ type RegistryMarketRemoved struct {
 // Solidity: event MarketRemoved(address indexed market)
 func (_Registry *RegistryFilterer) FilterMarketRemoved(opts *bind.FilterOpts, market []common.Address) (*RegistryMarketRemovedIterator, error) {
 
-	var marketRule []interface{}
+	var marketRule []any
 	for _, marketItem := range market {
 		marketRule = append(marketRule, marketItem)
 	}
@@ -816,7 +816,7 @@ func (_Registry *RegistryFilterer) FilterMarketRemoved(opts *bind.FilterOpts, ma
 // Solidity: event MarketRemoved(address indexed market)
 func (_Registry *RegistryFilterer) WatchMarketRemoved(opts *bind.WatchOpts, sink chan<- *RegistryMarketRemoved, market []common.Address) (event.Subscription, error) {
 
-	var marketRule []interface{}
+	var marketRule []any
 	for _, marketItem := range market {
 		marketRule = append(marketRule, marketItem)
 	}
@@ -944,7 +944,7 @@ type RegistryMarketUpdated struct {
 // Solidity: event MarketUpdated(address indexed optionMarket, (address,address,address,address,address,address,address,address,address,address,address) market)
 func (_Registry *RegistryFilterer) FilterMarketUpdated(opts *bind.FilterOpts, optionMarket []common.Address) (*RegistryMarketUpdatedIterator, error) {
 
-	var optionMarketRule []interface{}
+	var optionMarketRule []any
 	for _, optionMarketItem := range optionMarket {
 		optionMarketRule = append(optionMarketRule, optionMarketItem)
 	}
@@ -961,7 +961,7 @@ func (_Registry *RegistryFilterer) FilterMarketUpdated(opts *bind.FilterOpts, op
 // Solidity: event MarketUpdated(address indexed optionMarket, (address,address,address,address,address,address,address,address,address,address,address) market)
 func (_Registry *RegistryFilterer) WatchMarketUpdated(opts *bind.WatchOpts, sink chan<- *RegistryMarketUpdated, optionMarket []common.Address) (event.Subscription, error) {
 
-	var optionMarketRule []interface{}
+	var optionMarketRule []any
 	for _, optionMarketItem := range optionMarket {
 		optionMarketRule = append(optionMarketRule, optionMarketItem)
 	}

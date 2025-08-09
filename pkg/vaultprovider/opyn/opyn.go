@@ -37,7 +37,7 @@ type Vault struct {
 	ShortAmount      *big.Int
 }
 
-// GetClient returns a rpc client for mainnet
+// GetClient returns a rpc client for mainnet.
 func GetClient() (*ethclient.Client, error) {
 	client, err := ethclient.Dial(InfuraRPC)
 	if err != nil {
@@ -57,7 +57,6 @@ func GetVault(v int64, client *ethclient.Client) (Vault, error) {
 	if err != nil {
 		log.Print("Vaults", err)
 		return Vault{}, nil
-
 	}
 	/*return Vault{
 		Operator:         vault.Operator,
@@ -69,13 +68,13 @@ func GetVault(v int64, client *ethclient.Client) (Vault, error) {
 	return vault, err
 }
 
-// HasNFT if the vault has a Uniswap LP NFT (!=0)
+// HasNFT if the vault has a Uniswap LP NFT (!=0).
 func (v Vault) HasNFT() bool {
 	return v.NftCollateralId != 0
 }
 
 // Twap: returns the Time Weighted Average Price of ETH for the last 420 blocks
-// This is the period used for liquidation
+// This is the period used for liquidation.
 func Twap(controller *Controller) float64 {
 	index, err := controller.GetIndex(B, 420)
 	if err != nil {

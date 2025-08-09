@@ -31,14 +31,14 @@ func (Provider) Name() string {
 }
 
 // adaptiveMinSleepTime to rate limit the Aevo API.
-// link docs and check it
+// link docs and check it.
 const adaptiveMinSleepTime = 25 * time.Millisecond
 
 // Hour at which the options expires = 8:00 UTC.
 const Hour = 8
 
 // maxBytesToRead prevents wasting memory/CPU when receiving an abnormally huge response from Aevo API.
-// we put the same param as Deribit
+// we put the same param as Deribit.
 const maxBytesToRead = 2_000_000
 
 func (p Provider) Options() ([]rainbow.Option, error) {
@@ -163,7 +163,6 @@ func bidAsksToOrders(orders [][]string) ([]rainbow.Order, error) {
 			Size:  s,
 		})
 		// i,err=convert(o[2])
-
 	}
 
 	return convertedOrders, nil

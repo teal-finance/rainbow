@@ -6,7 +6,7 @@
 package lyra
 
 // Synths lists (proxyERC20) : https://docs.synthetix.io/addresses/#mainnet-optimism-l2
-// List tokens
+// List tokens.
 const (
 	SBTC    = "0x298B9B95708152ff6968aafd889c6586e9169f1D"
 	SETH    = "0xE405de8F52ba7559f9df3C368500B6E6ae6Cee49"

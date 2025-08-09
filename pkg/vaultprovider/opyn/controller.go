@@ -145,7 +145,7 @@ func bindController(address common.Address, caller bind.ContractCaller, transact
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Controller *ControllerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Controller *ControllerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Controller.Contract.ControllerCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -156,7 +156,7 @@ func (_Controller *ControllerRaw) Transfer(opts *bind.TransactOpts) (*types.Tran
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Controller *ControllerRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Controller *ControllerRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Controller.Contract.ControllerTransactor.contract.Transact(opts, method, params...)
 }
 
@@ -164,7 +164,7 @@ func (_Controller *ControllerRaw) Transact(opts *bind.TransactOpts, method strin
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Controller *ControllerCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Controller *ControllerCallerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Controller.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -175,7 +175,7 @@ func (_Controller *ControllerTransactorRaw) Transfer(opts *bind.TransactOpts) (*
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Controller *ControllerTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Controller *ControllerTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Controller.Contract.contract.Transact(opts, method, params...)
 }
 
@@ -183,7 +183,7 @@ func (_Controller *ControllerTransactorRaw) Transact(opts *bind.TransactOpts, me
 //
 // Solidity: function FUNDING_PERIOD() view returns(uint256)
 func (_Controller *ControllerCaller) FUNDINGPERIOD(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "FUNDING_PERIOD")
 
 	if err != nil {
@@ -214,7 +214,7 @@ func (_Controller *ControllerCallerSession) FUNDINGPERIOD() (*big.Int, error) {
 //
 // Solidity: function TWAP_PERIOD() view returns(uint32)
 func (_Controller *ControllerCaller) TWAPPERIOD(opts *bind.CallOpts) (uint32, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "TWAP_PERIOD")
 
 	if err != nil {
@@ -245,7 +245,7 @@ func (_Controller *ControllerCallerSession) TWAPPERIOD() (uint32, error) {
 //
 // Solidity: function ethQuoteCurrencyPool() view returns(address)
 func (_Controller *ControllerCaller) EthQuoteCurrencyPool(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "ethQuoteCurrencyPool")
 
 	if err != nil {
@@ -276,7 +276,7 @@ func (_Controller *ControllerCallerSession) EthQuoteCurrencyPool() (common.Addre
 //
 // Solidity: function feeRate() view returns(uint256)
 func (_Controller *ControllerCaller) FeeRate(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "feeRate")
 
 	if err != nil {
@@ -307,7 +307,7 @@ func (_Controller *ControllerCallerSession) FeeRate() (*big.Int, error) {
 //
 // Solidity: function feeRecipient() view returns(address)
 func (_Controller *ControllerCaller) FeeRecipient(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "feeRecipient")
 
 	if err != nil {
@@ -338,7 +338,7 @@ func (_Controller *ControllerCallerSession) FeeRecipient() (common.Address, erro
 //
 // Solidity: function feeTier() view returns(uint24)
 func (_Controller *ControllerCaller) FeeTier(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "feeTier")
 
 	if err != nil {
@@ -369,7 +369,7 @@ func (_Controller *ControllerCallerSession) FeeTier() (*big.Int, error) {
 //
 // Solidity: function getDenormalizedMark(uint32 _period) view returns(uint256)
 func (_Controller *ControllerCaller) GetDenormalizedMark(opts *bind.CallOpts, _period uint32) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "getDenormalizedMark", _period)
 
 	if err != nil {
@@ -400,7 +400,7 @@ func (_Controller *ControllerCallerSession) GetDenormalizedMark(_period uint32) 
 //
 // Solidity: function getDenormalizedMarkForFunding(uint32 _period) view returns(uint256)
 func (_Controller *ControllerCaller) GetDenormalizedMarkForFunding(opts *bind.CallOpts, _period uint32) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "getDenormalizedMarkForFunding", _period)
 
 	if err != nil {
@@ -431,7 +431,7 @@ func (_Controller *ControllerCallerSession) GetDenormalizedMarkForFunding(_perio
 //
 // Solidity: function getExpectedNormalizationFactor() view returns(uint256)
 func (_Controller *ControllerCaller) GetExpectedNormalizationFactor(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "getExpectedNormalizationFactor")
 
 	if err != nil {
@@ -462,7 +462,7 @@ func (_Controller *ControllerCallerSession) GetExpectedNormalizationFactor() (*b
 //
 // Solidity: function getIndex(uint32 _period) view returns(uint256)
 func (_Controller *ControllerCaller) GetIndex(opts *bind.CallOpts, _period uint32) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "getIndex", _period)
 
 	if err != nil {
@@ -493,7 +493,7 @@ func (_Controller *ControllerCallerSession) GetIndex(_period uint32) (*big.Int, 
 //
 // Solidity: function getUnscaledIndex(uint32 _period) view returns(uint256)
 func (_Controller *ControllerCaller) GetUnscaledIndex(opts *bind.CallOpts, _period uint32) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "getUnscaledIndex", _period)
 
 	if err != nil {
@@ -524,7 +524,7 @@ func (_Controller *ControllerCallerSession) GetUnscaledIndex(_period uint32) (*b
 //
 // Solidity: function indexForSettlement() view returns(uint256)
 func (_Controller *ControllerCaller) IndexForSettlement(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "indexForSettlement")
 
 	if err != nil {
@@ -555,7 +555,7 @@ func (_Controller *ControllerCallerSession) IndexForSettlement() (*big.Int, erro
 //
 // Solidity: function isShutDown() view returns(bool)
 func (_Controller *ControllerCaller) IsShutDown(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "isShutDown")
 
 	if err != nil {
@@ -586,7 +586,7 @@ func (_Controller *ControllerCallerSession) IsShutDown() (bool, error) {
 //
 // Solidity: function isSystemPaused() view returns(bool)
 func (_Controller *ControllerCaller) IsSystemPaused(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "isSystemPaused")
 
 	if err != nil {
@@ -617,7 +617,7 @@ func (_Controller *ControllerCallerSession) IsSystemPaused() (bool, error) {
 //
 // Solidity: function isVaultSafe(uint256 _vaultId) view returns(bool)
 func (_Controller *ControllerCaller) IsVaultSafe(opts *bind.CallOpts, _vaultId *big.Int) (bool, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "isVaultSafe", _vaultId)
 
 	if err != nil {
@@ -648,7 +648,7 @@ func (_Controller *ControllerCallerSession) IsVaultSafe(_vaultId *big.Int) (bool
 //
 // Solidity: function lastFundingUpdateTimestamp() view returns(uint128)
 func (_Controller *ControllerCaller) LastFundingUpdateTimestamp(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "lastFundingUpdateTimestamp")
 
 	if err != nil {
@@ -679,7 +679,7 @@ func (_Controller *ControllerCallerSession) LastFundingUpdateTimestamp() (*big.I
 //
 // Solidity: function lastPauseTime() view returns(uint256)
 func (_Controller *ControllerCaller) LastPauseTime(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "lastPauseTime")
 
 	if err != nil {
@@ -710,7 +710,7 @@ func (_Controller *ControllerCallerSession) LastPauseTime() (*big.Int, error) {
 //
 // Solidity: function normalizationFactor() view returns(uint128)
 func (_Controller *ControllerCaller) NormalizationFactor(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "normalizationFactor")
 
 	if err != nil {
@@ -741,7 +741,7 @@ func (_Controller *ControllerCallerSession) NormalizationFactor() (*big.Int, err
 //
 // Solidity: function oracle() view returns(address)
 func (_Controller *ControllerCaller) Oracle(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "oracle")
 
 	if err != nil {
@@ -772,7 +772,7 @@ func (_Controller *ControllerCallerSession) Oracle() (common.Address, error) {
 //
 // Solidity: function owner() view returns(address)
 func (_Controller *ControllerCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "owner")
 
 	if err != nil {
@@ -803,7 +803,7 @@ func (_Controller *ControllerCallerSession) Owner() (common.Address, error) {
 //
 // Solidity: function pausesLeft() view returns(uint256)
 func (_Controller *ControllerCaller) PausesLeft(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "pausesLeft")
 
 	if err != nil {
@@ -834,7 +834,7 @@ func (_Controller *ControllerCallerSession) PausesLeft() (*big.Int, error) {
 //
 // Solidity: function quoteCurrency() view returns(address)
 func (_Controller *ControllerCaller) QuoteCurrency(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "quoteCurrency")
 
 	if err != nil {
@@ -865,7 +865,7 @@ func (_Controller *ControllerCallerSession) QuoteCurrency() (common.Address, err
 //
 // Solidity: function shortPowerPerp() view returns(address)
 func (_Controller *ControllerCaller) ShortPowerPerp(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "shortPowerPerp")
 
 	if err != nil {
@@ -901,7 +901,7 @@ func (_Controller *ControllerCaller) Vaults(opts *bind.CallOpts, arg0 *big.Int) 
 	CollateralAmount *big.Int
 	ShortAmount      *big.Int
 }, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "vaults", arg0)
 
 	outstruct := new(struct {
@@ -951,7 +951,7 @@ func (_Controller *ControllerCallerSession) Vaults(arg0 *big.Int) (struct {
 //
 // Solidity: function wPowerPerp() view returns(address)
 func (_Controller *ControllerCaller) WPowerPerp(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "wPowerPerp")
 
 	if err != nil {
@@ -982,7 +982,7 @@ func (_Controller *ControllerCallerSession) WPowerPerp() (common.Address, error)
 //
 // Solidity: function wPowerPerpPool() view returns(address)
 func (_Controller *ControllerCaller) WPowerPerpPool(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "wPowerPerpPool")
 
 	if err != nil {
@@ -1013,7 +1013,7 @@ func (_Controller *ControllerCallerSession) WPowerPerpPool() (common.Address, er
 //
 // Solidity: function weth() view returns(address)
 func (_Controller *ControllerCaller) Weth(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Controller.contract.Call(opts, &out, "weth")
 
 	if err != nil {
@@ -2888,11 +2888,11 @@ type ControllerOwnershipTransferred struct {
 // Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
 func (_Controller *ControllerFilterer) FilterOwnershipTransferred(opts *bind.FilterOpts, previousOwner []common.Address, newOwner []common.Address) (*ControllerOwnershipTransferredIterator, error) {
 
-	var previousOwnerRule []interface{}
+	var previousOwnerRule []any
 	for _, previousOwnerItem := range previousOwner {
 		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
 	}
-	var newOwnerRule []interface{}
+	var newOwnerRule []any
 	for _, newOwnerItem := range newOwner {
 		newOwnerRule = append(newOwnerRule, newOwnerItem)
 	}
@@ -2909,11 +2909,11 @@ func (_Controller *ControllerFilterer) FilterOwnershipTransferred(opts *bind.Fil
 // Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
 func (_Controller *ControllerFilterer) WatchOwnershipTransferred(opts *bind.WatchOpts, sink chan<- *ControllerOwnershipTransferred, previousOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
 
-	var previousOwnerRule []interface{}
+	var previousOwnerRule []any
 	for _, previousOwnerItem := range previousOwner {
 		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
 	}
-	var newOwnerRule []interface{}
+	var newOwnerRule []any
 	for _, newOwnerItem := range newOwner {
 		newOwnerRule = append(newOwnerRule, newOwnerItem)
 	}

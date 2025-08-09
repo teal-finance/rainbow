@@ -152,7 +152,7 @@ func isStrikeAvailable(i *instrument) bool {
 
 	if i.BaseCurrency == "BTC" {
 		strikes = btcStrike
-		//} else if i.BaseCurrency == "SOL" {
+		// } else if i.BaseCurrency == "SOL" {
 		//	strikes = solStrike
 	}
 
@@ -168,7 +168,8 @@ func (p *Provider) fillOptions(instruments []instrument, depth uint32) ([]rainbo
 	for i := range instruments {
 		var result orderBookResult
 		apiurl := api + instruments[i].InstrumentName
-		if err := p.ar.Get(instruments[i].InstrumentName, apiurl, &result); err != nil {
+		err := p.ar.Get(instruments[i].InstrumentName, apiurl, &result)
+		if err != nil {
 			lastError = err
 			log.Warn(name + " book " + err.Error())
 		}

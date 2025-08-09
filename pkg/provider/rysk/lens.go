@@ -180,7 +180,7 @@ func bindRysk(address common.Address, caller bind.ContractCaller, transactor bin
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Rysk *RyskRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Rysk *RyskRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Rysk.Contract.RyskCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -191,7 +191,7 @@ func (_Rysk *RyskRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, err
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Rysk *RyskRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Rysk *RyskRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Rysk.Contract.RyskTransactor.contract.Transact(opts, method, params...)
 }
 
@@ -199,7 +199,7 @@ func (_Rysk *RyskRaw) Transact(opts *bind.TransactOpts, method string, params ..
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Rysk *RyskCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Rysk *RyskCallerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Rysk.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -210,7 +210,7 @@ func (_Rysk *RyskTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transa
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Rysk *RyskTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Rysk *RyskTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Rysk.Contract.contract.Transact(opts, method, params...)
 }
 
@@ -218,7 +218,7 @@ func (_Rysk *RyskTransactorRaw) Transact(opts *bind.TransactOpts, method string,
 //
 // Solidity: function catalogue() view returns(address)
 func (_Rysk *RyskCaller) Catalogue(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Rysk.contract.Call(opts, &out, "catalogue")
 
 	if err != nil {
@@ -249,7 +249,7 @@ func (_Rysk *RyskCallerSession) Catalogue() (common.Address, error) {
 //
 // Solidity: function collateralAsset() view returns(address)
 func (_Rysk *RyskCaller) CollateralAsset(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Rysk.contract.Call(opts, &out, "collateralAsset")
 
 	if err != nil {
@@ -280,7 +280,7 @@ func (_Rysk *RyskCallerSession) CollateralAsset() (common.Address, error) {
 //
 // Solidity: function getExpirations() view returns(uint64[])
 func (_Rysk *RyskCaller) GetExpirations(opts *bind.CallOpts) ([]uint64, error) {
-	var out []interface{}
+	var out []any
 	err := _Rysk.contract.Call(opts, &out, "getExpirations")
 
 	if err != nil {
@@ -311,7 +311,7 @@ func (_Rysk *RyskCallerSession) GetExpirations() ([]uint64, error) {
 //
 // Solidity: function getOptionChain() view returns((uint64[],(uint64,uint128[],(uint128,(uint256,uint256,uint256,bool,bool),(uint256,uint256,uint256,bool,bool),int256,int256)[],uint128[],(uint128,(uint256,uint256,uint256,bool,bool),(uint256,uint256,uint256,bool,bool),int256,int256)[],uint256)[]))
 func (_Rysk *RyskCaller) GetOptionChain(opts *bind.CallOpts) (DHVLensMK1OptionChain, error) {
-	var out []interface{}
+	var out []any
 	err := _Rysk.contract.Call(opts, &out, "getOptionChain")
 
 	if err != nil {
@@ -342,7 +342,7 @@ func (_Rysk *RyskCallerSession) GetOptionChain() (DHVLensMK1OptionChain, error) 
 //
 // Solidity: function getOptionExpirationDrill(uint64 expiration) view returns((uint64,uint128[],(uint128,(uint256,uint256,uint256,bool,bool),(uint256,uint256,uint256,bool,bool),int256,int256)[],uint128[],(uint128,(uint256,uint256,uint256,bool,bool),(uint256,uint256,uint256,bool,bool),int256,int256)[],uint256))
 func (_Rysk *RyskCaller) GetOptionExpirationDrill(opts *bind.CallOpts, expiration uint64) (DHVLensMK1OptionExpirationDrill, error) {
-	var out []interface{}
+	var out []any
 	err := _Rysk.contract.Call(opts, &out, "getOptionExpirationDrill", expiration)
 
 	if err != nil {
@@ -373,7 +373,7 @@ func (_Rysk *RyskCallerSession) GetOptionExpirationDrill(expiration uint64) (DHV
 //
 // Solidity: function pricer() view returns(address)
 func (_Rysk *RyskCaller) Pricer(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Rysk.contract.Call(opts, &out, "pricer")
 
 	if err != nil {
@@ -404,7 +404,7 @@ func (_Rysk *RyskCallerSession) Pricer() (common.Address, error) {
 //
 // Solidity: function protocol() view returns(address)
 func (_Rysk *RyskCaller) Protocol(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Rysk.contract.Call(opts, &out, "protocol")
 
 	if err != nil {
@@ -435,7 +435,7 @@ func (_Rysk *RyskCallerSession) Protocol() (common.Address, error) {
 //
 // Solidity: function strikeAsset() view returns(address)
 func (_Rysk *RyskCaller) StrikeAsset(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Rysk.contract.Call(opts, &out, "strikeAsset")
 
 	if err != nil {
@@ -466,7 +466,7 @@ func (_Rysk *RyskCallerSession) StrikeAsset() (common.Address, error) {
 //
 // Solidity: function underlyingAsset() view returns(address)
 func (_Rysk *RyskCaller) UnderlyingAsset(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Rysk.contract.Call(opts, &out, "underlyingAsset")
 
 	if err != nil {

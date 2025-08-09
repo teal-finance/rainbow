@@ -145,7 +145,7 @@ func bindThales(address common.Address, caller bind.ContractCaller, transactor b
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Thales *ThalesRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Thales *ThalesRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Thales.Contract.ThalesCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -156,7 +156,7 @@ func (_Thales *ThalesRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction,
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Thales *ThalesRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Thales *ThalesRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Thales.Contract.ThalesTransactor.contract.Transact(opts, method, params...)
 }
 
@@ -164,7 +164,7 @@ func (_Thales *ThalesRaw) Transact(opts *bind.TransactOpts, method string, param
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Thales *ThalesCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Thales *ThalesCallerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Thales.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -175,7 +175,7 @@ func (_Thales *ThalesTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Tr
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Thales *ThalesTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Thales *ThalesTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Thales.Contract.contract.Transact(opts, method, params...)
 }
 
@@ -183,7 +183,7 @@ func (_Thales *ThalesTransactorRaw) Transact(opts *bind.TransactOpts, method str
 //
 // Solidity: function MAX_APPROVAL() view returns(uint256)
 func (_Thales *ThalesCaller) MAXAPPROVAL(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "MAX_APPROVAL")
 
 	if err != nil {
@@ -214,7 +214,7 @@ func (_Thales *ThalesCallerSession) MAXAPPROVAL() (*big.Int, error) {
 //
 // Solidity: function availableToBuyFromAMM(address market, uint8 position) view returns(uint256 _available)
 func (_Thales *ThalesCaller) AvailableToBuyFromAMM(opts *bind.CallOpts, market common.Address, position uint8) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "availableToBuyFromAMM", market, position)
 
 	if err != nil {
@@ -245,7 +245,7 @@ func (_Thales *ThalesCallerSession) AvailableToBuyFromAMM(market common.Address,
 //
 // Solidity: function availableToSellToAMM(address market, uint8 position) view returns(uint256)
 func (_Thales *ThalesCaller) AvailableToSellToAMM(opts *bind.CallOpts, market common.Address, position uint8) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "availableToSellToAMM", market, position)
 
 	if err != nil {
@@ -276,7 +276,7 @@ func (_Thales *ThalesCallerSession) AvailableToSellToAMM(market common.Address, 
 //
 // Solidity: function buyFromAmmQuote(address market, uint8 position, uint256 amount) view returns(uint256)
 func (_Thales *ThalesCaller) BuyFromAmmQuote(opts *bind.CallOpts, market common.Address, position uint8, amount *big.Int) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "buyFromAmmQuote", market, position, amount)
 
 	if err != nil {
@@ -310,7 +310,7 @@ func (_Thales *ThalesCaller) BuyFromAmmQuoteWithDifferentCollateral(opts *bind.C
 	CollateralQuote *big.Int
 	SUSDToPay       *big.Int
 }, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "buyFromAmmQuoteWithDifferentCollateral", market, position, amount, collateral)
 
 	outstruct := new(struct {
@@ -352,7 +352,7 @@ func (_Thales *ThalesCallerSession) BuyFromAmmQuoteWithDifferentCollateral(marke
 //
 // Solidity: function buyPriceImpact(address market, uint8 position, uint256 amount) view returns(uint256)
 func (_Thales *ThalesCaller) BuyPriceImpact(opts *bind.CallOpts, market common.Address, position uint8, amount *big.Int) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "buyPriceImpact", market, position, amount)
 
 	if err != nil {
@@ -383,7 +383,7 @@ func (_Thales *ThalesCallerSession) BuyPriceImpact(market common.Address, positi
 //
 // Solidity: function calculateOdds(uint256 _price, uint256 strike, uint256 timeLeftInDays, uint256 volatility) view returns(uint256)
 func (_Thales *ThalesCaller) CalculateOdds(opts *bind.CallOpts, _price *big.Int, strike *big.Int, timeLeftInDays *big.Int, volatility *big.Int) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "calculateOdds", _price, strike, timeLeftInDays, volatility)
 
 	if err != nil {
@@ -414,7 +414,7 @@ func (_Thales *ThalesCallerSession) CalculateOdds(_price *big.Int, strike *big.I
 //
 // Solidity: function canExerciseMaturedMarket(address market) view returns(bool _canExercise)
 func (_Thales *ThalesCaller) CanExerciseMaturedMarket(opts *bind.CallOpts, market common.Address) (bool, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "canExerciseMaturedMarket", market)
 
 	if err != nil {
@@ -445,7 +445,7 @@ func (_Thales *ThalesCallerSession) CanExerciseMaturedMarket(market common.Addre
 //
 // Solidity: function capPerMarket() view returns(uint256)
 func (_Thales *ThalesCaller) CapPerMarket(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "capPerMarket")
 
 	if err != nil {
@@ -476,7 +476,7 @@ func (_Thales *ThalesCallerSession) CapPerMarket() (*big.Int, error) {
 //
 // Solidity: function curveOnrampEnabled() view returns(bool)
 func (_Thales *ThalesCaller) CurveOnrampEnabled(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "curveOnrampEnabled")
 
 	if err != nil {
@@ -507,7 +507,7 @@ func (_Thales *ThalesCallerSession) CurveOnrampEnabled() (bool, error) {
 //
 // Solidity: function curveSUSD() view returns(address)
 func (_Thales *ThalesCaller) CurveSUSD(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "curveSUSD")
 
 	if err != nil {
@@ -538,7 +538,7 @@ func (_Thales *ThalesCallerSession) CurveSUSD() (common.Address, error) {
 //
 // Solidity: function dai() view returns(address)
 func (_Thales *ThalesCaller) Dai(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "dai")
 
 	if err != nil {
@@ -569,7 +569,7 @@ func (_Thales *ThalesCallerSession) Dai() (common.Address, error) {
 //
 // Solidity: function deciMath() view returns(address)
 func (_Thales *ThalesCaller) DeciMath(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "deciMath")
 
 	if err != nil {
@@ -600,7 +600,7 @@ func (_Thales *ThalesCallerSession) DeciMath() (common.Address, error) {
 //
 // Solidity: function getCapPerAsset(bytes32 asset) view returns(uint256 _cap)
 func (_Thales *ThalesCaller) GetCapPerAsset(opts *bind.CallOpts, asset [32]byte) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "getCapPerAsset", asset)
 
 	if err != nil {
@@ -631,7 +631,7 @@ func (_Thales *ThalesCallerSession) GetCapPerAsset(asset [32]byte) (*big.Int, er
 //
 // Solidity: function impliedVolatilityPerAsset(bytes32 ) view returns(uint256)
 func (_Thales *ThalesCaller) ImpliedVolatilityPerAsset(opts *bind.CallOpts, arg0 [32]byte) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "impliedVolatilityPerAsset", arg0)
 
 	if err != nil {
@@ -662,7 +662,7 @@ func (_Thales *ThalesCallerSession) ImpliedVolatilityPerAsset(arg0 [32]byte) (*b
 //
 // Solidity: function isMarketInAMMTrading(address market) view returns(bool isTrading)
 func (_Thales *ThalesCaller) IsMarketInAMMTrading(opts *bind.CallOpts, market common.Address) (bool, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "isMarketInAMMTrading", market)
 
 	if err != nil {
@@ -693,7 +693,7 @@ func (_Thales *ThalesCallerSession) IsMarketInAMMTrading(market common.Address) 
 //
 // Solidity: function lastPauseTime() view returns(uint256)
 func (_Thales *ThalesCaller) LastPauseTime(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "lastPauseTime")
 
 	if err != nil {
@@ -724,7 +724,7 @@ func (_Thales *ThalesCallerSession) LastPauseTime() (*big.Int, error) {
 //
 // Solidity: function manager() view returns(address)
 func (_Thales *ThalesCaller) Manager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "manager")
 
 	if err != nil {
@@ -755,7 +755,7 @@ func (_Thales *ThalesCallerSession) Manager() (common.Address, error) {
 //
 // Solidity: function maxSupportedPrice() view returns(uint256)
 func (_Thales *ThalesCaller) MaxSupportedPrice(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "maxSupportedPrice")
 
 	if err != nil {
@@ -786,7 +786,7 @@ func (_Thales *ThalesCallerSession) MaxSupportedPrice() (*big.Int, error) {
 //
 // Solidity: function max_spread() view returns(uint256)
 func (_Thales *ThalesCaller) MaxSpread(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "max_spread")
 
 	if err != nil {
@@ -817,7 +817,7 @@ func (_Thales *ThalesCallerSession) MaxSpread() (*big.Int, error) {
 //
 // Solidity: function minSupportedPrice() view returns(uint256)
 func (_Thales *ThalesCaller) MinSupportedPrice(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "minSupportedPrice")
 
 	if err != nil {
@@ -848,7 +848,7 @@ func (_Thales *ThalesCallerSession) MinSupportedPrice() (*big.Int, error) {
 //
 // Solidity: function min_spread() view returns(uint256)
 func (_Thales *ThalesCaller) MinSpread(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "min_spread")
 
 	if err != nil {
@@ -879,7 +879,7 @@ func (_Thales *ThalesCallerSession) MinSpread() (*big.Int, error) {
 //
 // Solidity: function minimalTimeLeftToMaturity() view returns(uint256)
 func (_Thales *ThalesCaller) MinimalTimeLeftToMaturity(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "minimalTimeLeftToMaturity")
 
 	if err != nil {
@@ -910,7 +910,7 @@ func (_Thales *ThalesCallerSession) MinimalTimeLeftToMaturity() (*big.Int, error
 //
 // Solidity: function nominatedOwner() view returns(address)
 func (_Thales *ThalesCaller) NominatedOwner(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "nominatedOwner")
 
 	if err != nil {
@@ -941,7 +941,7 @@ func (_Thales *ThalesCallerSession) NominatedOwner() (common.Address, error) {
 //
 // Solidity: function owner() view returns(address)
 func (_Thales *ThalesCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "owner")
 
 	if err != nil {
@@ -972,7 +972,7 @@ func (_Thales *ThalesCallerSession) Owner() (common.Address, error) {
 //
 // Solidity: function paused() view returns(bool)
 func (_Thales *ThalesCaller) Paused(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "paused")
 
 	if err != nil {
@@ -1003,7 +1003,7 @@ func (_Thales *ThalesCallerSession) Paused() (bool, error) {
 //
 // Solidity: function previousManager() view returns(address)
 func (_Thales *ThalesCaller) PreviousManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "previousManager")
 
 	if err != nil {
@@ -1034,7 +1034,7 @@ func (_Thales *ThalesCallerSession) PreviousManager() (common.Address, error) {
 //
 // Solidity: function price(address market, uint8 position) view returns(uint256 price)
 func (_Thales *ThalesCaller) Price(opts *bind.CallOpts, market common.Address, position uint8) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "price", market, position)
 
 	if err != nil {
@@ -1065,7 +1065,7 @@ func (_Thales *ThalesCallerSession) Price(market common.Address, position uint8)
 //
 // Solidity: function priceFeed() view returns(address)
 func (_Thales *ThalesCaller) PriceFeed(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "priceFeed")
 
 	if err != nil {
@@ -1096,7 +1096,7 @@ func (_Thales *ThalesCallerSession) PriceFeed() (common.Address, error) {
 //
 // Solidity: function referrals() view returns(address)
 func (_Thales *ThalesCaller) Referrals(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "referrals")
 
 	if err != nil {
@@ -1127,7 +1127,7 @@ func (_Thales *ThalesCallerSession) Referrals() (common.Address, error) {
 //
 // Solidity: function referrerFee() view returns(uint256)
 func (_Thales *ThalesCaller) ReferrerFee(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "referrerFee")
 
 	if err != nil {
@@ -1158,7 +1158,7 @@ func (_Thales *ThalesCallerSession) ReferrerFee() (*big.Int, error) {
 //
 // Solidity: function sUSD() view returns(address)
 func (_Thales *ThalesCaller) SUSD(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "sUSD")
 
 	if err != nil {
@@ -1189,7 +1189,7 @@ func (_Thales *ThalesCallerSession) SUSD() (common.Address, error) {
 //
 // Solidity: function safeBox() view returns(address)
 func (_Thales *ThalesCaller) SafeBox(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "safeBox")
 
 	if err != nil {
@@ -1220,7 +1220,7 @@ func (_Thales *ThalesCallerSession) SafeBox() (common.Address, error) {
 //
 // Solidity: function safeBoxImpact() view returns(uint256)
 func (_Thales *ThalesCaller) SafeBoxImpact(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "safeBoxImpact")
 
 	if err != nil {
@@ -1251,7 +1251,7 @@ func (_Thales *ThalesCallerSession) SafeBoxImpact() (*big.Int, error) {
 //
 // Solidity: function sellPriceImpact(address market, uint8 position, uint256 amount) view returns(uint256 _impact)
 func (_Thales *ThalesCaller) SellPriceImpact(opts *bind.CallOpts, market common.Address, position uint8, amount *big.Int) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "sellPriceImpact", market, position, amount)
 
 	if err != nil {
@@ -1282,7 +1282,7 @@ func (_Thales *ThalesCallerSession) SellPriceImpact(market common.Address, posit
 //
 // Solidity: function sellToAmmQuote(address market, uint8 position, uint256 amount) view returns(uint256 _available)
 func (_Thales *ThalesCaller) SellToAmmQuote(opts *bind.CallOpts, market common.Address, position uint8, amount *big.Int) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "sellToAmmQuote", market, position, amount)
 
 	if err != nil {
@@ -1313,7 +1313,7 @@ func (_Thales *ThalesCallerSession) SellToAmmQuote(market common.Address, positi
 //
 // Solidity: function spentOnMarket(address ) view returns(uint256)
 func (_Thales *ThalesCaller) SpentOnMarket(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "spentOnMarket", arg0)
 
 	if err != nil {
@@ -1344,7 +1344,7 @@ func (_Thales *ThalesCallerSession) SpentOnMarket(arg0 common.Address) (*big.Int
 //
 // Solidity: function stakingThales() view returns(address)
 func (_Thales *ThalesCaller) StakingThales(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "stakingThales")
 
 	if err != nil {
@@ -1375,7 +1375,7 @@ func (_Thales *ThalesCallerSession) StakingThales() (common.Address, error) {
 //
 // Solidity: function usdc() view returns(address)
 func (_Thales *ThalesCaller) Usdc(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "usdc")
 
 	if err != nil {
@@ -1406,7 +1406,7 @@ func (_Thales *ThalesCallerSession) Usdc() (common.Address, error) {
 //
 // Solidity: function usdt() view returns(address)
 func (_Thales *ThalesCaller) Usdt(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "usdt")
 
 	if err != nil {
@@ -1437,7 +1437,7 @@ func (_Thales *ThalesCallerSession) Usdt() (common.Address, error) {
 //
 // Solidity: function whitelistedAddresses(address ) view returns(bool)
 func (_Thales *ThalesCaller) WhitelistedAddresses(opts *bind.CallOpts, arg0 common.Address) (bool, error) {
-	var out []interface{}
+	var out []any
 	err := _Thales.contract.Call(opts, &out, "whitelistedAddresses", arg0)
 
 	if err != nil {

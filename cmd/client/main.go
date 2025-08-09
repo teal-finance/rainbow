@@ -28,7 +28,7 @@ func main() {
 	*rURL = strings.Trim(*rURL, "/")
 	url := *rURL + "/v0/options/" + *asset + "tsv"
 
-	req, err := http.NewRequestWithContext(context.Background(), "GET", url, http.NoBody)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url, http.NoBody)
 	if err != nil {
 		log.Fatal(err)
 	}

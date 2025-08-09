@@ -146,7 +146,7 @@ func bindQuoter(address common.Address, caller bind.ContractCaller, transactor b
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Quoter *QuoterRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Quoter *QuoterRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Quoter.Contract.QuoterCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -157,7 +157,7 @@ func (_Quoter *QuoterRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction,
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Quoter *QuoterRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Quoter *QuoterRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Quoter.Contract.QuoterTransactor.contract.Transact(opts, method, params...)
 }
 
@@ -165,7 +165,7 @@ func (_Quoter *QuoterRaw) Transact(opts *bind.TransactOpts, method string, param
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Quoter *QuoterCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Quoter *QuoterCallerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Quoter.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -176,7 +176,7 @@ func (_Quoter *QuoterTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Tr
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Quoter *QuoterTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Quoter *QuoterTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Quoter.Contract.contract.Transact(opts, method, params...)
 }
 
@@ -184,7 +184,7 @@ func (_Quoter *QuoterTransactorRaw) Transact(opts *bind.TransactOpts, method str
 //
 // Solidity: function fullQuotes(address _optionMarket, uint256 strikeId, uint256 iterations, uint256 amount) view returns(uint256[], uint256[])
 func (_Quoter *QuoterCaller) FullQuotes(opts *bind.CallOpts, _optionMarket common.Address, strikeId *big.Int, iterations *big.Int, amount *big.Int) ([]*big.Int, []*big.Int, error) {
-	var out []interface{}
+	var out []any
 	err := _Quoter.contract.Call(opts, &out, "fullQuotes", _optionMarket, strikeId, iterations, amount)
 
 	if err != nil {
@@ -219,7 +219,7 @@ func (_Quoter *QuoterCaller) Quote(opts *bind.CallOpts, _optionMarket common.Add
 	TotalPremium *big.Int
 	TotalFee     *big.Int
 }, error) {
-	var out []interface{}
+	var out []any
 	err := _Quoter.contract.Call(opts, &out, "quote", _optionMarket, strikeId, iterations, optionType, amount)
 
 	outstruct := new(struct {

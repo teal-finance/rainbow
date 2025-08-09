@@ -75,7 +75,7 @@ func IsBigIntNull(b *big.Int) bool {
 	return len(b.Bits()) == 0
 }
 
-// Expiration converts a Unix timestamp in int64 to a string of the right format
+// Expiration converts a Unix timestamp in int64 to a string of the right format.
 func Expiration(seconds int64) string {
 	expiryTime := time.Unix(seconds, 0).UTC()
 	return expiryTime.Format("2006-01-02 15:04:05")

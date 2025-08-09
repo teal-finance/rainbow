@@ -47,7 +47,6 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 		return []rainbow.Option{}, log.Error(name, " GetExpirations error", err).Err()
 	}
 	for _, e := range exp {
-
 		expStr := rainbow.Expiration(int64(e))
 		drill, err := dhvLens.GetOptionExpirationDrill(&bind.CallOpts{}, e)
 		if err != nil {
@@ -63,7 +62,6 @@ func (p *Provider) Options() ([]rainbow.Option, error) {
 		}
 		options = append(options, *calls...)
 		options = append(options, *puts...)
-
 	}
 	return options, nil
 }
@@ -123,14 +121,13 @@ func process(expStr string, drills []DHVLensMK1OptionStrikeDrill, optionType str
 		})
 
 		options = append(options, o)
-
 	}
 
 	return &options, nil
 }
 
-// convertQuotes converst DHVLensMK1TradingSpec to floats mostly
-// return iv, quote, fee, disabled, premiumtoosmall
+// convertQuotes converts DHVLensMK1TradingSpec to floats mostly
+// return iv, quote, fee, disabled, premiumtoosmall.
 func convertQuotes(t DHVLensMK1TradingSpec) (float64, float64, float64, bool, bool) {
 	iv := rainbow.ToFloat(t.Iv, rainbow.DefaultEthereumDecimals-2) // just to store it as XX.XXX% instead of .XXXXX
 	quote := rainbow.ToFloat(t.Quote, USDCDecimals)
@@ -140,7 +137,7 @@ func convertQuotes(t DHVLensMK1TradingSpec) (float64, float64, float64, bool, bo
 }
 
 // TODO remove
-// this is just to test and learn
+// this is just to test and learn.
 func test() {
 	client, err := ethclient.Dial(rpc)
 	if err != nil {

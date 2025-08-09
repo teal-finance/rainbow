@@ -401,7 +401,7 @@ func bindMarketviewer(address common.Address, caller bind.ContractCaller, transa
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Marketviewer *MarketviewerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Marketviewer *MarketviewerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Marketviewer.Contract.MarketviewerCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -412,7 +412,7 @@ func (_Marketviewer *MarketviewerRaw) Transfer(opts *bind.TransactOpts) (*types.
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Marketviewer *MarketviewerRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Marketviewer *MarketviewerRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Marketviewer.Contract.MarketviewerTransactor.contract.Transact(opts, method, params...)
 }
 
@@ -420,7 +420,7 @@ func (_Marketviewer *MarketviewerRaw) Transact(opts *bind.TransactOpts, method s
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Marketviewer *MarketviewerCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+func (_Marketviewer *MarketviewerCallerRaw) Call(opts *bind.CallOpts, result *[]any, method string, params ...any) error {
 	return _Marketviewer.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -431,7 +431,7 @@ func (_Marketviewer *MarketviewerTransactorRaw) Transfer(opts *bind.TransactOpts
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Marketviewer *MarketviewerTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+func (_Marketviewer *MarketviewerTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...any) (*types.Transaction, error) {
 	return _Marketviewer.Contract.contract.Transact(opts, method, params...)
 }
 
@@ -439,7 +439,7 @@ func (_Marketviewer *MarketviewerTransactorRaw) Transact(opts *bind.TransactOpts
 //
 // Solidity: function exchangeAdapter() view returns(address)
 func (_Marketviewer *MarketviewerCaller) ExchangeAdapter(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "exchangeAdapter")
 
 	if err != nil {
@@ -470,7 +470,7 @@ func (_Marketviewer *MarketviewerCallerSession) ExchangeAdapter() (common.Addres
 //
 // Solidity: function getBoard(address market, uint256 boardId) view returns((address,uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,(int256,int256,int256),(uint256,uint256,uint256,uint256,uint256,(int256,int256,uint256,uint256,uint256),uint256,uint256,uint256,uint256,uint256,uint256)[]))
 func (_Marketviewer *MarketviewerCaller) GetBoard(opts *bind.CallOpts, market common.Address, boardId *big.Int) (OptionMarketViewerBoardView, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getBoard", market, boardId)
 
 	if err != nil {
@@ -501,7 +501,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetBoard(market common.Address, 
 //
 // Solidity: function getBoardForBase(string baseSymbol, uint256 boardId) view returns((address,uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,(int256,int256,int256),(uint256,uint256,uint256,uint256,uint256,(int256,int256,uint256,uint256,uint256),uint256,uint256,uint256,uint256,uint256,uint256)[]))
 func (_Marketviewer *MarketviewerCaller) GetBoardForBase(opts *bind.CallOpts, baseSymbol string, boardId *big.Int) (OptionMarketViewerBoardView, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getBoardForBase", baseSymbol, boardId)
 
 	if err != nil {
@@ -532,7 +532,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetBoardForBase(baseSymbol strin
 //
 // Solidity: function getBoardForStrikeId(address market, uint256 strikeId) view returns((address,uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,(int256,int256,int256),(uint256,uint256,uint256,uint256,uint256,(int256,int256,uint256,uint256,uint256),uint256,uint256,uint256,uint256,uint256,uint256)[]))
 func (_Marketviewer *MarketviewerCaller) GetBoardForStrikeId(opts *bind.CallOpts, market common.Address, strikeId *big.Int) (OptionMarketViewerBoardView, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getBoardForStrikeId", market, strikeId)
 
 	if err != nil {
@@ -563,7 +563,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetBoardForStrikeId(market commo
 //
 // Solidity: function getLiquidityBalances(address account) view returns((address,uint256,string,uint256,address,uint256)[])
 func (_Marketviewer *MarketviewerCaller) GetLiquidityBalances(opts *bind.CallOpts, account common.Address) ([]OptionMarketViewerLiquidityBalance, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getLiquidityBalances", account)
 
 	if err != nil {
@@ -594,7 +594,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetLiquidityBalances(account com
 //
 // Solidity: function getLiveBoards(address market) view returns((address,uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,(int256,int256,int256),(uint256,uint256,uint256,uint256,uint256,(int256,int256,uint256,uint256,uint256),uint256,uint256,uint256,uint256,uint256,uint256)[])[] marketBoards)
 func (_Marketviewer *MarketviewerCaller) GetLiveBoards(opts *bind.CallOpts, market common.Address) ([]OptionMarketViewerBoardView, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getLiveBoards", market)
 
 	if err != nil {
@@ -625,7 +625,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetLiveBoards(market common.Addr
 //
 // Solidity: function getMarket(address market) view returns((bool,uint256,string,uint256,string,uint256,(uint256,uint256,uint256,uint256,uint256,uint256,uint256),(address,address,address,address,address,address,address,address,address,address),((uint256,address,uint256,uint256),(uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(int256,int256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256)),(int256,int256,int256),(address,uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,(int256,int256,int256),(uint256,uint256,uint256,uint256,uint256,(int256,int256,uint256,uint256,uint256),uint256,uint256,uint256,uint256,uint256,uint256)[])[]) marketView)
 func (_Marketviewer *MarketviewerCaller) GetMarket(opts *bind.CallOpts, market common.Address) (OptionMarketViewerMarketView, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getMarket", market)
 
 	if err != nil {
@@ -656,7 +656,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetMarket(market common.Address)
 //
 // Solidity: function getMarketAddresses() view returns((address,address,address,address,address,address,address,address,address,address)[])
 func (_Marketviewer *MarketviewerCaller) GetMarketAddresses(opts *bind.CallOpts) ([]OptionMarketViewerOptionMarketAddresses, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getMarketAddresses")
 
 	if err != nil {
@@ -687,7 +687,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetMarketAddresses() ([]OptionMa
 //
 // Solidity: function getMarketForBase(string baseSymbol) view returns((bool,uint256,string,uint256,string,uint256,(uint256,uint256,uint256,uint256,uint256,uint256,uint256),(address,address,address,address,address,address,address,address,address,address),((uint256,address,uint256,uint256),(uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(int256,int256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256)),(int256,int256,int256),(address,uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,(int256,int256,int256),(uint256,uint256,uint256,uint256,uint256,(int256,int256,uint256,uint256,uint256),uint256,uint256,uint256,uint256,uint256,uint256)[])[]) marketView)
 func (_Marketviewer *MarketviewerCaller) GetMarketForBase(opts *bind.CallOpts, baseSymbol string) (OptionMarketViewerMarketView, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getMarketForBase", baseSymbol)
 
 	if err != nil {
@@ -718,7 +718,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetMarketForBase(baseSymbol stri
 //
 // Solidity: function getMarkets(address[] markets) view returns((bool,(bool,uint256,string,uint256,string,uint256,(uint256,uint256,uint256,uint256,uint256,uint256,uint256),(address,address,address,address,address,address,address,address,address,address),((uint256,address,uint256,uint256),(uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(int256,int256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool),(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256),(uint256,uint256,uint256,uint256)),(int256,int256,int256),(address,uint256,uint256,uint256,uint256,bool,uint256,uint256,uint256,(int256,int256,int256),(uint256,uint256,uint256,uint256,uint256,(int256,int256,uint256,uint256,uint256),uint256,uint256,uint256,uint256,uint256,uint256)[])[])[]) marketsView)
 func (_Marketviewer *MarketviewerCaller) GetMarkets(opts *bind.CallOpts, markets []common.Address) (OptionMarketViewerMarketsView, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getMarkets", markets)
 
 	if err != nil {
@@ -749,7 +749,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetMarkets(markets []common.Addr
 //
 // Solidity: function getOwnerPositions(address account) view returns((address,(uint256,uint256,uint8,uint256,uint256,uint8)[])[])
 func (_Marketviewer *MarketviewerCaller) GetOwnerPositions(opts *bind.CallOpts, account common.Address) ([]OptionMarketViewerMarketOptionPositions, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "getOwnerPositions", account)
 
 	if err != nil {
@@ -780,7 +780,7 @@ func (_Marketviewer *MarketviewerCallerSession) GetOwnerPositions(account common
 //
 // Solidity: function initialized() view returns(bool)
 func (_Marketviewer *MarketviewerCaller) Initialized(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "initialized")
 
 	if err != nil {
@@ -822,7 +822,7 @@ func (_Marketviewer *MarketviewerCaller) MarketAddresses(opts *bind.CallOpts, ar
 	QuoteAsset         common.Address
 	BaseAsset          common.Address
 }, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "marketAddresses", arg0)
 
 	outstruct := new(struct {
@@ -896,7 +896,7 @@ func (_Marketviewer *MarketviewerCallerSession) MarketAddresses(arg0 common.Addr
 //
 // Solidity: function nominatedOwner() view returns(address)
 func (_Marketviewer *MarketviewerCaller) NominatedOwner(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "nominatedOwner")
 
 	if err != nil {
@@ -927,7 +927,7 @@ func (_Marketviewer *MarketviewerCallerSession) NominatedOwner() (common.Address
 //
 // Solidity: function optionMarkets(uint256 ) view returns(address)
 func (_Marketviewer *MarketviewerCaller) OptionMarkets(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "optionMarkets", arg0)
 
 	if err != nil {
@@ -958,7 +958,7 @@ func (_Marketviewer *MarketviewerCallerSession) OptionMarkets(arg0 *big.Int) (co
 //
 // Solidity: function owner() view returns(address)
 func (_Marketviewer *MarketviewerCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
+	var out []any
 	err := _Marketviewer.contract.Call(opts, &out, "owner")
 
 	if err != nil {

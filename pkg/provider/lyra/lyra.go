@@ -26,16 +26,16 @@ const (
 	// TODO use teal on Optimism
 	// TODO use perso on Arbitrum
 	// TODO do that on the 1st Nov
-	// Sorry alchemy but we r too poor
+	// Sorry alchemy but we r too poor.
 
-	// teal
+	// teal.
 	rpcOP = "https://opt-mainnet.g.alchemy.com/v2/6_IOOvszkG_h71cZH3ybdKrgPPwAUx6m"
 	// perso
 	// rpcOP = "https://opt-mainnet.g.alchemy.com/v2/uksZH_SjXAaBnIw95hZcBoCWGCXs9VXI"
 	name = "Lyra"
 	// teal
 	// rpcARB = "https://arb-mainnet.g.alchemy.com/v2/hnBqLngSXPbAdvXHjcstEHkvWXV7RzEJ"
-	// perso
+	// perso.
 	rpcARB = "https://arb-mainnet.g.alchemy.com/v2/4TQ_6stSP__V97XUQQC07AV23f_XOemr"
 
 	oneOption = 1
@@ -79,13 +79,14 @@ func GetOptionsFromLayer(layer string) (*[]common.Address, *ethclient.Client, er
 	rpc := ""
 	lyraRegistry := ""
 
-	if layer == "Optimism" {
+	switch layer {
+	case "Optimism":
 		rpc = rpcOP
 		lyraRegistry = lyraRegistryOP
-	} else if layer == "Arbitrum" {
+	case "Arbitrum":
 		rpc = rpcARB
 		lyraRegistry = lyraRegistryARB
-	} else {
+	default:
 		return nil, &ethclient.Client{}, log.Error("Unknown layer", layer).Err()
 	}
 
@@ -127,13 +128,14 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 
 	quoterAddress := ""
 	optionMarketViewer := ""
-	if layer == "Optimism" {
+	switch layer {
+	case "Optimism":
 		quoterAddress = quoterAddressOP
 		optionMarketViewer = optionMarketViewerOP
-	} else if layer == "Arbitrum" {
+	case "Arbitrum":
 		quoterAddress = quoterAddressARB
 		optionMarketViewer = optionMarketViewerARB
-	} else {
+	default:
 		return nil, log.Error("Unknown layer", layer).Err()
 	}
 
@@ -147,7 +149,7 @@ func processMarketsFromLayer(layer string, markets *[]common.Address, client *et
 		return nil, log.Error("MarketAddresses", layer, err).Err()
 	}
 
-	for i := 0; i < len(*markets); i++ {
+	for i := range len(*markets) {
 		marketAddresses, err := viewer.MarketAddresses(&bind.CallOpts{}, (*markets)[i])
 		if err != nil {
 			return nil, log.Error("MarketAddresses", layer, i, err).Err()
@@ -221,7 +223,7 @@ func Asset(address common.Address) string {
 	}
 }
 
-// OptionMarketViewerBoardViewARB copies and slightly adapt OptionMarketViewerBoardView
+// OptionMarketViewerBoardViewARB copies and slightly adapt OptionMarketViewerBoardView.
 func (b *OptionMarketViewerBoardView) process(i int, asset string, quoter *Quoter, layer string) ([]rainbow.Option, error) {
 	options := []rainbow.Option{}
 

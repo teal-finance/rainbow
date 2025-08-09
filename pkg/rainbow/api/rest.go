@@ -149,7 +149,8 @@ func (h Handler) writeOptions(w http.ResponseWriter, options []rainbow.Option, s
 func (h Handler) replyJSON(w http.ResponseWriter, options []rainbow.Option) error {
 	w.Header().Set("Content-Type", "application/json")
 
-	if err := json.NewEncoder(w).Encode(options); err != nil {
+	err := json.NewEncoder(w).Encode(options)
+	if err != nil {
 		http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
 		return err
 	}
@@ -186,7 +187,8 @@ func (h Handler) replyCSV(w http.ResponseWriter, options []rainbow.Option, comma
 	}
 
 	for i := 0; ; i++ {
-		if err := csvWriter.Write(row); err != nil {
+		err := csvWriter.Write(row)
+		if err != nil {
 			return err
 		}
 
@@ -243,7 +245,8 @@ func (h Handler) replyCSV(w http.ResponseWriter, options []rainbow.Option, comma
 	}
 
 	csvWriter.Flush()
-	if err := csvWriter.Error(); err != nil {
+	err := csvWriter.Error()
+	if err != nil {
 		return err
 	}
 

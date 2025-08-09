@@ -19,7 +19,7 @@ const (
 	// dashRightAlignHTML must show the dash with the number of trailing digits defined by digitsInFractionalPart.
 	dashRightAlignHTML = "&mdash;&numsp;&numsp;"
 
-	// dashLeftAlignHTML visual width must be same as the the number of digits defined by len(spaces)-1.
+	// dashLeftAlignHTML visual width must be same as the number of digits defined by len(spaces)-1.
 	dashLeftAlignHTML = "&numsp;&numsp;&mdash;"
 
 	// dashLeftAlign must contain the same number of runes as len(spaces)-1.
