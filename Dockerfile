@@ -64,12 +64,16 @@ COPY pkg pkg
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
 # GOAMD64=v3 --> https://github.com/golang/go/wiki/MinimumRequirements#amd64
 RUN set -ex                                                                      ;\
-    v="$(cat version.txt)"                                                       ;\
+    case "$(grep flags -m1 /proc/cpuinfo)" in                                    ;\
+        *" avx512f "*)  export GOAMD64=v4;;                                      ;\
+        *" avx2 "*)     export GOAMD64=v3;;                                      ;\
+        *" sse2 "*)     export GOAMD64=v2;;                                      ;\
+    esac                                                                         ;\
     export CGO_ENABLED=0                                                         ;\
     export GOFLAGS="-trimpath -modcacherw"                                       ;\
     export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
-    export GOAMD64=v3                                                            ;\
     export GOEXPERIMENT=newinliner                                               ;\
+    v="$(cat version.txt)"                                                       ;\
     go build -v -ldflags="-X 'github.com/teal-finance/garcon.V=$v'" ./cmd/server ;\
     ls -sh server                                                                ;\
     ./server -version  # smoke test
