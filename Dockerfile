@@ -30,7 +30,7 @@ ARG uid=5505
 # base = /rainbow/
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.22 AS version
+FROM docker.io/golang:1.25 AS version
 
 WORKDIR /code
 
@@ -63,19 +63,18 @@ COPY pkg pkg
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
 # GOAMD64=v3 --> https://github.com/golang/go/wiki/MinimumRequirements#amd64
-RUN set -ex                                                                      ;\
-    case "$(grep flags -m1 /proc/cpuinfo)" in                                    ;\
-        *" avx512f "*)  export GOAMD64=v4;;                                      ;\
-        *" avx2 "*)     export GOAMD64=v3;;                                      ;\
-        *" sse2 "*)     export GOAMD64=v2;;                                      ;\
-    esac                                                                         ;\
-    export CGO_ENABLED=0                                                         ;\
-    export GOFLAGS="-trimpath -modcacherw"                                       ;\
-    export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
-    export GOEXPERIMENT=newinliner                                               ;\
-    v="$(cat version.txt)"                                                       ;\
-    go build -v -ldflags="-X 'github.com/LynxAIeu/garcon/gc.V=$v'" ./cmd/server ;\
-    ls -sh server                                                                ;\
+RUN set -ex                                          ;\
+    case "$(grep flags -m1 /proc/cpuinfo)" in         \
+        *" avx512f "*)  export GOAMD64=v4;;           \
+        *" avx2 "*)     export GOAMD64=v3;;           \
+        *" sse2 "*)     export GOAMD64=v2;;           \
+    esac                                             ;\
+    v="$(cat version.txt)"                           ;\
+    flags="-X 'github.com/LynxAIeu/garcon/vv.V=$v'"  ;\
+    CGO_ENABLED=0 GOFLAGS="-trimpath -modcacherw"     \
+    GOLDFLAGS="-d -s -w -extldflags=-static"          \
+    go build -a -v -ldflags="$flags" ./cmd/server    ;\
+    ls -lh server                                    ;\
     ./server -version  # smoke test
 
 # To enable Go hardening (FIPS 140-2 certification) set:
@@ -88,24 +87,32 @@ RUN set -ex                                                                     
 
 # --------------------------------------------------------------------
 # https://hub.docker.com/_/node
-FROM docker.io/node:22-alpine AS web_builder
+FROM docker.io/node:24-alpine AS web_builder
 
 WORKDIR /code
 
-COPY frontend/package.json    ./
+COPY frontend/package.json       \
+     frontend/package-lock.json ./
 
-RUN set -ex                    ;\
-    node --version             ;\
-    npm --version             ;\
-    npm  cache verify          ;\
-    npm i
+RUN set -ex                     ;\
+    node --version              ;\
+    npm --version               ;\
+    npm cache verify            ;\
+    npm ci --prefer-online --no-audit --no-fund
+    # ci = clean-install => read-only package-lock.json
+    # --prefer-offline   => use cache first, else download for internet
+    # --prefer-online    => download for internet, except 
+    # --no-fund          => no funding display
+    # --no-audit         => no security audit
+    # --only=production  => exclude devDependencies
+    # --omit=dev         => do not install dev tools (tsc?)
 
-COPY frontend/index.html        \
-    frontend/postcss.config.js  \
-    frontend/tailwind.config.js \
-    frontend/tsconfig.json      \
-    frontend/vite.config.mts     \
-    frontend/.env              ./
+COPY frontend/index.html         \
+     frontend/postcss.config.js  \
+     frontend/tailwind.config.js \
+     frontend/tsconfig.json      \
+     frontend/vite.config.mts    \
+     frontend/.env              ./
 
 COPY frontend/public public
 COPY frontend/src    src
@@ -131,7 +138,7 @@ RUN set -ex                                            ;\
     npm run compress
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.22 AS integrator
+FROM docker.io/golang:1.25 AS integrator
 
 WORKDIR /target
 
