@@ -1,10 +1,9 @@
 .DS_Store
+.gzipper
 .vscode
-/node_modules/
-/dist/
-/dist-ssr/
-/storybook-static
 /.gzipper
 /*.local
-.gzipper
-package-lock.json
+/dist-ssr/
+/dist/
+/node_modules/
+/storybook-static
