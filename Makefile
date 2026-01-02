@@ -61,7 +61,7 @@ run-ui:
 fmt:
 	go mod tidy
 	go generate ./...
-	go run mvdan.cc/gofumpt@latest -w -extra -l -lang 1.22 .
+	go run mvdan.cc/gofumpt@latest -w -extra -l -lang go1.25 .
 	go build ./...
 
 .PHONY: test
@@ -74,7 +74,7 @@ cov: test
 
 .PHONY: vet
 vet:
-	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run --fix || true
+	go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest run --fix || true
 	go run -race ./cmd/client || true
 	go run -race ./cmd/cli
 	timeout 16m go run -race ./cmd/server  || echo "Terminated by timeout 16m"
