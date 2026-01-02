@@ -8,7 +8,7 @@ package rainbow
 import (
 	"time"
 
-	"github.com/teal-finance/emo"
+	"github.com/LynxAIeu/emo"
 )
 
 var log = emo.NewZone("service")

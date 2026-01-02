@@ -10,15 +10,16 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/teal-finance/emo"
-	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/garcon/gg"
+	"github.com/LynxAIeu/emo"
+	"github.com/LynxAIeu/garcon/gg"
+	"github.com/LynxAIeu/garcon/gwt"
+	"github.com/LynxAIeu/garcon/vv"
 )
 
 var log = emo.NewZone("main")
 
 func main() {
-	garcon.LogVersion()
+	vv.LogVersion()
 
 	parseFlags()
 
@@ -34,7 +35,7 @@ func main() {
 	}
 
 	if *hmac != "" {
-		*access = garcon.NewAccessToken(*ttl, *usr, groups, orgs, *hmac)
+		*access = gwt.NewAccessToken(*ttl, *usr, groups, orgs, *hmac)
 		log.AccessToken(*access)
 	}
 

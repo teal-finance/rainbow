@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/teal-finance/emo"
-	"github.com/teal-finance/garcon/gg"
+	"github.com/LynxAIeu/emo"
+	"github.com/LynxAIeu/garcon/gg"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 

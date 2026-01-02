@@ -8,9 +8,9 @@ package provider
 import (
 	"os"
 
-	"github.com/teal-finance/emo"
-	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/garcon/gg"
+	"github.com/LynxAIeu/emo"
+	"github.com/LynxAIeu/garcon/gg"
+	"github.com/LynxAIeu/garcon/vv"
 	"github.com/teal-finance/rainbow/pkg/provider/aevo"
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
@@ -113,7 +113,7 @@ func AddAlert(providers []rainbow.Provider, n gg.Notifier, namespace string) []r
 
 // notifyStartup is called only once to notify when Rainbow is started.
 func notifyStartup(n gg.Notifier, namespace, list string) error {
-	msg := ":wave: Rainbow **" + namespace + "** " + garcon.Version("") + " has just started"
+	msg := ":wave: Rainbow **" + namespace + "** " + vv.Version("") + " has just started"
 
 	host, err := os.Hostname()
 	if err == nil {

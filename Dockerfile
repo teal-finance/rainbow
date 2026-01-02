@@ -74,7 +74,7 @@ RUN set -ex                                                                     
     export GOLDFLAGS="-d -s -w -extldflags=-static"                              ;\
     export GOEXPERIMENT=newinliner                                               ;\
     v="$(cat version.txt)"                                                       ;\
-    go build -v -ldflags="-X 'github.com/teal-finance/garcon.V=$v'" ./cmd/server ;\
+    go build -v -ldflags="-X 'github.com/LynxAIeu/garcon.V=$v'" ./cmd/server ;\
     ls -sh server                                                                ;\
     ./server -version  # smoke test
 

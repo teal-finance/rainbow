@@ -6,11 +6,11 @@
 package rysk
 
 import (
+	"github.com/LynxAIeu/emo"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/teal-finance/emo"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 

@@ -9,8 +9,8 @@ import (
 	"flag"
 	"strings"
 
-	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/garcon/gg"
+	"github.com/LynxAIeu/garcon/gg"
+	"github.com/LynxAIeu/garcon/vv"
 )
 
 const (
@@ -47,7 +47,7 @@ var (
 )
 
 func parseFlags() {
-	garcon.SetVersionFlag()
+	vv.SetVersionFlag()
 	flag.Parse()
 
 	switch {

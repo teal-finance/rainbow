@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/teal-finance/emo"
-	"github.com/teal-finance/garcon"
+	"github.com/LynxAIeu/emo"
+	"github.com/LynxAIeu/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 

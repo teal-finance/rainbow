@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/garcon/gg"
-	"github.com/teal-finance/garcon/timex"
+	"github.com/LynxAIeu/garcon/gg"
+	"github.com/LynxAIeu/garcon/timex"
+	"github.com/LynxAIeu/garcon/vv"
 	"github.com/teal-finance/rainbow/pkg/provider"
 )
 
@@ -43,7 +43,7 @@ var (
 )
 
 func parseFlags() {
-	garcon.SetVersionFlag()
+	vv.SetVersionFlag()
 	flag.Parse()
 
 	listenAddr = ":" + strconv.Itoa(*mainPort)
@@ -53,7 +53,7 @@ func parseFlags() {
 		log.Init("Enable -dev mode because -addr and -port flags are not used")
 	}
 
-	garcon.LogVersion()
+	vv.LogVersion()
 	log.Init("Dev. mode      -dev       =", *dev)
 	log.Init("Data fetch     -period    =", timex.DStr(*period))
 	log.Init("Centralized Ex -cex       =", *cex)

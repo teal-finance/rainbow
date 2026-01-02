@@ -11,9 +11,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/teal-finance/emo"
-	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/garcon/gg"
+	"github.com/LynxAIeu/emo"
+	"github.com/LynxAIeu/garcon"
+	"github.com/LynxAIeu/garcon/gg"
+	"github.com/LynxAIeu/garcon/vv"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
@@ -68,7 +69,7 @@ func main() {
 	// protect web files: reject invalid cookie
 	router.With(ck.Chk).Get("/js/*", ws.ServeDir("text/javascript; charset=utf-8"))
 	router.With(ck.Chk).Get("/assets/*", ws.ServeAssets())
-	router.With(ck.Chk).Get("/version", garcon.ServeVersion())
+	router.With(ck.Chk).Get("/version", vv.ServeVersion())
 	// do not protect favicon and other public images
 	router.Get("/favicon.ico", ws.ServeFile("favicon.ico", "image/x-icon"))
 	router.Get("/favicon.png", ws.ServeFile("favicon.png", "image/png"))

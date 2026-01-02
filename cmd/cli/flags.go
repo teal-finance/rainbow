@@ -8,8 +8,8 @@ package main
 import (
 	"flag"
 
-	"github.com/teal-finance/garcon"
-	"github.com/teal-finance/garcon/gg"
+	"github.com/LynxAIeu/garcon/gg"
+	"github.com/LynxAIeu/garcon/vv"
 	"github.com/teal-finance/rainbow/pkg/provider"
 )
 
@@ -27,10 +27,10 @@ var (
 )
 
 func parseFlags() {
-	garcon.SetVersionFlag()
+	vv.SetVersionFlag()
 	flag.Parse()
 
-	garcon.LogVersion()
+	vv.LogVersion()
 	log.Init("Centralized exchanges     -cex       =", *cex)
 	log.Init("Decentralized exchanges   -dex       =", *dex)
 	log.Init("Binary options exchanges  -exotic    =", *exotic)
