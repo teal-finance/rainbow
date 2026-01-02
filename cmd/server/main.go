@@ -12,7 +12,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/LynxAIeu/emo"
-	"github.com/LynxAIeu/garcon"
+	"github.com/LynxAIeu/garcon/gc"
 	"github.com/LynxAIeu/garcon/gg"
 	"github.com/LynxAIeu/garcon/vv"
 	"github.com/teal-finance/rainbow/pkg/provider"
@@ -30,9 +30,9 @@ func main() {
 	names := listProviderNames()
 	log.Init("Providers:", names)
 
-	g := garcon.New(
-		garcon.WithURLs(gg.SplitClean(*mainAddr)...),
-		garcon.WithDev(*dev))
+	g := gc.New(
+		gc.WithURLs(gg.SplitClean(*mainAddr)...),
+		gc.WithDev(*dev))
 
 	// start the service in background
 	providers := provider.Select(names, g.ServerName.String(), *alert)
@@ -49,7 +49,7 @@ func main() {
 		g.MiddlewareServerHeader("Rainbow"))
 
 	// middleware to set/check cookies
-	var ck garcon.TokenChecker
+	var ck gc.TokenChecker
 	if len(*aes) > 0 {
 		ck = g.IncorruptibleChecker(*aes, 0, true)
 	} else {

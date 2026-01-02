@@ -130,7 +130,7 @@ func (v *__OptionsInput) GetFirst() int { return v.First }
 // GetT returns __OptionsInput.T, and is useful for accessing the field via an interface.
 func (v *__OptionsInput) GetT() string { return v.T }
 
-// The query or mutation executed by Options.
+// The query executed by Options.
 const Options_Operation = `
 query Options ($skip: Int, $first: Int, $t: BigInt) {
 	otokens(skip: $skip, first: $first, orderBy: expiryTimestamp, orderDirection: desc, where: {expiryTimestamp_gt:$t}) {
@@ -166,7 +166,7 @@ func Options(
 	skip int,
 	first int,
 	t string,
-) (*OptionsResponse, error) {
+) (data_ *OptionsResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "Options",
 		Query:  Options_Operation,
@@ -176,10 +176,9 @@ func Options(
 			T:     t,
 		},
 	}
-	var err_ error
 
-	var data_ OptionsResponse
-	resp_ := &graphql.Response{Data: &data_}
+	data_ = &OptionsResponse{}
+	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
 		ctx_,
@@ -187,5 +186,5 @@ func Options(
 		resp_,
 	)
 
-	return &data_, err_
+	return data_, err_
 }

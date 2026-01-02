@@ -10,9 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/LynxAIeu/emo"
-	"github.com/LynxAIeu/garcon"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+
+	"github.com/LynxAIeu/emo"
+	"github.com/LynxAIeu/garcon/gc"
 )
 
 const (
@@ -27,7 +28,7 @@ const (
 var log = emo.NewZone(name)
 
 type Provider struct {
-	ar garcon.AdaptiveRate
+	ar gc.AdaptiveRate
 }
 
 func (Provider) Name() string {
@@ -56,7 +57,7 @@ const maxBytesToRead = 2_000_000
 
 func (p *Provider) Options() ([]rainbow.Option, error) {
 	if p.ar.Name == "" {
-		p.ar = garcon.NewAdaptiveRate(name, adaptiveMinSleepTime)
+		p.ar = gc.NewAdaptiveRate(name, adaptiveMinSleepTime)
 	}
 	p.ar.LogStats()
 
