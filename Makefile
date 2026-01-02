@@ -83,7 +83,7 @@ vet:
 
 # Below default values can be changes using:
 # make container-run expose=3333 port=3333
-expose=1111
+expose=2222
 addr=http://localhost:$(expose)
 port=2222
 base=/
