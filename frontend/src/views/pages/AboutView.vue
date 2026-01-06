@@ -167,7 +167,7 @@
         <div class="flex flex-wrap justify-center m-4">
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="0uep's picture" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/o.jpg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">0uep</h2>
@@ -183,7 +183,7 @@
           </div>
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="Syn's picture" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/syn.jpg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">Syn</h2>
@@ -198,7 +198,7 @@
           </div>
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="Kahlys' avatar" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/kahlys.jpg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">Kahlys</h2>
@@ -214,7 +214,7 @@
           </div>
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="Cryptohazard's picture" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/jy.jpg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">Cryptohazard</h2>
@@ -231,7 +231,7 @@
           </div>
           <div class="p-4 lg:w-1/5 md:w-1/2">
             <div class="flex flex-col items-center h-full text-center">
-              <img alt="Rainbow team member" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
+              <img alt="Arad's picture" class="flex-shrink-0 object-cover object-center w-full mb-4 rounded-lg h-58"
                 src="@/assets/profile/arad.jpg">
               <div class="w-full">
                 <h2 class="text-lg font-medium">Arad</h2>
@@ -256,7 +256,7 @@
         <div class="mb-20 text-center">
           <h1 class="mb-4 text-2xl font-medium sm:text-3xl">Our projects</h1>
           <p class="mx-auto leading-relaxed xl:w-2/4 lg:w-3/4">in
-            <a class="text-green-500" href="https://github.com/teal-finance/">Teal.Finance organization</a></p>
+            <a class="text-green-500" href="https://github.com/LM4eu/">Teal.Finance organization</a></p>
           <div class="flex justify-center mt-6">
             <div class="inline-flex w-16 h-1 rounded-full bg-primary"></div>
           </div>
