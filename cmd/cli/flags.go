@@ -8,9 +8,10 @@ package main
 import (
 	"flag"
 
+	"github.com/teal-finance/rainbow/pkg/provider"
+
 	"github.com/LynxAIeu/garcon/gg"
 	"github.com/LynxAIeu/garcon/vv"
-	"github.com/teal-finance/rainbow/pkg/provider"
 )
 
 const (

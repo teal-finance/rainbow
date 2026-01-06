@@ -9,14 +9,14 @@ import (
 	"math"
 	"os"
 
-	"github.com/gookit/color"
-	"github.com/jedib0t/go-pretty/v6/table"
-
-	"github.com/LynxAIeu/emo"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
 	"github.com/teal-finance/rainbow/pkg/rainbow/storage/dbram"
+
+	"github.com/gookit/color"
+	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/LynxAIeu/emo"
 )
 
 var (

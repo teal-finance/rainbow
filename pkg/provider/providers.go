@@ -9,9 +9,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/LynxAIeu/emo"
-	"github.com/LynxAIeu/garcon/gg"
-	"github.com/LynxAIeu/garcon/vv"
 	"github.com/teal-finance/rainbow/pkg/provider/aevo"
 	"github.com/teal-finance/rainbow/pkg/provider/deltaexchange"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
@@ -23,6 +20,10 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/thales"
 	"github.com/teal-finance/rainbow/pkg/provider/thalex"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
+
+	"github.com/LynxAIeu/emo"
+	"github.com/LynxAIeu/garcon/gg"
+	"github.com/LynxAIeu/garcon/vv"
 )
 
 var log = emo.NewZone("provider")
