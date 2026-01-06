@@ -1,375 +1,465 @@
 # Documentation:
 # https://golangci-lint.run/usage/configuration/#run-configuration
 
-# Run:
-# go run github.com/golangci/golangci-lint/cmd/golangci-lint run --fix
+# Run the last version:
+# go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest run --fix
 
-# List linters by category in a YAML-compatible format:
-# go run github.com/golangci/golangci-lint/cmd/golangci-lint help --color always linters | sed -n '/Linters presets:/,$p' | sed 's/^/# /;s/[:,]/\n-/g'
----
+# List the available linters:
+# go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest linters --no-config --color always
+
+version: "2"
+
 linters:
-  enable:
-    # bugs
-    - asciicheck # check code does not contain non-ASCII identifiers
-    - bidichk # check for dangerous unicode character sequences
-    - contextcheck # check the function whether use a non-inherited context
-    - durationcheck # check for two durations multiplied together
-    - errchkjson # check types passed to the json encoding functions. Reports unsupported types and optionally reports occasions, where the check for the returned error can be omitted.
-    - exhaustive # check exhaustiveness of enum switch statements
-    - exportloopref # check for pointers to enclosing loop variables
-    - gosec # inspect source code for security problems
-    - makezero # find slice declarations with non-zero initial length
-    - nilerr # find the code that returns nil even if it checks that the error is not nil
-    - typecheck # check types
-
-    # comment
-    - godot # check if comments end in a period
-    - misspell # find commonly misspelled English words in comments
-
-    # complexity
-    - cyclop # check function and package cyclomatic complexity
-    - funlen # detect long functions
-    - gocognit # compute the cognitive complexity of functions
-    - gocyclo # check the cyclomatic complexity of functions
-    - maintidx # measure the maintainability index of each function.
-    - nestif # report deeply nested if statements
-
-    # error
-    - errcheck # ANNOYING
-    - errorlint # find code that will cause problems with the error wrapping scheme introduced in Go 1.13
-
-    # format
-    - decorder # check declaration order and count of types, constants, variables and functions
-    - gofmt # check if code was gofmt-ed and check for code simplification
-    - gofumpt # check if code was gofumpt-ed.
-
-    # import
-    - goimports # fix imports and format code in the same style as gofmt.
-    - gomodguard # allow and block list linter for direct Go module dependencies. This is different from depguard where there are different block types for example version constraints and module recommendations.
-
-    # metalinter
-    - gocritic # check bugs, performance and style issues
-    - govet # report suspicious constructs, such as Printf calls whose arguments do not align with the format string
-    - revive # drop-in replacement of golint
-    - staticcheck # apply a ton of static analysis checks
-
-    # module
-    - depguard # check if package imports are in a list of acceptable packages
-    - gomoddirectives # manage the use of 'replace', 'retract', and 'excludes' directives in go.mod.
-
-    # performance
-    - bodyclose # check if HTTP response body is closed successfully
-    - noctx # noctx finds sending http request without context.Context
-    - prealloc # find slice declarations that could potentially be preallocated
-
-    # sql
-    - execinquery # check query string in Query function which reads your Go src files
-    - rowserrcheck # check whether Err of rows is checked successfully
-    - sqlclosecheck # check that sql.Rows and sql.Stmt are closed.
-
-    # style
-    - containedctx # detect struct contained context.Context field
-    - dogsled # check assignments with too many blank identifiers (e.g. x, _, _, _, := f())
-    - dupl # find duplicated code
-    - errname # check sentinel errors are prefixed with the `Err` and error types are suffixed with the `Error`
-    - forbidigo # forbids identifiers
-    - forcetypeassert # finds forced type assertions
-    - gochecknoinits # check that no init functions are present in Go code
-    - goconst # find repeated strings that could be replaced by a constant
-    - goheader # check if file header matches to pattern
-    - gomnd # ANNOYING
-    - goprintffuncname # check printf-like functions are named with `f` at the end
-    - gosimple # simplify code
-    - grouper # Aanalyze expression groups
-    - ifshort # check code uses short syntax for if-statements whenever possible
-    - importas # enforce consistent import aliases    - ireturn # accept Interfaces, return Concrete Types
-    - nakedret # find naked returns in functions greater than a specified function length
-    - nilnil # chec there is no simultaneous return of `nil` error and an invalid value
-    - nolintlint # reports ill-formed or insufficient nolint directives
-    - predeclared # find code that shadows one of Go's predeclared identifiers
-    - promlinter # check Prometheus metrics naming via promlint
-    - tenv # detect using os.Setenv instead of t.Setenv since Go1.17
-    - unconvert # remove unnecessary type conversions
-    - wastedassign # find wasted assignment statements
-    - whitespace # detect leading and trailing whitespace
-    - nosprintfhostport # check for misuse of Sprintf to construct a host with port in a URL
-
-    # test
-    - tparallel # detect inappropriate usage of t.Parallel() method in your Go test codes
-    - thelper # detect golang test helpers without t.Helper() call and checks the consistency of test helpers
-
-    # unused
-    - deadcode # find unused code
-    - ineffassign # detect when assignments to existing variables are not used
-    - structcheck # find unused struct fields
-    - unparam # report unused function parameters
-    - unused # check for unused constants, variables, functions and types
-    - varcheck # find unused global variables and constants
+  default: all
 
   disable:
-    # bugs
-    - scopelint # DEPRECATED
+    - nlreturn
+    - wsl
+    - wsl_v5
 
-    # comment
-    - godox # ANNOYING
-
-    # error
-    - goerr113 # ANNOYING
-    - wrapcheck # ANNOYING
-
-    # import
-    - gci # ANNOYING
-
-    # performance
-    - maligned # DEPRECATED
-
-    # style
-    - gochecknoglobals # ANNOYING
-    - golint # DEPRECATED (alternatives: revive and stylecheck)
-    - interfacer # DEPRECATED
-    - lll # ANNOYING
-    - nlreturn # ANNOYING
-    - tagliatelle # ANNOYING
-    - varnamelen # ANNOYING
-    - wsl # ANNOYING
-    - nonamedreturns # ANNOYING
-
-    # test
-    - paralleltest # ANNOYING
-    - testpackage # ANNOYING
-    - exhaustivestruct # DEPRECATED
-    - exhaustruct # ANNOYING
+  enable:
+    - arangolint
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - cyclop
+    - decorder
+    - depguard
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    - embeddedstructfieldcheck
+    - err113
+    - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - exhaustruct
+    - exptostd
+    - fatcontext
+    - forbidigo
+    - forcetypeassert
+    - funcorder
+    - funlen
+    - ginkgolinter
+    - gocheckcompilerdirectives
+    - gochecknoglobals
+    - gochecknoinits
+    - gochecksumtype
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - goheader
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    - govet
+    - grouper
+    - iface
+    - importas
+    - inamedparam
+    - ineffassign
+    - interfacebloat
+    - intrange
+    - ireturn
+    - lll
+    - loggercheck
+    - maintidx
+    - makezero
+    - mirror
+    - misspell
+    - mnd
+    - musttag
+    - nakedret
+    - nestif
+    - nilerr
+    - nilnesserr
+    - nilnil
+    - noctx
+    - noinlineerr
+    - nolintlint
+    - nonamedreturns
+    - nosprintfhostport
+    - paralleltest
+    - perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - protogetter
+    - reassign
+    - recvcheck
+    - revive
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
+    - staticcheck
+    - tagalign
+    - tagliatelle
+    - testableexamples
+    - testifylint
+    - testpackage
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - usetesting
+    - varnamelen
+    - wastedassign
+    - whitespace
+    - wrapcheck
+    - zerologlint
 
 linters-settings:
+  bodyclose:
+    no-default-checks: false
+
+  canonicalheader:
+    canonical-headers: []
+
+  copyloopvar:
+    check-alias: true
+
+  depguard:
+    rules:
+      deny: null
+
   dupl:
-    threshold: 150
+    threshold: 94
+
+  durationcheck:
+    check-multiplication: true
+
+  embeddedstructfieldcheck:
+    allow-empty-line: true
+
+  errcheck:
+    check-blank: false
+    check-type-assertions: false
+
+  errchkjson:
+    check-struct-tag: true
+
+  errname:
+    check-func-errors: true
+    check-named-errors: true
+
+  errorlint:
+    asserts: true
+    comparison: true
+    errorf: true
+
+  exhaustive:
+    check-generated: false
+
+  exhaustruct:
+    ignore-structs: []
+    include: []
+    exclude:
+      - "Perm$"
+
+  exptostd:
+    ignore: []
+
+  fatcontext:
+    max-context-nesting: 3
+
+  forbidigo:
+    forbid:
+      - msg: Use logger instead of fmt.Print
+        pattern: ^fmt\.Print.*$
+      - msg: Use logger instead of log
+        pattern: ^log\..*$
+
+  forcetypeassert:
+    check-all: true
+
+  funcorder:
+    order: ["init", "main", "Setup", "TearDown", "Test", "Benchmark", "Example"]
 
   funlen:
     lines: 100
     statements: 50
 
+  gochecknoglobals:
+    allow: []
+
+  gochecknoinits:
+    skip: []
+
+  gochecksumtype:
+    check-all: true
+
   gocyclo:
-    min-complexity: 15
+    min-complexity: 10
 
   cyclop:
-    max-complexity: 15
+    max-complexity: 10
+    skip-test: true
 
-  gci:
-    sections: [prefix(github.com/teal-finance/)]
+  gocognit:
+    min-complexity: 18
 
   goconst:
     min-len: 2
     min-occurrences: 5
 
   gocritic:
-    enabled-checks:
-      - appendAssign # Detects suspicious append result assignments
-      - argOrder # Detects suspicious arguments order
-      - badCall # Detects suspicious function calls
-      - badCond # Detects suspicious condition expressions
-      - badLock # Detects suspicious mutex lock/unlock operations
-      - badRegexp # Detects suspicious regexp patterns
-      - builtinShadowDecl # Detects top-level declarations that shadow the predeclared identifiers
-      - caseOrder # Detects erroneous case order inside switch statements
-      - codegenComment # Detects malformed 'code generated' file comments
-      - commentedOutCode # Detects commented-out code inside function bodies
-      - deprecatedComment # Detects malformed 'deprecated' doc-comments
-      - dupArg # Detects suspicious duplicated arguments
-      - dupBranchBody # Detects duplicated branch bodies inside conditional statements
-      - dupCase # Detects duplicated case clauses inside switch or select statements
-      - dupSubExpr # Detects suspicious duplicated sub-expressions
-      - emptyDecl # Detects suspicious empty declarations blocks
-      - evalOrder # Detects unwanted dependencies on the evaluation order
-      - exitAfterDefer # Detects calls to exit/fatal inside functions that use defer
-      - externalErrorReassign # Detects suspicious reassigment of error from another package
-      - filepathJoin # Detects problems in filepath.Join() function calls
-      - flagDeref # Detects immediate dereferencing of `flag` package pointers
-      - flagName # Detects suspicious flag names
-      - mapKey # Detects suspicious map literal keys
-      - nilValReturn # Detects return statements those results evaluate to nil
-      - offBy1 # Detects various off-by-one kind of errors
-      - regexpPattern # Detects suspicious regexp patterns
-      - returnAfterHttpError # Detects suspicious http.Error call without following return
-      - sloppyReassign # Detects suspicious/confusing re-assignments
-      - sloppyTypeAssert # Detects redundant type assertions
-      - sortSlice # Detects suspicious sort.Slice calls
-      - sprintfQuotedString # Detects "%s" formatting directives that can be replaced with %q
-      - sqlQuery # Detects issue in Query() and Exec() calls
-      - syncMapLoadAndDelete # Detects sync.Map load+delete operations that can be replaced with LoadAndDelete
-      - truncateCmp # Detects potential truncation issues when comparing ints of different sizes
-      - unnecessaryDefer # Detects redundantly deferred calls
-      - weakCond # Detects conditions that are unsafe due to not being exhaustive
-      - assignOp # Detects assignments that can be simplified by using assignment operators
-      - boolExprSimplify # Detects bool expressions that can be simplified
-      - builtinShadow # Detects when predeclared identifiers are shadowed in assignments
-      - captLocal # Detects capitalized names for local variables
-      - commentFormatting # Detects comments with non-idiomatic formatting
-      - commentedOutImport # Detects commented-out imports
-      - defaultCaseOrder # Detects when default case in switch isn't on 1st or last position
-      - deferUnlambda # Detects deferred function literals that can be simplified
-      - docStub # Detects comments that silence go lint complaints about doc-comment
-      - dupImport # Detects multiple imports of the same package under different aliases
-      - elseif # Detects else with nested if statement that can be replaced with else-if
-      - emptyFallthrough # Detects fallthrough that can be avoided by using multi case values
-      - emptyStringTest # Detects empty string checks that can be written more idiomatically
-      - exposedSyncMutex # Detects exposed methods from sync.Mutex and sync.RWMutex
-      - hexLiteral # Detects hex literals that have mixed case letter digits
-      - httpNoBody # Detects nil usages in http.NewRequest calls, suggesting http.NoBody as an alternative
-      - ifElseChain # Detects repeated if-else statements and suggests to replace them with switch statement
-      - importShadow # Detects when imported package names shadowed in the assignments
-      - initClause # Detects non-assignment statements inside if/switch init clause
-      - ioutilDeprecated # Detects deprecated io/ioutil package usages
-      - methodExprCall # Detects method expression call that can be replaced with a method call
-      - nestingReduce # Finds where nesting level could be reduced
-      - newDeref # Detects immediate dereferencing of `new` expressions
-      - octalLiteral # Detects old-style octal literals
-      - paramTypeCombine # Detects if function parameters could be combined by type and suggest the way to do it
-      - preferFilepathJoin # Detects concatenation with os.PathSeparator which can be replaced with filepath.Join
-      - ptrToRefParam # Detects input and output parameters that have a type of pointer to referential type
-      - redundantSprint # Detects redundant fmt.Sprint calls
-      - regexpMust # Detects `regexp.Compile*` that can be replaced with `regexp.MustCompile*`
-      - regexpSimplify # Detects regexp patterns that can be simplified
-      - ruleguard # Runs user-defined rules using ruleguard linter
-      - singleCaseSwitch # Detects switch statements that could be better written as if statement
-      - sloppyLen # Detects usage of `len` when result is obvious or doesn't make sense
-      - stringConcatSimplify # Detects string concat operations that can be simplified
-      - switchTrue # Detects switch-over-bool statements that use explicit `true` tag value
-      - timeExprSimplify # Detects manual conversion to milli- or microseconds
-      - tooManyResultsChecker # Detects function with too many results
-      - typeAssertChain # Detects repeated type assertions and suggests to replace them with type switch statement
-      - typeDefFirst # Detects method declarations preceding the type definition itself
-      - typeSwitchVar # Detects type switches that can benefit from type guard clause with variable
-      - typeUnparen # Detects unneded parenthesis inside type expressions and suggests to remove them
-      - underef # Detects dereference expressions that can be omitted
-      - unlabelStmt # Detects redundant statement labels
-      - unlambda # Detects function literals that can be simplified
-      - unnamedResult # Detects unnamed results that may benefit from names
-      - unnecessaryBlock # Detects unnecessary braced statement blocks
-      - unslice # Detects slice expressions that can be simplified to sliced expression itself
-      - valSwap # Detects value swapping code that are not using parallel assignment
-      - whyNoLint # Ensures that `//nolint` comments include an explanation
-      - wrapperFunc # Detects function calls that can be replaced with convenience wrappers
-      - yodaStyleExpr # Detects Yoda style expressions and suggests to replace them
-      - appendCombine # Detects `append` chains to the same slice that can be done in a single `append` call
-      - equalFold # Detects unoptimal strings/bytes case-insensitive comparison
-      - hugeParam # Detects params that incur excessive amount of copying
-      - indexAlloc # Detects strings.Index calls that may cause unwanted allocs
-      - preferDecodeRune # Detects expressions like []rune(s)[0] that may cause unwanted rune slice allocation
-      - preferFprint # Detects fmt.Sprint(f|ln) calls which can be replaced with fmt.Fprint(f|ln)
-      - preferStringWriter # Detects w.Write or io.WriteString calls which can be replaced with w.WriteString
-      - preferWriteByte # Detects WriteRune calls with byte literal argument and reports to use WriteByte instead
-      - rangeExprCopy # Detects expensive copies of `for` loop range expressions
-      - rangeValCopy # Detects loops that copy big objects during each iteration
-      - sliceClear # Detects slice clear loops, suggests an idiom that is recognized by the Go compiler
-      - stringXbytes # Detects redundant conversions between string and []byte
+    enabled-checks: all
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - captLocal
+      - unnamedResult
+      # - dupImport # https://github.com/go-critic/go-critic/issues/845
+      # - ifElseChain
+      # - octalLiteral
+      - whyNoLint
+    # - wrapperFunc
+    # - yodaStyleExpr
+    # - singleCaseSwitch # Every time this occurred in the code, there was no other way.
 
-      # next release:
-      # suspiciousSorting # Detects bad usage of sort package
-
-  # https://github.com/mvdan/gofumpt
-  gofumpt:
-    lang-version: "1.19"
-    extra-rules: true
-
-  goimports:
-    local-prefixes: github.com/teal-finance/
-
-  gomnd:
     settings:
-      mnd:
-        # don't include the "operation" and "assign,argument,case,condition"
-        checks: [return]
+      captureruneverywhere:
+        params-only: true
+      exitafterreturn:
+        allow-comment: true
+      hugeparam:
+        threshold: 10
+      ifelsechain:
+        max-chains: 3
+      longchain:
+        max-len: 5
+      nestingreduce:
+        max-depth: 5
+      rangevalcopy:
+        threshold: 512
+      sliceinit:
+        max-size: 100
+      stringintconv:
+        ignore-string-representation: true
+
+  godot:
+    scope: declarations
+
+  godox:
+    keywords: ["TODO", "FIXME", "BUG", "HACK"]
+
+  gomoddirectives:
+    replace-allowlist:
+      - github.com/owner/repo v1.0.0
+
+  gomodguard:
+    rules:
+      deny:
+        - path: ^gopkg.in/
+          reason: use newer go modules
+        - path: ^github.com/golang/protobuf
+          reason: use newer go modules
+
+  goprintffuncname:
+    check-func-names: []
+
+  gosec:
+    confidence: medium
+    excludes:
+      - G104
+    nosec: ""
+    severity: medium
+
+  gosmopolitan:
+    allow-time: false
+    allow-time-utc: false
+    check-timezone: true
 
   govet:
     check-shadowing: true
+    enable-all: true
     settings:
+      shadow:
+        strict: true
       printf:
         funcs:
           - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
           - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
           - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
           - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+
+  iface:
+    allow-empty-interface: false
+    allow-single-method: false
+
+  importas:
+    alias:
+      - alias: errors
+        pkg: github.com/pkg/errors
+      - alias: ctx
+        pkg: context
+
+  inamedparam:
+    ignore-empty: false
+
+  interfacebloat:
+    max-methods: 10
+
+  intrange:
+    check-range: true
+
   lll:
     line-length: 160
 
+  loggercheck:
+    kitsune: true
+    klog: true
+    logr: true
+    slog: true
+    zap: true
+
+  makezero:
+    always: false
+
   maligned:
     suggest-new: true
+    suggest-new-order: true
+
+  mirror:
+    check-all: true
 
   misspell:
     locale: US
 
-  nolintlint:
-    allow-leading-space: false # must bein format "//nolint"
-    require-specific: true # must be in format "//nolint:xxxx"
-    require-explanation: true # must be in format "//nolint:xxxx // explanation"
-    allow-unused: false # report any unused nolint directives
+  musttag:
+    rules: []
 
-  gosimple:
-    go: "1.19"
-    # https://staticcheck.io/docs/options#checks
-    checks: ["all"]
+  nakedret:
+    max-func-lines: 15
+
+  nestif:
+    max-nesting: 5
+
+  nilerr:
+    check-all: true
+
+  nilnesserr:
+    check-all: true
+
+  nlreturn:
+    max-lines: 2
+
+  noctx:
+    check-all: true
+
+  noinlineerr:
+    check-all: true
+
+  nolintlint:
+    allow-leading-space: false # don't require machine-readable nolint directives (i.e. with no leading space)
+    allow-unused: false # report any unused nolint directives
+    require-explanation: false # don't require an explanation for nolint directives
+    require-specific: true # require nolint directives to be specific about which linter is being skipped
+
+  nonamedreturns:
+    check-all: true
+
+  nosprintfhostport:
+    check-all: true
+
+  paralleltest:
+    ignore-missing: false
+
+  perfsprint:
+    ignore: []
+
+  prealloc:
+    for-loops: true
+    range-loops: true
+    simple: true
+
+  predeclared:
+    ignore: ""
+
+  promlinter:
+    strict: false
+
+  protogetter:
+    check-all: true
+
+  reassign:
+    check-global: true
+    check-local: true
+
+  recvcheck:
+    check-all: true
+
+  revive:
+    config:
+      - rule-name: blank-imports
+        severity: warning
+      - rule-name: context-as-argument
+        severity: warning
+      - rule-name: context-keys-type
+        severity: warning
+      - rule-name: dot-imports
+        severity: warning
+      - rule-name: error-return
+        severity: warning
+      - rule-name: error-naming
+        severity: warning
+      - rule-name: if-return
+        severity: warning
+      - rule-name: var-naming
+        severity: warning
+    enable-all-rules: true
+
+  rowserrcheck:
+    check-all: true
+    packages:
+      - database/sql
+      - github.com/jackc/pgx/v4
+
+  sloglint:
+    args-on-separate-lines: true
+    context: all
+    key-value-braces: true
+
+  spancheck:
+    check-all: true
+
+  sqlclosecheck:
+    packages:
+      - database/sql
+      - github.com/jackc/pgx/v4
 
   staticcheck:
-    go: "1.19"
+    go: "1.24"
     # https://staticcheck.io/docs/options#checks
-    checks: ["all"]
+    checks: all
 
-  stylecheck:
-    go: "1.19"
-    # https://staticcheck.io/docs/options#checks
-    checks: ["all"]
-    # https://staticcheck.io/docs/options#dot_import_whitelist
-    dot-import-whitelist: []
-    # https://staticcheck.io/docs/options#http_status_code_whitelist
-    http-status-code-whitelist: []
-    # https://staticcheck.io/docs/options#initialisms
-    initialisms:
-      [
-        "ACL",
-        "API",
-        "ASCII",
-        "CPU",
-        "CSS",
-        "DNS",
-        "EOF",
-        "GUID",
-        "HTML",
-        "HTTP",
-        "HTTPS",
-        "ID",
-        "IP",
-        "JSON",
-        "QPS",
-        "RAM",
-        "RPC",
-        "SLA",
-        "SMTP",
-        "SQL",
-        "SSH",
-        "TCP",
-        "TLS",
-        "TTL",
-        "UDP",
-        "UI",
-        "GID",
-        "UID",
-        "UUID",
-        "URI",
-        "URL",
-        "UTF8",
-        "VM",
-        "XML",
-        "XMPP",
-        "XSRF",
-        "XSS",
-        "SIP",
-        "RTP",
-        "AMQP",
-        "DB",
-        "TS",
-      ]
+  tagalign:
+    order: align
+    style: same
 
   tagliatelle:
+    check-all: true
+    ignore: []
     case:
       rules:
         json: snake # could be "goCamel"
@@ -384,21 +474,164 @@ linters-settings:
       - github.com/prometheus\/client_golang\/prometheus.Gauge
       - github.com/prometheus\/client_golang\/prometheus.Counter
 
+  testableexamples:
+    check-all: true
+
+  testifylint:
+    disable-all: false
+    enable:
+      - bool-compare
+      - compares
+      - empty
+      - error-is-as
+      - error-nil
+      - expected-actual
+      - go-require
+      - float-compare
+      - len
+      - nil-compare
+      - require-error
+      - suite-extra-assert-call
+      - suite-thelper
+
+  testpackage:
+    suffix: _test
+
+  thelper:
+    allow: []
+
+  tparallel:
+    check-all: true
+    ignore-missing: false
+
+  unconvert:
+    check-all: true
+
+  unparam:
+    check-exported: false
+
+  unused:
+    check-exported: false
+
+  usestdlibvars:
+    allow-all: false
+    ignore:
+      - os.O_WRONLY
+      - os.O_RDWR
+
+  usetesting:
+    allow:
+      - testing.T
+      - testing.B
+      - testing.F
+
+  varnamelen:
+    ignore: []
+    min-length: 2
+    # The longest distance, in source lines, that is being considered a "small scope".
+    # Variables used in at most this many lines will be ignored.
+    # Default: 5
+    max-distance: 14
+    # The minimum length of a variable's name that is considered "long".
+    # Variable names that are at least this long will be ignored.
+    # Default: 3
+    min-name-length: 2
+    # Check method receivers.
+    # Default: false
+    check-receiver: false
+    # Check named return values.
+    # Default: false
+    check-return: true
+    # Check type parameters.
+    # Default: false
+    check-type-param: true
+    # Ignore "ok" variables that hold the bool return value of a type assertion.
+    # Default: false
+    ignore-type-assert-ok: false
+    # Ignore "ok" variables that hold the bool return value of a map index.
+    # Default: false
+    ignore-map-index-ok: false
+    # Ignore "ok" variables that hold the bool return value of a channel receive.
+    # Default: false
+    ignore-chan-recv-ok: false
+    # Optional list of variable names that should be ignored completely.
+    # Default: []
+    ignore-names:
+      - err
+      - r # request
+      - w # writer
+      - g # garcon
+      - u # url
+      - d # duration
+    # Optional list of variable declarations that should be ignored completely.
+    # Entries must be in one of the following forms (see below for examples):
+    # - for variables, parameters, named return values, method receivers, or type parameters:
+    #   <name> <type>  (<type> can also be a pointer/slice/map/chan/...)
+    # - for constants: const <name>
+    #
+    # Default: []
+    ignore-decls:
+      - t testing.T
+      - f *foo.Bar
+      - e error
+      - i int
+      - const C
+      - T any
+      - m map[string]int
+
+  wastedassign:
+    check-all: true
+
+  whitespace:
+    blank-lines: true
+    multi-assign: true
+    multi-if: true
+    space-around-braces: true
+    space-around-comment: true
+    space-around-operator: true
+    space-around-parentheses: true
+
+  wrapcheck:
+    ignore-interface-regexps:
+      - ^(?i)error$
+    ignore-package-globs:
+      - errors/*
+      - fmt/*
+    ignore-sigs:
+      - errors.New(
+      - errors.New(
+      - fmt.Errorf(
+
+  wsl_v5:
+    allow-trailing-comma: true
+    strict: true
+
+  zerologlint:
+    check-event: true
+    check-log: true
+
 issues:
   exclude-rules:
-    # More flexible with test source code
+    # Excluding configuration per-path
     - path: _test\.go
       linters:
-        - gomnd
         - gosec # weak random number generator (math/rand instead of crypto/rand)
-        - gocyclo
-        - errcheck
-    ## Example commented
-    #- text: "unnecessaryDefer:"
-    #  linters: [gocritic]
-    ## Example commented
-    #- text: "exitAfterDefer:"
-    #  linters: [gocritic]
+        - scopelint
+        # gocyclo
+        # errcheck
+        # dupl
+        # unparam
+        # staticcheck
+
+    # Excluding configuration per-linter
+    - linters:
+        - gocritic
+      text: "unnecessaryDefer:"
+
+    # Excluding configuration per-text and per-source
+    - text: "exitAfterDefer:"
+      linters:
+        - gocritic
 
 run:
   # timeout for analysis, e.g. 30s, 5m, default is 1m
@@ -411,16 +644,21 @@ run:
   # from this option's value:
   #     vendor$, third_party$, testdata$, examples$, Godeps$, builtin$
   skip-dirs: [poc]
-  go: "1.17"
+  go: "1.24"
+  timeout: 5m
 
 output:
   # colored-line-number|line-number|json|tab|checkstyle, default is "colored-line-number"
   format: colored-line-number
+
   # print lines of code with issue, default is true
   print-issued-lines: true
+
   # print linter name in the end of issue text, default is true
   print-linter-name: true
+
   # make issues output unique by line, default is true
   uniq-by-line: true
+
   # sorts results by: filepath, line and column
   sort-results: true
