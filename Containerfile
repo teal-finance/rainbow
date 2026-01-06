@@ -1,9 +1,8 @@
 # Build:
 #
-#    export DOCKER_BUILDKIT=1
-#    docker  build --build-arg addr=http://my.dns.co:1111 --build-arg port=2222 --build-arg base=/rainbow/ -t rainbow .
-#    podman  build --build-arg addr=http://my.dns.co:1111 --build-arg port=2222 --build-arg base=/rainbow/ -t rainbow .
-#    buildah build --build-arg addr=http://my.dns.co:1111 --build-arg port=2222 --build-arg base=/rainbow/ -t rainbow .
+#    docker  build --build-arg addr=http://my.dns.co:1111 --build-arg port=2222 --build-arg base=/rainbow/ -f Containerfile -t rainbow .
+#    podman  build --build-arg addr=http://my.dns.co:1111 --build-arg port=2222 --build-arg base=/rainbow/ -f Containerfile -t rainbow .
+#    buildah build --build-arg addr=http://my.dns.co:1111 --build-arg port=2222 --build-arg base=/rainbow/ -f Containerfile -t rainbow .
 #
 # Run:
 #

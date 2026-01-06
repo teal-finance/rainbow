@@ -20,11 +20,6 @@
 **/.gitignore
 **/.github/
 
-# Docker
-**/.dockerignore
-**/*compose*.yml
-**/*Dockerfile*
-
 # Documentation (all Markdown files)
 **/*.md
 **/*LICENSE*

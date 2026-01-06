@@ -92,9 +92,9 @@ base=/
 .PHONY: container-build
 container-build: container-stop
 	# Build the container image
-	docker  build --build-arg addr=$(addr) --build-arg port=$(port) --build-arg base=$(base) -t rainbow . || \
-	podman  build --build-arg addr=$(addr) --build-arg port=$(port) --build-arg base=$(base) -t rainbow . || \
-	buildah build --build-arg addr=$(addr) --build-arg port=$(port) --build-arg base=$(base) -t rainbow .
+	docker  build --build-arg addr=$(addr) --build-arg port=$(port) --build-arg base=$(base) -t rainbow -f Containerfile . || \
+	podman  build --build-arg addr=$(addr) --build-arg port=$(port) --build-arg base=$(base) -t rainbow -f Containerfile . || \
+	buildah build --build-arg addr=$(addr) --build-arg port=$(port) --build-arg base=$(base) -t rainbow -f Containerfile .
 
 # Build and run the container
 .PHONY: container-run
@@ -118,7 +118,7 @@ container-stop:
 	command -v podman
 
 	# Stop the container (if currently running)
-	-docker stop   rainbow || \
+	docker stop    rainbow || \
 	podman stop -i rainbow
 
 # Stop the container if still running, then remove its image
