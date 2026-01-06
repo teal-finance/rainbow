@@ -6,18 +6,14 @@
 package rainbow
 
 import (
+	"slices"
 	"strconv"
 	"time"
 )
 
 // IsExpiryAvailable takes the expiries from "func Expiries(" below and compare it with the option expiry.
 func IsExpiryAvailable(expiries []time.Time, expiry time.Time) bool {
-	for _, e := range expiries {
-		if expiry.Equal(e) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(expiries, expiry.Equal)
 }
 
 // Expiries return today, tomorrow, tosurlendemain and next n fridays. hour is the hour at which the option expires:

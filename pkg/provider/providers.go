@@ -7,6 +7,7 @@ package provider
 
 import (
 	"os"
+	"strings"
 
 	"github.com/LynxAIeu/emo"
 	"github.com/LynxAIeu/garcon/gg"
@@ -96,14 +97,14 @@ func parseArgs(alerterOptions ...string) (namespace string, _ gg.Notifier) {
 
 // AddAlert returns the providers with an alerter on anomalies.
 // Do not panic if alerter endpoint is not reachable.
-func AddAlert(providers []rainbow.Provider, n gg.Notifier, namespace string) []rainbow.Provider {
-	list := ""
+func AddAlert(providers []rainbow.Provider, notifier gg.Notifier, namespace string) []rainbow.Provider {
+	var list strings.Builder
 	for i, p := range providers {
-		list += "\n" + "1. " + p.Name()
-		providers[i] = newAlerter(namespace, p, n)
+		list.WriteString("\n" + "1. " + p.Name())
+		providers[i] = newAlerter(namespace, p, notifier)
 	}
 
-	err := notifyStartup(n, namespace, list)
+	err := notifyStartup(notifier, namespace, list.String())
 	if err != nil {
 		log.Error("Alerter:", err)
 	}
@@ -112,7 +113,7 @@ func AddAlert(providers []rainbow.Provider, n gg.Notifier, namespace string) []r
 }
 
 // notifyStartup is called only once to notify when Rainbow is started.
-func notifyStartup(n gg.Notifier, namespace, list string) error {
+func notifyStartup(notifier gg.Notifier, namespace, list string) error {
 	msg := ":wave: Rainbow **" + namespace + "** " + vv.Version("") + " has just started"
 
 	host, err := os.Hostname()
@@ -122,5 +123,5 @@ func notifyStartup(n gg.Notifier, namespace, list string) error {
 
 	msg += " with:" + list
 
-	return n.Notify(msg)
+	return notifier.Notify(msg)
 }

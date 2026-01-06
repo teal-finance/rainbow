@@ -6,6 +6,7 @@
 package dbram
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/teal-finance/rainbow/pkg/rainbow"
@@ -100,12 +101,7 @@ func in(provider string, wanted []string) bool {
 		return true
 	}
 
-	for _, w := range wanted {
-		if w == provider {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(wanted, provider)
 }
 
 // TODO go1.18: use generics with constraint comparable.
