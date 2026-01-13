@@ -8,11 +8,11 @@ package rysk
 import (
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 
-	"github.com/LynxAIeu/emo"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/lynxai-team/emo"
 )
 
 const (

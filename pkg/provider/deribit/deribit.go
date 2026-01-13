@@ -13,8 +13,8 @@ import (
 
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 
-	"github.com/LynxAIeu/emo"
-	"github.com/LynxAIeu/garcon/gc"
+	"github.com/lynxai-team/emo"
+	"github.com/lynxai-team/garcon/gc"
 )
 
 const name = "Deribit"

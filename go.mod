@@ -4,8 +4,8 @@ go 1.25.5
 
 require (
 	github.com/Khan/genqlient v0.8.1
-	github.com/LynxAIeu/emo v0.0.0-20260102000151-bd606f39cc08
-	github.com/LynxAIeu/garcon v0.60.0
+	github.com/lynxai-team/emo v0.0.0-20260102000151-bd606f39cc08
+	github.com/lynxai-team/garcon v0.60.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/ethereum/go-ethereum v1.16.7
 	github.com/friendsofgo/graphiql v0.2.2
@@ -27,7 +27,7 @@ require (
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/JohannesKaufmann/html-to-markdown v1.6.0 // indirect
-	github.com/LynxAIeu/incorruptible v0.0.0-20260102113753-6906f8c34a1e // indirect
+	github.com/lynxai-team/incorruptible v0.0.0-20260102113753-6906f8c34a1e // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProjectZKM/Ziren/crates/go-runtime/zkvm_runtime v0.0.0-20251230134950-44c893854e3f // indirect
 	github.com/PuerkitoBio/goquery v1.11.0 // indirect

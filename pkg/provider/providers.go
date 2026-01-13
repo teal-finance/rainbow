@@ -21,9 +21,9 @@ import (
 	"github.com/teal-finance/rainbow/pkg/provider/thalex"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 
-	"github.com/LynxAIeu/emo"
-	"github.com/LynxAIeu/garcon/gg"
-	"github.com/LynxAIeu/garcon/vv"
+	"github.com/lynxai-team/emo"
+	"github.com/lynxai-team/garcon/gg"
+	"github.com/lynxai-team/garcon/vv"
 )
 
 var log = emo.NewZone("provider")

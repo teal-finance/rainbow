@@ -18,7 +18,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 
-	"github.com/LynxAIeu/emo"
+	"github.com/lynxai-team/emo"
 	"github.com/teal-finance/rainbow/pkg/provider/the-graph/thales"
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor"
 	"github.com/teal-finance/rainbow/pkg/rainbow"

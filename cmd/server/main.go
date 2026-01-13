@@ -11,10 +11,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/LynxAIeu/emo"
-	"github.com/LynxAIeu/garcon/gc"
-	"github.com/LynxAIeu/garcon/gg"
-	"github.com/LynxAIeu/garcon/vv"
+	"github.com/lynxai-team/emo"
+	"github.com/lynxai-team/garcon/gc"
+	"github.com/lynxai-team/garcon/gg"
+	"github.com/lynxai-team/garcon/vv"
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"

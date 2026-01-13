@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/LynxAIeu/garcon/gg"
-	"github.com/LynxAIeu/garcon/timex"
-	"github.com/LynxAIeu/garcon/vv"
+	"github.com/lynxai-team/garcon/gg"
+	"github.com/lynxai-team/garcon/timex"
+	"github.com/lynxai-team/garcon/vv"
 	"github.com/teal-finance/rainbow/pkg/provider"
 )
 

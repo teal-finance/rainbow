@@ -219,7 +219,7 @@ The above manual commands can be obtained using the [Makefile](Makefile):
 Rainbow embeds a complete HTTP server,
 including a rate limiter, an export port (Prometheus monitoring),
 and more. For more details see the underlying project
-[Teal.Finance/Garcon](https://github.com/LynxAIeu/garcon/).
+[Teal.Finance/Garcon](https://github.com/lynxai-team/garcon/).
 
     $ go build ./cmd/server
     $ ./server -h

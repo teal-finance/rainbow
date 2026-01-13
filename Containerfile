@@ -62,18 +62,18 @@ COPY pkg pkg
 # Go build flags: https://shibumi.dev/posts/hardening-executables/
 # "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
 # GOAMD64=v3 --> https://github.com/golang/go/wiki/MinimumRequirements#amd64
-RUN set -ex                                          ;\
-    case "$(grep flags -m1 /proc/cpuinfo)" in         \
-        *" avx512f "*)  export GOAMD64=v4;;           \
-        *" avx2 "*)     export GOAMD64=v3;;           \
-        *" sse2 "*)     export GOAMD64=v2;;           \
-    esac                                             ;\
-    v="$(cat version.txt)"                           ;\
-    flags="-X 'github.com/LynxAIeu/garcon/vv.V=$v'"  ;\
-    CGO_ENABLED=0 GOFLAGS="-trimpath -modcacherw"     \
-    GOLDFLAGS="-d -s -w -extldflags=-static"          \
-    go build -a -v -ldflags="$flags" ./cmd/server    ;\
-    ls -lh server                                    ;\
+RUN set -ex                                             ;\
+    case "$(grep flags -m1 /proc/cpuinfo)" in            \
+        *" avx512f "*)  export GOAMD64=v4;;              \
+        *" avx2 "*)     export GOAMD64=v3;;              \
+        *" sse2 "*)     export GOAMD64=v2;;              \
+    esac                                                ;\
+    v="$(cat version.txt)"                              ;\
+    flags="-X 'github.com/lynxai-team/garcon/vv.V=$v'"  ;\
+    CGO_ENABLED=0 GOFLAGS="-trimpath -modcacherw"        \
+    GOLDFLAGS="-d -s -w -extldflags=-static"             \
+    go build -a -v -ldflags="$flags" ./cmd/server       ;\
+    ls -lh server                                       ;\
     ./server -version  # smoke test
 
 # To enable Go hardening (FIPS 140-2 certification) set:

@@ -16,7 +16,7 @@ import (
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
 
-	"github.com/LynxAIeu/emo"
+	"github.com/lynxai-team/emo"
 	"github.com/teal-finance/rainbow/pkg/provider/zetamarkets/anchor/generated/zeta"
 )
 

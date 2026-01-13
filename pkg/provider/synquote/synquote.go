@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/LynxAIeu/emo"
+	"github.com/lynxai-team/emo"
 	"github.com/teal-finance/rainbow/pkg/provider/deribit"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )

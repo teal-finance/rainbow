@@ -9,8 +9,8 @@ import (
 	"flag"
 	"strings"
 
-	"github.com/LynxAIeu/garcon/gg"
-	"github.com/LynxAIeu/garcon/vv"
+	"github.com/lynxai-team/garcon/gg"
+	"github.com/lynxai-team/garcon/vv"
 )
 
 const (
