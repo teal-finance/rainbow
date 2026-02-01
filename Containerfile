@@ -59,14 +59,18 @@ RUN set -ex          ;\
 COPY cmd cmd
 COPY pkg pkg
 
-# Go build flags: https://shibumi.dev/posts/hardening-executables/
-# "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
-# GOAMD64=v3 --> https://github.com/golang/go/wiki/MinimumRequirements#amd64
-RUN set -ex                                             ;\
-    case "$(grep flags -m1 /proc/cpuinfo)" in            \
-        *" avx512f "*)  export GOAMD64=v4;;              \
-        *" avx2 "*)     export GOAMD64=v3;;              \
-        *" sse2 "*)     export GOAMD64=v2;;              \
+# --mount=type -> https://docs.docker.com/build/cache/optimize/#use-cache-mounts
+# Go build flags: "-s -w" removes all debug symbols: https://pkg.go.dev/cmd/link
+#                https://shibumi.dev/posts/hardening-executables/
+# GOAMD64=v3 --> https://go.dev/wiki/MinimumRequirements#amd64
+RUN --mount=type=cache,target=/go/pkg/mod                \
+    --mount=type=cache,target=/root/.cache/go-build      \
+    set -ex                                             ;\
+    ls -lShA                                            ;\
+    case "$(grep flags -m1 /proc/cpuinfo)" in           ;\
+        *" avx512f "*)  export GOAMD64=v4;;             ;\
+        *" avx2 "*)     export GOAMD64=v3;;             ;\
+        *" sse2 "*)     export GOAMD64=v2;;             ;\
     esac                                                ;\
     v="$(cat version.txt)"                              ;\
     flags="-X 'github.com/lynxai-team/garcon/vv.V=$v'"  ;\
