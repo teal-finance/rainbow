@@ -61,7 +61,7 @@ run-ui:
 fmt:
 	go mod tidy
 	go generate ./...
-	go run mvdan.cc/gofumpt@latest -w -extra -l -lang go1.25 .
+	go run mvdan.cc/gofumpt@latest -w -extra -l .
 	go build ./...
 
 .PHONY: test

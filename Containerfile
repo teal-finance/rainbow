@@ -29,7 +29,7 @@ ARG uid=5505
 # base = /rainbow/
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.25 AS version
+FROM docker.io/golang:1.26 AS version
 
 WORKDIR /code
 
@@ -73,7 +73,7 @@ RUN --mount=type=cache,target=/go/pkg/mod                \
         *" sse2 "*)     export GOAMD64=v2;;             ;\
     esac                                                ;\
     v="$(cat version.txt)"                              ;\
-    flags="-X 'github.com/lynxai-team/garcon/vv.V=$v'"  ;\
+    flags="-X 'github.com/lynxai-team/garcon/vv.V=$v' -linkmode=internal"  ;\
     CGO_ENABLED=0 GOFLAGS="-trimpath -modcacherw"        \
     GOLDFLAGS="-d -s -w -extldflags=-static"             \
     go build -a -v -ldflags="$flags" ./cmd/server       ;\
@@ -141,7 +141,7 @@ RUN set -ex                                            ;\
     npm run compress
 
 # --------------------------------------------------------------------
-FROM docker.io/golang:1.25 AS integrator
+FROM docker.io/golang:1.26 AS integrator
 
 WORKDIR /target
 
