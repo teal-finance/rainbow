@@ -13,6 +13,7 @@ import (
 
 	"github.com/lynxai-team/emo"
 	"github.com/lynxai-team/garcon/gg"
+
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 )
 
@@ -128,7 +129,7 @@ type (
 			PriceClubbingValues      []float64 `json:"price_clubbing_values"`
 			ShowBracketOrders        bool      `json:"show_bracket_orders"`
 			SortPriority             int       `json:"sort_priority"`
-		} `json:"ui_config,omitempty"`
+		} `json:"ui_config,omitzero"`
 		ContractValue                   string `json:"contract_value"`
 		InitialMarginScalingFactor      string `json:"initial_margin_scaling_factor"`
 		ImpactSize                      int    `json:"impact_size"`
@@ -266,7 +267,7 @@ type (
 			PremiumCommissionRate       float64 `json:"premium_commission_rate"`
 			VolCalculationMethod        string  `json:"vol_calculation_method"`
 			VolExpiryTime               int     `json:"vol_expiry_time"`
-		} `json:"product_specs,omitempty"`
+		} `json:"product_specs,omitzero"`
 		FundingMethod     string `json:"funding_method"`
 		StrikePrice       string `json:"strike_price"`
 		PriceBand         string `json:"price_band"`
