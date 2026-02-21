@@ -10,11 +10,11 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-
 	"github.com/lynxai-team/emo"
 	"github.com/lynxai-team/garcon/gc"
 	"github.com/lynxai-team/garcon/gg"
 	"github.com/lynxai-team/garcon/vv"
+
 	"github.com/teal-finance/rainbow/pkg/provider"
 	"github.com/teal-finance/rainbow/pkg/rainbow"
 	"github.com/teal-finance/rainbow/pkg/rainbow/api"
@@ -77,8 +77,8 @@ func main() {
 
 	// Disable the contact-form endpoint until we protect it against DoS
 	if false {
-		cf := g.NewContactForm("/about")                      // submitted contact-form redirects to "/about"
-		router.With(ck.Chk).Post("/submit", cf.Notify(*form)) // forward contact-form to Mattermost
+		contactForm := g.NewContactForm("/about")                      // submitted contact-form redirects to "/about"
+		router.With(ck.Chk).Post("/submit", contactForm.Notify(*form)) // forward contact-form to Mattermost
 	}
 
 	// API routes
